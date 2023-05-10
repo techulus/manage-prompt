@@ -1,62 +1,8 @@
 import PageTitle from "@/components/layout/page-title";
-import { WorkflowModel } from "@/data/workflow";
-import prisma from "@/utils/db";
-import { auth } from "@clerk/nextjs/app-beta";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-
-// TODO Validate
-// const WorkflowSchema = Yup.object().shape({
-//   name: Yup.string()
-//     .required("Name cannot be empty")
-//     .min(2, "Name too Short!")
-//     .max(75, "Name too Long!"),
-//   template: Yup.string()
-//     .required("Template cannot be empty")
-//     .min(2, "Template too Short!")
-//     .max(9669, "Template too Long!"),
-//   model: Yup.mixed<WorkflowModel>()
-//     .oneOf(Object.values(WorkflowModel))
-//     .required("Select valid model"),
-//   inputs: Yup.array().of(
-//     Yup.object().shape({
-//       name: Yup.string(),
-//     })
-//   ),
-// });
+import { WorkflowModels } from "@/data/workflow";
+import { saveWorkflow } from "./actions";
 
 export default function CreateWorkflow() {
-  const { userId, orgId } = auth();
-
-  async function saveWorkflow(formData: FormData) {
-    "use server";
-
-    // parse template and extract variables
-    const inputs = Array.from(
-      (formData.get("template") as string).matchAll(/{{\s*(?<name>\w+)\s*}}/g)
-    ).reduce((acc: string[], match) => {
-      const { name } = match.groups as { name: string };
-      if (!acc.includes(name)) {
-        acc.push(name);
-      }
-      return acc;
-    }, []);
-
-    await prisma.workflow.create({
-      data: {
-        createdBy: userId ?? "",
-        ownerId: orgId ?? userId ?? "",
-        name: formData.get("name") as string,
-        model: formData.get("model") as WorkflowModel,
-        template: formData.get("template") as string,
-        inputs,
-      },
-    });
-
-    revalidatePath("/console/workflows");
-    redirect("/console/workflows");
-  }
-
   return (
     <>
       <PageTitle title="Create Workflow" />
@@ -122,8 +68,8 @@ export default function CreateWorkflow() {
                     name="model"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:max-w-xs sm:text-sm sm:leading-6 capitalize"
                   >
-                    {Object.keys(WorkflowModel).map((model) => (
-                      <option key={model} value={String(WorkflowModel[model])}>
+                    {Object.keys(WorkflowModels).map((model) => (
+                      <option key={model} value={WorkflowModels[model]}>
                         {model}
                       </option>
                     ))}
