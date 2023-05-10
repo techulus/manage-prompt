@@ -1,6 +1,7 @@
 import PageTitle from "@/components/layout/page-title";
 import { WorkflowModels } from "@/data/workflow";
 // import { experimental_useFormStatus as useFormStatus } from "react-dom";
+import Link from "next/link";
 import { saveWorkflow } from "./actions";
 
 export default function CreateWorkflow() {
@@ -74,7 +75,7 @@ export default function CreateWorkflow() {
                   >
                     {Object.keys(WorkflowModels).map((model) => (
                       <option key={model} value={WorkflowModels[model]}>
-                        {model}
+                        {model} ({WorkflowModels[model]})
                       </option>
                     ))}
                   </select>
@@ -85,12 +86,12 @@ export default function CreateWorkflow() {
         </div>
 
         <div className="mt-6 flex items-center justify-end gap-x-6">
-          <button
-            type="button"
+          <Link
+            href="/console/workflows"
             className="text-sm font-semibold leading-6 text-gray-900"
           >
             Cancel
-          </button>
+          </Link>
           <button
             type="submit"
             className="inline-flex justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"

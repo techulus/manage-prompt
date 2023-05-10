@@ -23,10 +23,10 @@ export default function NavBar() {
           <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
               {/* Logo section */}
-              <Link href="/" className="text-white">
+              <Link href="/" className="text-white hero">
                 <div className="flex items-center px-2 lg:px-0 xl:w-64">
                   <div className="flex-shrink-0">
-                    Manage<span className="font-semibold">Prompt</span>
+                    Manage<span className="font-semibold">Prompt</span> (alpha)
                   </div>
                 </div>
               </Link>

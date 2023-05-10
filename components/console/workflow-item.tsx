@@ -1,0 +1,82 @@
+import { clerkClient } from "@clerk/nextjs";
+import { ChevronRightIcon, UserIcon } from "@heroicons/react/20/solid";
+import { Workflow } from "@prisma/client";
+import classNames from "classnames";
+
+interface Props {
+  workflow: Workflow;
+}
+
+export async function WorkflowItem({ workflow }: Props) {
+  const creator = await clerkClient.users.getUser(workflow.createdBy);
+
+  return (
+    <li
+      key={workflow.id}
+      className="relative py-5 pl-4 pr-6 hover:bg-gray-50 sm:py-6 sm:pl-6 lg:pl-8 xl:pl-6"
+    >
+      <div className="flex items-center justify-between space-x-4">
+        <div className="min-w-0 space-y-3">
+          <div className="flex items-center space-x-3">
+            <span
+              className={classNames(
+                workflow.published ? "bg-green-100" : "bg-gray-100",
+                "h-4 w-4 flex items-center justify-center rounded-full"
+              )}
+              aria-hidden="true"
+            >
+              <span
+                className={classNames(
+                  workflow.published ? "bg-green-400" : "bg-gray-400",
+                  "h-2 w-2 rounded-full"
+                )}
+              />
+            </span>
+
+            <h2 className="text-sm font-medium">
+              <a href={`/console/workflows/${workflow.id}`}>
+                <span className="absolute inset-0" aria-hidden="true" />
+                {workflow.name}{" "}
+                <span className="sr-only">
+                  {workflow.published ? "Running" : "Not running"}
+                </span>
+              </a>
+            </h2>
+          </div>
+          <a
+            href={`/console/workflows/${workflow.id}`}
+            className="group relative flex items-center space-x-2.5"
+          >
+            <UserIcon className="h-4 w-4 inline text-gray-400" />
+            <span className="truncate text-sm font-medium text-gray-500 group-hover:text-gray-900">
+              {creator.firstName} {creator.lastName}
+            </span>
+          </a>
+        </div>
+        <div className="sm:hidden">
+          <ChevronRightIcon
+            className="h-5 w-5 text-gray-400"
+            aria-hidden="true"
+          />
+        </div>
+        <div className="hidden flex-shrink-0 flex-col items-end space-y-3 sm:flex">
+          <p className="flex items-center space-x-4">
+            <a
+              href={`/console/workflows/${workflow.id}`}
+              className="relative text-sm font-medium text-gray-500 hover:text-gray-900"
+            >
+              Run
+            </a>
+          </p>
+          <p className="flex space-x-2 text-sm text-gray-500">
+            <span>{workflow.model}</span>
+            <span aria-hidden="true">&middot;</span>
+            <span>
+              Last updated {new Date(workflow.updatedAt).toLocaleDateString()}
+            </span>
+          </p>
+        </div>
+      </div>
+    </li>
+  );
+}

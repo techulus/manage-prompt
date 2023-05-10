@@ -11,8 +11,8 @@ export function Header() {
         <div className="flex lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">ManagePrompt</span>
-            <p className="text-black">
-              Manage<span className="font-semibold">Prompt</span>
+            <p className="text-black hero">
+              Manage<span className="font-semibold">Prompt</span> (alpha)
             </p>
           </Link>
         </div>
