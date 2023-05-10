@@ -1,3 +1,9 @@
+export enum OpenAIModel {
+  "gpt-3.5-turbo" = "gpt-3.5-turbo",
+  "text-davinci-003" = "text-davinci-003",
+  "text-davinci-edit-001" = "text-davinci-edit-001",
+}
+
 export const WorkflowModels: Record<string, string> = {
   chat: "gpt-3.5-turbo",
   insert: "text-davinci-003",
