@@ -5,15 +5,9 @@ import {
   SignedIn,
   SignedOut,
   UserButton,
-  useOrganization,
 } from "@clerk/nextjs";
 import { Disclosure } from "@headlessui/react";
-import {
-  HomeIcon,
-  HomeModernIcon,
-  MagnifyingGlassIcon,
-  RectangleStackIcon,
-} from "@heroicons/react/20/solid";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { Bars3CenterLeftIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import classNames from "classnames";
 import Link from "next/link";
@@ -28,8 +22,6 @@ export default function ConsoleLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { membership } = useOrganization();
-
   return (
     <>
       <SignedIn>
@@ -164,7 +156,7 @@ export default function ConsoleLayout({
                           <div className="flex items-center space-x-3">
                             <div className="space-y-1">
                               <div className="flex items-center space-x-2">
-                                <OrganizationSwitcher />
+                                <OrganizationSwitcher afterSwitchOrganizationUrl="/console/workflows" />
                               </div>
                             </div>
                           </div>
@@ -184,27 +176,6 @@ export default function ConsoleLayout({
                             Invite Team
                           </button>
                         </div>
-                      </div>
-                      {/* Meta info */}
-                      <div className="flex flex-col space-y-6 sm:flex-row sm:space-x-8 sm:space-y-0 xl:flex-col xl:space-x-0 xl:space-y-6">
-                        {membership ? (
-                          <div className="flex items-center space-x-2">
-                            {membership.role === "admin" ? (
-                              <HomeModernIcon
-                                className="h-5 w-5 text-gray-400"
-                                aria-hidden="true"
-                              />
-                            ) : (
-                              <HomeIcon
-                                className="h-5 w-5 text-gray-400"
-                                aria-hidden="true"
-                              />
-                            )}
-                            <span className="text-sm font-medium text-gray-500 capitalize">
-                              {membership.role.replace("_", " ")}
-                            </span>
-                          </div>
-                        ) : null}
                       </div>
                     </div>
                   </div>

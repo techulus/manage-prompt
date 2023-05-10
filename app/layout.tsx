@@ -1,7 +1,7 @@
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider } from "@clerk/nextjs/app-beta";
 
-import "./globals.css";
 import { SITE_METADATA } from "@/data/marketing";
+import "./globals.css";
 
 export const metadata = {
   title: SITE_METADATA.TITLE,
@@ -14,10 +14,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
-      <html lang="en" className="h-full">
+    <html lang="en" className="h-full">
+      <ClerkProvider>
         <body className="h-full">{children}</body>
-      </html>
-    </ClerkProvider>
+      </ClerkProvider>
+    </html>
   );
 }

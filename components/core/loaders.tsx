@@ -1,6 +1,12 @@
 import classnames from "classnames";
 
-export function Spinner({ message = null, className = "" }) {
+export function Spinner({
+  message = null,
+  className = "",
+}: {
+  message?: string | null;
+  className?: string;
+}) {
   return (
     <div className="flex">
       <svg
@@ -33,8 +39,8 @@ export function Spinner({ message = null, className = "" }) {
 
 export function SpinnerWithSpacing() {
   return (
-    <li className="relative pl-4 pr-4 py-5 sm:py-6 sm:pl-6 lg:pl-8 xl:pl-6 flex items-center justify-center h-48">
+    <div className="relative pl-4 pr-4 py-5 sm:py-6 sm:pl-6 lg:pl-8 xl:pl-6 flex items-center justify-center h-48">
       <Spinner />
-    </li>
+    </div>
   );
 }
