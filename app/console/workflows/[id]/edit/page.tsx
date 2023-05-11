@@ -1,23 +1,49 @@
 import PageTitle from "@/components/layout/page-title";
 import { WorkflowModels } from "@/data/workflow";
 // import { experimental_useFormStatus as useFormStatus } from "react-dom";
+import prisma from "@/utils/db";
+import { Workflow } from "@prisma/client";
 import Link from "next/link";
-import { saveWorkflow } from "../actions";
+import { updateWorkflow } from "../../actions";
 
-export default function CreateWorkflow() {
+interface Props {
+  params: {
+    id: string;
+  };
+}
+
+export const dynamic = "force-dynamic";
+
+export default async function EditWorkflow({ params }: Props) {
+  const workflow: Workflow | null = await prisma.workflow.findUnique({
+    where: {
+      id: Number(params.id),
+    },
+  });
   // doesn't work, https://github.com/vercel/next.js/issues/49232
   // const { pending } = useFormStatus();
 
   return (
     <>
-      <PageTitle title="Create Workflow" />
-      <form className="px-6" action={saveWorkflow}>
+      <PageTitle
+        title={`Update ${workflow?.name}`}
+        backUrl="/console/workflows"
+      />
+      <form className="px-6" action={updateWorkflow}>
         <div className="space-y-12 sm:space-y-16">
           <div>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-600">
               A workflow is a programmable AI prompt with a pre-defined set of
               inputs.
             </p>
+
+            <input
+              type="number"
+              name="id"
+              id="id"
+              className="hidden"
+              defaultValue={Number(workflow?.id)}
+            />
 
             <div className="mt-10 space-y-8 border-b border-gray-900/10 pb-12 sm:space-y-0 sm:divide-y sm:divide-gray-900/10 sm:border-t sm:pb-0">
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
@@ -33,6 +59,7 @@ export default function CreateWorkflow() {
                     name="name"
                     id="name"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                    defaultValue={workflow?.name}
                   />
                 </div>
               </div>
@@ -51,6 +78,7 @@ export default function CreateWorkflow() {
                       name="template"
                       rows={3}
                       className="block w-full max-w-2xl rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                      defaultValue={workflow?.template}
                     />
                     <p className="mt-3 text-sm leading-6 text-gray-600">
                       Write the prompt template, you can insert varibles using
@@ -72,6 +100,7 @@ export default function CreateWorkflow() {
                     id="model"
                     name="model"
                     className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:max-w-xs sm:text-sm sm:leading-6 capitalize"
+                    defaultValue={workflow?.model}
                   >
                     {Object.keys(WorkflowModels).map((model) => (
                       <option key={model} value={WorkflowModels[model]}>

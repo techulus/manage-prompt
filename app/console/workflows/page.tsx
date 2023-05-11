@@ -16,6 +16,9 @@ export default async function Workflows() {
         equals: orgId ?? userId ?? "",
       },
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 
   return (

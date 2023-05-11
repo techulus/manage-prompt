@@ -3,16 +3,16 @@ import Link from "next/link";
 
 interface Props {
   title: string;
-  showBackButton?: boolean;
+  backUrl?: string;
 }
 
-export default function PageTitle({ title, showBackButton }: Props) {
+export default function PageTitle({ title, backUrl }: Props) {
   return (
     <div className="border-b border-t border-gray-200 pb-4 pl-4 pr-6 pt-4 sm:pl-6 lg:pl-8 xl:border-t-0 xl:pl-6 xl:pt-6">
       <div className="flex items-center">
-        {showBackButton && (
+        {backUrl && (
           <Link
-            href="/console/workflows"
+            href={backUrl}
             className="flex items-center text-md font-medium text-gray-600 hover:text-gray-900 mr-2"
           >
             <ArrowLeftIcon

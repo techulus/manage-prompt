@@ -48,12 +48,47 @@ export async function saveWorkflow(formData: FormData) {
     inputs,
   });
 
-  throw new Error("test");
-
   await prisma.workflow.create({
     data: {
       createdBy: userId ?? "",
       ownerId: orgId ?? userId ?? "",
+      published: true,
+      name: formData.get("name") as string,
+      model: formData.get("model") as string,
+      template: formData.get("template") as string,
+      inputs,
+    },
+  });
+
+  revalidatePath("/console/workflows");
+  redirect("/console/workflows");
+}
+
+export async function updateWorkflow(formData: FormData) {
+  // parse template and extract variables
+  const inputs = Array.from(
+    (formData.get("template") as string).matchAll(/{{\s*(?<name>\w+)\s*}}/g)
+  ).reduce((acc: string[], match) => {
+    const { name } = match.groups as { name: string };
+    if (!acc.includes(name)) {
+      acc.push(name);
+    }
+    return acc;
+  }, []);
+
+  // validate form data
+  await WorkflowSchema.validate({
+    name: formData.get("name") as string,
+    model: formData.get("model") as string,
+    template: formData.get("template") as string,
+    inputs,
+  });
+
+  await prisma.workflow.update({
+    where: {
+      id: Number(formData.get("id")),
+    },
+    data: {
       published: true,
       name: formData.get("name") as string,
       model: formData.get("model") as string,

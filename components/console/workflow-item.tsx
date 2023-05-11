@@ -1,7 +1,13 @@
 import { clerkClient } from "@clerk/nextjs";
-import { ChevronRightIcon, UserIcon } from "@heroicons/react/20/solid";
+import {
+  ChevronRightIcon,
+  PencilIcon,
+  PlayIcon,
+  UserIcon,
+} from "@heroicons/react/20/solid";
 import { Workflow } from "@prisma/client";
 import classNames from "classnames";
+import Link from "next/link";
 
 interface Props {
   workflow: Workflow;
@@ -34,24 +40,19 @@ export async function WorkflowItem({ workflow }: Props) {
             </span>
 
             <h2 className="text-sm font-medium">
-              <a href={`/console/workflows/${workflow.id}`}>
-                <span className="absolute inset-0" aria-hidden="true" />
-                {workflow.name}{" "}
-                <span className="sr-only">
-                  {workflow.published ? "Running" : "Not running"}
-                </span>
-              </a>
+              <span className="absolute inset-0" aria-hidden="true" />
+              {workflow.name}{" "}
+              <span className="sr-only">
+                {workflow.published ? "Published" : "Draft"}
+              </span>
             </h2>
           </div>
-          <a
-            href={`/console/workflows/${workflow.id}`}
-            className="group relative flex items-center space-x-2.5"
-          >
+          <div className="group relative flex items-center space-x-2.5">
             <UserIcon className="h-4 w-4 inline text-gray-400" />
             <span className="truncate text-sm font-medium text-gray-500 group-hover:text-gray-900">
               {creator.firstName} {creator.lastName}
             </span>
-          </a>
+          </div>
         </div>
         <div className="sm:hidden">
           <ChevronRightIcon
@@ -61,12 +62,23 @@ export async function WorkflowItem({ workflow }: Props) {
         </div>
         <div className="hidden flex-shrink-0 flex-col items-end space-y-3 sm:flex">
           <p className="flex items-center space-x-4">
-            <a
-              href={`/console/workflows/${workflow.id}`}
+            {workflow.published ? (
+              <Link
+                href={`/console/workflows/${workflow.id}`}
+                className="relative text-sm font-medium text-gray-500 hover:text-gray-900"
+              >
+                <PlayIcon className="h-3 w-3 inline mr-1 -mt-0.5" />
+                Run
+              </Link>
+            ) : null}
+
+            <Link
+              href={`/console/workflows/${workflow.id}/edit`}
               className="relative text-sm font-medium text-gray-500 hover:text-gray-900"
             >
-              Run
-            </a>
+              <PencilIcon className="h-3 w-3 inline mr-1 -mt-0.5" />
+              Edit
+            </Link>
           </p>
           <p className="flex space-x-2 text-sm text-gray-500">
             <span>{workflow.model}</span>

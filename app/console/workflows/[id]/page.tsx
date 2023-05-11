@@ -23,7 +23,7 @@ export default async function Workflows({ params }: Props) {
 
   return (
     <>
-      <PageTitle title={workflow.name} showBackButton />
+      <PageTitle title={workflow.name} backUrl="/console/workflows" />
     </>
   );
 }
