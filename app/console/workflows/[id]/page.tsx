@@ -65,28 +65,29 @@ export default async function Workflows({ params }: Props) {
                       name="published"
                       defaultValue={workflow.published ? 1 : 0}
                     />
-                    <button
-                      type="submit"
-                      className="relative inline-flex items-center gap-x-1.5 rounded-full bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:z-10 hover:bg-gray-50 focus:z-10"
-                    >
-                      {workflow.published ? (
-                        <>
-                          <PauseCircleIcon
-                            className="-ml-0.5 h-5 w-5 text-gray-400"
-                            aria-hidden="true"
-                          />
-                          Deactivate
-                        </>
-                      ) : (
-                        <>
-                          <PlayCircleIcon
-                            className="-ml-0.5 h-5 w-5 text-gray-400"
-                            aria-hidden="true"
-                          />
-                          Activate
-                        </>
-                      )}
-                    </button>
+                    {workflow.published ? (
+                      <button
+                        type="submit"
+                        className="relative inline-flex items-center gap-x-1.5 rounded-full bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:z-10 hover:bg-orange-50 focus:z-10"
+                      >
+                        <PauseCircleIcon
+                          className="-ml-0.5 h-5 w-5 text-gray-400 hover:text-orange-400"
+                          aria-hidden="true"
+                        />
+                        Deactivate
+                      </button>
+                    ) : (
+                      <button
+                        type="submit"
+                        className="relative inline-flex items-center gap-x-1.5 rounded-full bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:z-10 hover:bg-green-50 focus:z-10"
+                      >
+                        <PlayCircleIcon
+                          className="-ml-0.5 h-5 w-5 text-gray-400 hover:text-green-400"
+                          aria-hidden="true"
+                        />
+                        Activate
+                      </button>
+                    )}
                   </form>
 
                   <Link
@@ -118,7 +119,7 @@ export default async function Workflows({ params }: Props) {
                     className="relative -ml-px hidden items-center gap-x-1.5 rounded-full bg-white px-3 py-2 text-sm font-semibold text-gray-700 hover:z-10 hover:bg-red-100 hover:text-red-600 focus:z-10 sm:inline-flex"
                   >
                     <TrashIcon
-                      className="-ml-0.5 h-5 w-5 text-gray-400 hover:text-red-400"
+                      className="-ml-0.5 h-5 w-5 text-gray-400"
                       aria-hidden="true"
                     />
                     Delete

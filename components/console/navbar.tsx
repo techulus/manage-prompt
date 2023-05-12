@@ -17,7 +17,7 @@ const navigation = [
 
 export default function NavBar() {
   return (
-    <Disclosure as="nav" className="flex-shrink-0 bg-blue-600">
+    <Disclosure as="nav" className="flex-shrink-0 bg-blue-800">
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
