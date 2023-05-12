@@ -1,12 +1,12 @@
 import { WorkflowComposer } from "@/components/console/workflow-composer";
 import { WorkflowRunItem } from "@/components/console/workflow-run-item";
+import { DeleteButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
 import prisma from "@/utils/db";
 import {
   PauseCircleIcon,
   PencilIcon,
   PlayCircleIcon,
-  TrashIcon,
 } from "@heroicons/react/20/solid";
 import { Workflow, WorkflowRun } from "@prisma/client";
 import Link from "next/link";
@@ -114,16 +114,7 @@ export default async function Workflows({ params }: Props) {
                     name="id"
                     defaultValue={workflow.id}
                   />
-                  <button
-                    type="submit"
-                    className="relative -ml-px hidden items-center gap-x-1.5 rounded-full bg-white px-3 py-2 text-sm font-semibold text-gray-700 hover:z-10 hover:bg-red-100 hover:text-red-600 focus:z-10 sm:inline-flex"
-                  >
-                    <TrashIcon
-                      className="-ml-0.5 h-5 w-5 text-gray-400"
-                      aria-hidden="true"
-                    />
-                    Delete
-                  </button>
+                  <DeleteButton />
                 </form>
               </span>
             </nav>
