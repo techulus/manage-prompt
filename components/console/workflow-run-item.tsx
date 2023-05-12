@@ -14,7 +14,6 @@ export async function WorkflowRunItem({ workflowRun }: Props) {
     >
       <div className="flex justify-between space-x-3">
         <div className="min-w-0 flex-1">
-          <span className="absolute inset-0" aria-hidden="true" />
           <p className="truncate text-sm font-medium text-gray-900">
             {createdBy}
           </p>

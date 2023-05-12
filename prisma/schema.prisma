@@ -42,8 +42,9 @@ model WorkflowRun {
 
 model Organisation {
   orgId      Int      @id @unique
-  plan       String   @default("free")
-  usageLimit Int      @default(50)
+  plan       String   @default("byok") // Bring your own key
+  usageLimit Int?
+  banned     Boolean  @default(false)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
