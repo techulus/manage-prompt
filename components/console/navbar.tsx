@@ -25,8 +25,11 @@ export default function NavBar() {
               {/* Logo section */}
               <Link href="/" className="text-white hero">
                 <div className="flex items-center px-2 lg:px-0 xl:w-64">
-                  <div className="flex-shrink-0">
-                    Manage<span className="font-semibold">Prompt</span> (alpha)
+                  <div className="flex-shrink-0 relative">
+                    Manage<span className="font-semibold">Prompt</span>
+                    <sup className="absolute top-0 left-[calc(100%+.1rem)] text-xs text-blue">
+                      [alpha]
+                    </sup>
                   </div>
                 </div>
               </Link>

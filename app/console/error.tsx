@@ -1,5 +1,6 @@
 "use client"; // Error components must be Client components
 
+import { ExclamationTriangleIcon } from "@heroicons/react/20/solid";
 import { useEffect } from "react";
 
 export default function Error({
@@ -17,8 +18,9 @@ export default function Error({
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-auto flex-col justify-center px-6 py-24 lg:px-8">
       <p className="text-base font-semibold leading-8 text-blue-600">Oops!</p>
-      <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-3xl">
-        Something went wrong.
+      <h1 className="mt-4 text-3xl font-bold tracking-tight text-red-600 sm:text-3xl">
+        <ExclamationTriangleIcon className="h-8 w-8 inline" /> Something went
+        wrong.
       </h1>
       <div className="mt-10">
         <button

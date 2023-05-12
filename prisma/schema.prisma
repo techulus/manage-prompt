@@ -16,14 +16,33 @@ datasource db {
 }
 
 model Workflow {
-  id        Int      @id @default(autoincrement())
-  createdBy String // User ID
-  ownerId   String // Can be user or organisaiton id
-  name      String
-  model     String
-  template  String
-  inputs    Json
-  published Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          Int           @id @default(autoincrement())
+  createdBy   String // User ID
+  ownerId     String // Can be user or organisaiton id
+  name        String
+  model       String
+  template    String
+  inputs      Json
+  published   Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  WorkflowRun WorkflowRun[]
+}
+
+model WorkflowRun {
+  id         Int      @id @default(autoincrement())
+  workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  workflowId Int
+  result     String
+  createdBy  String // User ID
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Organisation {
+  orgId      Int      @id @unique
+  plan       String   @default("free")
+  usageLimit Int      @default(50)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
