@@ -2,15 +2,21 @@ import { WorkflowItem } from "@/components/console/workflow-item";
 import PageTitle from "@/components/layout/page-title";
 import prisma from "@/utils/db";
 import { auth } from "@clerk/nextjs/app-beta";
-import { Workflow } from "@prisma/client";
+import { Prisma, Workflow } from "@prisma/client";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
-export default async function Workflows() {
+interface Props {
+  searchParams: {
+    search: string;
+  };
+}
+
+export default async function Workflows({ searchParams }: Props) {
   const { userId, orgId } = auth();
 
-  const workflows: Workflow[] = await prisma.workflow.findMany({
+  const dbQuery: Prisma.WorkflowFindManyArgs = {
     where: {
       ownerId: {
         equals: orgId ?? userId ?? "",
@@ -19,11 +25,24 @@ export default async function Workflows() {
     orderBy: {
       createdAt: "desc",
     },
-  });
+  };
+
+  if (searchParams?.search) {
+    dbQuery.where!["name"] = {
+      search: searchParams.search,
+    };
+  }
+
+  const workflows: Workflow[] = await prisma.workflow.findMany(dbQuery);
 
   return (
     <>
-      <PageTitle title="Workflows" />
+      <PageTitle
+        title={
+          searchParams.search ? `Search '${searchParams.search}'` : "Workflows"
+        }
+        backUrl={searchParams.search ? "/console/workflows" : undefined}
+      />
       <ul
         role="list"
         className="divide-y divide-gray-200 border-b border-gray-200"

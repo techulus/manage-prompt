@@ -26,7 +26,7 @@ export default function NavBar() {
               <Link href="/" className="text-white hero">
                 <div className="flex items-center px-2 lg:px-0 xl:w-64">
                   <div className="flex-shrink-0 relative">
-                    Manage<span className="font-semibold">Prompt</span>
+                    M<span className="font-semibold">P</span>
                     <sup className="absolute top-0 left-[calc(100%+.1rem)] text-xs text-blue">
                       [alpha]
                     </sup>
@@ -35,7 +35,10 @@ export default function NavBar() {
               </Link>
 
               {/* Search section */}
-              <div className="flex flex-1 justify-center lg:justify-end">
+              <form
+                action="/console/workflows"
+                className="flex flex-1 justify-center lg:justify-end"
+              >
                 <div className="w-full px-2 lg:px-6">
                   <label htmlFor="search" className="sr-only">
                     Search workflows
@@ -56,7 +59,7 @@ export default function NavBar() {
                     />
                   </div>
                 </div>
-              </div>
+              </form>
               <div className="flex lg:hidden">
                 {/* Mobile menu button */}
                 <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-blue-600 p-2 text-blue-400 hover:bg-blue-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600">
