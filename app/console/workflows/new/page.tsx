@@ -10,7 +10,7 @@ export default function CreateWorkflow() {
 
   return (
     <>
-      <PageTitle title="Create Workflow" />
+      <PageTitle title="Create Workflow" backUrl="/console/workflows" />
       <form className="px-6" action={saveWorkflow}>
         <WorkflowForm />
 

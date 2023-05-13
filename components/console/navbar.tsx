@@ -23,7 +23,7 @@ export default function NavBar() {
           <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
               {/* Logo section */}
-              <Link href="/" className="text-white hero">
+              <Link href="/" className="text-white hero hidden xl:block">
                 <div className="flex items-center px-2 lg:px-0 xl:w-64">
                   <div className="flex-shrink-0 relative">
                     M<span className="font-semibold">P</span>
@@ -33,6 +33,10 @@ export default function NavBar() {
                   </div>
                 </div>
               </Link>
+
+              <div className="flex lg:hidden ml-2 justify-center">
+                <UserButton />
+              </div>
 
               {/* Search section */}
               <form
@@ -115,11 +119,6 @@ export default function NavBar() {
                   {item.name}
                 </Disclosure.Button>
               ))}
-            </div>
-            <div className="border-t border-blue-800 pb-3 pt-4">
-              <div className="space-y-1 px-2 pl-4">
-                <UserButton />
-              </div>
             </div>
           </Disclosure.Panel>
         </>
