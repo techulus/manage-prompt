@@ -1,7 +1,7 @@
 "use client";
 
 import { runWorkflow } from "@/app/console/workflows/actions";
-import { WorkflowInput } from "@/data/workflow";
+import { WorkflowInput, WorkflowModels } from "@/data/workflow";
 import { useAuth } from "@clerk/nextjs";
 import { Tab } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/20/solid";
@@ -9,15 +9,13 @@ import { Workflow } from "@prisma/client";
 import classNames from "classnames";
 import { useMemo, useReducer } from "react";
 
-const Mustache = require("mustache");
-
 interface Props {
   workflow: Workflow;
 }
 
 export function WorkflowComposer({ workflow }: Props) {
   const { userId } = useAuth();
-  const { id, inputs, template, model } = workflow;
+  const { id, inputs, template, instruction, model } = workflow;
 
   const [inputValues, updateInput] = useReducer((state: any, action: any) => {
     return {
@@ -26,10 +24,25 @@ export function WorkflowComposer({ workflow }: Props) {
     };
   }, {});
 
-  const previewContent = useMemo(
-    () => Mustache.render(template, inputValues),
-    [inputValues, template]
-  );
+  const generatedTemplate = useMemo(() => {
+    let result = template;
+
+    Object.keys(inputValues).forEach((key) => {
+      result = result.replace(`{{${key}}}`, inputValues[key]);
+    });
+
+    return result;
+  }, [inputValues, template]);
+
+  const geneatedInstruction = useMemo(() => {
+    let result = instruction ?? "";
+
+    Object.keys(inputValues).forEach((key) => {
+      result = result.replace(`{{${key}}}`, inputValues[key]);
+    });
+
+    return result;
+  }, [inputValues, instruction]);
 
   return (
     <form className="p-6" action={runWorkflow}>
@@ -59,7 +72,15 @@ export function WorkflowComposer({ workflow }: Props) {
         name="content"
         id="content"
         className="hidden"
-        value={previewContent}
+        value={generatedTemplate}
+        onChange={() => null}
+      />
+      <input
+        type="text"
+        name="instruction"
+        id="instruction"
+        className="hidden"
+        value={geneatedInstruction}
         onChange={() => null}
       />
 
@@ -125,7 +146,7 @@ export function WorkflowComposer({ workflow }: Props) {
                       >
                         <label
                           htmlFor="name"
-                          className="block text-xs font-medium text-gray-900 capitalize"
+                          className="block text-xs font-medium text-gray-900 uppercase"
                         >
                           {name}
                         </label>
@@ -148,8 +169,14 @@ export function WorkflowComposer({ workflow }: Props) {
 
               <Tab.Panel className="-m-0.5 rounded-lg p-0.5">
                 <div className="border-b">
-                  <div className="mx-px mt-px px-3 pb-12 pt-2 text-sm leading-5 text-gray-800 whitespace-pre-line">
-                    {previewContent}
+                  {model === WorkflowModels.edit ||
+                  model === WorkflowModels.code ? (
+                    <div className="mx-px mt-px px-3 pb-12 pt-2 text-sm leading-5 text-gray-800 whitespace-pre-wrap">
+                      {geneatedInstruction}
+                    </div>
+                  ) : null}
+                  <div className="mx-px mt-px px-3 pb-12 pt-2 text-sm leading-5 text-gray-800 whitespace-pre-wrap">
+                    {generatedTemplate}
                   </div>
                 </div>
               </Tab.Panel>

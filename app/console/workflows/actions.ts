@@ -18,6 +18,7 @@ const WorkflowSchema = Yup.object().shape({
     .required("Template cannot be empty")
     .min(2, "Template too Short!")
     .max(9669, "Template too Long!"),
+  instruction: Yup.string().optional(),
   model: Yup.mixed<OpenAIModel>()
     .oneOf(Object.values(OpenAIModel))
     .required("Select valid model"),
@@ -43,14 +44,18 @@ export async function saveWorkflow(formData: FormData) {
   const { userId, orgId } = auth();
   const user = await clerkClient.users.getUser(userId!);
 
-  // parse template and extract variables
-  const inputs = parseInputs(formData.get("template") as string);
+  const name = formData.get("name") as string;
+  const model = formData.get("model") as string;
+  const template = formData.get("template") as string;
+  const instruction = (formData.get("instruction") as string) ?? "";
+  const inputs = parseInputs(`${template} ${instruction}`);
 
   // validate form data
   await WorkflowSchema.validate({
-    name: formData.get("name") as string,
-    model: formData.get("model") as string,
-    template: formData.get("template") as string,
+    name,
+    model,
+    template,
+    instruction,
     inputs,
   });
 
@@ -59,9 +64,10 @@ export async function saveWorkflow(formData: FormData) {
       createdBy: `${user?.firstName} ${user?.lastName}`,
       ownerId: orgId ?? userId ?? "",
       published: true,
-      name: formData.get("name") as string,
-      model: formData.get("model") as string,
-      template: formData.get("template") as string,
+      name,
+      model,
+      template,
+      instruction,
       inputs,
     },
   });
@@ -73,14 +79,18 @@ export async function saveWorkflow(formData: FormData) {
 export async function updateWorkflow(formData: FormData) {
   const id = Number(formData.get("id"));
 
-  // parse template and extract variables
-  const inputs = parseInputs(formData.get("template") as string);
+  const name = formData.get("name") as string;
+  const model = formData.get("model") as string;
+  const template = formData.get("template") as string;
+  const instruction = (formData.get("instruction") as string) ?? "";
+  const inputs = parseInputs(`${template} ${instruction}`);
 
   // validate form data
   await WorkflowSchema.validate({
-    name: formData.get("name") as string,
-    model: formData.get("model") as string,
-    template: formData.get("template") as string,
+    name,
+    model,
+    template,
+    instruction,
     inputs,
   });
 
@@ -90,9 +100,10 @@ export async function updateWorkflow(formData: FormData) {
     },
     data: {
       published: true,
-      name: formData.get("name") as string,
-      model: formData.get("model") as string,
-      template: formData.get("template") as string,
+      name,
+      model,
+      template,
+      instruction,
       inputs,
     },
   });
@@ -137,11 +148,12 @@ export async function runWorkflow(formData: FormData) {
   const id = Number(formData.get("id"));
   const model = formData.get("model") as OpenAIModel;
   const content = formData.get("content") as string;
+  const instruction = formData.get("instruction") as string;
   const userId = formData.get("userId") as string;
 
   if (!id) throw "ID is missing";
 
-  const result = await getCompletion(model, content);
+  const result = await getCompletion(model, content, instruction);
 
   if (!result) throw "No result returned from OpenAI";
 
