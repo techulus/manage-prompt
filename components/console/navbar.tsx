@@ -26,7 +26,7 @@ export default function NavBar() {
               <Link href="/" className="text-white hero hidden xl:block">
                 <div className="flex items-center px-2 lg:px-0 xl:w-64">
                   <div className="flex-shrink-0 relative">
-                    M<span className="font-semibold">P</span>
+                    Manage<span className="font-semibold">Prompt</span>
                     <sup className="absolute top-0 left-[calc(100%+.1rem)] text-xs text-blue">
                       [alpha]
                     </sup>
@@ -66,7 +66,7 @@ export default function NavBar() {
               </form>
               <div className="flex lg:hidden">
                 {/* Mobile menu button */}
-                <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-blue-600 p-2 text-blue-400 hover:bg-blue-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600">
+                <Disclosure.Button className="inline-flex items-center justify-center rounded-md bg-blue-800 p-2 text-blue-400 hover:bg-blue-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
                     <XMarkIcon className="block h-6 w-6" aria-hidden="true" />

@@ -2,7 +2,7 @@
 
 import { runWorkflow } from "@/app/console/workflows/actions";
 import { WorkflowInput, WorkflowModels } from "@/data/workflow";
-import { useAuth } from "@clerk/nextjs";
+import { SignedIn, useAuth } from "@clerk/nextjs";
 import { Tab } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/20/solid";
 import { Workflow } from "@prisma/client";
@@ -14,7 +14,7 @@ interface Props {
 }
 
 export function WorkflowComposer({ workflow }: Props) {
-  const { userId } = useAuth();
+  const { userId, orgId } = useAuth();
   const { id, inputs, template, instruction, model } = workflow;
 
   const [inputValues, updateInput] = useReducer((state: any, action: any) => {
@@ -83,6 +83,32 @@ export function WorkflowComposer({ workflow }: Props) {
         value={geneatedInstruction}
         onChange={() => null}
       />
+
+      {workflow.publicUrl && workflow.ownerId === orgId ? (
+        <div className="border-l-4 border-yellow-400 bg-yellow-50 p-4 mb-4">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <ExclamationTriangleIcon
+                className="h-5 w-5 text-yellow-400"
+                aria-hidden="true"
+              />
+            </div>
+            <div className="ml-3">
+              <p className="text-sm text-yellow-700">
+                This workflow can be run by anyone with the link:{" "}
+                <a
+                  href={`/w/${workflow.publicUrl}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline"
+                >
+                  {workflow.publicUrl}
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       {!workflow.published ? (
         <div className="border-l-4 border-yellow-400 bg-yellow-50 p-4 mb-4">
@@ -185,22 +211,25 @@ export function WorkflowComposer({ workflow }: Props) {
           </>
         )}
       </Tab.Group>
-      <div className="mt-2 flex justify-end">
-        <button
-          type="submit"
-          className={classNames(
-            "inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600",
-            "disabled:bg-gray-400 disabled:cursor-not-allowed"
-          )}
-          disabled={
-            !workflow.published ||
-            Object.keys(inputValues).length !==
-              (inputs as WorkflowInput[])?.length
-          }
-        >
-          Run
-        </button>
-      </div>
+
+      <SignedIn>
+        <div className="mt-2 flex justify-end">
+          <button
+            type="submit"
+            className={classNames(
+              "inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600",
+              "disabled:bg-gray-400 disabled:cursor-not-allowed"
+            )}
+            disabled={
+              !workflow.published ||
+              Object.keys(inputValues).length !==
+                (inputs as WorkflowInput[])?.length
+            }
+          >
+            Run
+          </button>
+        </div>
+      </SignedIn>
     </form>
   );
 }

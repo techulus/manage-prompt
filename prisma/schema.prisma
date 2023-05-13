@@ -17,19 +17,23 @@ datasource db {
 }
 
 model Workflow {
-  id            Int           @id @default(autoincrement())
-  createdBy     String // User ID
-  ownerId       String // Can be user or organisaiton id
-  name          String
+  id        Int     @id @default(autoincrement())
+  createdBy String // User ID
+  ownerId   String // Can be user or organisaiton id
+  name      String
+  published Boolean @default(false)
+
   model         String
   modelSettings Json?
   template      String
   instruction   String?
   inputs        Json
-  published     Boolean       @default(false)
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-  WorkflowRun   WorkflowRun[]
+
+  publicUrl String? @unique
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  WorkflowRun WorkflowRun[]
 }
 
 model WorkflowRun {
