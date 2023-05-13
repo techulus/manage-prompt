@@ -84,7 +84,8 @@ export function WorkflowComposer({ workflow }: Props) {
         onChange={() => null}
       />
 
-      {workflow.publicUrl && workflow.ownerId === orgId ? (
+      {workflow.publicUrl &&
+      (workflow.ownerId === orgId || workflow.ownerId === userId) ? (
         <div className="border-l-4 border-yellow-400 bg-yellow-50 p-4 mb-4">
           <div className="flex">
             <div className="flex-shrink-0">
