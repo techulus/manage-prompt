@@ -73,8 +73,6 @@ export async function getCompletion(
           top_p: 1,
         });
 
-        console.log("Result", editData);
-
         if (!editData.choices)
           throw new Error("No choices returned from OpenAI");
 

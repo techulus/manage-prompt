@@ -171,11 +171,12 @@ export function WorkflowComposer({ workflow }: Props) {
                 <div className="border-b">
                   {model === WorkflowModels.edit ||
                   model === WorkflowModels.code ? (
-                    <div className="mx-px mt-px px-3 pb-12 pt-2 text-sm leading-5 text-gray-800 whitespace-pre-wrap">
+                    <div className="mx-px mt-px px-3 pb-12 pt-2 text-sm leading-5 text-gray-800 bg-gray-50 whitespace-pre-wrap">
+                      <span className="font-semibold">Instruction:</span>{" "}
                       {geneatedInstruction}
                     </div>
                   ) : null}
-                  <div className="mx-px mt-px px-3 pb-12 pt-2 text-sm leading-5 text-gray-800 whitespace-pre-wrap">
+                  <div className="mx-px mt-px px-3 pb-12 pt-2 text-sm leading-5 text-gray-800 bg-gray-50 whitespace-pre-wrap">
                     {generatedTemplate}
                   </div>
                 </div>
