@@ -1,8 +1,7 @@
 import PageTitle from "@/components/layout/page-title";
 // import { experimental_useFormStatus as useFormStatus } from "react-dom";
 import { WorkflowForm } from "@/components/console/workflow-form";
-import prisma from "@/utils/db";
-import { Workflow } from "@prisma/client";
+import { getWorkflowById } from "@/utils/useWorkflow";
 import Link from "next/link";
 import { updateWorkflow } from "../../actions";
 
@@ -15,11 +14,7 @@ interface Props {
 export const dynamic = "force-dynamic";
 
 export default async function EditWorkflow({ params }: Props) {
-  const workflow: Workflow | null = await prisma.workflow.findUnique({
-    where: {
-      id: Number(params.id),
-    },
-  });
+  const workflow = await getWorkflowById(Number(params.id));
 
   if (!workflow) {
     return <div>Workflow not found</div>;

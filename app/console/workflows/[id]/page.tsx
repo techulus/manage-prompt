@@ -2,7 +2,7 @@ import { WorkflowComposer } from "@/components/console/workflow-composer";
 import { WorkflowRunItem } from "@/components/console/workflow-run-item";
 import { DeleteButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
-import prisma from "@/utils/db";
+import { getWorkflowAndRuns } from "@/utils/useWorkflow";
 import {
   LockClosedIcon,
   LockOpenIcon,
@@ -10,7 +10,6 @@ import {
   PencilIcon,
   PlayCircleIcon,
 } from "@heroicons/react/20/solid";
-import { Workflow, WorkflowRun } from "@prisma/client";
 import Link from "next/link";
 import {
   deleteWorkflow,
@@ -28,20 +27,9 @@ interface Props {
 export const dynamic = "force-dynamic";
 
 export default async function WorkflowDetails({ params }: Props) {
-  const workflow: Workflow | null = await prisma.workflow.findUnique({
-    where: {
-      id: Number(params.id),
-    },
-  });
-
-  const workflowRuns: WorkflowRun[] = await prisma.workflowRun.findMany({
-    where: {
-      workflowId: Number(params.id),
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  const { workflow, workflowRuns } = await getWorkflowAndRuns(
+    Number(params.id)
+  );
 
   if (!workflow) {
     throw new Error("Workflow not found");

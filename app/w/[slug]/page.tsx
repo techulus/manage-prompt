@@ -1,6 +1,6 @@
 import { WorkflowComposer } from "@/components/console/workflow-composer";
 import PageTitle from "@/components/layout/page-title";
-import prisma from "@/utils/db";
+import { prisma } from "@/utils/db";
 import { Workflow } from "@prisma/client";
 
 interface Props {

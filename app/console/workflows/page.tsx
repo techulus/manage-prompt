@@ -1,8 +1,7 @@
 import { WorkflowItem } from "@/components/console/workflow-item";
 import PageTitle from "@/components/layout/page-title";
-import prisma from "@/utils/db";
+import { getWorkflowsForOwner } from "@/utils/useWorkflow";
 import { auth } from "@clerk/nextjs/app-beta";
-import { Prisma, Workflow } from "@prisma/client";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -16,24 +15,11 @@ interface Props {
 export default async function Workflows({ searchParams }: Props) {
   const { userId, orgId } = auth();
 
-  const dbQuery: Prisma.WorkflowFindManyArgs = {
-    where: {
-      ownerId: {
-        equals: orgId ?? userId ?? "",
-      },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  };
-
-  if (searchParams?.search) {
-    dbQuery.where!["name"] = {
-      search: searchParams.search,
-    };
-  }
-
-  const workflows: Workflow[] = await prisma.workflow.findMany(dbQuery);
+  const workflows = await getWorkflowsForOwner({
+    orgId: orgId!,
+    userId: userId!,
+    search: searchParams.search,
+  });
 
   return (
     <>
