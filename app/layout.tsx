@@ -7,7 +7,7 @@ import classNames from "classnames";
 import "./globals.css";
 
 const firaSans = Fira_Sans({
-  weight: ["400", "700"],
+  weight: ["400", "600", "700"],
   subsets: ["latin"],
 });
 

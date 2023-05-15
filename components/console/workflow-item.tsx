@@ -39,7 +39,7 @@ export async function WorkflowItem({ workflow }: Props) {
               />
             </span>
 
-            <h2 className="font-medium">
+            <h2 className="font-semibold">
               <span className="absolute inset-0" aria-hidden="true" />
               {workflow.name}{" "}
               <span className="sr-only">
