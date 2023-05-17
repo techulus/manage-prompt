@@ -8,7 +8,7 @@ export function Spinner({
   className?: string;
 }) {
   return (
-    <div className="flex">
+    <div className="flex items-center justify-center">
       <svg
         className={classnames(
           "animate-spin h-5 w-5 text-gray-900 dark:text-gray-100",

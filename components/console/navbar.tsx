@@ -1,6 +1,6 @@
 "use client";
 
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 import { Disclosure } from "@headlessui/react";
 import {
   Bars3CenterLeftIcon,
@@ -9,6 +9,7 @@ import {
 } from "@heroicons/react/20/solid";
 import classNames from "classnames";
 import Link from "next/link";
+import { useEffect } from "react";
 
 const navigation = [
   { name: "Workflows", href: "/console/workflows", current: true },
@@ -16,6 +17,14 @@ const navigation = [
 ];
 
 export default function NavBar() {
+  const { isLoaded, user } = useUser();
+
+  useEffect(() => {
+    if (isLoaded && !user) {
+      window.location.href = "/";
+    }
+  }, [user, isLoaded]);
+
   return (
     <Disclosure as="nav" className="flex-shrink-0 bg-blue-800">
       {({ open }) => (

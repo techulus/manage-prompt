@@ -1,6 +1,8 @@
 import NavBar from "@/components/console/navbar";
 import Sidebar from "@/components/console/sidebar";
 
+export const dynamic = "force-dynamic";
+
 export default function ConsoleLayout({
   children,
 }: {

@@ -1,11 +1,9 @@
 import { WorkflowComposer } from "@/components/console/workflow-composer";
 import { WorkflowRunItem } from "@/components/console/workflow-run-item";
-import { DeleteButton } from "@/components/form/button";
+import { ActionButton, DeleteButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
 import { getWorkflowAndRuns } from "@/utils/useWorkflow";
 import {
-  LockClosedIcon,
-  LockOpenIcon,
   PauseCircleIcon,
   PencilIcon,
   PlayCircleIcon,
@@ -60,27 +58,27 @@ export default async function WorkflowDetails({ params }: Props) {
                     defaultValue={workflow.published ? 1 : 0}
                   />
                   {workflow.published ? (
-                    <button
-                      type="submit"
-                      className="relative inline-flex items-center gap-x-1.5 rounded-full bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:z-10 hover:bg-orange-50 focus:z-10"
-                    >
-                      <PauseCircleIcon
-                        className="-ml-0.5 h-5 w-5 text-gray-400 hover:text-orange-400"
-                        aria-hidden="true"
-                      />
-                      Deactivate
-                    </button>
+                    <ActionButton
+                      icon={
+                        <PauseCircleIcon
+                          className="-ml-0.5 h-5 w-5 text-gray-400 hover:text-orange-400"
+                          aria-hidden="true"
+                        />
+                      }
+                      label="Deactivate"
+                      className="hover:bg-orange-50"
+                    />
                   ) : (
-                    <button
-                      type="submit"
-                      className="relative inline-flex items-center gap-x-1.5 rounded-full bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:z-10 hover:bg-green-50 focus:z-10"
-                    >
-                      <PlayCircleIcon
-                        className="-ml-0.5 h-5 w-5 text-gray-400 hover:text-green-400"
-                        aria-hidden="true"
-                      />
-                      Activate
-                    </button>
+                    <ActionButton
+                      icon={
+                        <PlayCircleIcon
+                          className="-ml-0.5 h-5 w-5 text-gray-400 hover:text-orange-400"
+                          aria-hidden="true"
+                        />
+                      }
+                      label="Activate"
+                      className="hover:bg-green-50"
+                    />
                   )}
                 </form>
 
@@ -103,16 +101,16 @@ export default async function WorkflowDetails({ params }: Props) {
                       name="id"
                       defaultValue={workflow.id}
                     />
-                    <button
-                      type="submit"
-                      className="relative inline-flex items-center gap-x-1.5 rounded-full bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:z-10 hover:bg-orange-50 focus:z-10"
-                    >
-                      <LockClosedIcon
-                        className="-ml-0.5 h-5 w-5 text-gray-400 hover:text-orange-400"
-                        aria-hidden="true"
-                      />
-                      Make private
-                    </button>
+                    <ActionButton
+                      icon={
+                        <PlayCircleIcon
+                          className="-ml-0.5 h-5 w-5 text-gray-400 hover:text-orange-400"
+                          aria-hidden="true"
+                        />
+                      }
+                      label="Make private"
+                      className="hover:bg-orange-50"
+                    />
                   </form>
                 ) : (
                   <form action={makeWorkflowPublic}>
@@ -122,16 +120,16 @@ export default async function WorkflowDetails({ params }: Props) {
                       name="id"
                       defaultValue={workflow.id}
                     />
-                    <button
-                      type="submit"
-                      className="relative inline-flex items-center gap-x-1.5 rounded-full bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:z-10 hover:bg-orange-50 focus:z-10"
-                    >
-                      <LockOpenIcon
-                        className="-ml-0.5 h-5 w-5 text-gray-400 hover:text-orange-400"
-                        aria-hidden="true"
-                      />
-                      Make public
-                    </button>
+                    <ActionButton
+                      icon={
+                        <PlayCircleIcon
+                          className="-ml-0.5 h-5 w-5 text-gray-400 hover:text-orange-400"
+                          aria-hidden="true"
+                        />
+                      }
+                      label="Make public"
+                      className="hover:bg-orange-50"
+                    />
                   </form>
                 )}
               </span>

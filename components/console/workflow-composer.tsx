@@ -8,6 +8,7 @@ import { ExclamationTriangleIcon } from "@heroicons/react/20/solid";
 import { Workflow } from "@prisma/client";
 import classNames from "classnames";
 import { useMemo, useReducer } from "react";
+import { SaveButton } from "../form/button";
 
 interface Props {
   workflow: Workflow;
@@ -215,20 +216,15 @@ export function WorkflowComposer({ workflow }: Props) {
 
       <SignedIn>
         <div className="mt-2 flex justify-end">
-          <button
-            type="submit"
-            className={classNames(
-              "inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600",
-              "disabled:bg-gray-400 disabled:cursor-not-allowed"
-            )}
+          <SaveButton
+            label="Run"
+            loadingLabel="Running"
             disabled={
               !workflow.published ||
               Object.keys(inputValues).length !==
                 (inputs as WorkflowInput[])?.length
             }
-          >
-            Run
-          </button>
+          />
         </div>
       </SignedIn>
     </form>
