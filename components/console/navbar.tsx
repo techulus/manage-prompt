@@ -8,8 +8,10 @@ import {
   XMarkIcon,
 } from "@heroicons/react/20/solid";
 import classNames from "classnames";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect } from "react";
+import logo from "../../public/images/logo.png";
 
 const navigation = [
   { name: "Workflows", href: "/console/workflows", current: true },
@@ -35,8 +37,14 @@ export default function NavBar() {
               <Link href="/" className="text-white hero hidden xl:block">
                 <div className="flex items-center px-2 lg:px-0 xl:w-64">
                   <div className="flex-shrink-0 relative">
-                    Manage<span className="font-semibold">Prompt</span>
-                    <sup className="absolute top-0 left-[calc(100%+.1rem)] text-xs text-blue">
+                    <Image
+                      src={logo}
+                      alt="ManagePrompt"
+                      width={32}
+                      height={32}
+                      className="mr-2"
+                    />
+                    <sup className="absolute top-2 left-[calc(100%+.1rem)] text-xs text-blue">
                       [alpha]
                     </sup>
                   </div>

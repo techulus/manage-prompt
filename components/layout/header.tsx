@@ -1,5 +1,7 @@
 import { SignedIn, SignedOut } from "@clerk/nextjs";
+import Image from "next/image";
 import Link from "next/link";
+import logo from "../../public/images/logo.png";
 
 export function Header() {
   return (
@@ -9,6 +11,14 @@ export function Header() {
         aria-label="Global"
       >
         <div className="flex lg:flex-1">
+          <Image
+            src={logo}
+            alt="ManagePrompt"
+            width={32}
+            height={32}
+            className="-mt-2 mr-2"
+          />
+
           <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">ManagePrompt</span>
             <p className="text-black hero relative">

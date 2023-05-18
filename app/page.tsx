@@ -108,7 +108,7 @@ export default function Home() {
               </div>
             ))}
           </nav>
-          <div className="mt-10 flex justify-center space-x-10">
+          <div className="mt-4 flex justify-center space-x-10">
             {navigation.social.map((item) => (
               <Link
                 key={item.name}
@@ -122,7 +122,16 @@ export default function Home() {
               </Link>
             ))}
           </div>
-          <p className="mt-10 text-center text-xs leading-5 text-gray-500">
+
+          <a
+            className="text-gray-500 text-xs leading-6 mt-10 block text-center"
+            href="https://www.flaticon.com/free-icons/bot"
+            title="bot icons"
+          >
+            Bot icons created by Smashicons - Flaticon
+          </a>
+
+          <p className="mt-4 text-center text-xs leading-5 text-gray-500">
             &copy; 2023 Techulus. All rights reserved.
           </p>
         </div>
