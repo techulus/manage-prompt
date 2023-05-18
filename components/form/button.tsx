@@ -117,3 +117,19 @@ export const ActionButton = ({
     </button>
   );
 };
+
+export const UpdateProfileButton = () => (
+  <button
+    type="button"
+    className="font-semibold text-blue-600 hover:text-blue-500"
+    onClick={() => {
+      // @ts-ignore
+      if (window?.Clerk) {
+        // @ts-ignore
+        window.Clerk.openUserProfile();
+      }
+    }}
+  >
+    Update
+  </button>
+);

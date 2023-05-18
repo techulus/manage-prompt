@@ -41,6 +41,7 @@ model WorkflowRun {
   workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
   workflowId Int
   result     String
+  rawResult  Json?
   createdBy  String // User ID
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt

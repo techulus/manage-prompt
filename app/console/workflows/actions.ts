@@ -182,7 +182,11 @@ export async function runWorkflow(formData: FormData) {
 
   if (!id) throw "ID is missing";
 
-  const result = await getCompletion(model, content, instruction);
+  const { result, rawResult } = await getCompletion(
+    model,
+    content,
+    instruction
+  );
 
   if (!result) throw "No result returned from OpenAI";
 
@@ -192,6 +196,7 @@ export async function runWorkflow(formData: FormData) {
     data: {
       workflowId: id,
       result,
+      rawResult: JSON.parse(JSON.stringify(rawResult)),
       createdBy: `${user?.firstName} ${user?.lastName}`,
     },
   });

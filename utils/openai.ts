@@ -1,5 +1,11 @@
 import { OpenAIModel } from "@/data/workflow";
-import { Configuration, OpenAIApi } from "openai";
+import {
+  Configuration,
+  CreateChatCompletionResponse,
+  CreateCompletionResponse,
+  CreateEditResponse,
+  OpenAIApi,
+} from "openai";
 
 const openai = new OpenAIApi(
   new Configuration({
@@ -7,11 +13,18 @@ const openai = new OpenAIApi(
   })
 );
 
-export async function getCompletion(
+export const getCompletion = async (
   model: OpenAIModel,
   content: string,
   instruction?: string
-) {
+): Promise<{
+  result: string | undefined;
+  rawResult:
+    | CreateChatCompletionResponse
+    | CreateCompletionResponse
+    | CreateEditResponse
+    | undefined;
+}> => {
   console.log("OPENAI: Request ->", {
     model,
     content,
@@ -37,7 +50,10 @@ export async function getCompletion(
 
       if (!chatData.choices) throw new Error("No choices returned from OpenAI");
 
-      return chatData.choices[0].message?.content;
+      return {
+        result: chatData.choices[0].message?.content,
+        rawResult: chatData,
+      };
 
     case "text-davinci-003":
       try {
@@ -54,7 +70,7 @@ export async function getCompletion(
         if (!textData.choices)
           throw new Error("No choices returned from OpenAI");
 
-        return textData.choices[0].text;
+        return { result: textData.choices[0].text, rawResult: textData };
       } catch (e: any) {
         console.error(e?.response?.data);
         throw new Error("Request failed");
@@ -76,10 +92,12 @@ export async function getCompletion(
         if (!editData.choices)
           throw new Error("No choices returned from OpenAI");
 
-        return editData.choices[0].text;
+        return { result: editData.choices[0].text, rawResult: editData };
       } catch (e: any) {
         console.error(e?.response?.data);
         throw new Error("Request failed");
       }
   }
-}
+
+  return { result: undefined, rawResult: undefined };
+};
