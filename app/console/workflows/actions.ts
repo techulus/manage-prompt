@@ -1,44 +1,13 @@
 "use server";
 
-import { OpenAIModel } from "@/data/workflow";
+import { OpenAIModel, WorkflowInput } from "@/data/workflow";
 import { prisma } from "@/utils/db";
 import { getCompletion } from "@/utils/openai";
+import { WorkflowSchema } from "@/utils/workflow";
 import { auth, clerkClient } from "@clerk/nextjs";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import slugify from "slugify";
-import * as Yup from "yup";
-
-const WorkflowSchema = Yup.object().shape({
-  name: Yup.string()
-    .required("Name cannot be empty")
-    .min(2, "Name too Short!")
-    .max(75, "Name too Long!"),
-  template: Yup.string()
-    .required("Template cannot be empty")
-    .min(2, "Template too Short!")
-    .max(9669, "Template too Long!"),
-  instruction: Yup.string().optional(),
-  model: Yup.mixed<OpenAIModel>()
-    .oneOf(Object.values(OpenAIModel))
-    .required("Select valid model"),
-  inputs: Yup.array().of(
-    Yup.object().shape({
-      name: Yup.string(),
-    })
-  ),
-});
-
-const parseInputs = (inputs: string) =>
-  Array.from(inputs.matchAll(/{{\s*(?<name>\w+)\s*}}/g))
-    .reduce((acc: string[], match) => {
-      const { name } = match.groups as { name: string };
-      if (!acc.includes(name)) {
-        acc.push(name);
-      }
-      return acc;
-    }, [])
-    .map((input) => ({ name: slugify(input, { lower: true }) }));
 
 export async function saveWorkflow(formData: FormData) {
   const { userId, orgId } = auth();
@@ -48,7 +17,13 @@ export async function saveWorkflow(formData: FormData) {
   const model = formData.get("model") as string;
   const template = formData.get("template") as string;
   const instruction = (formData.get("instruction") as string) ?? "";
-  const inputs = parseInputs(`${template} ${instruction}`);
+
+  let inputs: WorkflowInput[] = [];
+  try {
+    inputs = JSON.parse((formData.get("inputs") as string) ?? "");
+  } catch (e) {
+    inputs = [];
+  }
 
   // validate form data
   await WorkflowSchema.validate({
@@ -83,7 +58,13 @@ export async function updateWorkflow(formData: FormData) {
   const model = formData.get("model") as string;
   const template = formData.get("template") as string;
   const instruction = (formData.get("instruction") as string) ?? "";
-  const inputs = parseInputs(`${template} ${instruction}`);
+
+  let inputs: WorkflowInput[] = [];
+  try {
+    inputs = JSON.parse((formData.get("inputs") as string) ?? "");
+  } catch (e) {
+    inputs = [];
+  }
 
   // validate form data
   await WorkflowSchema.validate({

@@ -1,7 +1,11 @@
 "use client";
 
 import { runWorkflow } from "@/app/console/workflows/actions";
-import { WorkflowInput, WorkflowModels } from "@/data/workflow";
+import {
+  WorkflowInput,
+  WorkflowInputType,
+  WorkflowModels,
+} from "@/data/workflow";
 import { SignedIn, useAuth } from "@clerk/nextjs";
 import { Tab } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/20/solid";
@@ -131,7 +135,7 @@ export function WorkflowComposer({ workflow }: Props) {
       ) : null}
 
       <Tab.Group>
-        {({ selectedIndex }) => (
+        {() => (
           <>
             <Tab.List className="flex items-center">
               <Tab
@@ -167,28 +171,49 @@ export function WorkflowComposer({ workflow }: Props) {
                 </label>
                 {(inputs as [])?.length ? (
                   <div className="space-y-4">
-                    {(inputs as WorkflowInput[]).map(({ name }) => (
-                      <div
-                        key={name}
-                        className="rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-blue-600"
-                      >
-                        <label
-                          htmlFor="name"
-                          className="block text-xs font-medium text-gray-900 uppercase"
+                    {(inputs as WorkflowInput[]).map(
+                      ({ name, type = WorkflowInputType.text, label }) => (
+                        <div
+                          key={name}
+                          className="rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-blue-600"
                         >
-                          {name}
-                        </label>
-                        <textarea
-                          rows={3}
-                          className="block w-full border-0 p-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                          placeholder={`Enter value for ${name}`}
-                          value={inputValues[name] ?? ""}
-                          onChange={(e) =>
-                            updateInput({ [name]: e.target.value })
-                          }
-                        />
-                      </div>
-                    ))}
+                          <label
+                            htmlFor="name"
+                            className="block text-xs font-medium text-gray-900"
+                          >
+                            {label ?? name}
+                          </label>
+
+                          {type === WorkflowInputType.textarea ? (
+                            <textarea
+                              rows={3}
+                              className="block w-full border-0 p-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                              placeholder={`Enter value for ${name}`}
+                              value={inputValues[name] ?? ""}
+                              onChange={(e) =>
+                                updateInput({ [name]: e.target.value })
+                              }
+                            />
+                          ) : null}
+
+                          {[
+                            WorkflowInputType.text,
+                            WorkflowInputType.date,
+                            WorkflowInputType.number,
+                          ].includes(type) ? (
+                            <input
+                              type={type}
+                              className="block w-full border-0 p-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                              placeholder={`Enter value for ${name}`}
+                              value={inputValues[name] ?? ""}
+                              onChange={(e) =>
+                                updateInput({ [name]: e.target.value })
+                              }
+                            />
+                          ) : null}
+                        </div>
+                      )
+                    )}
                   </div>
                 ) : (
                   <p>There are no inputs!</p>

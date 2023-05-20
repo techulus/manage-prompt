@@ -14,5 +14,17 @@ export const WorkflowModels: Record<string, string> = {
 
 export type WorkflowInput = {
   name: string;
-  value: string;
+  type?: WorkflowInputType;
+  label?: string;
+  value?: string;
 };
+
+export enum WorkflowInputType {
+  "text" = "text",
+  "textarea" = "textarea",
+  "number" = "number",
+  "date" = "date",
+  // "select" = "select",
+  // "checkbox" = "checkbox",
+  // "radio" = "radio",
+}
