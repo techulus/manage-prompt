@@ -2,6 +2,7 @@ import { WorkflowItem } from "@/components/console/workflow-item";
 import PageTitle from "@/components/layout/page-title";
 import { getWorkflowsForOwner } from "@/utils/useWorkflow";
 import { auth } from "@clerk/nextjs/app-beta";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -28,7 +29,32 @@ export default async function Workflows({ searchParams }: Props) {
           searchParams.search ? `Search '${searchParams.search}'` : "Workflows"
         }
         backUrl={searchParams.search ? "/console/workflows" : undefined}
+        createLink="/console/workflows/new"
       />
+
+      <form
+        action="/console/workflows"
+        className="flex flex-1 justify-center lg:justify-end mt-4 border-b border-gray-200 pb-4"
+      >
+        <div className="w-full px-2 lg:px-6">
+          <label htmlFor="search" className="sr-only">
+            Search workflows
+          </label>
+          <div className="relative text-gray-600 focus-within:text-gray-800">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+              <MagnifyingGlassIcon className="h-5 w-5" aria-hidden="true" />
+            </div>
+            <input
+              id="search"
+              name="search"
+              className="block w-full rounded-md border-0 bg-gray-200 bg-opacity-25 py-1.5 pl-10 pr-3 text-black placeholder:text-gray-400 focus:bg-white focus:outline focus:outline-gray-200 focus:text-gray-900 focus:outline-none focus:ring-0 focus:placeholder:text-gray-500 sm:text-sm sm:leading-6"
+              placeholder="Search Workflows"
+              type="search"
+            />
+          </div>
+        </div>
+      </form>
+
       <ul
         role="list"
         className="divide-y divide-gray-200 border-b border-gray-200"
