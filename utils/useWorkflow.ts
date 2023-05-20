@@ -1,3 +1,4 @@
+import { auth } from "@clerk/nextjs/app-beta";
 import { Prisma, Workflow, WorkflowRun } from "@prisma/client";
 import { prisma } from "./db";
 
@@ -44,11 +45,16 @@ export async function getWorkflowsForOwner({
 
 // TODO: Add pagination
 export async function getWorkflowAndRuns(id: number) {
+  const { orgId, userId } = auth();
   const workflow: Workflow | null = await prisma.workflow.findUnique({
     where: {
       id,
     },
   });
+
+  if (workflow?.ownerId !== userId && workflow?.ownerId !== orgId) {
+    throw new Error("Workflow not found");
+  }
 
   const workflowRuns: WorkflowRun[] = await prisma.workflowRun.findMany({
     where: {

@@ -1,6 +1,6 @@
 "use client";
 
-import { runWorkflow } from "@/app/console/workflows/actions";
+import { copyWorkflow, runWorkflow } from "@/app/console/workflows/actions";
 import {
   WorkflowInput,
   WorkflowInputType,
@@ -16,9 +16,10 @@ import { SaveButton } from "../form/button";
 
 interface Props {
   workflow: Workflow;
+  isPublicPage?: boolean;
 }
 
-export function WorkflowComposer({ workflow }: Props) {
+export function WorkflowComposer({ workflow, isPublicPage = false }: Props) {
   const { userId, orgId } = useAuth();
   const { id, inputs, template, instruction, model } = workflow;
 
@@ -50,7 +51,7 @@ export function WorkflowComposer({ workflow }: Props) {
   }, [inputValues, instruction]);
 
   return (
-    <form className="p-6" action={runWorkflow}>
+    <form className="p-6" action={isPublicPage ? copyWorkflow : runWorkflow}>
       <input
         type="number"
         name="id"
@@ -241,15 +242,19 @@ export function WorkflowComposer({ workflow }: Props) {
 
       <SignedIn>
         <div className="mt-2 flex justify-end">
-          <SaveButton
-            label="Run"
-            loadingLabel="Running"
-            disabled={
-              !workflow.published ||
-              Object.keys(inputValues).length !==
-                (inputs as WorkflowInput[])?.length
-            }
-          />
+          {isPublicPage ? (
+            <SaveButton label="Copy to my workflows" loadingLabel="Copying" />
+          ) : (
+            <SaveButton
+              label="Run"
+              loadingLabel="Running"
+              disabled={
+                !workflow.published ||
+                Object.keys(inputValues).length !==
+                  (inputs as WorkflowInput[])?.length
+              }
+            />
+          )}
         </div>
       </SignedIn>
     </form>

@@ -18,14 +18,18 @@ const navigation = [
   { name: "Settings", href: "/console/settings", current: false },
 ];
 
-export default function NavBar() {
+export default function NavBar({ isPublicPage = false }) {
   const { isLoaded, user } = useUser();
 
   useEffect(() => {
+    if (isPublicPage) {
+      return;
+    }
+
     if (isLoaded && !user) {
       window.location.href = "/";
     }
-  }, [user, isLoaded]);
+  }, [user, isLoaded, isPublicPage]);
 
   return (
     <Disclosure as="nav" className="flex-shrink-0 bg-blue-800">

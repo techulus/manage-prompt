@@ -197,3 +197,39 @@ export async function runWorkflow(formData: FormData) {
   revalidatePath(`/console/workflows/${id}`);
   redirect(`/console/workflows/${id}`);
 }
+
+export async function copyWorkflow(formData: FormData) {
+  const id = Number(formData.get("id"));
+  const userId = formData.get("userId") as string;
+  const orgId = formData.get("orgId") as string;
+
+  if (!id) throw "ID is missing";
+
+  const workflow = await prisma.workflow.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  if (!workflow) throw "Workflow not found";
+
+  const user = await clerkClient.users.getUser(userId!);
+
+  const { name, model, template, instruction, inputs } = workflow;
+
+  const { id: newId } = await prisma.workflow.create({
+    data: {
+      ownerId: orgId ?? userId ?? "",
+      name: `${name} (copy)`,
+      model,
+      template,
+      instruction,
+      inputs: JSON.parse(JSON.stringify(inputs)),
+      published: true,
+      createdBy: `${user?.firstName} ${user?.lastName}`,
+    },
+  });
+
+  revalidatePath(`/console/workflows/${newId}`);
+  redirect(`/console/workflows/${newId}`);
+}

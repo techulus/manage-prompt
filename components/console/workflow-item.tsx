@@ -1,5 +1,6 @@
 import {
   ChevronRightIcon,
+  GlobeAltIcon,
   PencilIcon,
   PlayIcon,
   UserIcon,
@@ -52,6 +53,9 @@ export async function WorkflowItem({ workflow }: Props) {
             <span className="truncate text-sm font-medium text-gray-500 group-hover:text-gray-900">
               {workflow.createdBy}
             </span>
+            {workflow.publicUrl ? (
+              <GlobeAltIcon className="h-4 w-4 inline text-orange-400" />
+            ) : null}
           </div>
         </Link>
         <div className="sm:hidden">
