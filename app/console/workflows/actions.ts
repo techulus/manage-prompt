@@ -4,6 +4,7 @@ import { OpenAIModel } from "@/data/workflow";
 import { prisma } from "@/utils/db";
 import { getCompletion } from "@/utils/openai";
 import { auth, clerkClient } from "@clerk/nextjs";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import slugify from "slugify";
 import * as Yup from "yup";
@@ -71,6 +72,7 @@ export async function saveWorkflow(formData: FormData) {
     },
   });
 
+  revalidatePath(`/console/workflows`);
   redirect("/console/workflows");
 }
 
@@ -106,6 +108,8 @@ export async function updateWorkflow(formData: FormData) {
     },
   });
 
+  revalidatePath(`/console/workflows/${id}`);
+  revalidatePath(`/console/workflows`);
   redirect(`/console/workflows/${id}`);
 }
 
@@ -118,6 +122,8 @@ export async function deleteWorkflow(formData: FormData) {
     },
   });
 
+  revalidatePath(`/console/workflows/${id}`);
+  revalidatePath(`/console/workflows`);
   redirect("/console/workflows");
 }
 
@@ -134,6 +140,8 @@ export async function toggleWorkflowState(formData: FormData) {
     },
   });
 
+  revalidatePath(`/console/workflows/${id}`);
+  revalidatePath(`/console/workflows`);
   redirect(`/console/workflows/${id}`);
 }
 
@@ -155,6 +163,8 @@ export async function makeWorkflowPublic(formData: FormData) {
     },
   });
 
+  revalidatePath(`/console/workflows/${id}`);
+  revalidatePath(`/console/workflows`);
   redirect(`/console/workflows/${id}`);
 }
 
@@ -170,6 +180,8 @@ export async function makeWorkflowPrivate(formData: FormData) {
     },
   });
 
+  revalidatePath(`/console/workflows/${id}`);
+  revalidatePath(`/console/workflows`);
   redirect(`/console/workflows/${id}`);
 }
 
@@ -201,5 +213,6 @@ export async function runWorkflow(formData: FormData) {
     },
   });
 
+  revalidatePath(`/console/workflows/${id}`);
   redirect(`/console/workflows/${id}`);
 }

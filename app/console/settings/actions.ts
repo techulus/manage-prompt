@@ -19,5 +19,6 @@ export async function purgeWorkflowData() {
   });
 
   revalidatePath("/console/settings");
+  revalidatePath(`/console/workflows`);
   redirect("/console/settings");
 }
