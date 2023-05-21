@@ -4,7 +4,7 @@ import { SITE_METADATA } from "@/data/marketing";
 
 export default function Home() {
   return (
-    <div className="bg-white h-full">
+    <div className="h-full">
       <Header />
 
       <div className="relative isolate px-6 pt-14 lg:px-8">
@@ -25,7 +25,7 @@ export default function Home() {
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl hero text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-700">
               {SITE_METADATA.TAGLINE}
             </h1>
-            <p className="mt-6 text-lg leading-8 text-gray-600">
+            <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-400">
               {SITE_METADATA.DESCRIPTION}
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
@@ -39,7 +39,7 @@ export default function Home() {
                 href="https://github.com/techulus/manage-prompt"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm font-semibold leading-6 text-gray-900 rounded-full border border-gray-300 px-4 py-2.5 hover:shadow"
+                className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-300 rounded-full border border-gray-300 dark:border-gray-700 px-4 py-2.5 hover:shadow"
               >
                 Star on GitHub{" "}
                 <svg

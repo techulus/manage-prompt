@@ -17,7 +17,7 @@ export async function WorkflowItem({ workflow }: Props) {
   return (
     <li
       key={workflow.id}
-      className="relative py-5 pl-4 pr-6 hover:bg-gray-50 sm:py-6 sm:pl-6 lg:pl-8 xl:pl-6"
+      className="relative py-5 pl-4 pr-6 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-900 sm:py-6 sm:pl-6 lg:pl-8 xl:pl-6"
     >
       <div className="flex items-center justify-between space-x-4">
         <Link
@@ -27,7 +27,9 @@ export async function WorkflowItem({ workflow }: Props) {
           <div className="flex items-center space-x-3">
             <span
               className={classNames(
-                workflow.published ? "bg-green-100" : "bg-gray-100",
+                workflow.published
+                  ? "bg-green-100 dark:bg-green-900"
+                  : "bg-gray-100 dark:bg-gray-900",
                 "h-4 w-4 flex items-center justify-center rounded-full"
               )}
               aria-hidden="true"
@@ -50,11 +52,11 @@ export async function WorkflowItem({ workflow }: Props) {
           </div>
           <div className="group relative flex items-center space-x-2.5">
             <UserIcon className="h-4 w-4 inline text-gray-400" />
-            <span className="truncate text-sm font-medium text-gray-500 group-hover:text-gray-900">
+            <span className="truncate text-sm font-medium text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-300">
               {workflow.createdBy}
             </span>
             {workflow.publicUrl ? (
-              <GlobeAltIcon className="h-4 w-4 inline text-orange-400" />
+              <GlobeAltIcon className="h-4 w-4 inline text-orange-400 dark:text-orange-500" />
             ) : null}
           </div>
         </Link>

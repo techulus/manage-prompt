@@ -34,20 +34,20 @@ export default async function Workflows({ searchParams }: Props) {
 
       <form
         action="/console/workflows"
-        className="flex flex-1 justify-center lg:justify-end mt-4 border-b border-gray-200 pb-4"
+        className="flex flex-1 justify-center lg:justify-end mt-4 border-b border-gray-200 dark:border-gray-800 pb-4"
       >
         <div className="w-full px-2 lg:px-6">
           <label htmlFor="search" className="sr-only">
             Search workflows
           </label>
-          <div className="relative text-gray-600 focus-within:text-gray-800">
+          <div className="relative text-gray-600 dark:text-gray-400 focus-within:text-gray-800 dark:focus-within:text-gray-200">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
               <MagnifyingGlassIcon className="h-5 w-5" aria-hidden="true" />
             </div>
             <input
               id="search"
               name="search"
-              className="block w-full rounded-md border-0 bg-gray-200 bg-opacity-25 py-1.5 pl-10 pr-3 text-black placeholder:text-gray-400 focus:bg-white focus:outline focus:outline-gray-200 focus:text-gray-900 focus:outline-none focus:ring-0 focus:placeholder:text-gray-500 sm:text-sm sm:leading-6"
+              className="block w-full rounded-md border-0 bg-gray-200 dark:bg-gray-900 bg-opacity-25 py-1.5 pl-10 pr-3 text-black dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:bg-white dark:focus:bg-gray-800 focus:outline focus:outline-gray-200 dark:focus:outline-gray-600  focus:outline-none focus:ring-0 focus:placeholder:text-gray-500 dark:focus:placeholder:text-gray-400 sm:text-sm sm:leading-6"
               placeholder="Search Workflows"
               type="search"
             />
@@ -57,7 +57,7 @@ export default async function Workflows({ searchParams }: Props) {
 
       <ul
         role="list"
-        className="divide-y divide-gray-200 border-b border-gray-200"
+        className="divide-y divide-gray-200 dark:divide-gray-800 border-b border-gray-200 dark:border-gray-800"
       >
         {workflows.length === 0 && (
           <div className="p-6">

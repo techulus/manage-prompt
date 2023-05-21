@@ -14,7 +14,7 @@ export default function CreateWorkflow() {
         <div className="mt-6 flex items-center justify-end gap-x-6">
           <Link
             href="/console/workflows"
-            className="text-sm font-semibold leading-6 text-gray-900"
+            className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-200"
           >
             Cancel
           </Link>

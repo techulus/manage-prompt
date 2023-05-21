@@ -2,7 +2,7 @@ import { Header } from "@/components/layout/header";
 
 export default function TermsAndConditions() {
   return (
-    <div className="bg-white h-full">
+    <div className="dark:text-gray-100 h-full">
       <Header />
 
       <div className="relative isolate px-6 pt-14 lg:px-8">

@@ -8,6 +8,7 @@ import {
   PencilIcon,
   PlayCircleIcon,
 } from "@heroicons/react/20/solid";
+import classNames from "classnames";
 import Link from "next/link";
 import {
   deleteWorkflow,
@@ -38,7 +39,7 @@ export default async function WorkflowDetails({ params }: Props) {
       <PageTitle title={workflow.name} backUrl="/console/workflows" />
 
       {/* Toolbar*/}
-      <div className="hidden md:flex h-16 flex-col justify-center border-b border-gray-200">
+      <div className="hidden md:flex h-16 flex-col justify-center border-b border-gray-200 dark:border-gray-800">
         <div className="px-4 sm:px-6 lg:px-8 lg:-mx-4">
           <div className="flex justify-between py-3">
             {/* Left buttons */}
@@ -61,7 +62,7 @@ export default async function WorkflowDetails({ params }: Props) {
                     <ActionButton
                       icon={
                         <PauseCircleIcon
-                          className="-ml-0.5 h-5 w-5 text-gray-400 hover:text-orange-400"
+                          className="-ml-0.5 h-5 w-5 text-gray-400 dark:text-gray-600 hover:text-orange-400"
                           aria-hidden="true"
                         />
                       }
@@ -72,7 +73,7 @@ export default async function WorkflowDetails({ params }: Props) {
                     <ActionButton
                       icon={
                         <PlayCircleIcon
-                          className="-ml-0.5 h-5 w-5 text-gray-400 hover:text-orange-400"
+                          className="-ml-0.5 h-5 w-5 text-gray-400 dark:text-gray-600 hover:text-orange-400"
                           aria-hidden="true"
                         />
                       }
@@ -84,10 +85,13 @@ export default async function WorkflowDetails({ params }: Props) {
 
                 <Link
                   href={`/console/workflows/${workflow.id}/edit`}
-                  className="relative -ml-px hidden items-center gap-x-1.5 rounded-full bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:z-10 hover:bg-gray-50 focus:z-10 sm:inline-flex"
+                  className={classNames(
+                    "relative -ml-px hidden items-center gap-x-1.5 rounded-full bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:z-10 hover:bg-gray-50 focus:z-10 sm:inline-flex",
+                    "dark:bg-gray-950 dark:text-gray-300 dark:hover:bg-gray-900 dark:hover:text-gray-400"
+                  )}
                 >
                   <PencilIcon
-                    className="-ml-0.5 h-5 w-5 text-gray-400"
+                    className="-ml-0.5 h-5 w-5 text-gray-400 dark:text-gray-600"
                     aria-hidden="true"
                   />
                   Edit
@@ -104,7 +108,7 @@ export default async function WorkflowDetails({ params }: Props) {
                     <ActionButton
                       icon={
                         <PlayCircleIcon
-                          className="-ml-0.5 h-5 w-5 text-gray-400 hover:text-orange-400"
+                          className="-ml-0.5 h-5 w-5 text-gray-400 dark:text-gray-600 hover:text-orange-400"
                           aria-hidden="true"
                         />
                       }
@@ -123,7 +127,7 @@ export default async function WorkflowDetails({ params }: Props) {
                     <ActionButton
                       icon={
                         <PlayCircleIcon
-                          className="-ml-0.5 h-5 w-5 text-gray-400 hover:text-orange-400"
+                          className="-ml-0.5 h-5 w-5 text-gray-400 dark:text-gray-600 hover:text-orange-400"
                           aria-hidden="true"
                         />
                       }
@@ -157,7 +161,7 @@ export default async function WorkflowDetails({ params }: Props) {
 
       <ul
         role="list"
-        className="border-t divide-y divide-gray-200 border-b border-gray-200"
+        className="border-t divide-y divide-gray-200 dark:divide-gray-800 border-b border-gray-200 dark:border-gray-800"
       >
         {workflowRuns.map((run) => (
           // @ts-ignore React server component

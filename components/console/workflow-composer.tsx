@@ -92,7 +92,12 @@ export function WorkflowComposer({ workflow, isPublicPage = false }: Props) {
 
       {workflow.publicUrl &&
       (workflow.ownerId === orgId || workflow.ownerId === userId) ? (
-        <div className="border-l-4 border-yellow-400 bg-yellow-50 p-4 mb-4">
+        <div
+          className={classNames(
+            "border-l-4 border-yellow-400 bg-yellow-50 p-4 mb-4",
+            "dark:border-yellow-500 dark:bg-yellow-700 dark:text-yellow-100"
+          )}
+        >
           <div className="flex">
             <div className="flex-shrink-0">
               <ExclamationTriangleIcon
@@ -101,7 +106,7 @@ export function WorkflowComposer({ workflow, isPublicPage = false }: Props) {
               />
             </div>
             <div className="ml-3">
-              <p className="text-sm text-yellow-700">
+              <p className="text-sm text-yellow-700 dark:text-yellow-100">
                 This workflow can be run by anyone with the link:{" "}
                 <a
                   href={`/w/${workflow.publicUrl}`}
@@ -118,7 +123,12 @@ export function WorkflowComposer({ workflow, isPublicPage = false }: Props) {
       ) : null}
 
       {!workflow.published ? (
-        <div className="border-l-4 border-yellow-400 bg-yellow-50 p-4 mb-4">
+        <div
+          className={classNames(
+            "border-l-4 border-yellow-400 bg-yellow-50 p-4 mb-4",
+            "dark:border-yellow-500 dark:bg-yellow-700 dark:text-yellow-100"
+          )}
+        >
           <div className="flex">
             <div className="flex-shrink-0">
               <ExclamationTriangleIcon
@@ -127,7 +137,7 @@ export function WorkflowComposer({ workflow, isPublicPage = false }: Props) {
               />
             </div>
             <div className="ml-3">
-              <p className="text-sm text-yellow-700">
+              <p className="text-sm text-yellow-700 dark:text-yellow-100">
                 This workflow is not published and hence cannot be run.
               </p>
             </div>
@@ -145,6 +155,9 @@ export function WorkflowComposer({ workflow, isPublicPage = false }: Props) {
                     selected
                       ? "bg-gray-100 text-gray-900 hover:bg-gray-200"
                       : "bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-900",
+                    selected
+                      ? "dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700"
+                      : "dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600",
                     "rounded-md border border-transparent px-3 py-1.5 text-sm font-medium"
                   )
                 }
@@ -157,6 +170,9 @@ export function WorkflowComposer({ workflow, isPublicPage = false }: Props) {
                     selected
                       ? "bg-gray-100 text-gray-900 hover:bg-gray-200"
                       : "bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-900",
+                    selected
+                      ? "dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700"
+                      : "dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600",
                     "ml-2 rounded-md border border-transparent px-3 py-1.5 text-sm font-medium"
                   )
                 }
@@ -167,20 +183,17 @@ export function WorkflowComposer({ workflow, isPublicPage = false }: Props) {
 
             <Tab.Panels className="mt-2">
               <Tab.Panel className="-m-0.5 rounded-lg p-0.5">
-                <label htmlFor="comment" className="sr-only">
-                  Comment
-                </label>
                 {(inputs as [])?.length ? (
                   <div className="space-y-4">
                     {(inputs as WorkflowInput[]).map(
                       ({ name, type = WorkflowInputType.text, label }) => (
                         <div
                           key={name}
-                          className="rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-blue-600"
+                          className="rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-800 focus-within:ring-2 focus-within:ring-blue-600"
                         >
                           <label
                             htmlFor="name"
-                            className="block text-xs font-medium text-gray-900"
+                            className="block text-xs font-medium text-gray-900 dark:text-gray-200"
                           >
                             {label ?? name}
                           </label>
@@ -188,7 +201,7 @@ export function WorkflowComposer({ workflow, isPublicPage = false }: Props) {
                           {type === WorkflowInputType.textarea ? (
                             <textarea
                               rows={3}
-                              className="block w-full border-0 p-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                              className="block w-full border-0 p-0 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 dark:bg-gray-900 dark:ring-gray-800"
                               placeholder={`Enter value for ${name}`}
                               value={inputValues[name] ?? ""}
                               onChange={(e) =>
@@ -204,7 +217,7 @@ export function WorkflowComposer({ workflow, isPublicPage = false }: Props) {
                           ].includes(type) ? (
                             <input
                               type={type}
-                              className="block w-full border-0 p-0 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                              className="block w-full border-0 p-0 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 dark:bg-gray-900 dark:ring-gray-800"
                               placeholder={`Enter value for ${name}`}
                               value={inputValues[name] ?? ""}
                               onChange={(e) =>
@@ -222,15 +235,15 @@ export function WorkflowComposer({ workflow, isPublicPage = false }: Props) {
               </Tab.Panel>
 
               <Tab.Panel className="-m-0.5 rounded-lg p-0.5">
-                <div className="border-b">
+                <div className="border-b dark:border-gray-800">
                   {model === WorkflowModels.edit ||
                   model === WorkflowModels.code ? (
-                    <div className="mx-px mt-px px-3 pb-12 pt-2 text-sm leading-5 text-gray-800 bg-gray-50 whitespace-pre-wrap">
+                    <div className="mx-px mt-px px-3 pb-12 pt-2 text-sm leading-5 text-gray-800 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 whitespace-pre-wrap">
                       <span className="font-semibold">Instruction:</span>{" "}
                       {geneatedInstruction}
                     </div>
                   ) : null}
-                  <div className="mx-px mt-px px-3 pb-12 pt-2 text-sm leading-5 text-gray-800 bg-gray-50 whitespace-pre-wrap">
+                  <div className="mx-px mt-px px-3 pb-12 pt-2 text-sm leading-5 text-gray-800 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 whitespace-pre-wrap">
                     {generatedTemplate}
                   </div>
                 </div>

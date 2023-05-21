@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+const { neutral, amber } = require("tailwindcss/colors");
+
 module.exports = {
-  darkMode: "class",
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -12,6 +13,10 @@ module.exports = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      },
+      colors: {
+        gray: neutral,
+        yellow: amber,
       },
     },
     fontSize: {

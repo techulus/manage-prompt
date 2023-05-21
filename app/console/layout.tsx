@@ -12,8 +12,8 @@ export default function ConsoleLayout({
       <NavBar />
 
       <div className="mx-auto w-full max-w-7xl flex-grow lg:flex xl:px-8">
-        <div className="min-w-0 flex-1 bg-white xl:flex">
-          <div className="bg-white lg:min-w-0 lg:flex-1 border-l border-r border-gray-200 pb-12">
+        <div className="min-w-0 flex-1 xl:flex">
+          <div className="lg:min-w-0 lg:flex-1 border-l border-r border-gray-200 dark:border-gray-800 pb-12">
             {children}
           </div>
         </div>

@@ -1,6 +1,11 @@
 "use client";
 
-import { OrganizationSwitcher, UserButton, useUser } from "@clerk/nextjs";
+import {
+  OrganizationSwitcher,
+  SignedIn,
+  UserButton,
+  useUser,
+} from "@clerk/nextjs";
 import { Disclosure } from "@headlessui/react";
 import { Bars3CenterLeftIcon, XMarkIcon } from "@heroicons/react/20/solid";
 import classNames from "classnames";
@@ -30,15 +35,14 @@ export default function NavBar({ isPublicPage = false }) {
   return (
     <Disclosure
       as="nav"
-      className="flex-shrink-0 bg-white border-b border-gray-200"
+      className="flex-shrink-0 border-b border-gray-200 dark:border-gray-800 text-black dark:text-white"
     >
       {({ open }) => (
         <>
           <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
             <div className="relative flex h-16 items-center justify-between">
               <div className="flex">
-                {/* Logo section */}
-                <Link href="/" className="text-white ml-1">
+                <Link href="/" className="ml-1">
                   <div className="flex items-center lg:px-0">
                     <div className="flex-shrink-0">
                       <Image
@@ -62,7 +66,7 @@ export default function NavBar({ isPublicPage = false }) {
                   strokeWidth="1"
                   viewBox="0 0 24 24"
                   width="32"
-                  className="text-gray-300 xl:block"
+                  className="text-gray-300 dark:text-gray-700 xl:block mr-2"
                 >
                   <path d="M16.88 3.549L7.12 20.451"></path>
                 </svg>
@@ -89,25 +93,27 @@ export default function NavBar({ isPublicPage = false }) {
                 </Disclosure.Button>
               </div>
               {/* Links section */}
-              <div className="hidden lg:block lg:w-80">
-                <div className="flex items-center justify-end">
-                  <div className="flex">
-                    {navigation.map((item) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className="rounded-md px-3 py-2 text-sm font-medium text-gray-800 hover:text-black"
-                        aria-current={item.current ? "page" : undefined}
-                      >
-                        {item.name}
-                      </Link>
-                    ))}
-                  </div>
-                  <div className="relative ml-4 flex-shrink-0">
-                    <UserButton />
+              <SignedIn>
+                <div className="hidden lg:block lg:w-80">
+                  <div className="flex items-center justify-end">
+                    <div className="flex">
+                      {navigation.map((item) => (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          className="rounded-md px-3 py-2 text-sm font-medium text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
+                          aria-current={item.current ? "page" : undefined}
+                        >
+                          {item.name}
+                        </Link>
+                      ))}
+                    </div>
+                    <div className="relative ml-4 flex-shrink-0">
+                      <UserButton />
+                    </div>
                   </div>
                 </div>
-              </div>
+              </SignedIn>
             </div>
           </div>
 
