@@ -83,10 +83,13 @@ export default function NavBar({ isPublicPage = false }) {
                 <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-900 hover:bg-gray-50 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
-                    <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+                    <XMarkIcon
+                      className="block h-6 w-6 dark:text-gray-500"
+                      aria-hidden="true"
+                    />
                   ) : (
                     <Bars3CenterLeftIcon
-                      className="block h-6 w-6"
+                      className="block h-6 w-6 dark:text-gray-500"
                       aria-hidden="true"
                     />
                   )}
@@ -128,6 +131,9 @@ export default function NavBar({ isPublicPage = false }) {
                     item.current
                       ? "text-gray-800 bg-gray-50"
                       : "text-gray-800 hover:bg-gray-100 hover:text-black",
+                    item.current
+                      ? "text-gray-200 bg-gray-800"
+                      : "text-gray-200 hover:bg-gray-800 hover:text-white",
                     "block rounded-md px-3 py-2 text-base font-medium"
                   )}
                   aria-current={item.current ? "page" : undefined}
