@@ -80,7 +80,7 @@ export default function NavBar({ isPublicPage = false }) {
 
               <div className="flex lg:hidden">
                 {/* Mobile menu button */}
-                <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-900 hover:bg-gray-50 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600">
+                <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-blue-600">
                   <span className="sr-only">Open main menu</span>
                   {open ? (
                     <XMarkIcon
@@ -132,8 +132,8 @@ export default function NavBar({ isPublicPage = false }) {
                       ? "text-gray-800 bg-gray-50"
                       : "text-gray-800 hover:bg-gray-100 hover:text-black",
                     item.current
-                      ? "text-gray-200 bg-gray-800"
-                      : "text-gray-200 hover:bg-gray-800 hover:text-white",
+                      ? "dark:text-gray-200 dark:bg-gray-800"
+                      : "dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white",
                     "block rounded-md px-3 py-2 text-base font-medium"
                   )}
                   aria-current={item.current ? "page" : undefined}

@@ -156,8 +156,8 @@ export function WorkflowComposer({ workflow, isPublicPage = false }: Props) {
                       ? "bg-gray-100 text-gray-900 hover:bg-gray-200"
                       : "bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-900",
                     selected
-                      ? "dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700"
-                      : "dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600",
+                      ? "dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
+                      : "dark:bg-black dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100",
                     "rounded-md border border-transparent px-3 py-1.5 text-sm font-medium"
                   )
                 }
@@ -171,8 +171,8 @@ export function WorkflowComposer({ workflow, isPublicPage = false }: Props) {
                       ? "bg-gray-100 text-gray-900 hover:bg-gray-200"
                       : "bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-900",
                     selected
-                      ? "dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700"
-                      : "dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600",
+                      ? "dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
+                      : "dark:bg-black dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100",
                     "ml-2 rounded-md border border-transparent px-3 py-1.5 text-sm font-medium"
                   )
                 }

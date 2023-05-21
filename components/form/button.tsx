@@ -16,7 +16,7 @@ export const DeleteButton = () => {
       <button
         type="submit"
         className={classNames(
-          "relative -ml-px hidden items-center gap-x-1.5 rounded-full bg-red-200 dark:bg-red-900 px-3 py-2 text-sm font-semibold text-red-700 hover:z-10 hover:bg-red-100 hover:text-red-600 focus:z-10 sm:inline-flex",
+          "relative -ml-px items-center gap-x-1.5 rounded-full bg-red-200 dark:bg-red-900 px-3 py-2 text-sm font-semibold text-red-700 hover:z-10 hover:bg-red-100 hover:text-red-600 focus:z-10 inline-flex",
           "dark:hover:bg-red-800 dark:hover:text-red-400"
         )}
       >
@@ -43,7 +43,7 @@ export const DeleteButton = () => {
         setShowConfirmDelete(true);
       }}
       className={classNames(
-        "relative -ml-px hidden items-center gap-x-1.5 rounded-full bg-white dark:bg-red-950 px-3 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:z-10 hover:bg-red-100 hover:text-red-600 focus:z-10 sm:inline-flex",
+        "relative -ml-px items-center gap-x-1.5 rounded-full bg-white dark:bg-red-950 px-3 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:z-10 hover:bg-red-100 hover:text-red-600 focus:z-10 inline-flex",
         "dark:hover:bg-red-900 dark:hover:text-red-400"
       )}
     >
