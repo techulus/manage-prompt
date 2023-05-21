@@ -37,7 +37,7 @@ export async function WorkflowRunItem({ workflowRun }: Props) {
       </div>
       <div className="mt-1">
         {result.includes("```") ? (
-          <ReactMarkdown className="text-sm text-gray-600 prose dark:prose-gray">
+          <ReactMarkdown className="text-sm text-gray-600 prose dark:prose-invert">
             {result}
           </ReactMarkdown>
         ) : (
