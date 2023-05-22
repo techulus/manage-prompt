@@ -29,13 +29,6 @@ module.exports = {
       "4xl": "2.441rem",
       "5xl": "3.052rem",
     },
-    typography: {
-      DEFAULT: {
-        css: {
-          maxWidth: "100ch",
-        },
-      },
-    },
   },
   plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography")],
 };

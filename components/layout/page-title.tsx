@@ -27,7 +27,7 @@ export default function PageTitle({ title, backUrl, createLink }: Props) {
           </Link>
         )}
 
-        <h1 className="flex-1 text-lg font-bold">{title}</h1>
+        <h1 className="flex-1 text-2xl font-bold">{title}</h1>
       </div>
 
       {createLink ? (

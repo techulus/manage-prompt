@@ -36,7 +36,7 @@ export async function WorkflowRunItem({ workflowRun }: Props) {
         </time>
       </div>
       <div className="mt-1 text-gray-600 dark:text-gray-200">
-        <ReactMarkdown className="text-sm prose dark:prose-invert">
+        <ReactMarkdown className="text-sm prose dark:prose-invert max-w-none prose-a:text-blue-600 dark:prose-a:text-blue-500">
           {result}
         </ReactMarkdown>
       </div>
