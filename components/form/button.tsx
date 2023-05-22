@@ -16,7 +16,7 @@ export const DeleteButton = () => {
       <button
         type="submit"
         className={classNames(
-          "relative -ml-px items-center gap-x-1.5 rounded-full bg-red-200 dark:bg-red-900 px-3 py-2 text-sm font-semibold text-red-700 hover:z-10 hover:bg-red-100 hover:text-red-600 focus:z-10 inline-flex",
+          "relative -ml-px items-center gap-x-1.5 rounded-md bg-red-200 dark:bg-red-900 px-3 py-2 text-sm font-semibold text-red-700 hover:z-10 hover:bg-red-100 hover:text-red-600 focus:z-10 inline-flex",
           "dark:hover:bg-red-800 dark:hover:text-red-400"
         )}
       >
@@ -43,7 +43,7 @@ export const DeleteButton = () => {
         setShowConfirmDelete(true);
       }}
       className={classNames(
-        "relative -ml-px items-center gap-x-1.5 rounded-full bg-white dark:bg-red-950 px-3 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:z-10 hover:bg-red-100 hover:text-red-600 focus:z-10 inline-flex",
+        "relative -ml-px items-center gap-x-1.5 rounded-md bg-white dark:bg-red-950 px-3 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:z-10 hover:bg-red-100 hover:text-red-600 focus:z-10 inline-flex",
         "dark:hover:bg-red-900 dark:hover:text-red-400"
       )}
     >
@@ -109,7 +109,7 @@ export const ActionButton = ({
     <button
       type="submit"
       className={classNames(
-        "relative inline-flex items-center gap-x-1.5 rounded-full bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:z-10 focus:z-10",
+        "relative inline-flex items-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:z-10 focus:z-10",
         "dark:bg-gray-950 dark:text-gray-300 dark:hover:bg-gray-900 dark:hover:text-gray-400",
         "disabled:cursor-not-allowed",
         className

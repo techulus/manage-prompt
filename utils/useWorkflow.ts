@@ -1,6 +1,8 @@
+import { prisma } from "@/utils/db";
 import { auth } from "@clerk/nextjs/app-beta";
 import { Prisma, Workflow, WorkflowRun } from "@prisma/client";
-import { prisma } from "./db";
+
+export const LIMIT = 15;
 
 export async function getWorkflowById(id: number): Promise<Workflow | null> {
   const workflow: Workflow | null = await prisma.workflow.findUnique({
@@ -16,11 +18,16 @@ export async function getWorkflowsForOwner({
   orgId,
   userId,
   search,
+  page = 1,
 }: {
   orgId: string;
   userId: string;
   search?: string;
-}): Promise<Workflow[]> {
+  page?: number;
+}): Promise<{
+  workflows: Workflow[];
+  count: number;
+}> {
   const dbQuery: Prisma.WorkflowFindManyArgs = {
     where: {
       ownerId: {
@@ -30,6 +37,8 @@ export async function getWorkflowsForOwner({
     orderBy: {
       createdAt: "desc",
     },
+    take: LIMIT,
+    skip: (page - 1) * LIMIT,
   };
 
   if (search) {
@@ -38,23 +47,35 @@ export async function getWorkflowsForOwner({
     };
   }
 
-  const workflows: Workflow[] = await prisma.workflow.findMany(dbQuery);
+  const [workflows, count]: [Workflow[], number] = await prisma.$transaction([
+    prisma.workflow.findMany(dbQuery),
+    prisma.workflow.count({
+      where: {
+        ownerId: {
+          equals: orgId ?? userId ?? "",
+        },
+      },
+    }),
+  ]);
 
-  return workflows;
+  return { workflows, count };
 }
 
 // TODO: Add pagination
 export async function getWorkflowAndRuns(id: number) {
   const { orgId, userId } = auth();
-  const workflow: Workflow | null = await prisma.workflow.findUnique({
+  const workflow: Workflow | null = await prisma.workflow.findFirst({
     where: {
-      id,
+      id: {
+        equals: id,
+      },
+      ownerId: {
+        equals: orgId ?? userId ?? "",
+      },
     },
   });
 
-  if (workflow?.ownerId !== userId && workflow?.ownerId !== orgId) {
-    throw new Error("Workflow not found");
-  }
+  if (!workflow) throw new Error("Workflow not found");
 
   const workflowRuns: WorkflowRun[] = await prisma.workflowRun.findMany({
     where: {

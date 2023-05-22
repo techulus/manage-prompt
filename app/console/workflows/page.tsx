@@ -1,6 +1,6 @@
 import { WorkflowItem } from "@/components/console/workflow-item";
 import PageTitle from "@/components/layout/page-title";
-import { getWorkflowsForOwner } from "@/utils/useWorkflow";
+import { LIMIT, getWorkflowsForOwner } from "@/utils/useWorkflow";
 import { auth } from "@clerk/nextjs/app-beta";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
@@ -10,16 +10,19 @@ export const dynamic = "force-dynamic";
 interface Props {
   searchParams: {
     search: string;
+    page: string;
   };
 }
 
 export default async function Workflows({ searchParams }: Props) {
   const { userId, orgId } = auth();
 
-  const workflows = await getWorkflowsForOwner({
+  const currentPage = searchParams.page ? parseInt(searchParams.page) : 1;
+  const { workflows, count } = await getWorkflowsForOwner({
     orgId: orgId!,
     userId: userId!,
     search: searchParams.search,
+    page: currentPage,
   });
 
   return (
@@ -91,6 +94,46 @@ export default async function Workflows({ searchParams }: Props) {
           <WorkflowItem key={workflow.id} workflow={workflow} />
         ))}
       </ul>
+
+      <nav className="flex items-center justify-between border-t border-gray-200 dark:border-gray-800 px-4 py-3 sm:px-6">
+        <div className="hidden sm:block">
+          <p className="text-sm text-gray-700 dark:text-gray-400">
+            Showing{" "}
+            <span className="font-medium">{(currentPage - 1) * LIMIT + 1}</span>{" "}
+            to{" "}
+            <span className="font-medium">
+              {Math.min(currentPage * LIMIT, count)}
+            </span>{" "}
+            of <span className="font-medium">{count}</span> workflows
+          </p>
+        </div>
+
+        <div className="flex flex-1 justify-between sm:justify-end">
+          {currentPage > 1 ? (
+            <form action="/console/workflows">
+              <input type="hidden" name="page" value={currentPage - 1} />
+              <button
+                type="submit"
+                className="relative inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold text-gray-900 dark:text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 focus-visible:outline-offset-0"
+              >
+                Previous
+              </button>
+            </form>
+          ) : null}
+
+          {(currentPage - 1) * LIMIT + workflows.length < count ? (
+            <form action="/console/workflows">
+              <input type="hidden" name="page" value={currentPage + 1} />
+              <button
+                type="submit"
+                className="relative ml-3 inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold text-gray-900 dark:text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 focus-visible:outline-offset-0"
+              >
+                Next
+              </button>
+            </form>
+          ) : null}
+        </div>
+      </nav>
     </>
   );
 }
