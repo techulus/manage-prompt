@@ -16,8 +16,8 @@ export const DeleteButton = () => {
       <button
         type="submit"
         className={classNames(
-          "relative -ml-px items-center gap-x-1.5 rounded-md bg-red-200 dark:bg-red-900 px-3 py-2 text-sm font-semibold text-red-700 hover:z-10 hover:bg-red-100 hover:text-red-600 focus:z-10 inline-flex",
-          "dark:hover:bg-red-800 dark:hover:text-red-400"
+          "relative -ml-px items-center gap-x-1.5 rounded-md bg-red-200 px-3 py-2 text-sm font-semibold text-red-700 hover:z-10 hover:bg-red-100 focus:z-10 inline-flex",
+          "dark:bg-red-900 dark:text-red-400 dark:hover:bg-red-800 dark:hover:text-red-300"
         )}
       >
         {pending ? (
@@ -44,7 +44,7 @@ export const DeleteButton = () => {
       }}
       className={classNames(
         "relative -ml-px items-center gap-x-1.5 rounded-md bg-white dark:bg-red-950 px-3 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:z-10 hover:bg-red-100 hover:text-red-600 focus:z-10 inline-flex",
-        "dark:hover:bg-red-900 dark:hover:text-red-400"
+        "dark:bg-red-900 dark:text-red-400 dark:hover:bg-red-800 dark:hover:text-red-300"
       )}
     >
       <TrashIcon
@@ -74,7 +74,7 @@ export const SaveButton = ({
       type="submit"
       className={classNames(
         "inline-flex items-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600",
-        "disabled:bg-gray-400 disabled:cursor-not-allowed"
+        "disabled:bg-gray-400 dark:disabled:bg-gray-700 disabled:cursor-not-allowed"
       )}
       disabled={pending || disabled}
     >

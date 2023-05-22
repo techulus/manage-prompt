@@ -189,7 +189,7 @@ export function WorkflowComposer({ workflow, isPublicPage = false }: Props) {
                       ({ name, type = WorkflowInputType.text, label }) => (
                         <div
                           key={name}
-                          className="rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-800 focus-within:ring-2 focus-within:ring-blue-600"
+                          className="rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-800 dark:bg-gray-900 focus-within:ring-2 focus-within:ring-blue-600"
                         >
                           <label
                             htmlFor="name"
@@ -230,7 +230,9 @@ export function WorkflowComposer({ workflow, isPublicPage = false }: Props) {
                     )}
                   </div>
                 ) : (
-                  <p>There are no inputs!</p>
+                  <p className="dark:text-white">
+                    There are no inputs, you can run the workflow!
+                  </p>
                 )}
               </Tab.Panel>
 
