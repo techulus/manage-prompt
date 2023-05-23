@@ -101,7 +101,7 @@ export default async function Workflows({ searchParams }: Props) {
         ))}
       </ul>
 
-      {!searchParams.search ? (
+      {workflows.length > 0 && !searchParams.search ? (
         <nav className="flex items-center justify-between border-t border-gray-200 dark:border-gray-800 px-4 py-3 sm:px-6">
           <div className="hidden sm:block">
             <p className="text-sm text-gray-700 dark:text-gray-400">
