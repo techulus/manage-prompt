@@ -61,8 +61,7 @@ export async function getWorkflowsForOwner({
   return { workflows, count };
 }
 
-// TODO: Add pagination
-export async function getWorkflowAndRuns(id: number) {
+export async function getWorkflowAndRuns(id: number, page: number = 1) {
   const { orgId, userId } = auth();
   const workflow: Workflow | null = await prisma.workflow.findFirst({
     where: {
@@ -77,17 +76,30 @@ export async function getWorkflowAndRuns(id: number) {
 
   if (!workflow) throw new Error("Workflow not found");
 
-  const workflowRuns: WorkflowRun[] = await prisma.workflowRun.findMany({
-    where: {
-      workflowId: id,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  const [workflowRuns, count]: [WorkflowRun[], number] =
+    await prisma.$transaction([
+      prisma.workflowRun.findMany({
+        where: {
+          workflowId: id,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: LIMIT,
+        skip: (page - 1) * LIMIT,
+      }),
+      prisma.workflowRun.count({
+        where: {
+          workflowId: {
+            equals: id,
+          },
+        },
+      }),
+    ]);
 
   return {
     workflow,
     workflowRuns,
+    count,
   };
 }

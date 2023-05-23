@@ -5,14 +5,14 @@ import { auth } from "@clerk/nextjs/app-beta";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 
-export const dynamic = "force-dynamic";
-
 interface Props {
   searchParams: {
     search: string;
     page: string;
   };
 }
+
+export const dynamic = "force-dynamic";
 
 export default async function Workflows({ searchParams }: Props) {
   const { userId, orgId } = auth();

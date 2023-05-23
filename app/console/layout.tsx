@@ -1,3 +1,5 @@
+"use client"; // not ideal, but the clerk components are reloading too many times, and this is a quick fix
+
 import NavBar from "@/components/console/navbar";
 
 export const dynamic = "force-dynamic";

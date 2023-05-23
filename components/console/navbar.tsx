@@ -82,7 +82,7 @@ export default function NavBar({ isPublicPage = false }) {
         </div>
 
         <nav
-          className="-mb-px flex space-x-8 overflow-y-scroll"
+          className="-mb-px flex space-x-1 overflow-y-scroll"
           aria-label="Tabs"
         >
           {tabs.map((tab) => (
@@ -92,12 +92,14 @@ export default function NavBar({ isPublicPage = false }) {
               className={classNames(
                 tab.current
                   ? "border-blue-500 text-blue-600 dark:text-blue-500"
-                  : "border-transparent text-gray-500 dark:text-gray-400 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-300",
-                "whitespace-nowrap border-b-2 py-1 px-1 text-sm font-medium"
+                  : "border-transparent text-gray-500 dark:text-gray-400",
+                "whitespace-nowrap border-b-2 py-2 text-sm font-medium"
               )}
               aria-current={tab.current ? "page" : undefined}
             >
-              {tab.name}
+              <span className="transition ease-in-out duration-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white hover:text-black py-2 px-4 rounded-md">
+                {tab.name}
+              </span>
             </Link>
           ))}
         </nav>
