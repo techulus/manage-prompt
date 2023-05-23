@@ -5,7 +5,7 @@ import PageTitle from "@/components/layout/page-title";
 import { LIMIT, getWorkflowAndRuns } from "@/utils/useWorkflow";
 import {
   PauseCircleIcon,
-  PencilIcon,
+  PencilSquareIcon,
   PlayCircleIcon,
 } from "@heroicons/react/20/solid";
 import classNames from "classnames";
@@ -72,7 +72,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                         />
                       }
                       label="Deactivate"
-                      className="hover:bg-orange-50"
+                      className="hover:bg-orange-50 hover:text-orange-600 dark:hover:text-orange-500"
                     />
                   ) : (
                     <ActionButton
@@ -83,7 +83,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                         />
                       }
                       label="Activate"
-                      className="hover:bg-green-50"
+                      className="hover:bg-green-50 hover:text-green-600 dark:hover:text-green-500"
                     />
                   )}
                 </form>
@@ -92,10 +92,11 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                   href={`/console/workflows/${workflow.id}/edit`}
                   className={classNames(
                     "relative -ml-px hidden items-center gap-x-1.5 rounded-sm bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:z-10 hover:bg-gray-50 focus:z-10 sm:inline-flex",
-                    "dark:bg-gray-950 dark:text-gray-300 dark:hover:bg-gray-900 dark:hover:text-gray-400"
+                    "dark:bg-gray-950 dark:text-gray-300 dark:hover:bg-gray-900",
+                    "hover:text-black dark:hover:text-gray-200"
                   )}
                 >
-                  <PencilIcon
+                  <PencilSquareIcon
                     className="-ml-0.5 h-5 w-5 text-gray-400 dark:text-gray-600"
                     aria-hidden="true"
                   />
@@ -118,7 +119,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                         />
                       }
                       label="Make private"
-                      className="hover:bg-orange-50"
+                      className="hover:bg-orange-50 hover:text-orange-600 dark:hover:text-orange-500"
                     />
                   </form>
                 ) : (
@@ -132,12 +133,12 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                     <ActionButton
                       icon={
                         <PlayCircleIcon
-                          className="-ml-0.5 h-5 w-5 text-gray-400 dark:text-gray-600 hover:text-orange-400"
+                          className="-ml-0.5 h-5 w-5 text-gray-400 dark:text-gray-600"
                           aria-hidden="true"
                         />
                       }
                       label="Make public"
-                      className="hover:bg-orange-50"
+                      className="hover:bg-orange-50 hover:text-orange-600 dark:hover:text-orange-500"
                     />
                   </form>
                 )}

@@ -67,7 +67,7 @@ export async function WorkflowItem({ workflow }: Props) {
           />
         </div>
         <div className="hidden flex-shrink-0 flex-col items-end space-y-3 sm:flex">
-          <p className="flex items-center space-x-4 text-blue-500 hover:text-blue-900">
+          <p className="flex items-center space-x-4 text-blue-500 hover:text-blue-900 dark:hover:text-blue-400">
             {workflow.published ? (
               <Link
                 href={`/console/workflows/${workflow.id}`}
