@@ -76,6 +76,13 @@ export function WorkflowComposer({ workflow, isPublicPage = false }: Props) {
         />
         <input
           type="text"
+          name="orgId"
+          id="orgId"
+          className="hidden"
+          defaultValue={orgId!}
+        />
+        <input
+          type="text"
           name="model"
           id="model"
           className="hidden"

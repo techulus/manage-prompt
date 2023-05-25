@@ -40,7 +40,7 @@ export default function NavBar({ isPublicPage = false }) {
   }, [user, isLoaded, isPublicPage]);
 
   return (
-    <nav className="flex-shrink-0 border-b bg-white dark:bg-black border-gray-200 dark:border-gray-800 text-black dark:text-white">
+    <nav className="flex-shrink-0 border-b border-gray-200 dark:border-gray-800 text-black dark:text-white">
       <div className="mx-auto max-w-7xl px-2 sm:px-4 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
           <div className="flex">
