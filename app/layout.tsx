@@ -22,14 +22,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full bg-blue-600">
+    <html lang="en" className="h-full bg-gray-700">
       <link rel="manifest" href="/manifest.json" />
 
       <ClerkProvider>
         <body
           className={classNames(
             "h-full bg-white dark:bg-black",
-            "rounded-tl-2xl rounded-tr-2xl md:rounded-none",
+            "rounded-tl-xl rounded-tr-xl md:rounded-none",
             firaSans.className
           )}
         >
