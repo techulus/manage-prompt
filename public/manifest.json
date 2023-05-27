@@ -1,8 +1,8 @@
 {
   "name": "ManagePrompt [alpha]",
   "short_name": "ManagePrompt",
-  "theme_color": "#404040",
-  "background_color": "#fff",
+  "theme_color": "#000",
+  "background_color": "#000",
   "display": "standalone",
   "orientation": "",
   "scope": "/",
