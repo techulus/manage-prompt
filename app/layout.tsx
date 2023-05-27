@@ -22,13 +22,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="h-full bg-gray-700">
+    <html lang="en" className="flex min-w-full min-h-full bg-black">
       <link rel="manifest" href="/manifest.json" />
 
       <ClerkProvider>
         <body
           className={classNames(
-            "h-full bg-white dark:bg-black",
+            "flex-1 min-h-full min-w-full bg-white dark:bg-gray-900",
             "rounded-tl-xl rounded-tr-xl md:rounded-none",
             firaSans.className
           )}
