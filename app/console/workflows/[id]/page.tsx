@@ -49,7 +49,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
           <div className="flex justify-between py-3">
             {/* Left buttons */}
             <div className="isolate inline-flex sm:space-x-3">
-              <span className="inline-flex">
+              <span className="inline-flex space-x-1">
                 <form action={toggleWorkflowState}>
                   <input
                     className="hidden"
@@ -187,7 +187,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
               <span className="font-medium">
                 {Math.min(currentPage * LIMIT, count)}
               </span>{" "}
-              of <span className="font-medium">{count}</span> workflows
+              of <span className="font-medium">{count}</span> workflow runs
             </p>
           </div>
 
