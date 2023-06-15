@@ -17,6 +17,7 @@ export const dynamic = "force-dynamic";
 
 export default async function PublicWorkflow({ params }: Props) {
   const { userId, orgId } = auth();
+
   const workflow: Workflow | null = await prisma.workflow.findUnique({
     where: {
       publicUrl: params.slug! as string,

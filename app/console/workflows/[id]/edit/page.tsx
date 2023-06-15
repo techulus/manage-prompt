@@ -26,19 +26,22 @@ export default async function EditWorkflow({ params }: Props) {
         title={`Update ${workflow?.name}`}
         backUrl="/console/workflows"
       />
-      <form className="px-6" action={updateWorkflow}>
-        <WorkflowForm workflow={workflow} />
 
-        <div className="mt-6 flex items-center justify-end gap-x-6">
-          <Link
-            href="/console/workflows"
-            className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-200"
-          >
-            Cancel
-          </Link>
-          <SaveButton />
-        </div>
-      </form>
+      <div className="flex flex-col rounded-md mt-4 mx-auto max-w-7xl lg:border border-gray-200 dark:border-gray-800">
+        <form className="px-6" action={updateWorkflow}>
+          <WorkflowForm workflow={workflow} />
+
+          <div className="mt-6 flex items-center justify-end gap-x-6">
+            <Link
+              href="/console/workflows"
+              className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-200"
+            >
+              Cancel
+            </Link>
+            <SaveButton />
+          </div>
+        </form>
+      </div>
     </>
   );
 }
