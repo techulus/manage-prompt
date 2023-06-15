@@ -36,7 +36,7 @@ export default async function Workflows({ searchParams }: Props) {
         createLink="/console/workflows/new"
       />
 
-      <div className="flex flex-col rounded-md mt-4 mx-auto max-w-7xl lg:border border-gray-200 dark:border-gray-800">
+      <div className="flex flex-col xl:mt-4 rounded-md mx-auto max-w-7xl lg:border border-gray-200 dark:border-gray-800">
         <form
           action="/console/workflows"
           className="flex flex-1 justify-center lg:justify-end pt-4 border-b border-gray-200 dark:border-gray-800 pb-4"

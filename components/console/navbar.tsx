@@ -51,7 +51,7 @@ export default function NavBar({ isPublicPage = false }) {
   return (
     <>
       <nav className="flex-shrink-0 text-black dark:text-white">
-        <div className="mx-auto px-8">
+        <div className="mx-auto px-4 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
             <div className="flex">
               <Link href="/" className="ml-1">
@@ -98,7 +98,7 @@ export default function NavBar({ isPublicPage = false }) {
       <SignedIn>
         <div
           className={classNames(
-            "flex px-8 min-w-full bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 -mb-px self-start sticky -top-[1px] z-10",
+            "flex px-4 lg:px-8 min-w-full bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 -mb-px self-start sticky -top-[1px] z-10",
             isSticky ? "pt-[1px] bg-red shadow-md" : ""
           )}
           ref={ref}

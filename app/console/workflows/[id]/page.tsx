@@ -43,7 +43,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
     <div className="relative">
       <PageTitle title={workflow.name} backUrl="/console/workflows" />
 
-      <div className="flex flex-col rounded-md mt-4 mx-auto max-w-7xl lg:border border-gray-200 dark:border-gray-800">
+      <div className="flex flex-col xl:mt-4 rounded-md mx-auto max-w-7xl lg:border border-gray-200 dark:border-gray-800">
         {/* Toolbar*/}
         <div className="hidden md:flex h-12 flex-col justify-center border-b border-gray-200 dark:border-gray-800">
           <div className="px-4 sm:px-6 lg:px-8 lg:-mx-4">

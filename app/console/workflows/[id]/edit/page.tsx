@@ -27,7 +27,7 @@ export default async function EditWorkflow({ params }: Props) {
         backUrl="/console/workflows"
       />
 
-      <div className="flex flex-col rounded-md mt-4 mx-auto max-w-7xl lg:border border-gray-200 dark:border-gray-800">
+      <div className="flex flex-col xl:mt-4 rounded-md mx-auto max-w-7xl lg:border border-gray-200 dark:border-gray-800">
         <form className="px-6" action={updateWorkflow}>
           <WorkflowForm workflow={workflow} />
 

@@ -18,7 +18,7 @@ export default async function Settings() {
     <>
       <PageTitle title="Settings" />
 
-      <div className="flex flex-col rounded-md mt-4 mx-auto max-w-7xl lg:border border-gray-200 dark:border-gray-800">
+      <div className="flex flex-col xl:mt-4 rounded-md mx-auto max-w-7xl lg:border border-gray-200 dark:border-gray-800">
         <main className="px-4 py-8 sm:px-6 lg:flex-auto">
           <div className="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
             <div>
