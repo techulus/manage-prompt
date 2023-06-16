@@ -8,6 +8,7 @@ import { Workflow } from "@prisma/client";
 import classNames from "classnames";
 import Link from "next/link";
 import { Badge } from "../ui/badge";
+import { Separator } from "../ui/separator";
 
 interface Props {
   workflow: Workflow;
@@ -85,7 +86,7 @@ export async function WorkflowItem({ workflow }: Props) {
           </p>
           <p className="flex space-x-2 text-sm text-gray-500">
             <span>{workflow.createdBy}</span>
-            <span aria-hidden="true">&middot;</span>
+            <Separator orientation="vertical" />
             <span>
               Last updated {new Date(workflow.updatedAt).toLocaleDateString()}
             </span>

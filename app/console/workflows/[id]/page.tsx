@@ -4,15 +4,9 @@ import { ContentBlock } from "@/components/core/content-block";
 import { ActionButton, DeleteButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { buttonVariants } from "@/components/ui/button";
 import { LIMIT, getWorkflowAndRuns } from "@/lib/utils/useWorkflow";
-import {
-  PauseCircleIcon,
-  PencilSquareIcon,
-  PlayCircleIcon,
-} from "@heroicons/react/20/solid";
+import { PauseCircleIcon, PlayCircleIcon } from "@heroicons/react/20/solid";
 import { Terminal } from "lucide-react";
-import Link from "next/link";
 import {
   deleteWorkflow,
   makeWorkflowPrivate,
@@ -44,7 +38,12 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
 
   return (
     <div className="relative">
-      <PageTitle title={workflow.name} backUrl="/console/workflows" />
+      <PageTitle
+        title={workflow.name}
+        backUrl="/console/workflows"
+        actionLabel="Edit"
+        actionLink={`/console/workflows/${workflow.id}/edit`}
+      />
 
       {!workflow.published ? (
         <Alert variant="destructive" className="mx-auto max-w-7xl mt-4">
@@ -101,17 +100,6 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                       />
                     )}
                   </form>
-
-                  <Link
-                    href={`/console/workflows/${workflow.id}/edit`}
-                    className={buttonVariants({ variant: "ghost" })}
-                  >
-                    <PencilSquareIcon
-                      className="mr-2 h-5 w-5"
-                      aria-hidden="true"
-                    />
-                    Edit
-                  </Link>
 
                   {workflow.publicUrl ? (
                     <form action={makeWorkflowPrivate}>

@@ -6,16 +6,16 @@ import { buttonVariants } from "../ui/button";
 
 interface Props {
   title: string;
-  createLink?: string;
-  createLabel?: string;
+  actionLink?: string;
+  actionLabel?: string;
   backUrl?: string;
 }
 
 export default function PageTitle({
   title,
   backUrl,
-  createLink,
-  createLabel,
+  actionLink,
+  actionLabel,
 }: Props) {
   return (
     <div className="flex justify-center border-b border-gray-200 dark:border-gray-800 pb-4 pl-4 pr-6 pt-4 sm:pl-6 lg:pl-8 xl:border-t-0 xl:px-8 xl:py-12 dark:text-white">
@@ -41,12 +41,9 @@ export default function PageTitle({
           <h1 className="flex-1 text-2xl">{title}</h1>
         </div>
 
-        {createLink && createLabel ? (
-          <Link
-            href={createLink}
-            className={buttonVariants({ variant: "outline" })}
-          >
-            {createLabel}
+        {actionLink && actionLabel ? (
+          <Link href={actionLink} className={buttonVariants()}>
+            {actionLabel}
           </Link>
         ) : null}
       </div>

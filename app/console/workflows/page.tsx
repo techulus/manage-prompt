@@ -34,8 +34,8 @@ export default async function Workflows({ searchParams }: Props) {
           searchParams.search ? `Search '${searchParams.search}'` : "Workflows"
         }
         backUrl={searchParams.search ? "/console/workflows" : undefined}
-        createLabel="New Workflow"
-        createLink="/console/workflows/new"
+        actionLabel="New Workflow"
+        actionLink="/console/workflows/new"
       />
 
       <form

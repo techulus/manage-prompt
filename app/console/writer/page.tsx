@@ -6,8 +6,8 @@ export default async function Writer() {
     <>
       <PageTitle
         title="Writer"
-        createLink="/console/writer/new"
-        createLabel="New Page"
+        actionLabel="New Page"
+        actionLink="/console/writer/new"
       />
 
       <ContentBlock>WIP</ContentBlock>
