@@ -1,12 +1,9 @@
 import { ClerkProvider } from "@clerk/nextjs/app-beta";
 import { Analytics } from "@vercel/analytics/react";
-import { Inter } from "next/font/google";
 
 import { SITE_METADATA } from "@/data/marketing";
 import classNames from "classnames";
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: SITE_METADATA.TITLE,
@@ -19,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="flex min-w-full min-h-full bg-black">
+    <html lang="en" className="flex min-w-full min-h-full dark">
       <link rel="manifest" href="/manifest.json" />
       <meta name="apple-mobile-web-app-capable" content="yes" />
       <link
@@ -76,9 +73,8 @@ export default function RootLayout({
       <ClerkProvider>
         <body
           className={classNames(
-            "flex-1 min-h-full min-w-full bg-white dark:bg-gray-900",
-            "rounded-tl-xl rounded-tr-xl md:rounded-none",
-            inter.className
+            "flex-1 min-h-full min-w-full",
+            "rounded-tl-xl rounded-tr-xl md:rounded-none"
           )}
         >
           {children}

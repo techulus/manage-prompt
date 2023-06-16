@@ -1,6 +1,6 @@
 "use client";
 
-import { useDetectSticky } from "@/hooks/useDetectSticky";
+import { useDetectSticky } from "@/lib/hooks/useDetectSticky";
 import { SignedIn, useUser } from "@clerk/nextjs";
 import { Transition } from "@headlessui/react";
 import classNames from "classnames";
@@ -24,11 +24,11 @@ export default function NavBar({ isPublicPage = false }) {
         href: "/console/workflows",
         current: path.startsWith("/console/workflows"),
       },
-      {
-        name: "Writer",
-        href: "/console/writer",
-        current: path.startsWith("/console/writer"),
-      },
+      // {
+      //   name: "Writer",
+      //   href: "/console/writer",
+      //   current: path.startsWith("/console/writer"),
+      // },
       {
         name: "Settings",
         href: "/console/settings",
@@ -98,7 +98,7 @@ export default function NavBar({ isPublicPage = false }) {
       <SignedIn>
         <div
           className={classNames(
-            "flex px-4 lg:px-8 min-w-full bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 -mb-px self-start sticky -top-[1px] z-10",
+            "flex px-4 lg:px-8 min-w-full bg-background border-b border-gray-200 dark:border-gray-800 -mb-px self-start sticky -top-[1px] z-10",
             isSticky ? "pt-[1px] bg-red shadow-md" : ""
           )}
           ref={ref}

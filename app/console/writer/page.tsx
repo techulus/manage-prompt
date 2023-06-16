@@ -1,11 +1,7 @@
+import { ContentBlock } from "@/components/core/content-block";
 import PageTitle from "@/components/layout/page-title";
-import { auth } from "@clerk/nextjs/app-beta";
-
-export const dynamic = "force-dynamic";
 
 export default async function Writer() {
-  const { userId, orgId } = auth();
-
   return (
     <>
       <PageTitle
@@ -13,6 +9,8 @@ export default async function Writer() {
         createLink="/console/writer/new"
         createLabel="New Page"
       />
+
+      <ContentBlock>WIP</ContentBlock>
     </>
   );
 }

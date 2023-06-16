@@ -3,11 +3,11 @@ import {
   GlobeAltIcon,
   PencilIcon,
   PlayIcon,
-  UserIcon,
 } from "@heroicons/react/20/solid";
 import { Workflow } from "@prisma/client";
 import classNames from "classnames";
 import Link from "next/link";
+import { Badge } from "../ui/badge";
 
 interface Props {
   workflow: Workflow;
@@ -51,10 +51,7 @@ export async function WorkflowItem({ workflow }: Props) {
             </h2>
           </div>
           <div className="group relative flex items-center space-x-2.5">
-            <UserIcon className="h-4 w-4 inline text-gray-400" />
-            <span className="truncate text-sm font-medium text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-gray-300">
-              {workflow.createdBy}
-            </span>
+            <Badge variant="outline">{workflow.model}</Badge>
             {workflow.publicUrl ? (
               <GlobeAltIcon className="h-4 w-4 inline text-orange-400 dark:text-orange-500" />
             ) : null}
@@ -87,7 +84,7 @@ export async function WorkflowItem({ workflow }: Props) {
             )}
           </p>
           <p className="flex space-x-2 text-sm text-gray-500">
-            <span>{workflow.model}</span>
+            <span>{workflow.createdBy}</span>
             <span aria-hidden="true">&middot;</span>
             <span>
               Last updated {new Date(workflow.updatedAt).toLocaleDateString()}

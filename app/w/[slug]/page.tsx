@@ -1,7 +1,7 @@
 import { WorkflowComposer } from "@/components/console/workflow-composer";
 import PageTitle from "@/components/layout/page-title";
-import { prisma } from "@/utils/db";
-import { getAppBaseUrl } from "@/utils/url";
+import { prisma } from "@/lib/utils/db";
+import { getAppBaseUrl } from "@/lib/utils/url";
 import { SignedOut, auth } from "@clerk/nextjs/app-beta";
 import { Workflow } from "@prisma/client";
 import classNames from "classnames";

@@ -5,9 +5,18 @@ import {
   WorkflowInputType,
   WorkflowModels,
 } from "@/data/workflow";
-import { parseInputs } from "@/utils/workflow";
+import { parseInputs } from "@/lib/utils/workflow";
 import { Workflow } from "@prisma/client";
 import { useCallback, useState } from "react";
+import { Input } from "../ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { Textarea } from "../ui/textarea";
 
 interface Props {
   workflow?: Workflow;
@@ -39,11 +48,6 @@ export function WorkflowForm({ workflow }: Props) {
   return (
     <div className="space-y-12 sm:space-y-16">
       <div>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-600 dark:text-gray-400">
-          A workflow is a AI prompt with a pre-defined set of inputs &
-          configuration.
-        </p>
-
         {workflow?.id ? (
           <input
             type="number"
@@ -63,22 +67,26 @@ export function WorkflowForm({ workflow }: Props) {
               Model
             </label>
             <div className="mt-2 sm:col-span-2 sm:mt-0">
-              <select
-                id="model"
+              <Select
                 name="model"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-200 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:max-w-xs sm:text-sm sm:leading-6 dark:bg-gray-900 dark:ring-gray-800 capitalize"
                 value={model}
-                onChange={(e) => {
-                  setModel(e.target.value);
-                  updateInputs({ model: e.target.value });
+                onValueChange={(val) => {
+                  setModel(val);
+                  updateInputs({ model: val });
                 }}
               >
-                {Object.keys(WorkflowModels).map((model) => (
-                  <option key={model} value={WorkflowModels[model]}>
-                    {model} ({WorkflowModels[model]})
-                  </option>
-                ))}
-              </select>
+                <SelectTrigger className="w-[240px]">
+                  <SelectValue placeholder="Model" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.keys(WorkflowModels).map((model) => (
+                    <SelectItem key={model} value={WorkflowModels[model]}>
+                      {" "}
+                      {model} ({WorkflowModels[model]})
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
@@ -90,13 +98,7 @@ export function WorkflowForm({ workflow }: Props) {
               Name
             </label>
             <div className="mt-2 sm:col-span-2 sm:mt-0">
-              <input
-                type="text"
-                name="name"
-                id="name"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-200 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:max-w-xs sm:text-sm sm:leading-6 dark:bg-gray-900 dark:ring-gray-800"
-                defaultValue={workflow?.name ?? ""}
-              />
+              <Input name="name" defaultValue={workflow?.name ?? ""} />
             </div>
           </div>
 
@@ -110,11 +112,9 @@ export function WorkflowForm({ workflow }: Props) {
                   Instruction
                 </label>
                 <div className="mt-2 sm:col-span-2 sm:mt-0">
-                  <textarea
-                    id="instruction"
+                  <Textarea
                     name="instruction"
                     rows={3}
-                    className="block w-full max-w-2xl rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-200 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 dark:bg-gray-900 dark:ring-gray-800"
                     value={instruction}
                     onChange={(e) => {
                       setInstruction(e.target.value);
@@ -139,11 +139,9 @@ export function WorkflowForm({ workflow }: Props) {
                 Request template
               </label>
               <div className="mt-2 sm:col-span-2 sm:mt-0">
-                <textarea
-                  id="template"
+                <Textarea
                   name="template"
                   rows={3}
-                  className="block w-full max-w-2xl rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-200 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 dark:bg-gray-900 dark:ring-gray-800"
                   value={template}
                   onChange={(e) => {
                     setTemplate(e.target.value);
@@ -177,22 +175,13 @@ export function WorkflowForm({ workflow }: Props) {
                     >
                       <div className="sm:col-span-2 sm:col-start-1">
                         <div className="mt-2">
-                          <input
-                            type="text"
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-200 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 disabled:cursor-not-allowed disabled:bg-gray-100 dark:disabled:bg-gray-950 dark:bg-gray-900 dark:ring-gray-800"
-                            placeholder="Name"
-                            value={name}
-                            onChange={() => {}}
-                            disabled
-                          />
+                          <Input value={name} disabled />
                         </div>
                       </div>
 
                       <div className="sm:col-span-2">
                         <div className="mt-2">
-                          <input
-                            type="text"
-                            className="block w-full rounded-md border-0 py-1.5 text-gray-900 dark:text-gray-200 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 dark:bg-gray-900 dark:ring-gray-800"
+                          <Input
                             placeholder="Label"
                             value={label ?? ""}
                             onChange={(e) => {
@@ -207,26 +196,30 @@ export function WorkflowForm({ workflow }: Props) {
 
                       <div className="sm:col-span-2">
                         <div className="mt-2">
-                          <select
-                            className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 dark:text-gray-200 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600 sm:text-sm sm:leading-6 dark:bg-gray-900 dark:ring-gray-800"
+                          <Select
                             value={type ?? "text"}
-                            onChange={(e) => {
+                            onValueChange={(val) => {
                               const newInputs = [...inputs];
-                              newInputs.find((i) => i.name === name)!.type = e
-                                .target.value as WorkflowInputType;
+                              newInputs.find((i) => i.name === name)!.type =
+                                val as WorkflowInputType;
                               setInputs(newInputs);
                             }}
                           >
-                            {Object.keys(WorkflowInputType).map((type) => (
-                              <option
-                                key={type}
-                                value={type}
-                                className="capitalize"
-                              >
-                                {type}
-                              </option>
-                            ))}
-                          </select>
+                            <SelectTrigger className="w-[240px]">
+                              <SelectValue placeholder="Model" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {Object.keys(WorkflowInputType).map((type) => (
+                                <SelectItem
+                                  key={type}
+                                  value={type}
+                                  className="capitalize"
+                                >
+                                  {type}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
                         </div>
                       </div>
                     </div>

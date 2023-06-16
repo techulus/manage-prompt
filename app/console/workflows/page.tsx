@@ -1,8 +1,10 @@
 import { WorkflowItem } from "@/components/console/workflow-item";
+import { ContentBlock } from "@/components/core/content-block";
 import PageTitle from "@/components/layout/page-title";
-import { LIMIT, getWorkflowsForOwner } from "@/utils/useWorkflow";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { LIMIT, getWorkflowsForOwner } from "@/lib/utils/useWorkflow";
 import { auth } from "@clerk/nextjs/app-beta";
-import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import Link from "next/link";
 
 interface Props {
@@ -36,30 +38,21 @@ export default async function Workflows({ searchParams }: Props) {
         createLink="/console/workflows/new"
       />
 
-      <div className="flex flex-col xl:mt-4 rounded-md mx-auto max-w-7xl lg:border border-gray-200 dark:border-gray-800">
-        <form
-          action="/console/workflows"
-          className="flex flex-1 justify-center lg:justify-end pt-4 border-b border-gray-200 dark:border-gray-800 pb-4"
-        >
-          <div className="w-full px-2 lg:px-6">
-            <label htmlFor="search" className="sr-only">
-              Search workflows
-            </label>
-            <div className="relative text-gray-600 dark:text-gray-400 focus-within:text-gray-800 dark:focus-within:text-gray-200">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <MagnifyingGlassIcon className="h-5 w-5" aria-hidden="true" />
-              </div>
-              <input
-                id="search"
-                name="search"
-                className="block w-full rounded-md border-0 bg-gray-200 dark:bg-gray-900 bg-opacity-25 py-1.5 pl-10 pr-3 text-black dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-600 focus:bg-white dark:focus:bg-gray-800 focus:outline focus:outline-gray-200 dark:focus:outline-gray-600  focus:outline-none focus:ring-0 focus:placeholder:text-gray-500 dark:focus:placeholder:text-gray-400 sm:text-sm sm:leading-6"
-                placeholder="Search Workflows"
-                type="search"
-              />
-            </div>
+      <form
+        action="/console/workflows"
+        className="flex flex-1 justify-center lg:justify-end mx-4 py-4 xl:pt-4 xl:pb-0 xl:m-0"
+      >
+        <div className="w-full max-w-7xl mx-auto">
+          <label htmlFor="search" className="sr-only">
+            Search workflows
+          </label>
+          <div className="relative text-gray-600 dark:text-gray-400 focus-within:text-gray-800 dark:focus-within:text-gray-200">
+            <Input name="search" placeholder="Search Workflows" type="search" />
           </div>
-        </form>
+        </div>
+      </form>
 
+      <ContentBlock>
         <ul
           role="list"
           className="divide-y divide-gray-200 dark:divide-gray-800 border-b border-gray-200 dark:border-gray-800"
@@ -123,30 +116,24 @@ export default async function Workflows({ searchParams }: Props) {
               {currentPage > 1 ? (
                 <form action="/console/workflows">
                   <input type="hidden" name="page" value={currentPage - 1} />
-                  <button
-                    type="submit"
-                    className="relative inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold text-gray-900 dark:text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 focus-visible:outline-offset-0"
-                  >
+                  <Button type="submit" variant="ghost">
                     Previous
-                  </button>
+                  </Button>
                 </form>
               ) : null}
 
               {(currentPage - 1) * LIMIT + workflows.length < count ? (
                 <form action="/console/workflows">
                   <input type="hidden" name="page" value={currentPage + 1} />
-                  <button
-                    type="submit"
-                    className="relative ml-3 inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold text-gray-900 dark:text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 focus-visible:outline-offset-0"
-                  >
+                  <Button type="submit" variant="ghost">
                     Next
-                  </button>
+                  </Button>
                 </form>
               ) : null}
             </div>
           </nav>
         ) : null}
-      </div>
+      </ContentBlock>
     </>
   );
 }

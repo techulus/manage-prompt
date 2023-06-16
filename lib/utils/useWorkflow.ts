@@ -1,4 +1,4 @@
-import { prisma } from "@/utils/db";
+import { prisma } from "@/lib/utils/db";
 import { auth } from "@clerk/nextjs/app-beta";
 import { Prisma, Workflow, WorkflowRun } from "@prisma/client";
 

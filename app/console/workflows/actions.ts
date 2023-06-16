@@ -1,9 +1,9 @@
 "use server";
 
 import { OpenAIModel, WorkflowInput } from "@/data/workflow";
-import { prisma } from "@/utils/db";
-import { getCompletion } from "@/utils/openai";
-import { WorkflowSchema } from "@/utils/workflow";
+import { prisma } from "@/lib/utils/db";
+import { getCompletion } from "@/lib/utils/openai";
+import { WorkflowSchema } from "@/lib/utils/workflow";
 import { auth, clerkClient } from "@clerk/nextjs";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";

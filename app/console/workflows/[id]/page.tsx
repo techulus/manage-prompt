@@ -1,14 +1,17 @@
 import { WorkflowComposer } from "@/components/console/workflow-composer";
 import { WorkflowRunItem } from "@/components/console/workflow-run-item";
+import { ContentBlock } from "@/components/core/content-block";
 import { ActionButton, DeleteButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
-import { LIMIT, getWorkflowAndRuns } from "@/utils/useWorkflow";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { buttonVariants } from "@/components/ui/button";
+import { LIMIT, getWorkflowAndRuns } from "@/lib/utils/useWorkflow";
 import {
   PauseCircleIcon,
   PencilSquareIcon,
   PlayCircleIcon,
 } from "@heroicons/react/20/solid";
-import classNames from "classnames";
+import { Terminal } from "lucide-react";
 import Link from "next/link";
 import {
   deleteWorkflow,
@@ -43,8 +46,18 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
     <div className="relative">
       <PageTitle title={workflow.name} backUrl="/console/workflows" />
 
-      <div className="flex flex-col xl:mt-4 rounded-md mx-auto max-w-7xl lg:border border-gray-200 dark:border-gray-800">
-        {/* Toolbar*/}
+      {!workflow.published ? (
+        <Alert variant="destructive" className="mx-auto max-w-7xl mt-4">
+          <Terminal className="h-4 w-4" />
+          <AlertTitle>Heads up!</AlertTitle>
+          <AlertDescription>
+            This workflow is not published and hence cannot be run.
+          </AlertDescription>
+        </Alert>
+      ) : null}
+
+      {/* Toolbar*/}
+      <ContentBlock>
         <div className="hidden md:flex h-12 flex-col justify-center border-b border-gray-200 dark:border-gray-800">
           <div className="px-4 sm:px-6 lg:px-8 lg:-mx-4">
             <div className="flex justify-between py-3">
@@ -68,7 +81,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                       <ActionButton
                         icon={
                           <PauseCircleIcon
-                            className="-ml-0.5 h-5 w-5 text-gray-400 dark:text-gray-600 hover:text-orange-400"
+                            className="mr-2 h-5 w-5"
                             aria-hidden="true"
                           />
                         }
@@ -79,7 +92,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                       <ActionButton
                         icon={
                           <PlayCircleIcon
-                            className="-ml-0.5 h-5 w-5 text-gray-400 dark:text-gray-600 hover:text-orange-400"
+                            className="mr-2 h-5 w-5"
                             aria-hidden="true"
                           />
                         }
@@ -91,14 +104,10 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
 
                   <Link
                     href={`/console/workflows/${workflow.id}/edit`}
-                    className={classNames(
-                      "relative -ml-px hidden items-center gap-x-1.5 rounded-sm bg-white px-3 py-2 text-sm font-semibold text-gray-900 hover:z-10 hover:bg-gray-50 focus:z-10 sm:inline-flex",
-                      "dark:bg-gray-950 dark:text-gray-300 dark:hover:bg-gray-900",
-                      "hover:text-black dark:hover:text-gray-200"
-                    )}
+                    className={buttonVariants({ variant: "ghost" })}
                   >
                     <PencilSquareIcon
-                      className="-ml-0.5 h-5 w-5 text-gray-400 dark:text-gray-600"
+                      className="mr-2 h-5 w-5"
                       aria-hidden="true"
                     />
                     Edit
@@ -115,7 +124,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                       <ActionButton
                         icon={
                           <PlayCircleIcon
-                            className="-ml-0.5 h-5 w-5 text-gray-400 dark:text-gray-600 hover:text-orange-400"
+                            className="mr-2 h-5 w-5"
                             aria-hidden="true"
                           />
                         }
@@ -134,7 +143,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                       <ActionButton
                         icon={
                           <PlayCircleIcon
-                            className="-ml-0.5 h-5 w-5 text-gray-400 dark:text-gray-600"
+                            className="mr-2 h-5 w-5"
                             aria-hidden="true"
                           />
                         }
@@ -163,20 +172,24 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
             </div>
           </div>
         </div>
+      </ContentBlock>
 
+      <ContentBlock>
         <WorkflowComposer workflow={workflow} />
+      </ContentBlock>
 
-        <ul
-          role="list"
-          className="border-t divide-y divide-gray-200 dark:divide-gray-800 border-b border-gray-200 dark:border-gray-800"
-        >
-          {workflowRuns.map((run) => (
-            // @ts-ignore React server component
-            <WorkflowRunItem key={run.id} workflowRun={run} />
-          ))}
-        </ul>
+      {workflowRuns.length ? (
+        <ContentBlock>
+          <ul
+            role="list"
+            className="border-t divide-y divide-gray-200 dark:divide-gray-800 border-b border-gray-200 dark:border-gray-800"
+          >
+            {workflowRuns.map((run) => (
+              // @ts-ignore React server component
+              <WorkflowRunItem key={run.id} workflowRun={run} />
+            ))}
+          </ul>
 
-        {workflowRuns.length ? (
           <nav className="flex items-center justify-between border-t border-gray-200 dark:border-gray-800 px-4 py-3 sm:px-6">
             <div className="hidden sm:block">
               <p className="text-sm text-gray-700 dark:text-gray-400">
@@ -218,8 +231,8 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
               ) : null}
             </div>
           </nav>
-        ) : null}
-      </div>
+        </ContentBlock>
+      ) : null}
     </div>
   );
 }

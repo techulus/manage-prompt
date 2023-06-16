@@ -11,8 +11,10 @@ import { Tab } from "@headlessui/react";
 import { Workflow } from "@prisma/client";
 import classNames from "classnames";
 import { useMemo, useReducer } from "react";
-import { Alert, AlertType } from "../core/alert";
 import { SaveButton } from "../form/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Textarea } from "../ui/textarea";
 
 interface Props {
   workflow: Workflow;
@@ -52,13 +54,6 @@ export function WorkflowComposer({ workflow, isPublicPage = false }: Props) {
 
   return (
     <>
-      {!workflow.published ? (
-        <Alert
-          type={AlertType.Warning}
-          message=" This workflow is not published and hence cannot be run."
-        />
-      ) : null}
-
       <form className="p-6" action={isPublicPage ? copyWorkflow : runWorkflow}>
         <input
           type="number"
@@ -144,24 +139,18 @@ export function WorkflowComposer({ workflow, isPublicPage = false }: Props) {
               <Tab.Panels className="mt-2">
                 <Tab.Panel className="-m-0.5 rounded-lg p-0.5">
                   {(inputs as [])?.length ? (
-                    <div className="space-y-4">
+                    <div className="mt-4 space-y-4">
                       {(inputs as WorkflowInput[]).map(
                         ({ name, type = WorkflowInputType.text, label }) => (
                           <div
                             key={name}
-                            className="rounded-md px-3 pb-1.5 pt-2.5 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-800 dark:bg-gray-900 focus-within:ring-2 focus-within:ring-blue-600"
+                            className="grid w-full items-center gap-1.5"
                           >
-                            <label
-                              htmlFor="name"
-                              className="block text-xs font-medium text-gray-900 dark:text-gray-200"
-                            >
-                              {label ?? name}
-                            </label>
+                            <Label>{label ?? name}</Label>
 
                             {type === WorkflowInputType.textarea ? (
-                              <textarea
-                                rows={3}
-                                className="block w-full border-0 p-0 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 dark:bg-gray-900 dark:ring-gray-800"
+                              <Textarea
+                                rows={5}
                                 placeholder={`Enter value for ${name}`}
                                 value={inputValues[name] ?? ""}
                                 onChange={(e) =>
@@ -175,9 +164,8 @@ export function WorkflowComposer({ workflow, isPublicPage = false }: Props) {
                               WorkflowInputType.date,
                               WorkflowInputType.number,
                             ].includes(type) ? (
-                              <input
+                              <Input
                                 type={type}
-                                className="block w-full border-0 p-0 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6 dark:bg-gray-900 dark:ring-gray-800"
                                 placeholder={`Enter value for ${name}`}
                                 value={inputValues[name] ?? ""}
                                 onChange={(e) =>

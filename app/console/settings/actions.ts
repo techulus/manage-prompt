@@ -1,6 +1,6 @@
 "use server";
 
-import { prisma } from "@/utils/db";
+import { prisma } from "@/lib/utils/db";
 import { auth } from "@clerk/nextjs/app-beta";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
