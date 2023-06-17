@@ -29,7 +29,7 @@ export default function Chat() {
       <PageTitle title="Chat" />
 
       <ContentBlock className="flex flex-grow overflow-y-scoll">
-        <CardContent className="w-full py-4 space-y-4">
+        <CardContent className="w-full py-4 space-y-4 divide-y">
           {!messages.length ? (
             <div className="w-full text-gray-400 text-center p-10">
               No messages yet. Start the conversation!
@@ -38,7 +38,7 @@ export default function Chat() {
 
           {messages.map((message: Message) => (
             <div className="flex flex-col space-y-2" key={message.id}>
-              <p className="font-extrabold tracking-tight text-lg">
+              <p className="mt-2 font-extrabold tracking-tight text-lg">
                 {message.role === "user" ? "You" : "Assistant"}
               </p>
               <div className="flex flex-col prose justify-center">
@@ -49,41 +49,42 @@ export default function Chat() {
         </CardContent>
       </ContentBlock>
 
-      <form className="flex-shrink-0" onSubmit={handleSubmit}>
-        <ContentBlock className="mt-auto">
-          <CardContent className="flex flex-col md:flex-row mt-4 space-y-2 md:space-y-0 md:space-x-4">
-            <Textarea
-              placeholder="Hello!"
-              value={input}
-              onChange={handleInputChange}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  btnRef.current?.click();
-                }
-              }}
-            />
-            {isLoading ? (
-              <Button type="button" onClick={stop}>
-                <Spinner className="mr-2" /> Cancel
+      <form
+        className="w-full max-w-3xl mx-auto flex-shrink-0 mt-8"
+        onSubmit={handleSubmit}
+      >
+        <CardContent className="flex flex-col md:flex-row mt-4 space-y-2 md:space-y-0 md:space-x-4">
+          <Textarea
+            placeholder="Send a message..."
+            value={input}
+            onChange={handleInputChange}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                btnRef.current?.click();
+              }
+            }}
+          />
+          {isLoading ? (
+            <Button type="button" onClick={stop}>
+              <Spinner className="mr-2" /> Cancel
+            </Button>
+          ) : (
+            <div className="flex md:flex-col md:space-y-2">
+              <Button type="submit" ref={btnRef}>
+                <PaperAirplaneIcon className="w-5 h-5 mr-2" /> Send
               </Button>
-            ) : (
-              <div className="flex md:flex-col md:space-y-2">
-                <Button type="submit" ref={btnRef}>
-                  <PaperAirplaneIcon className="w-5 h-5 mr-2" /> Send
-                </Button>
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={() => setMessages([])}
-                  className="ml-auto md:ml-0"
-                >
-                  Clear
-                </Button>
-              </div>
-            )}
-          </CardContent>
-        </ContentBlock>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => setMessages([])}
+                className="ml-auto md:ml-0"
+              >
+                Clear
+              </Button>
+            </div>
+          )}
+        </CardContent>
       </form>
     </>
   );
