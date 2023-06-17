@@ -8,6 +8,7 @@ import { CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { PaperAirplaneIcon } from "@heroicons/react/20/solid";
 import { Message, useChat } from "ai/react";
+import { useRef } from "react";
 import ReactMarkdown from "react-markdown";
 
 export default function Chat() {
@@ -21,6 +22,7 @@ export default function Chat() {
     handleSubmit,
     isLoading,
   } = useChat();
+  const btnRef = useRef<HTMLButtonElement>(null);
 
   return (
     <>
@@ -54,6 +56,12 @@ export default function Chat() {
               placeholder="Hello!"
               value={input}
               onChange={handleInputChange}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault();
+                  btnRef.current?.click();
+                }
+              }}
             />
             {isLoading ? (
               <Button type="button" onClick={stop}>
@@ -61,7 +69,7 @@ export default function Chat() {
               </Button>
             ) : (
               <div className="flex md:flex-col md:space-y-2">
-                <Button type="submit">
+                <Button type="submit" ref={btnRef}>
                   <PaperAirplaneIcon className="w-5 h-5 mr-2" /> Send
                 </Button>
                 <Button
