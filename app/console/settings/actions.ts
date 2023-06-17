@@ -4,6 +4,7 @@ import { prisma } from "@/lib/utils/db";
 import { auth } from "@clerk/nextjs/app-beta";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 export async function purgeWorkflowData() {
   const { userId, orgId } = auth();
@@ -21,4 +22,10 @@ export async function purgeWorkflowData() {
   revalidatePath("/console/settings");
   revalidatePath(`/console/workflows`);
   redirect("/console/settings");
+}
+
+export async function updateTheme(formData: FormData) {
+  const theme = String(formData.get("theme")) ?? "light";
+
+  cookies().set("theme", theme, { httpOnly: true });
 }

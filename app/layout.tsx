@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { SITE_METADATA } from "@/data/marketing";
 import classNames from "classnames";
 import "./globals.css";
+import { cookies } from "next/headers";
 
 export const metadata = {
   title: SITE_METADATA.TITLE,
@@ -15,8 +16,14 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const theme = cookies().get("theme")?.value ?? "light";
+
   return (
-    <html lang="en" className="flex min-w-full min-h-full dark">
+    <html lang="en" className={classNames("flex min-w-full min-h-full", theme)}>
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=5.0"
+      />
       <link rel="manifest" href="/manifest.json" />
       <meta name="apple-mobile-web-app-capable" content="yes" />
       <link
