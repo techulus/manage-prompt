@@ -117,10 +117,10 @@ export default function NavBar({ isPublicPage = false, appearance }: Props) {
           <Transition
             show={isSticky}
             className="absolute self-center"
-            enter="transition-all ease-in-out duration-[250ms]"
+            enter="transition-all ease-in-out duration-300"
             enterFrom="transform  translate-y-[-100%] opacity-0"
             enterTo="transform  translate-y-0 opacity-100"
-            leave="transition-all ease-in-out duration-[250ms]"
+            leave="transition-all ease-in-out duration-300"
             leaveFrom="transform  translate-y-0 opacity-100"
             leaveTo="transform  translate-y-[-100%] opacity-0"
           >
