@@ -1,9 +1,7 @@
 import { OrganizationSwitcher, UserButton } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 
-const appearance = "dark";
-
-export const ThemedOrgSwitcher = () => {
+export const ThemedOrgSwitcher = ({ appearance }) => {
   return (
     <OrganizationSwitcher
       appearance={appearance === "dark" ? { baseTheme: dark } : {}}
@@ -12,7 +10,7 @@ export const ThemedOrgSwitcher = () => {
   );
 };
 
-export const ThemedUserButton = () => {
+export const ThemedUserButton = ({ appearance }) => {
   return (
     <UserButton appearance={appearance === "dark" ? { baseTheme: dark } : {}} />
   );

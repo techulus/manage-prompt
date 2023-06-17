@@ -1,4 +1,5 @@
 import NavBar from "@/components/console/navbar";
+import { cookies } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
@@ -7,9 +8,11 @@ export default function PublicLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const theme = cookies().get("theme")?.value ?? "light";
+
   return (
     <div className="relative flex min-h-full flex-col">
-      <NavBar isPublicPage />
+      <NavBar isPublicPage appearance={theme} />
 
       <div className="mx-auto w-full max-w-7xl flex-grow lg:flex xl:px-8">
         <div className="min-w-0 flex-1 xl:flex">

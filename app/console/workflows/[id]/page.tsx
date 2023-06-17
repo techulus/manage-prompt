@@ -5,7 +5,12 @@ import { ActionButton, DeleteButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { LIMIT, getWorkflowAndRuns } from "@/lib/utils/useWorkflow";
-import { PauseCircleIcon, PlayCircleIcon } from "@heroicons/react/20/solid";
+import {
+  LockClosedIcon,
+  LockOpenIcon,
+  PauseCircleIcon,
+  PlayCircleIcon,
+} from "@heroicons/react/20/solid";
 import { Terminal } from "lucide-react";
 import {
   deleteWorkflow,
@@ -111,7 +116,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                       />
                       <ActionButton
                         icon={
-                          <PlayCircleIcon
+                          <LockClosedIcon
                             className="mr-2 h-5 w-5"
                             aria-hidden="true"
                           />
@@ -130,7 +135,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                       />
                       <ActionButton
                         icon={
-                          <PlayCircleIcon
+                          <LockOpenIcon
                             className="mr-2 h-5 w-5"
                             aria-hidden="true"
                           />

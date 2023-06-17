@@ -11,7 +11,12 @@ import { useEffect, useMemo } from "react";
 import logo from "../../public/images/logo.png";
 import { ThemedOrgSwitcher, ThemedUserButton } from "../core/auth";
 
-export default function NavBar({ isPublicPage = false }) {
+type Props = {
+  isPublicPage?: boolean;
+  appearance: string;
+};
+
+export default function NavBar({ isPublicPage = false, appearance }: Props) {
   const { isLoaded, user } = useUser();
   const path = usePathname();
 
@@ -90,11 +95,11 @@ export default function NavBar({ isPublicPage = false }) {
                 </svg>
               </SignedIn>
 
-              <ThemedOrgSwitcher />
+              <ThemedOrgSwitcher appearance={appearance} />
             </div>
 
             <div className="flex ml-2 justify-center">
-              <ThemedUserButton />
+              <ThemedUserButton appearance={appearance} />
             </div>
           </div>
         </div>
