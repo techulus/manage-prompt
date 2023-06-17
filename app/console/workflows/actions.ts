@@ -189,6 +189,7 @@ export async function runWorkflow(formData: FormData) {
     data: {
       workflowId: id,
       result,
+      rawRequest: JSON.parse(JSON.stringify({ model, content, instruction })),
       rawResult: JSON.parse(JSON.stringify(rawResult)),
       createdBy: `${user?.firstName} ${user?.lastName}`,
     },

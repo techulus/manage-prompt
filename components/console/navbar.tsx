@@ -24,6 +24,11 @@ export default function NavBar({ isPublicPage = false }) {
         href: "/console/workflows",
         current: path.startsWith("/console/workflows"),
       },
+      {
+        name: "Chat",
+        href: "/console/chat",
+        current: path.startsWith("/console/chat"),
+      },
       // {
       //   name: "Writer",
       //   href: "/console/writer",
@@ -107,7 +112,7 @@ export default function NavBar({ isPublicPage = false }) {
           <Transition
             show={isSticky}
             className="absolute self-center"
-            enter="transition-all ease-in-out duration-[250ms] delay-[50ms]"
+            enter="transition-all ease-in-out duration-[250ms]"
             enterFrom="transform  translate-y-[-100%] opacity-0"
             enterTo="transform  translate-y-0 opacity-100"
             leave="transition-all ease-in-out duration-[250ms]"

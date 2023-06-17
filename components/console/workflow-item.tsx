@@ -84,13 +84,13 @@ export async function WorkflowItem({ workflow }: Props) {
               </Link>
             )}
           </p>
-          <p className="flex space-x-2 text-sm text-gray-500">
+          <div className="flex space-x-2 text-sm text-gray-500">
             <span>{workflow.createdBy}</span>
             <Separator orientation="vertical" />
             <span>
               Last updated {new Date(workflow.updatedAt).toLocaleDateString()}
             </span>
-          </p>
+          </div>
         </div>
       </div>
     </li>
