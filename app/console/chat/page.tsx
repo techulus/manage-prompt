@@ -38,7 +38,7 @@ export default function Chat() {
 
           {messages.map((message: Message) => (
             <div className="flex flex-col space-y-2" key={message.id}>
-              <p className="mt-2 font-extrabold tracking-tight text-lg">
+              <p className="mt-2 font-bold tracking-tight">
                 {message.role === "user" ? "You" : "Assistant"}
               </p>
               <div className="flex flex-col prose justify-center">
