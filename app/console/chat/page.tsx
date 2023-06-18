@@ -2,34 +2,57 @@
 
 import { ContentBlock } from "@/components/core/content-block";
 import { Spinner } from "@/components/core/loaders";
+import { notifyError } from "@/components/core/toast";
 import PageTitle from "@/components/layout/page-title";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { PaperAirplaneIcon } from "@heroicons/react/20/solid";
+import {
+  BoltIcon,
+  PaperAirplaneIcon,
+  UserIcon,
+} from "@heroicons/react/20/solid";
 import { Message, useChat } from "ai/react";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import ReactMarkdown from "react-markdown";
 
 export default function Chat() {
-  // TODO: handle errors
   const {
-    stop,
     messages,
     setMessages,
     input,
     handleInputChange,
     handleSubmit,
+    stop,
     isLoading,
-  } = useChat();
+  } = useChat({
+    onError: (error: Error) => {
+      console.error(error);
+      notifyError("Something went wrong, please try again.");
+    },
+  });
   const btnRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (messages.length) {
+      localStorage.setItem("messages", JSON.stringify(messages));
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    const messages = localStorage.getItem("messages");
+    if (messages) {
+      setMessages(JSON.parse(messages));
+    }
+  }, []);
 
   return (
     <>
       <PageTitle title="Chat" />
 
       <ContentBlock className="flex flex-grow overflow-y-scoll">
-        <CardContent className="w-full py-4 space-y-4 divide-y">
+        <CardContent className="content-block w-full overflow-x-scroll">
           {!messages.length ? (
             <div className="w-full text-gray-400 text-center p-10">
               No messages yet. Start the conversation!
@@ -37,11 +60,19 @@ export default function Chat() {
           ) : null}
 
           {messages.map((message: Message) => (
-            <div className="flex flex-col space-y-2" key={message.id}>
-              <p className="mt-2 font-bold tracking-tight">
-                {message.role === "user" ? "You" : "Assistant"}
+            <div className="flex items-center mt-4" key={message.id}>
+              <p className="font-bold tracking-tight mt-1 self-start">
+                <Avatar>
+                  <AvatarFallback>
+                    {message.role === "user" ? (
+                      <UserIcon className="w-5 h-5" />
+                    ) : (
+                      <BoltIcon className="w-5 h-5 text-blue-600" />
+                    )}
+                  </AvatarFallback>
+                </Avatar>
               </p>
-              <div className="flex flex-col prose justify-center">
+              <div className="ml-2 flex flex-col prose justify-center">
                 <ReactMarkdown>{message.content}</ReactMarkdown>
               </div>
             </div>
@@ -77,7 +108,10 @@ export default function Chat() {
               <Button
                 type="button"
                 variant="secondary"
-                onClick={() => setMessages([])}
+                onClick={() => {
+                  setMessages([]);
+                  localStorage.removeItem("messages");
+                }}
                 className="ml-auto md:ml-0"
               >
                 Clear

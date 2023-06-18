@@ -10,6 +10,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import logo from "../../public/images/logo.png";
 import { ThemedOrgSwitcher, ThemedUserButton } from "../core/auth";
+import { createToastWrapper } from "../core/toast";
 
 type Props = {
   isPublicPage?: boolean;
@@ -60,6 +61,7 @@ export default function NavBar({ isPublicPage = false, appearance }: Props) {
 
   return (
     <>
+      {createToastWrapper(appearance)}
       <nav className="flex-shrink-0 text-black dark:text-white">
         <div className="mx-auto px-4 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
