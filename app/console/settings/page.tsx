@@ -4,16 +4,16 @@ import PageTitle from "@/components/layout/page-title";
 import { prisma } from "@/lib/utils/db";
 import { auth, clerkClient } from "@clerk/nextjs/app-beta";
 import { purgeWorkflowData } from "./actions";
-import { Select } from "@/components/ui/select";
 import { ThemePicker } from "@/components/core/theme-picker";
 import { cookies } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
 export default async function Settings() {
+  const theme = cookies().get("theme")?.value ?? "light";
+
   const { userId, orgId } = auth();
   const user = await clerkClient.users.getUser(userId ?? "");
-  const theme = cookies().get("theme")?.value ?? "light";
 
   const dataCount = await prisma.workflow.count({
     where: { ownerId: orgId ?? userId ?? "" },
