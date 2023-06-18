@@ -98,7 +98,11 @@ export function WorkflowForm({ workflow }: Props) {
               Name
             </label>
             <div className="mt-2 sm:col-span-2 sm:mt-0">
-              <Input name="name" defaultValue={workflow?.name ?? ""} />
+              <Input
+                type="text"
+                name="name"
+                defaultValue={workflow?.name ?? ""}
+              />
             </div>
           </div>
 
@@ -175,13 +179,14 @@ export function WorkflowForm({ workflow }: Props) {
                     >
                       <div className="sm:col-span-2 sm:col-start-1">
                         <div className="mt-2">
-                          <Input value={name} disabled />
+                          <Input type="text" value={name} disabled />
                         </div>
                       </div>
 
                       <div className="sm:col-span-2">
                         <div className="mt-2">
                           <Input
+                            type="text"
                             placeholder="Label"
                             value={label ?? ""}
                             onChange={(e) => {
