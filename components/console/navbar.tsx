@@ -68,15 +68,24 @@ export default function NavBar({ isPublicPage = false, appearance }: Props) {
             <div className="flex">
               <Link href="/" className="ml-1">
                 <div className="flex items-center lg:px-0">
-                  <div className="flex-shrink-0">
-                    <Image
-                      src={logo}
-                      alt="ManagePrompt"
-                      width={32}
-                      height={32}
-                      className="mr-2"
-                    />
-                  </div>
+                  <Image
+                    src={logo}
+                    alt="ManagePrompt"
+                    width={32}
+                    height={32}
+                    className="mr-2"
+                  />
+                  {isPublicPage ? (
+                    <Link href="/" className="-m-1.5 p-1.5">
+                      <span className="sr-only">ManagePrompt</span>
+                      <p className="hero relative">
+                        Manage<span className="font-semibold">Prompt</span>
+                        <sup className="absolute top-0 left-[calc(100%+.1rem)] text-xs">
+                          [alpha]
+                        </sup>
+                      </p>
+                    </Link>
+                  ) : null}
                 </div>
               </Link>
 
@@ -95,69 +104,70 @@ export default function NavBar({ isPublicPage = false, appearance }: Props) {
                 >
                   <path d="M16.88 3.549L7.12 20.451"></path>
                 </svg>
+
+                <ThemedOrgSwitcher appearance={appearance} />
               </SignedIn>
-
-              <ThemedOrgSwitcher appearance={appearance} />
             </div>
 
-            <div className="flex ml-2 justify-center">
-              <ThemedUserButton appearance={appearance} />
-            </div>
+            <SignedIn>
+              <div className="flex ml-2 justify-center">
+                <ThemedUserButton appearance={appearance} />
+              </div>
+            </SignedIn>
           </div>
         </div>
       </nav>
 
-      <SignedIn>
+      <div
+        className={classNames(
+          "flex px-4 lg:px-8 min-w-full bg-background border-b border-gray-200 dark:border-gray-800 -mb-px self-start sticky -top-[1px] z-10",
+          isSticky ? "pt-[1px] bg-red shadow-md" : "",
+          isPublicPage ? "hidden" : ""
+        )}
+        ref={ref}
+        aria-label="Tabs"
+      >
+        <Transition
+          show={isSticky}
+          className="absolute self-center"
+          enter="transition-all ease-in-out duration-300"
+          enterFrom="transform  translate-y-[-100%] opacity-0"
+          enterTo="transform  translate-y-0 opacity-100"
+          leave="transition-all ease-in-out duration-300"
+          leaveFrom="transform  translate-y-0 opacity-100"
+          leaveTo="transform  translate-y-[-100%] opacity-0"
+        >
+          <Link href="/">
+            <Image src={logo} alt="ManagePrompt" width={24} height={24} />
+          </Link>
+        </Transition>
+
         <div
           className={classNames(
-            "flex px-4 lg:px-8 min-w-full bg-background border-b border-gray-200 dark:border-gray-800 -mb-px self-start sticky -top-[1px] z-10",
-            isSticky ? "pt-[1px] bg-red shadow-md" : ""
+            "flex space-x-1 overflow-y-scroll",
+            "transition ease-in-out duration-300",
+            isSticky ? "translate-x-[40px]" : "translate-x-0"
           )}
-          ref={ref}
-          aria-label="Tabs"
         >
-          <Transition
-            show={isSticky}
-            className="absolute self-center"
-            enter="transition-all ease-in-out duration-300"
-            enterFrom="transform  translate-y-[-100%] opacity-0"
-            enterTo="transform  translate-y-0 opacity-100"
-            leave="transition-all ease-in-out duration-300"
-            leaveFrom="transform  translate-y-0 opacity-100"
-            leaveTo="transform  translate-y-[-100%] opacity-0"
-          >
-            <Link href="/">
-              <Image src={logo} alt="ManagePrompt" width={24} height={24} />
+          {tabs.map((tab) => (
+            <Link
+              key={tab.name}
+              href={tab.href}
+              className={classNames(
+                tab.current
+                  ? "border-blue-500 text-blue-600 dark:text-blue-500"
+                  : "border-transparent text-gray-500 dark:text-gray-400",
+                "whitespace-nowrap border-b-2 py-3 text-sm font-medium"
+              )}
+              aria-current={tab.current ? "page" : undefined}
+            >
+              <span className="transition ease-in-out duration-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white hover:text-black py-2 px-4 rounded-md">
+                {tab.name}
+              </span>
             </Link>
-          </Transition>
-
-          <div
-            className={classNames(
-              "flex space-x-1 overflow-y-scroll",
-              "transition ease-in-out duration-300",
-              isSticky ? "translate-x-[40px]" : "translate-x-0"
-            )}
-          >
-            {tabs.map((tab) => (
-              <Link
-                key={tab.name}
-                href={tab.href}
-                className={classNames(
-                  tab.current
-                    ? "border-blue-500 text-blue-600 dark:text-blue-500"
-                    : "border-transparent text-gray-500 dark:text-gray-400",
-                  "whitespace-nowrap border-b-2 py-3 text-sm font-medium"
-                )}
-                aria-current={tab.current ? "page" : undefined}
-              >
-                <span className="transition ease-in-out duration-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white hover:text-black py-2 px-4 rounded-md">
-                  {tab.name}
-                </span>
-              </Link>
-            ))}
-          </div>
+          ))}
         </div>
-      </SignedIn>
+      </div>
     </>
   );
 }

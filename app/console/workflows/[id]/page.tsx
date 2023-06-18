@@ -60,6 +60,20 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
         </Alert>
       ) : null}
 
+      {workflow.publicUrl ? (
+        <Alert variant="default" className="mx-auto max-w-7xl mt-4">
+          <Terminal className="h-4 w-4" />
+          <AlertTitle>Heads up!</AlertTitle>
+          <AlertDescription>
+            This workflow is public and can be accessed by anyone{" "}
+            <a className="inline underline" href={`/w/${workflow.publicUrl}`}>
+              here
+            </a>
+            .
+          </AlertDescription>
+        </Alert>
+      ) : null}
+
       {/* Toolbar*/}
       <ContentBlock>
         <div className="hidden md:flex h-12 flex-col justify-center border-b border-gray-200 dark:border-gray-800">
