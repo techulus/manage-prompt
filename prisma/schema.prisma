@@ -16,6 +16,29 @@ datasource db {
   // shadowDatabaseUrl = env(“SHADOW_DATABASE_URL”)
 }
 
+model User {
+  id            String         @id
+  email         String         @unique
+  first_name    String?
+  last_name     String?
+  rawData       Json?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  organizations Organization[]
+}
+
+model Organization {
+  id            String   @id
+  name          String
+  image_url     String?
+  logo_url      String?
+  rawData       Json?
+  createdByUser String
+  createdBy     User     @relation(fields: [createdByUser], references: [id], onDelete: Cascade)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
 model Workflow {
   id        Int     @id @default(autoincrement())
   createdBy String // User ID
