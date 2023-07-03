@@ -80,12 +80,3 @@ model WorkflowRun {
 
   user User @relation(fields: [createdBy], references: [id], onDelete: Cascade)
 }
-
-model Organisation {
-  orgId      Int      @id @unique
-  plan       String   @default("byok") // Bring your own key
-  usageLimit Int?
-  banned     Boolean  @default(false)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
