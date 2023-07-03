@@ -9,6 +9,7 @@ const publicPaths = [
   "/sign-up*",
   "/w\\/[a-zA-Z0-9-]+$",
   "/terms*",
+  "/webhooks/auth*",
 ];
 
 const isPublic = (path: string) => {
