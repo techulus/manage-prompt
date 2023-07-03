@@ -10,8 +10,13 @@ import Link from "next/link";
 import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
 
+type WorkflowWithUser = Workflow & {
+  user: {
+    first_name: string;
+  };
+};
 interface Props {
-  workflow: Workflow;
+  workflow: WorkflowWithUser;
 }
 
 export async function WorkflowItem({ workflow }: Props) {
@@ -85,7 +90,7 @@ export async function WorkflowItem({ workflow }: Props) {
             )}
           </p>
           <div className="flex space-x-2 text-sm text-gray-500">
-            <span>{workflow.createdBy}</span>
+            <span>{workflow.user?.first_name}</span>
             <Separator orientation="vertical" />
             <span>
               Last updated {new Date(workflow.updatedAt).toLocaleDateString()}

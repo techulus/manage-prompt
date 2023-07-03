@@ -1,12 +1,17 @@
 import { WorkflowRun } from "@prisma/client";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
+type WorkflowRunWithUser = WorkflowRun & {
+  user: {
+    first_name: string;
+  };
+};
 interface Props {
-  workflowRun: WorkflowRun;
+  workflowRun: WorkflowRunWithUser;
 }
 
 export async function WorkflowRunItem({ workflowRun }: Props) {
-  const { result, createdBy, createdAt, rawResult } = workflowRun;
+  const { result, user, createdAt, rawResult } = workflowRun;
   const model = (rawResult as any)?.model as string;
 
   return (
@@ -17,7 +22,7 @@ export async function WorkflowRunItem({ workflowRun }: Props) {
       <div className="flex justify-between space-x-3">
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-semibold text-gray-900 dark:text-gray-100 space-x-2">
-            <span>{createdBy}</span>
+            <span>{user?.first_name}</span>
             {model ? (
               <>
                 <span aria-hidden="true">&middot;</span>

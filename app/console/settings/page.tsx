@@ -1,11 +1,11 @@
 import { ContentBlock } from "@/components/core/content-block";
+import { ThemePicker } from "@/components/core/theme-picker";
 import { DeleteButton, UpdateProfileButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
 import { prisma } from "@/lib/utils/db";
 import { auth, clerkClient } from "@clerk/nextjs/app-beta";
-import { purgeWorkflowData } from "./actions";
-import { ThemePicker } from "@/components/core/theme-picker";
 import { cookies } from "next/headers";
+import { purgeWorkflowData } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +16,13 @@ export default async function Settings() {
   const user = await clerkClient.users.getUser(userId ?? "");
 
   const dataCount = await prisma.workflow.count({
-    where: { ownerId: orgId ?? userId ?? "" },
+    where: {
+      organization: {
+        id: {
+          equals: orgId ?? userId ?? "",
+        },
+      },
+    },
   });
 
   return (

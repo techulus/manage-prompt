@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/utils/db";
 import { auth } from "@clerk/nextjs/app-beta";
-import { Prisma, Workflow, WorkflowRun } from "@prisma/client";
+import { Prisma, Workflow } from "@prisma/client";
 
 export const LIMIT = 15;
 
@@ -29,9 +29,25 @@ export async function getWorkflowsForOwner({
   count: number;
 }> {
   const dbQuery: Prisma.WorkflowFindManyArgs = {
+    select: {
+      id: true,
+      name: true,
+      createdAt: true,
+      updatedAt: true,
+      published: true,
+      model: true,
+      ownerId: true,
+      user: {
+        select: {
+          first_name: true,
+        },
+      },
+    },
     where: {
-      ownerId: {
-        equals: orgId ?? userId ?? "",
+      organization: {
+        id: {
+          equals: orgId ?? userId ?? "",
+        },
       },
     },
     orderBy: {
@@ -51,8 +67,10 @@ export async function getWorkflowsForOwner({
     prisma.workflow.findMany(dbQuery),
     prisma.workflow.count({
       where: {
-        ownerId: {
-          equals: orgId ?? userId ?? "",
+        organization: {
+          id: {
+            equals: orgId ?? userId ?? "",
+          },
         },
       },
     }),
@@ -68,34 +86,46 @@ export async function getWorkflowAndRuns(id: number, page: number = 1) {
       id: {
         equals: id,
       },
-      ownerId: {
-        equals: orgId ?? userId ?? "",
+      organization: {
+        id: {
+          equals: orgId ?? userId ?? "",
+        },
       },
     },
   });
 
   if (!workflow) throw new Error("Workflow not found");
 
-  const [workflowRuns, count]: [WorkflowRun[], number] =
-    await prisma.$transaction([
-      prisma.workflowRun.findMany({
-        where: {
-          workflowId: id,
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-        take: LIMIT,
-        skip: (page - 1) * LIMIT,
-      }),
-      prisma.workflowRun.count({
-        where: {
-          workflowId: {
-            equals: id,
+  const [workflowRuns, count] = await prisma.$transaction([
+    prisma.workflowRun.findMany({
+      select: {
+        id: true,
+        result: true,
+        createdAt: true,
+        rawResult: true,
+        user: {
+          select: {
+            first_name: true,
           },
         },
-      }),
-    ]);
+      },
+      where: {
+        workflowId: id,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: LIMIT,
+      skip: (page - 1) * LIMIT,
+    }),
+    prisma.workflowRun.count({
+      where: {
+        workflowId: {
+          equals: id,
+        },
+      },
+    }),
+  ]);
 
   return {
     workflow,

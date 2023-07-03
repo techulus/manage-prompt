@@ -3,8 +3,8 @@
 import { prisma } from "@/lib/utils/db";
 import { auth } from "@clerk/nextjs/app-beta";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export async function purgeWorkflowData() {
   const { userId, orgId } = auth();
@@ -15,7 +15,11 @@ export async function purgeWorkflowData() {
 
   await prisma.workflow.deleteMany({
     where: {
-      ownerId: orgId ?? userId,
+      organization: {
+        id: {
+          equals: orgId ?? userId ?? "",
+        },
+      },
     },
   });
 
