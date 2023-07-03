@@ -25,24 +25,27 @@ model User {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   organizations Organization[]
+  Workflow      Workflow[]
+  WorkflowRun   WorkflowRun[]
 }
 
 model Organization {
-  id            String   @id
+  id            String     @id
   name          String
   image_url     String?
   logo_url      String?
   rawData       Json?
   createdByUser String
-  createdBy     User     @relation(fields: [createdByUser], references: [id], onDelete: Cascade)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdBy     User       @relation(fields: [createdByUser], references: [id], onDelete: Cascade)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  workflows     Workflow[]
 }
 
 model Workflow {
   id        Int     @id @default(autoincrement())
-  createdBy String // User ID
-  ownerId   String // Can be user or organisaiton id
+  createdBy String
+  ownerId   String
   name      String
   published Boolean @default(false)
 
@@ -58,6 +61,9 @@ model Workflow {
   updatedAt   DateTime      @updatedAt
   WorkflowRun WorkflowRun[]
 
+  organization Organization @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+
   @@index([ownerId])
 }
 
@@ -68,9 +74,11 @@ model WorkflowRun {
   result     String
   rawRequest Json?
   rawResult  Json?
-  createdBy  String // User ID
+  createdBy  String
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+
+  user User @relation(fields: [createdBy], references: [id], onDelete: Cascade)
 }
 
 model Organisation {

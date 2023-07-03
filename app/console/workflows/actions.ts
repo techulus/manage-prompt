@@ -36,8 +36,16 @@ export async function saveWorkflow(formData: FormData) {
 
   await prisma.workflow.create({
     data: {
-      createdBy: `${user?.firstName} ${user?.lastName}`,
-      ownerId: orgId ?? userId ?? "",
+      user: {
+        connect: {
+          id: userId!,
+        },
+      },
+      organization: {
+        connect: {
+          id: orgId ?? userId ?? "",
+        },
+      },
       published: true,
       name,
       model,
@@ -183,15 +191,21 @@ export async function runWorkflow(formData: FormData) {
 
   if (!result) throw "No result returned from OpenAI";
 
-  const user = await clerkClient.users.getUser(userId!);
-
   await prisma.workflowRun.create({
     data: {
-      workflowId: id,
       result,
       rawRequest: JSON.parse(JSON.stringify({ model, content, instruction })),
       rawResult: JSON.parse(JSON.stringify(rawResult)),
-      createdBy: `${user?.firstName} ${user?.lastName}`,
+      user: {
+        connect: {
+          id: userId,
+        },
+      },
+      workflow: {
+        connect: {
+          id,
+        },
+      },
     },
   });
 
@@ -214,20 +228,26 @@ export async function copyWorkflow(formData: FormData) {
 
   if (!workflow) throw "Workflow not found";
 
-  const user = await clerkClient.users.getUser(userId!);
-
   const { name, model, template, instruction, inputs } = workflow;
 
   const { id: newId } = await prisma.workflow.create({
     data: {
-      ownerId: orgId ?? userId ?? "",
       name: `${name} (copy)`,
       model,
       template,
       instruction,
       inputs: JSON.parse(JSON.stringify(inputs)),
       published: true,
-      createdBy: `${user?.firstName} ${user?.lastName}`,
+      user: {
+        connect: {
+          id: userId!,
+        },
+      },
+      organization: {
+        connect: {
+          id: orgId ?? userId ?? "",
+        },
+      },
     },
   });
 

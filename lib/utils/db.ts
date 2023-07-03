@@ -1,10 +1,14 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaClient as PrismaEdgeClient } from "@prisma/client/edge";
 
-export const prisma = new PrismaClient({
-  log: ["query", "info", "warn", "error"],
-});
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
+};
 
-export const prismaEdge = new PrismaEdgeClient({
-  log: ["query", "info", "warn", "error"],
-});
+export const prisma =
+  globalForPrisma.prisma ??
+  new PrismaClient({
+    // log: ["query", "info", "warn", "error"],
+    log: ["info", "warn", "error"],
+  });
+
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
