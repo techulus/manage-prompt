@@ -27,13 +27,13 @@ export function Footer() {
           ))}
         </nav>
 
-        <a
+        <Link
           className="text-gray-500 text-sm leading-6 mt-10 block sm:text-center"
           href="https://www.flaticon.com/free-icons/bot"
           title="bot icons"
         >
           Bot icons created by Smashicons - Flaticon
-        </a>
+        </Link>
 
         <p className="mt-4 sm:text-center text-sm leading-5 text-gray-500">
           &copy; 2023 Techulus. All rights reserved.

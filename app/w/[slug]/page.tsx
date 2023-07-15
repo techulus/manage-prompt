@@ -8,6 +8,7 @@ import { SignedOut, auth } from "@clerk/nextjs/app-beta";
 import { RocketLaunchIcon } from "@heroicons/react/20/solid";
 import { Workflow } from "@prisma/client";
 import classNames from "classnames";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 interface Props {
@@ -45,7 +46,7 @@ export default async function PublicWorkflow({ params }: Props) {
 
           <SignedOut>
             <div className="ml-8">
-              <a
+              <Link
                 href={`/sign-up?redirect_url=${encodeURIComponent(
                   `${getAppBaseUrl()}/w/${params.slug}}`
                 )}`}
@@ -56,7 +57,7 @@ export default async function PublicWorkflow({ params }: Props) {
               >
                 <RocketLaunchIcon className="h-4 w-4 mr-2" />
                 Sign in and copy workflow
-              </a>
+              </Link>
             </div>
           </SignedOut>
         </CardContent>

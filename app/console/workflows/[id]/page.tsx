@@ -18,6 +18,7 @@ import {
   makeWorkflowPublic,
   toggleWorkflowState,
 } from "../actions";
+import Link from "next/link";
 
 interface Props {
   params: {
@@ -66,9 +67,9 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
           <AlertTitle>Heads up!</AlertTitle>
           <AlertDescription>
             This workflow is public and can be accessed by anyone{" "}
-            <a className="inline underline" href={`/w/${workflow.publicUrl}`}>
+            <Link className="inline underline" href={`/w/${workflow.publicUrl}`}>
               here
-            </a>
+            </Link>
             .
           </AlertDescription>
         </Alert>
