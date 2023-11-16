@@ -10,6 +10,8 @@ enum MessageTypes {
   // Organization
   "organization.created" = "organization.created",
   "organization.updated" = "organization.updated",
+  "organizationMembership.created" = "organizationMembership.created",
+  "organizationMembership.deleted" = "organizationMembership.deleted",
 }
 
 type Message = {
@@ -34,6 +36,8 @@ export async function POST(request: Request) {
     // console.log("POST /webhooks/auth Message:", msg);
 
     const data = msg.data;
+
+    console.log("POST /webhooks/auth Message:", msg);
 
     switch (msg.type) {
       case "user.created":
@@ -94,6 +98,7 @@ export async function POST(request: Request) {
           },
         });
         break;
+
       case "organization.updated":
         await prisma.organization.update({
           where: {
@@ -111,6 +116,32 @@ export async function POST(request: Request) {
             },
           },
         });
+        break;
+
+      case "organizationMembership.created":
+        await prisma.organizationToUser.create({
+          data: {
+            organization: {
+              connect: {
+                id: data.organization.id,
+              },
+            },
+            user: {
+              connect: {
+                id: data.public_user_data.user_id,
+              },
+            },
+          },
+        });
+        break;
+      case "organizationMembership.deleted":
+        await prisma.organizationToUser.deleteMany({
+          where: {
+            organizationId: { equals: data.organization.id },
+            userId: { equals: data.public_user_data.user_id },
+          },
+        });
+        break;
       default:
         console.log("POST /webhooks/auth Unknown message type:", msg.type);
     }
