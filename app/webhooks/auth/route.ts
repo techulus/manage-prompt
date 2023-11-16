@@ -134,6 +134,7 @@ export async function POST(request: Request) {
           },
         });
         break;
+
       case "organizationMembership.deleted":
         await prisma.organizationToUser.deleteMany({
           where: {
@@ -142,6 +143,7 @@ export async function POST(request: Request) {
           },
         });
         break;
+
       default:
         console.log("POST /webhooks/auth Unknown message type:", msg.type);
     }
