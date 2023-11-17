@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs";
+import { owner } from "@/lib/hooks/useOwner";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 import { Configuration, OpenAIApi } from "openai-edge";
 
@@ -10,7 +10,7 @@ const openai = new OpenAIApi(config);
 export const runtime = "edge";
 
 export async function POST(req: Request) {
-  const { userId } = auth();
+  const { userId } = owner();
 
   if (!userId) {
     return new Response("Unauthorized", { status: 401 });

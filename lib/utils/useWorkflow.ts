@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/utils/db";
-import { auth } from "@clerk/nextjs/app-beta";
 import { Prisma, Workflow } from "@prisma/client";
+import { owner } from "../hooks/useOwner";
 
 export const LIMIT = 15;
 
@@ -80,7 +80,7 @@ export async function getWorkflowsForOwner({
 }
 
 export async function getWorkflowAndRuns(id: number, page: number = 1) {
-  const { orgId, userId } = auth();
+  const { ownerId } = owner();
   const workflow: Workflow | null = await prisma.workflow.findFirst({
     where: {
       id: {
@@ -88,7 +88,7 @@ export async function getWorkflowAndRuns(id: number, page: number = 1) {
       },
       organization: {
         id: {
-          equals: orgId ?? userId ?? "",
+          equals: ownerId,
         },
       },
     },

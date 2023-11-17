@@ -1,15 +1,15 @@
 "use server";
 
+import { owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
-import { auth } from "@clerk/nextjs/app-beta";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 export async function purgeWorkflowData() {
-  const { userId, orgId } = auth();
+  const { ownerId } = owner();
 
-  if (!userId && !orgId) {
+  if (ownerId) {
     throw new Error("User and org ID not found");
   }
 
@@ -17,7 +17,7 @@ export async function purgeWorkflowData() {
     where: {
       organization: {
         id: {
-          equals: orgId ?? userId ?? "",
+          equals: ownerId,
         },
       },
     },
