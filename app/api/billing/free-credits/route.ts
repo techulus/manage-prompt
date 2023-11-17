@@ -1,18 +1,12 @@
 import { prisma } from "@/lib/utils/db";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request) {
-  const authToken = (req.headers.get("authorization") || "")
-    .split("Bearer ")
-    .at(1);
-
-  if (!authToken || authToken != process.env.CRON_SECRET) {
-    return NextResponse.json(
-      { error: "Unauthorized" },
-      {
-        status: 401,
-      }
-    );
+export async function GET(request: Request) {
+  const authHeader = request.headers.get("authorization");
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return new Response("Unauthorized", {
+      status: 401,
+    });
   }
 
   await prisma.organization.updateMany({
