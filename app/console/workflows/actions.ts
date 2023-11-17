@@ -4,14 +4,13 @@ import { OpenAIModel, WorkflowInput } from "@/data/workflow";
 import { prisma } from "@/lib/utils/db";
 import { getCompletion } from "@/lib/utils/openai";
 import { WorkflowSchema } from "@/lib/utils/workflow";
-import { auth, clerkClient } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import slugify from "slugify";
 
 export async function saveWorkflow(formData: FormData) {
   const { userId, orgId } = auth();
-  const user = await clerkClient.users.getUser(userId!);
 
   const name = formData.get("name") as string;
   const model = formData.get("model") as string;
@@ -175,13 +174,22 @@ export async function makeWorkflowPrivate(formData: FormData) {
 }
 
 export async function runWorkflow(formData: FormData) {
+  const { userId, orgId } = auth();
+
   const id = Number(formData.get("id"));
   const model = formData.get("model") as OpenAIModel;
   const content = formData.get("content") as string;
   const instruction = formData.get("instruction") as string;
-  const userId = formData.get("userId") as string;
 
-  if (!id) throw "ID is missing";
+  if (!id || !orgId || !userId) throw "ID is missing";
+
+  const organization = await prisma.organization.findUnique({
+    where: {
+      id: orgId,
+    },
+  });
+
+  if (organization?.credits === 0) throw "No credits remaining";
 
   const { result, rawResult } = await getCompletion(
     model,
@@ -191,23 +199,35 @@ export async function runWorkflow(formData: FormData) {
 
   if (!result) throw "No result returned from OpenAI";
 
-  await prisma.workflowRun.create({
-    data: {
-      result,
-      rawRequest: JSON.parse(JSON.stringify({ model, content, instruction })),
-      rawResult: JSON.parse(JSON.stringify(rawResult)),
-      user: {
-        connect: {
-          id: userId,
+  await prisma.$transaction([
+    prisma.workflowRun.create({
+      data: {
+        result,
+        rawRequest: JSON.parse(JSON.stringify({ model, content, instruction })),
+        rawResult: JSON.parse(JSON.stringify(rawResult)),
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+        workflow: {
+          connect: {
+            id,
+          },
         },
       },
-      workflow: {
-        connect: {
-          id,
+    }),
+    prisma.organization.update({
+      where: {
+        id: orgId,
+      },
+      data: {
+        credits: {
+          decrement: 1,
         },
       },
-    },
-  });
+    }),
+  ]);
 
   revalidatePath(`/console/workflows/${id}`);
   redirect(`/console/workflows/${id}`);
@@ -215,8 +235,7 @@ export async function runWorkflow(formData: FormData) {
 
 export async function copyWorkflow(formData: FormData) {
   const id = Number(formData.get("id"));
-  const userId = formData.get("userId") as string;
-  const orgId = formData.get("orgId") as string;
+  const { userId, orgId } = auth();
 
   if (!id) throw "ID is missing";
 

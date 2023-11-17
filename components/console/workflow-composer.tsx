@@ -6,7 +6,7 @@ import {
   WorkflowInputType,
   WorkflowModels,
 } from "@/data/workflow";
-import { SignedIn, useAuth } from "@clerk/nextjs";
+import { SignedIn } from "@clerk/nextjs";
 import { Tab } from "@headlessui/react";
 import { Workflow } from "@prisma/client";
 import classNames from "classnames";
@@ -22,7 +22,6 @@ interface Props {
 }
 
 export function WorkflowComposer({ workflow, isPublicPage = false }: Props) {
-  const { userId, orgId } = useAuth();
   const { id, inputs, template, instruction, model } = workflow;
 
   const [inputValues, updateInput] = useReducer((state: any, action: any) => {
@@ -61,20 +60,6 @@ export function WorkflowComposer({ workflow, isPublicPage = false }: Props) {
           id="id"
           className="hidden"
           defaultValue={Number(id)}
-        />
-        <input
-          type="text"
-          name="userId"
-          id="userId"
-          className="hidden"
-          defaultValue={userId!}
-        />
-        <input
-          type="text"
-          name="orgId"
-          id="orgId"
-          className="hidden"
-          defaultValue={orgId!}
         />
         <input
           type="text"
