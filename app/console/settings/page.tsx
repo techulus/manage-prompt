@@ -2,8 +2,9 @@ import { ContentBlock } from "@/components/core/content-block";
 import { ThemePicker } from "@/components/core/theme-picker";
 import { DeleteButton, UpdateProfileButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
+import { owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
-import { auth, clerkClient } from "@clerk/nextjs/app-beta";
+import { clerkClient } from "@clerk/nextjs/app-beta";
 import { cookies } from "next/headers";
 import { purgeWorkflowData } from "./actions";
 
@@ -12,12 +13,13 @@ export const dynamic = "force-dynamic";
 export default async function Settings() {
   const theme = cookies().get("theme")?.value ?? "light";
 
-  const { userId, orgId } = auth();
+  const { userId, ownerId } = owner();
+
   const user = await clerkClient.users.getUser(userId ?? "");
 
   const organization = await prisma.organization.findUnique({
     where: {
-      id: orgId ?? "",
+      id: ownerId,
     },
   });
 
@@ -25,7 +27,7 @@ export default async function Settings() {
     where: {
       organization: {
         id: {
-          equals: orgId ?? userId ?? "",
+          equals: ownerId,
         },
       },
     },

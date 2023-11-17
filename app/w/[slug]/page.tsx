@@ -2,9 +2,10 @@ import { WorkflowComposer } from "@/components/console/workflow-composer";
 import { ContentBlock } from "@/components/core/content-block";
 import PageTitle from "@/components/layout/page-title";
 import { CardContent } from "@/components/ui/card";
+import { owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
 import { getAppBaseUrl } from "@/lib/utils/url";
-import { SignedOut, auth } from "@clerk/nextjs/app-beta";
+import { SignedOut } from "@clerk/nextjs/app-beta";
 import { RocketLaunchIcon } from "@heroicons/react/20/solid";
 import { Workflow } from "@prisma/client";
 import classNames from "classnames";
@@ -20,7 +21,7 @@ interface Props {
 export const dynamic = "force-dynamic";
 
 export default async function PublicWorkflow({ params }: Props) {
-  const { userId, orgId } = auth();
+  const { userId, orgId } = owner();
 
   const workflow: Workflow | null = await prisma.workflow.findUnique({
     where: {

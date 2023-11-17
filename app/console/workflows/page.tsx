@@ -3,8 +3,8 @@ import { ContentBlock } from "@/components/core/content-block";
 import PageTitle from "@/components/layout/page-title";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { owner } from "@/lib/hooks/useOwner";
 import { LIMIT, getWorkflowsForOwner } from "@/lib/utils/useWorkflow";
-import { auth } from "@clerk/nextjs/app-beta";
 import Link from "next/link";
 
 interface Props {
@@ -17,7 +17,7 @@ interface Props {
 export const dynamic = "force-dynamic";
 
 export default async function Workflows({ searchParams }: Props) {
-  const { userId, orgId } = auth();
+  const { userId, orgId } = owner();
 
   const currentPage = searchParams.page ? parseInt(searchParams.page) : 1;
   const { workflows, count } = await getWorkflowsForOwner({

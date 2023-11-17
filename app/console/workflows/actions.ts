@@ -1,16 +1,16 @@
 "use server";
 
 import { OpenAIModel, WorkflowInput } from "@/data/workflow";
+import { owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
 import { getCompletion } from "@/lib/utils/openai";
 import { WorkflowSchema } from "@/lib/utils/workflow";
-import { auth } from "@clerk/nextjs";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import slugify from "slugify";
 
 export async function saveWorkflow(formData: FormData) {
-  const { userId, orgId } = auth();
+  const { userId, ownerId } = owner();
 
   const name = formData.get("name") as string;
   const model = formData.get("model") as string;
@@ -42,7 +42,7 @@ export async function saveWorkflow(formData: FormData) {
       },
       organization: {
         connect: {
-          id: orgId ?? userId ?? "",
+          id: ownerId,
         },
       },
       published: true,
@@ -174,18 +174,19 @@ export async function makeWorkflowPrivate(formData: FormData) {
 }
 
 export async function runWorkflow(formData: FormData) {
-  const { userId, orgId } = auth();
+  const { userId, ownerId } = owner();
 
   const id = Number(formData.get("id"));
   const model = formData.get("model") as OpenAIModel;
   const content = formData.get("content") as string;
   const instruction = formData.get("instruction") as string;
 
-  if (!id || !orgId || !userId) throw "ID is missing";
+  if (!id) throw "ID is missing";
+  if (!userId && !ownerId) throw "User/Owner ID is missing";
 
   const organization = await prisma.organization.findUnique({
     where: {
-      id: orgId,
+      id: ownerId,
     },
   });
 
@@ -219,7 +220,7 @@ export async function runWorkflow(formData: FormData) {
     }),
     prisma.organization.update({
       where: {
-        id: orgId,
+        id: ownerId,
       },
       data: {
         credits: {
@@ -235,7 +236,7 @@ export async function runWorkflow(formData: FormData) {
 
 export async function copyWorkflow(formData: FormData) {
   const id = Number(formData.get("id"));
-  const { userId, orgId } = auth();
+  const { userId, ownerId } = owner();
 
   if (!id) throw "ID is missing";
 
@@ -264,7 +265,7 @@ export async function copyWorkflow(formData: FormData) {
       },
       organization: {
         connect: {
-          id: orgId ?? userId ?? "",
+          id: ownerId,
         },
       },
     },
