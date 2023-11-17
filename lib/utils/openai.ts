@@ -32,6 +32,7 @@ export const getCompletion = async (
   });
 
   switch (model) {
+    case "gpt-3.5-turbo":
     case "gpt-4-1106-preview":
       const { data: chatData } = await openai.createChatCompletion({
         model,

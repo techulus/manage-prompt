@@ -6,6 +6,7 @@ import { buttonVariants } from "../ui/button";
 
 interface Props {
   title: string;
+  subTitle?: string;
   actionLink?: string;
   actionLabel?: string;
   backUrl?: string;
@@ -13,6 +14,7 @@ interface Props {
 
 export default function PageTitle({
   title,
+  subTitle,
   backUrl,
   actionLink,
   actionLabel,
@@ -38,7 +40,10 @@ export default function PageTitle({
             </SignedIn>
           )}
 
-          <h1 className="flex-1 text-2xl">{title}</h1>
+          <div className="flex flex-col">
+            <h1 className="flex-1 text-2xl">{title}</h1>
+            {subTitle ? <p className="text-gray-500">{subTitle}</p> : null}
+          </div>
         </div>
 
         {actionLink && actionLabel ? (

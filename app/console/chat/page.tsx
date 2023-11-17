@@ -45,11 +45,11 @@ export default function Chat() {
     if (messages) {
       setMessages(JSON.parse(messages));
     }
-  }, []);
+  }, [setMessages]);
 
   return (
     <>
-      <PageTitle title="Chat" />
+      <PageTitle title="Chat" subTitle="gpt-4-1106-preview" />
 
       <ContentBlock className="flex flex-grow overflow-y-scoll">
         <CardContent className="content-block w-full overflow-x-scroll">
