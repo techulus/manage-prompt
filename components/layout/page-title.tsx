@@ -2,6 +2,7 @@ import { SignedIn } from "@clerk/nextjs";
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import classNames from "classnames";
 import Link from "next/link";
+import { PropsWithChildren } from "react";
 import { buttonVariants } from "../ui/button";
 
 interface Props {
@@ -18,7 +19,8 @@ export default function PageTitle({
   backUrl,
   actionLink,
   actionLabel,
-}: Props) {
+  children,
+}: PropsWithChildren<Props>) {
   return (
     <div className="flex justify-center border-b border-gray-200 dark:border-gray-800 pb-4 pl-4 pr-6 pt-4 sm:pl-6 lg:pl-8 xl:border-t-0 xl:px-8 xl:py-12 dark:text-white">
       <div className="flex w-full justify-between max-w-7xl">
@@ -43,6 +45,7 @@ export default function PageTitle({
           <div className="flex flex-col">
             <h1 className="flex-1 text-2xl">{title}</h1>
             {subTitle ? <p className="text-gray-500">{subTitle}</p> : null}
+            {children}
           </div>
         </div>
 
