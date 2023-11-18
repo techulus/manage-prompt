@@ -19,6 +19,7 @@ model User {
   first_name         String?
   last_name          String?
   rawData            Json?
+  settings           Json?
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
   organizations      Organization[]

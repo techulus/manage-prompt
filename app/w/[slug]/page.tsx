@@ -5,7 +5,7 @@ import { CardContent } from "@/components/ui/card";
 import { owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
 import { getAppBaseUrl } from "@/lib/utils/url";
-import { SignedOut } from "@clerk/nextjs/app-beta";
+import { SignedOut } from "@clerk/nextjs";
 import { RocketLaunchIcon } from "@heroicons/react/20/solid";
 import { Workflow } from "@prisma/client";
 import classNames from "classnames";

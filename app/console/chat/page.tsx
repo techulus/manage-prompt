@@ -1,125 +1,40 @@
-"use client";
-
-import { ContentBlock } from "@/components/core/content-block";
-import { Spinner } from "@/components/core/loaders";
-import { notifyError } from "@/components/core/toast";
+import ChatForm from "@/components/chat/chat-form";
 import PageTitle from "@/components/layout/page-title";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { CardContent } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  BoltIcon,
-  PaperAirplaneIcon,
-  UserIcon,
-} from "@heroicons/react/20/solid";
-import { Message, useChat } from "ai/react";
-import { useEffect, useRef } from "react";
-import ReactMarkdown from "react-markdown";
+import { owner } from "@/lib/hooks/useOwner";
+import { prisma } from "@/lib/utils/db";
 
-export default function Chat() {
-  const {
-    messages,
-    setMessages,
-    input,
-    handleInputChange,
-    handleSubmit,
-    stop,
-    isLoading,
-  } = useChat({
-    onError: (error: Error) => {
-      console.error(error);
-      notifyError("Something went wrong, please try again.");
+export default async function Chat() {
+  const { userId } = owner();
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+    select: {
+      settings: true,
     },
   });
-  const btnRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (messages.length) {
-      localStorage.setItem("messages", JSON.stringify(messages));
-    }
-  }, [messages]);
-
-  useEffect(() => {
-    const messages = localStorage.getItem("messages");
-    if (messages) {
-      setMessages(JSON.parse(messages));
-    }
-  }, [setMessages]);
 
   return (
     <>
-      <PageTitle title="Chat" subTitle="gpt-4-1106-preview" />
-
-      <ContentBlock className="flex flex-grow overflow-y-scoll">
-        <CardContent className="content-block w-full overflow-x-scroll">
-          {!messages.length ? (
-            <div className="w-full text-gray-400 text-center p-10">
-              No messages yet. Start the conversation!
-            </div>
-          ) : null}
-
-          {messages.map((message: Message) => (
-            <div className="flex items-center mt-4" key={message.id}>
-              <p className="font-bold tracking-tight mt-1 self-start">
-                <Avatar>
-                  <AvatarFallback>
-                    {message.role === "user" ? (
-                      <UserIcon className="w-5 h-5" />
-                    ) : (
-                      <BoltIcon className="w-5 h-5 text-blue-600" />
-                    )}
-                  </AvatarFallback>
-                </Avatar>
-              </p>
-              <div className="ml-2 flex flex-col prose justify-center">
-                <ReactMarkdown>{message.content}</ReactMarkdown>
-              </div>
-            </div>
-          ))}
-        </CardContent>
-      </ContentBlock>
-
-      <form
-        className="w-full max-w-3xl mx-auto flex-shrink-0 mt-8"
-        onSubmit={handleSubmit}
-      >
-        <CardContent className="flex flex-col md:flex-row mt-4 space-y-2 md:space-y-0 md:space-x-4">
-          <Textarea
-            placeholder="Send a message..."
-            value={input}
-            onChange={handleInputChange}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                btnRef.current?.click();
-              }
-            }}
-          />
-          {isLoading ? (
-            <Button type="button" onClick={stop}>
-              <Spinner className="mr-2" /> Cancel
-            </Button>
-          ) : (
-            <div className="flex md:flex-col md:space-y-2">
-              <Button type="submit" ref={btnRef}>
-                <PaperAirplaneIcon className="w-5 h-5 mr-2" /> Send
-              </Button>
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => {
-                  setMessages([]);
-                  localStorage.removeItem("messages");
-                }}
-                className="ml-auto md:ml-0"
-              >
-                Clear
-              </Button>
-            </div>
-          )}
-        </CardContent>
-      </form>
+      <PageTitle title="Chat" />
+      <ChatForm
+        // @ts-ignore
+        defaultModel={user?.settings?.chat_model}
+        updateModel={async (value) => {
+          "use server";
+          await prisma.user.update({
+            where: {
+              id: userId,
+            },
+            data: {
+              settings: {
+                chat_model: value,
+              },
+            },
+          });
+        }}
+      />
     </>
   );
 }

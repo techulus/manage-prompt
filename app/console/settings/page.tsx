@@ -4,7 +4,7 @@ import { DeleteButton, UpdateProfileButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
 import { owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
-import { clerkClient } from "@clerk/nextjs/app-beta";
+import { clerkClient } from "@clerk/nextjs";
 import { cookies } from "next/headers";
 import { purgeWorkflowData } from "./actions";
 

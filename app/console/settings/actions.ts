@@ -29,7 +29,19 @@ export async function purgeWorkflowData() {
 }
 
 export async function updateTheme(formData: FormData) {
+  const { userId } = owner();
   const theme = String(formData.get("theme")) ?? "light";
+
+  await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      settings: {
+        theme,
+      },
+    },
+  });
 
   cookies().set("theme", theme, { httpOnly: true });
 }

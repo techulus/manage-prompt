@@ -1,8 +1,10 @@
-import { ClerkProvider } from "@clerk/nextjs/app-beta";
+import { ClerkProvider } from "@clerk/nextjs";
 import { Analytics } from "@vercel/analytics/react";
 import { GeistSans } from "geist/font/sans";
 
 import { SITE_METADATA } from "@/data/marketing";
+import { owner } from "@/lib/hooks/useOwner";
+import { prisma } from "@/lib/utils/db";
 import classNames from "classnames";
 import { cookies } from "next/headers";
 import "./globals.css";
@@ -12,12 +14,25 @@ export const metadata = {
   description: SITE_METADATA.DESCRIPTION,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const theme = cookies().get("theme")?.value ?? "light";
+  const { userId } = owner();
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+    select: {
+      settings: true,
+    },
+  });
+
+  const theme =
+    // @ts-ignore
+    cookies().get("theme")?.value ?? user?.settings?.theme ?? "light";
 
   return (
     <html
