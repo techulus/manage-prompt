@@ -29,7 +29,7 @@ export const updateSettings = async (settings: UserSetting) => {
 
 export const getSettings = async (): Promise<UserSetting> => {
   const { userId } = auth();
-  if (!userId) throw new Error("User not found");
+  if (!userId) return {};
 
   const user = await prisma.user.findUnique({
     where: {
