@@ -13,6 +13,7 @@ import {
   UserIcon,
 } from "@heroicons/react/20/solid";
 
+import { updateSettings } from "@/lib/hooks/user";
 import { Message, useChat } from "ai/react";
 import { useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
@@ -26,10 +27,9 @@ import {
 
 type Props = {
   defaultModel: string;
-  updateModel: (model: string) => Promise<void>;
 };
 
-export default function ChatForm({ defaultModel, updateModel }: Props) {
+export default function ChatForm({ defaultModel }: Props) {
   const [model, setModel] = useState(defaultModel ?? "gpt-4-1106-preview");
   const {
     messages,
@@ -74,7 +74,7 @@ export default function ChatForm({ defaultModel, updateModel }: Props) {
                   value={model}
                   onValueChange={async (value) => {
                     setModel(value);
-                    await updateModel(value);
+                    await updateSettings({ chat_model: value });
                   }}
                 >
                   <SelectTrigger className="w-[180px]">

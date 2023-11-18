@@ -1,4 +1,5 @@
 import { owner } from "@/lib/hooks/useOwner";
+import { getSettings } from "@/lib/hooks/user";
 import { prisma } from "@/lib/utils/db";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 import { Configuration, OpenAIApi } from "openai-edge";
@@ -17,19 +18,10 @@ export async function POST(req: Request) {
     return new Response("Unauthorized", { status: 401 });
   }
 
-  const user = await prisma.user.findUnique({
-    where: {
-      id: userId,
-    },
-    select: {
-      settings: true,
-    },
-  });
-
   const { messages } = await req.json();
 
-  // @ts-ignore
-  const model = user?.settings?.chat_model ?? "gpt-4-1106-preview";
+  const settings = await getSettings();
+  const model = settings?.chat_model ?? "gpt-4-1106-preview";
   console.log(`Sending Chat request for model ${model}`);
 
   const response = await openai.createChatCompletion({
