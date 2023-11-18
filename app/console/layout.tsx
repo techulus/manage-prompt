@@ -1,5 +1,3 @@
-// "use client"; // not ideal, but the clerk components are reloading too many times, and this is a quick fix
-
 import NavBar from "@/components/console/navbar";
 import { cookies } from "next/headers";
 
@@ -18,7 +16,9 @@ export default function ConsoleLayout({
 
       <div className="mx-auto w-full flex-grow lg:flex">
         <div className="min-w-0 flex-1 xl:flex">
-          <div className="lg:min-w-0 lg:flex-1 pb-12">{children}</div>
+          <div className="lg:min-w-0 lg:flex-1 pb-12 bg-gray-50 dark:bg-gray-900">
+            {children}
+          </div>
         </div>
       </div>
     </div>
