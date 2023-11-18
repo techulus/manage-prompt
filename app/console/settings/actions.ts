@@ -1,6 +1,7 @@
 "use server";
 
 import { owner } from "@/lib/hooks/useOwner";
+import { updateSettings } from "@/lib/hooks/user";
 import { prisma } from "@/lib/utils/db";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
@@ -29,18 +30,10 @@ export async function purgeWorkflowData() {
 }
 
 export async function updateTheme(formData: FormData) {
-  const { userId } = owner();
   const theme = String(formData.get("theme")) ?? "light";
 
-  await prisma.user.update({
-    where: {
-      id: userId,
-    },
-    data: {
-      settings: {
-        theme,
-      },
-    },
+  await updateSettings({
+    theme,
   });
 
   cookies().set("theme", theme, { httpOnly: true });

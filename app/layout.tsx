@@ -3,8 +3,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { GeistSans } from "geist/font/sans";
 
 import { SITE_METADATA } from "@/data/marketing";
-import { owner } from "@/lib/hooks/useOwner";
-import { prisma } from "@/lib/utils/db";
+import { getSettings } from "@/lib/hooks/user";
 import classNames from "classnames";
 import { cookies } from "next/headers";
 import "./globals.css";
@@ -19,20 +18,9 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { userId } = owner();
+  const settings = await getSettings();
 
-  const user = await prisma.user.findUnique({
-    where: {
-      id: userId,
-    },
-    select: {
-      settings: true,
-    },
-  });
-
-  const theme =
-    // @ts-ignore
-    cookies().get("theme")?.value ?? user?.settings?.theme ?? "light";
+  const theme = cookies().get("theme")?.value ?? settings?.theme ?? "light";
 
   return (
     <html

@@ -35,11 +35,11 @@ export default function NavBar({ isPublicPage = false, appearance }: Props) {
         href: "/console/chat",
         current: path.startsWith("/console/chat"),
       },
-      // {
-      //   name: "Writer",
-      //   href: "/console/writer",
-      //   current: path.startsWith("/console/writer"),
-      // },
+      {
+        name: "Writer",
+        href: "/console/writer",
+        current: path.startsWith("/console/writer"),
+      },
       {
         name: "Settings",
         href: "/console/settings",
