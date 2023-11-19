@@ -3,6 +3,10 @@
     {
       "path": "/webhooks/billing/free-credits",
       "schedule": "0 0 1 * *"
+    },
+    {
+      "path": "/api/ai-tools/clean",
+      "schedule": "0 * * * *"
     }
   ]
 }

@@ -75,7 +75,7 @@ export default function NavBar({ isPublicPage = false, appearance }: Props) {
                     height={32}
                     className="mr-2"
                   />
-                  {isPublicPage ? (
+                  {isPublicPage && !user ? (
                     <Link href="/" className="-m-1.5 p-1.5">
                       <span className="sr-only">ManagePrompt</span>
                       <p className="hero relative">

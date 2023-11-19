@@ -91,3 +91,16 @@ model WorkflowRun {
 
   user User @relation(fields: [createdBy], references: [id], onDelete: Cascade)
 }
+
+model ImageOrder {
+  id                Int      @id @default(autoincrement())
+  type              String
+  email             String?
+  inputUrl          String
+  outputUrl         String
+  stripePaymentLink Json?
+  paymentId         String?
+  paymentStatus     String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
