@@ -9,7 +9,7 @@ import { Metadata } from "next";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import Replicate from "replicate";
-import input from "./input.png";
+import input from "./input.jpg";
 import output from "./output.png";
 
 const replicate = new Replicate({
@@ -28,48 +28,43 @@ export default async function BlackAndWhiteToColor() {
   async function renderImage(image: string) {
     "use server";
 
-    try {
-      console.log("starting replicate", image);
-      const output = await replicate.run(
-        "cjwbw/bigcolor:9451bfbf652b21a9bccc741e5c7046540faa5586cfa3aa45abc7dbb46151a4f7",
-        {
-          input: {
-            mode: "Multi-modal class vector c",
-            image,
-            classes: "88",
-          },
-        }
-      );
-
-      // @ts-ignore
-      const outputUrl = output[0].image;
-      console.log("replicate done", outputUrl);
-
-      const user = userId
-        ? await prisma.user.findUnique({
-            where: {
-              id: userId,
-            },
-          })
-        : null;
-
-      const order = await prisma.imageOrder.create({
-        data: {
-          email: user?.email,
-          inputUrl: image,
-          outputUrl: outputUrl,
-          type: "black-and-white-to-color",
-          paymentStatus: "pending",
+    console.log("starting replicate", image);
+    const output = await replicate.run(
+      "cjwbw/bigcolor:9451bfbf652b21a9bccc741e5c7046540faa5586cfa3aa45abc7dbb46151a4f7",
+      {
+        input: {
+          mode: "Multi-modal class vector c",
+          image,
+          classes: "88",
         },
-      });
+      }
+    );
 
-      await del(image);
+    // @ts-ignore
+    const outputUrl = output[0].image;
+    console.log("replicate done", outputUrl);
 
-      redirect(`/ai-tools/order/${order.id}`);
-    } catch (error) {
-      console.error(error);
-      redirect(`/ai-tools/black-and-white-to-color`);
-    }
+    const user = userId
+      ? await prisma.user.findUnique({
+          where: {
+            id: userId,
+          },
+        })
+      : null;
+
+    const order = await prisma.imageOrder.create({
+      data: {
+        email: user?.email,
+        inputUrl: image,
+        outputUrl: outputUrl,
+        type: "black-and-white-to-color",
+        paymentStatus: "pending",
+      },
+    });
+
+    await del(image);
+
+    redirect(`/ai-tools/order/${order.id}`);
   }
 
   return (
