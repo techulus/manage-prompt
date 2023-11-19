@@ -45,11 +45,13 @@ export default async function BlackAndWhiteToColor() {
       const outputUrl = output[0].image;
       console.log("replicate done", outputUrl);
 
-      const user = await prisma.user.findUnique({
-        where: {
-          id: userId,
-        },
-      });
+      const user = userId
+        ? await prisma.user.findUnique({
+            where: {
+              id: userId,
+            },
+          })
+        : null;
 
       const order = await prisma.imageOrder.create({
         data: {
