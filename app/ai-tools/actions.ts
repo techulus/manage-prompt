@@ -19,7 +19,7 @@ export async function createPaymentLink(orderId: number, email: string) {
     after_completion: {
       type: "redirect",
       redirect: {
-        url: getAppBaseUrl() + "/ai-tools/result/" + orderId,
+        url: getAppBaseUrl() + "/ai-tools/order/" + orderId,
       },
     },
     metadata: {
