@@ -11,7 +11,7 @@ export function AIImageProcessingPage({
   output,
 }: {
   title: string;
-  renderImage: (image: string) => void;
+  renderImage: (image: string) => Promise<void>;
   input: StaticImageData;
   output: StaticImageData;
 }) {
