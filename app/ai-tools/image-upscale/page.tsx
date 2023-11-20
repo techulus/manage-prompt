@@ -13,9 +13,9 @@ import output from "./output.png";
 
 export const dynamic = "force-dynamic";
 
-const title = "AI Black and White Photo Colorizer";
+const title = "Image Upscaling";
 const description =
-  "Elevate your photos with our AI Black and White Photo Colorizer. Effortlessly bring vintage images to life in vibrant colors. Try our advanced tool for unparalleled results in photo transformation. Restore and revitalize your memories with ease – explore the future of photo coloring now!";
+  "Witness a leap in image quality with our state-of-the-art AI Image Upscaling Tool. Enhance the details and sharpness of your pictures effortlessly. Uncover a new realm of visual clarity as our advanced algorithms redefine image resolution.";
 
 export const metadata: Metadata = {
   title,
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     description,
     images: [
       {
-        url: "https://cdn.capture.techulus.in/e1ab7054-dabc-48d6-a33f-c18038aac1c8/137bbe87161f3eb7bb2ef09419572824/image?url=https%3A%2F%2Fmanageprompt.com%2Fai-tools%2Fblack-and-white-to-color&delay=1&vw=1200&vh=630",
+        url: "https://cdn.capture.techulus.in/e1ab7054-dabc-48d6-a33f-c18038aac1c8/fb7402dd8aef88fa5931ff8e2f6575fb/image?url=https%3A%2F%2Fmanageprompt.com%2Fai-tools%2Fimage-upscale&delay=1&vw=1200&vh=630",
         width: 1200,
         height: 630,
         alt: title,
@@ -35,13 +35,13 @@ export const metadata: Metadata = {
   metadataBase: new URL(getAppBaseUrl()),
 };
 
-export default async function BlackAndWhiteToColor() {
+export default async function ImageUpscale() {
   async function renderImage(image: string) {
     "use server";
 
     console.log("starting replicate", image);
     const output = await runModel(
-      "cjwbw/bigcolor:9451bfbf652b21a9bccc741e5c7046540faa5586cfa3aa45abc7dbb46151a4f7",
+      "nightmareai/real-esrgan:42fed1c4974146d4d2414e2be2c5277c7fcf05fcc3a73abf41610695738c1d7b",
       image,
       {
         scale: 2,
@@ -50,13 +50,13 @@ export default async function BlackAndWhiteToColor() {
     );
 
     // @ts-ignore
-    const outputUrl = output[0].image;
+    const outputUrl = output as unknown as string;
     console.log("replicate done", outputUrl);
 
     const order = await createOrder({
       inputUrl: image,
       outputUrl: outputUrl,
-      type: "black-and-white-to-color",
+      type: "image-upscale",
     });
 
     await del(image);
@@ -68,7 +68,7 @@ export default async function BlackAndWhiteToColor() {
     <>
       <PageTitle
         title={String(metadata.title)}
-        subTitle="Transform Memories with Stunning Colors"
+        subTitle="AI-Powered Image Upscaling Tool"
       />
 
       <ContentBlock>

@@ -49,6 +49,7 @@ export function FileUploader({
     accept: {
       "image/png": [".png", ".jpg", ".jpeg"],
     },
+    maxSize: 5 * 1024 * 1024,
   });
 
   return (
@@ -67,16 +68,14 @@ export function FileUploader({
           <div className="mt-4 flex text-sm leading-6 text-gray-600">
             <label
               htmlFor="file-upload"
-              className="relative cursor-pointer rounded-md bg-white font-semibold text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
+              className="relative cursor-pointer rounded-md font-semibold text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2 hover:text-blue-500"
             >
-              <span>Upload a file</span>
+              <span>Upload an image</span>
               <input {...getInputProps()} disabled={loading} />
             </label>
             <p className="pl-1">or drag and drop</p>
           </div>
-          <p className="text-xs leading-5 text-gray-600">
-            PNG, JPG, GIF up to 10MB
-          </p>
+          <p className="text-xs leading-5 text-gray-600">PNG, JPG up to 5MB</p>
         </div>
       )}
     </div>

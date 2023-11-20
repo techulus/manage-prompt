@@ -5,6 +5,7 @@ import PageTitle from "@/components/layout/page-title";
 import { Button } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { prisma } from "@/lib/utils/db";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -42,19 +43,27 @@ export default async function AIToolsResult({
 
   return (
     <>
-      <PageTitle title="Here is your result!" subTitle={order.type} />
+      <PageTitle title="It's ready!" subTitle={order.type} />
 
       <ContentBlock>
         <CardContent>
           <div className="mt-6 lg:grid lg:grid-cols-7 lg:grid-rows-1 lg:gap-x-8 xl:gap-x-16">
             <div className="lg:col-span-4 lg:row-end-1">
-              <div className="aspect-h-3 aspect-w-4 overflow-hidden rounded-lg bg-gray-100">
+              <div
+                className={cn(
+                  "output-image",
+                  "aspect-h-3 aspect-w-4 overflow-hidden rounded-lg border bg-gray-100 dark:bg-gray-900",
+                  order.paymentStatus === "paid" ? "" : "watermarked"
+                )}
+              >
                 <img
                   src={String(order.outputUrl)}
                   alt="Result"
-                  className="object-cover object-center mx-auto"
+                  className="block object-cover object-center mx-auto"
                 />
               </div>
+              {/* transparent overlay */}
+              <div className="absolute inset-0 pointer-events-none"></div>
             </div>
 
             <form
@@ -63,18 +72,18 @@ export default async function AIToolsResult({
             >
               <div className="flex flex-col-reverse">
                 <div className="mt-4">
-                  <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+                  <h1 className="text-2xl font-bold tracking-tightsm:text-3xl">
                     Order #{order.id}
                   </h1>
                 </div>
               </div>
 
               {order.paymentStatus == "paid" ? (
-                <p className="my-6 text-gray-500">
+                <p className="my-6">
                   You have already paid for this order. You can download it now.
                 </p>
               ) : (
-                <p className="my-6 text-gray-500">
+                <p className="my-6">
                   You can download it after making the payment. Please provide
                   your email address so that you can retrieve your order later.
                 </p>
