@@ -1,12 +1,8 @@
-import { FileUploader } from "@/components/ai-tools/image-upload";
-import { ContentBlock } from "@/components/core/content-block";
-import PageTitle from "@/components/layout/page-title";
-import { CardContent } from "@/components/ui/card";
+import { AIImageProcessingPage } from "@/components/ai-tools/page-layout";
 import { createOrder, runModel } from "@/lib/utils/replicate";
 import { getAppBaseUrl } from "@/lib/utils/url";
 import { del } from "@vercel/blob";
 import { Metadata } from "next";
-import Image from "next/image";
 import { redirect } from "next/navigation";
 import input from "./input.jpg";
 import output from "./output.png";
@@ -65,30 +61,11 @@ export default async function ImageUpscale() {
   }
 
   return (
-    <>
-      <PageTitle
-        title={String(metadata.title)}
-        subTitle="AI-Powered Image Upscaling Tool"
-      />
-
-      <ContentBlock>
-        <CardContent>
-          <div className="flex flex-col mt-4">
-            <FileUploader onUploadComplete={renderImage} />
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6">
-              <div className="flex flex-col items-center justify-center">
-                <p className="text-lg text-bold pt-2">Before</p>
-                <Image src={input} alt={title} />
-              </div>
-              <div className="flex flex-col items-center justify-center">
-                <p className="text-lg text-bold pt-2">After</p>
-                <Image src={output} alt={title} />
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </ContentBlock>
-    </>
+    <AIImageProcessingPage
+      title={String(metadata.title)}
+      input={input}
+      output={output}
+      renderImage={renderImage}
+    />
   );
 }

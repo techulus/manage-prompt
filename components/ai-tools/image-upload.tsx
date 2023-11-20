@@ -55,7 +55,7 @@ export function FileUploader({
   return (
     <div
       {...getRootProps()}
-      className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10"
+      className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 dark:border-gray-700 px-6 py-10"
     >
       {loading ? (
         <Spinner className="ml-2" />
@@ -65,7 +65,7 @@ export function FileUploader({
             className="mx-auto h-12 w-12 text-gray-300"
             aria-hidden="true"
           />
-          <div className="mt-4 flex text-sm leading-6 text-gray-600">
+          <div className="mt-4 flex text-sm leading-6 text-gray-600 dark:text-gray-400">
             <label
               htmlFor="file-upload"
               className="relative cursor-pointer rounded-md font-semibold text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2 hover:text-blue-500"
@@ -75,7 +75,9 @@ export function FileUploader({
             </label>
             <p className="pl-1">or drag and drop</p>
           </div>
-          <p className="text-xs leading-5 text-gray-600">PNG, JPG up to 5MB</p>
+          <p className="text-xs leading-5 text-gray-600 dark:text-gray-400">
+            PNG, JPG up to 5MB
+          </p>
         </div>
       )}
     </div>
