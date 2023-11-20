@@ -1,6 +1,7 @@
 "use client";
 
 import { useDetectSticky } from "@/lib/hooks/useDetectSticky";
+import { cn } from "@/lib/utils";
 import { SignedIn, useUser } from "@clerk/nextjs";
 import { Transition } from "@headlessui/react";
 import classNames from "classnames";
@@ -36,11 +37,6 @@ export default function NavBar({ isPublicPage = false, appearance }: Props) {
         current: path.startsWith("/console/chat"),
       },
       {
-        name: "Writer",
-        href: "/console/writer",
-        current: path.startsWith("/console/writer"),
-      },
-      {
         name: "Settings",
         href: "/console/settings",
         current: path === "/console/settings",
@@ -62,7 +58,12 @@ export default function NavBar({ isPublicPage = false, appearance }: Props) {
   return (
     <>
       {createToastWrapper(appearance)}
-      <nav className="flex-shrink-0 text-black dark:text-white">
+      <nav
+        className={cn(
+          "flex-shrink-0 text-black dark:text-white",
+          isPublicPage && "border-b border-gray-200 dark:border-gray-800"
+        )}
+      >
         <div className="mx-auto px-4 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
             <div className="flex">
@@ -75,7 +76,7 @@ export default function NavBar({ isPublicPage = false, appearance }: Props) {
                     height={32}
                     className="mr-2"
                   />
-                  {isPublicPage ? (
+                  {isPublicPage && !user ? (
                     <Link href="/" className="-m-1.5 p-1.5">
                       <span className="sr-only">ManagePrompt</span>
                       <p className="hero relative">

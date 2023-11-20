@@ -1,9 +1,10 @@
 import NavBar from "@/components/console/navbar";
+import { Footer } from "@/components/layout/footer";
 import { cookies } from "next/headers";
 
 export const dynamic = "force-dynamic";
 
-export default function ConsoleLayout({
+export default function PublicLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -12,15 +13,17 @@ export default function ConsoleLayout({
 
   return (
     <div className="relative flex min-h-full flex-col">
-      <NavBar appearance={theme} />
+      <NavBar isPublicPage appearance={theme} />
 
       <div className="mx-auto w-full flex-grow lg:flex">
         <div className="min-w-0 flex-1 xl:flex">
-          <div className="lg:min-w-0 lg:flex-1 pb-12 bg-gray-50 dark:bg-gray-900 min-h-screen">
+          <div className="lg:min-w-0 lg:flex-1 pb-12 bg-gray-50 dark:bg-gray-900">
             {children}
           </div>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 }

@@ -70,11 +70,13 @@ export const SaveButton = ({
 };
 
 export const ActionButton = ({
+  variant = "ghost",
   icon = null,
   label = "Save",
   loadingLabel = "Saving",
   disabled = false,
 }: {
+  variant?: "default" | "ghost" | "link" | "destructive";
   className?: string;
   icon?: React.ReactElement | null;
   label?: string;
@@ -84,7 +86,7 @@ export const ActionButton = ({
   const { pending } = useFormStatus();
 
   return (
-    <Button type="submit" variant="ghost" disabled={pending || disabled}>
+    <Button type="submit" variant={variant} disabled={pending || disabled}>
       {pending ? (
         <Spinner message={loadingLabel} />
       ) : (
