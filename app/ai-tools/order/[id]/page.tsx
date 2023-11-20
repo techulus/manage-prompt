@@ -2,7 +2,7 @@
 import { ContentBlock } from "@/components/core/content-block";
 import { ActionButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -41,6 +41,8 @@ export default async function AIToolsResult({
     redirect(paymentLink.url + "?prefilled_email=" + encodeURIComponent(email));
   }
 
+  const isPaid = order.paymentStatus === "paid";
+
   return (
     <>
       <PageTitle title="It's ready!" subTitle={order.type} />
@@ -53,7 +55,7 @@ export default async function AIToolsResult({
                 className={cn(
                   "output-image",
                   "aspect-h-3 aspect-w-4 overflow-hidden rounded-lg border bg-gray-100 dark:bg-gray-900",
-                  order.paymentStatus === "paid" ? "" : "watermarked"
+                  isPaid ? "" : "watermarked"
                 )}
               >
                 <img
@@ -78,31 +80,40 @@ export default async function AIToolsResult({
                 </div>
               </div>
 
-              {order.paymentStatus == "paid" ? (
+              {isPaid ? (
                 <p className="my-6">
                   You have already paid for this order. You can download it now.
                 </p>
               ) : (
                 <p className="my-6">
-                  You can download it after making the payment. Please provide
-                  your email address so that you can retrieve your order later.
+                  You can download the image without watermark after payment.
                 </p>
               )}
 
-              <div className="grid w-full items-center gap-1.5">
-                <Input
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  defaultValue={order?.email ?? ""}
-                />
-              </div>
+              {isPaid ? null : (
+                <div className="grid w-full items-center gap-1.5">
+                  <Input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    defaultValue={order?.email ?? ""}
+                  />
+                </div>
+              )}
 
               <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-4">
-                {order.paymentStatus === "paid" ? (
-                  <Button className="w-full" type="button">
+                {isPaid ? (
+                  <Link
+                    href={`/api/ai-tools/order/download?id=${order.id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cn(
+                      buttonVariants({ variant: "default" }),
+                      "w-full"
+                    )}
+                  >
                     Download
-                  </Button>
+                  </Link>
                 ) : (
                   <ActionButton
                     className="w-full"

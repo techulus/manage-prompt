@@ -9,7 +9,7 @@ import { Spinner } from "../core/loaders";
 export function FileUploader({
   onUploadComplete,
 }: {
-  onUploadComplete: (url: string) => void;
+  onUploadComplete: (url: string) => Promise<void>;
 }) {
   const [loading, setLoading] = useState(false);
   const onDrop = useCallback(
@@ -24,7 +24,11 @@ export function FileUploader({
           })
             .then((res) => res.json())
             .then((result) => {
-              onUploadComplete(result.url);
+              toast.promise(onUploadComplete(result.url), {
+                loading: "Processing...",
+                success: "Done!",
+                error: "Failed to process image!",
+              });
             });
         } catch (e) {
           console.error(e);
@@ -34,10 +38,11 @@ export function FileUploader({
 
       toast
         .promise(Promise.all(uploaders), {
-          loading: "Processing...",
+          loading: "Uploading...",
           success: "Done!",
           error: "Failed to upload file(s)",
         })
+        // .then(() => notifyInfo("Processing..."))
         .finally(() => setLoading(false));
     },
     [onUploadComplete]
