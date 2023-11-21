@@ -7,6 +7,10 @@
     {
       "path": "/api/ai-tools/clean",
       "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/ai-tools/cancel-payment-links",
+      "schedule": "0 * * * *"
     }
   ]
 }

@@ -4,14 +4,14 @@ import { getAppBaseUrl } from "@/lib/utils/url";
 import { del } from "@vercel/blob";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
-import input from "./input.jpg";
+import input from "./input.jpeg";
 import output from "./output.png";
 
 export const dynamic = "force-dynamic";
 
-const title = "AI Image Upscaling";
+const title = "AI Image Background Removal";
 const description =
-  "Witness a leap in image quality with our state-of-the-art AI Image Upscaling Tool. Enhance the details and sharpness of your pictures effortlessly. Uncover a new realm of visual clarity as our advanced algorithms redefine image resolution.";
+  "Discover the ultimate solution for removing image backgrounds seamlessly with our cutting-edge AI-powered tool. Effortlessly transform your photos with just a few clicks, saving time and ensuring professional, stunning results. Say goodbye to tedious manual editing – experience the power of AI background removal today!";
 
 export const metadata: Metadata = {
   title,
@@ -37,12 +37,8 @@ export default async function ImageUpscale() {
 
     console.log("starting replicate", image);
     const output = await runModel(
-      "nightmareai/real-esrgan:42fed1c4974146d4d2414e2be2c5277c7fcf05fcc3a73abf41610695738c1d7b",
-      image,
-      {
-        scale: 2,
-        face_enhance: true,
-      }
+      "cjwbw/rembg:fb8af171cfa1616ddcf1242c093f9c46bcada5ad4cf6f2fbe8b81b330ec5c003",
+      image
     );
 
     // @ts-ignore
@@ -52,7 +48,7 @@ export default async function ImageUpscale() {
     const order = await createOrder({
       inputUrl: image,
       outputUrl: outputUrl,
-      type: "image-upscale",
+      type: "remove-background",
     });
 
     await del(image);
