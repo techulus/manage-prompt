@@ -42,6 +42,25 @@ export default async function AIToolsResult({
   }
 
   const isPaid = order.paymentStatus === "paid";
+  const isExpired = order.paymentStatus === "cancelled";
+
+  if (isExpired) {
+    return (
+      <>
+        <PageTitle title="Order expired" subTitle={order.type} />
+
+        <ContentBlock>
+          <CardContent>
+            <p className="my-6">Your order has expired. Please try again.</p>
+
+            <Link href={`/ai-tools/${order.type}`}>
+              <Button variant="default">Try again</Button>
+            </Link>
+          </CardContent>
+        </ContentBlock>
+      </>
+    );
+  }
 
   return (
     <>
