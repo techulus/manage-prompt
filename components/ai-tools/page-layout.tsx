@@ -2,6 +2,7 @@ import Image, { StaticImageData } from "next/image";
 import { ContentBlock } from "../core/content-block";
 import PageTitle from "../layout/page-title";
 import { CardContent } from "../ui/card";
+import { ContentDeleteWarningAlert } from "./content-deletion-warning-alert";
 import { FileUploader } from "./image-upload";
 
 export function AIImageProcessingPage({
@@ -19,7 +20,7 @@ export function AIImageProcessingPage({
     <>
       <PageTitle
         title={title}
-        subTitle="$1 per image. Pay after viewing the result."
+        subTitle="$1 per image, Pay after viewing the result."
       />
 
       <div className="h-8"></div>
@@ -27,11 +28,7 @@ export function AIImageProcessingPage({
       <ContentBlock>
         <CardContent>
           <div className="flex flex-col">
-            <p className="text-lg py-8">
-              Upload your image, and let the magic happen. Your privacy
-              matters—all uploaded content and processed images are wiped hourly
-              from our systems.
-            </p>
+            <ContentDeleteWarningAlert />
 
             <FileUploader onUploadComplete={renderImage} />
 

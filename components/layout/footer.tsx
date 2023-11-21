@@ -17,6 +17,10 @@ const navigation = {
       name: "Image Upscale",
       href: "/ai-tools/image-upscale",
     },
+    {
+      name: "Remove Background",
+      href: "/ai-tools/remove-background",
+    },
   ],
   project: [
     { name: "Source code", href: "https://github.com/techulus/manage-prompt" },

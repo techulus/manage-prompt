@@ -9,7 +9,7 @@ const replicate = new Replicate({
 export async function runModel(
   name: `${string}/${string}:${string}`,
   image: string,
-  input: any
+  input: any = {}
 ) {
   return await replicate.run(name, {
     input: {

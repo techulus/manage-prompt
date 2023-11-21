@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import { ContentDeleteWarningAlert } from "@/components/ai-tools/content-deletion-warning-alert";
 import { ContentBlock } from "@/components/core/content-block";
 import { ActionButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
@@ -33,6 +34,9 @@ export default async function AIToolsResult({
     if (!order) return;
 
     const email = formData.get("email") as string;
+    if (!email) {
+      throw "Email is required";
+    }
 
     const paymentLink =
       order?.stripePaymentLink ??
@@ -68,6 +72,8 @@ export default async function AIToolsResult({
 
       <ContentBlock>
         <CardContent>
+          <ContentDeleteWarningAlert />
+
           <div className="mt-6 lg:grid lg:grid-cols-7 lg:grid-rows-1 lg:gap-x-8 xl:gap-x-16">
             <div className="lg:col-span-4 lg:row-end-1">
               <div
@@ -116,6 +122,7 @@ export default async function AIToolsResult({
                     name="email"
                     placeholder="Email"
                     defaultValue={order?.email ?? ""}
+                    required
                   />
                 </div>
               )}

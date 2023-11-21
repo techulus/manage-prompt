@@ -39,7 +39,7 @@ export function FileUploader({
       toast
         .promise(Promise.all(uploaders), {
           loading: "Uploading...",
-          success: "Done!",
+          success: "Upload completed!",
           error: "Failed to upload file(s)",
         })
         // .then(() => notifyInfo("Processing..."))
