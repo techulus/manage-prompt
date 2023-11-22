@@ -12,13 +12,13 @@ import {
   PlayCircleIcon,
 } from "@heroicons/react/20/solid";
 import { Terminal } from "lucide-react";
+import Link from "next/link";
 import {
   deleteWorkflow,
   makeWorkflowPrivate,
   makeWorkflowPublic,
   toggleWorkflowState,
 } from "../actions";
-import Link from "next/link";
 
 interface Props {
   params: {
@@ -67,7 +67,10 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
           <AlertTitle>Heads up!</AlertTitle>
           <AlertDescription>
             This workflow is public and can be accessed by anyone{" "}
-            <Link className="inline underline" href={`/w/${workflow.publicUrl}`}>
+            <Link
+              className="inline underline"
+              href={`/w/${workflow.publicUrl}`}
+            >
               here
             </Link>
             .
