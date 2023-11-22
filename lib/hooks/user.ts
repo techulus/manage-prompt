@@ -1,7 +1,7 @@
 "use server";
 
-import { auth } from "@clerk/nextjs";
 import { prisma } from "../utils/db";
+import { owner } from "./useOwner";
 
 export type UserSetting = {
   theme?: string;
@@ -9,7 +9,7 @@ export type UserSetting = {
 };
 
 export const updateSettings = async (settings: UserSetting) => {
-  const { userId } = auth();
+  const { userId } = owner();
   if (!userId) throw new Error("User not found");
 
   const currentSettings = await getSettings();
@@ -28,7 +28,7 @@ export const updateSettings = async (settings: UserSetting) => {
 };
 
 export const getSettings = async (): Promise<UserSetting> => {
-  const { userId } = auth();
+  const { userId } = owner();
   if (!userId) return {};
 
   const user = await prisma.user.findUnique({

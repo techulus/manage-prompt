@@ -10,6 +10,11 @@ export async function GET(request: Request) {
   }
 
   await prisma.organization.updateMany({
+    where: {
+      credits: {
+        lt: 100,
+      },
+    },
     data: {
       credits: 100,
     },
