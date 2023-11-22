@@ -60,20 +60,20 @@ export function FileUploader({
   return (
     <div
       {...getRootProps()}
-      className="mt-2 flex justify-center rounded-lg border border-dashed border-blue-700 dark:border-blue-700 px-6 py-10"
+      className="mt-2 flex justify-center rounded-lg border border-dashed border-blue-500 dark:border-blue-600 px-6 py-10"
     >
       {loading ? (
         <Spinner className="ml-2" />
       ) : (
         <div className="text-center">
           <PhotoIcon
-            className="mx-auto h-12 w-12 text-blue-500"
+            className="mx-auto h-12 w-12 text-blue-500 dark:text-blue-600"
             aria-hidden="true"
           />
           <div className="mt-4 flex text-sm leading-6 text-gray-600 dark:text-gray-400">
             <label
               htmlFor="file-upload"
-              className="relative cursor-pointer rounded-md font-semibold text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2 hover:text-blue-500"
+              className="relative cursor-pointer rounded-md font-semibold text-blue-500 dark:text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2 hover:text-blue-700 hover:dark:text-blue-500"
             >
               <span>Upload an image</span>
               <input {...getInputProps()} disabled={loading} />
