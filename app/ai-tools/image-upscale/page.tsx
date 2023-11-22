@@ -1,6 +1,6 @@
 import { AIImageProcessingPage } from "@/components/ai-tools/page-layout";
+import { buildMetadata } from "@/lib/utils/metadata";
 import { createOrder, runModel } from "@/lib/utils/replicate";
-import { getAppBaseUrl } from "@/lib/utils/url";
 import { del } from "@vercel/blob";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -13,23 +13,7 @@ const title = "AI Image Upscaling";
 const description =
   "Witness a leap in image quality with our state-of-the-art AI Image Upscaling Tool. Enhance the details and sharpness of your pictures effortlessly. Uncover a new realm of visual clarity as our advanced algorithms redefine image resolution.";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  openGraph: {
-    title,
-    description,
-    images: [
-      {
-        url: "https://cdn.capture.techulus.in/e1ab7054-dabc-48d6-a33f-c18038aac1c8/fb7402dd8aef88fa5931ff8e2f6575fb/image?url=https%3A%2F%2Fmanageprompt.com%2Fai-tools%2Fimage-upscale&delay=1&vw=1200&vh=630",
-        width: 1200,
-        height: 630,
-        alt: title,
-      },
-    ],
-  },
-  metadataBase: new URL(getAppBaseUrl()),
-};
+export const metadata: Metadata = buildMetadata(title, description);
 
 export default async function ImageUpscale() {
   async function renderImage(image: string) {

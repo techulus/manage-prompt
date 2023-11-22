@@ -1,6 +1,6 @@
 import { AIImageProcessingPage } from "@/components/ai-tools/page-layout";
+import { buildMetadata } from "@/lib/utils/metadata";
 import { createOrder, runModel } from "@/lib/utils/replicate";
-import { getAppBaseUrl } from "@/lib/utils/url";
 import { del } from "@vercel/blob";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
@@ -13,23 +13,7 @@ const title = "AI Black and White Photo Colorizer";
 const description =
   "Elevate your photos with our AI Black and White Photo Colorizer. Effortlessly bring vintage images to life in vibrant colors. Try our advanced tool for unparalleled results in photo transformation. Restore and revitalize your memories with ease – explore the future of photo coloring now!";
 
-export const metadata: Metadata = {
-  title,
-  description,
-  openGraph: {
-    title,
-    description,
-    images: [
-      {
-        url: "https://cdn.capture.techulus.in/e1ab7054-dabc-48d6-a33f-c18038aac1c8/137bbe87161f3eb7bb2ef09419572824/image?url=https%3A%2F%2Fmanageprompt.com%2Fai-tools%2Fblack-and-white-to-color&delay=1&vw=1200&vh=630",
-        width: 1200,
-        height: 630,
-        alt: title,
-      },
-    ],
-  },
-  metadataBase: new URL(getAppBaseUrl()),
-};
+export const metadata: Metadata = buildMetadata(title, description);
 
 export default async function BlackAndWhiteToColor() {
   async function renderImage(image: string) {

@@ -77,7 +77,7 @@ export default function NavBar({ isPublicPage = false, appearance }: Props) {
                     className="mr-2"
                   />
                   {isPublicPage && !user ? (
-                    <Link href="/" className="-m-1.5 p-1.5">
+                    <div className="-m-1.5 p-1.5">
                       <span className="sr-only">ManagePrompt</span>
                       <p className="hero relative">
                         Manage<span className="font-semibold">Prompt</span>
@@ -85,7 +85,7 @@ export default function NavBar({ isPublicPage = false, appearance }: Props) {
                           [alpha]
                         </sup>
                       </p>
-                    </Link>
+                    </div>
                   ) : null}
                 </div>
               </Link>
