@@ -53,6 +53,35 @@ export async function GET(request: Request) {
           >
             {title}
           </div>
+
+          <div
+            style={{
+              backgroundColor: "white",
+              borderRadius: 18,
+              position: "absolute",
+              width: 800,
+              height: 80,
+              bottom: -25,
+              left: 200,
+            }}
+          ></div>
+
+          <div
+            style={{
+              position: "absolute",
+              bottom: 8,
+              left: 495,
+              textAlign: "center",
+              fontSize: 24,
+              fontStyle: "normal",
+              letterSpacing: "-0.025em",
+              color: "black",
+              lineHeight: 1.4,
+              whiteSpace: "pre-wrap",
+            }}
+          >
+            manageprompt.com
+          </div>
         </div>
       ),
       {
