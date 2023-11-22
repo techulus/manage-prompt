@@ -60,14 +60,14 @@ export function FileUploader({
   return (
     <div
       {...getRootProps()}
-      className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 dark:border-gray-700 px-6 py-10"
+      className="mt-2 flex justify-center rounded-lg border border-dashed border-blue-700 dark:border-blue-700 px-6 py-10"
     >
       {loading ? (
         <Spinner className="ml-2" />
       ) : (
         <div className="text-center">
           <PhotoIcon
-            className="mx-auto h-12 w-12 text-gray-300"
+            className="mx-auto h-12 w-12 text-blue-500"
             aria-hidden="true"
           />
           <div className="mt-4 flex text-sm leading-6 text-gray-600 dark:text-gray-400">

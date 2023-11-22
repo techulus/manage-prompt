@@ -8,6 +8,7 @@ export default authMiddleware({
     "/terms",
     "/webhooks/(.*)",
     "/w/(.*)",
+    "/og",
     "/ai-tools/(.*)",
     "/api/ai-tools/(.*)",
   ],
