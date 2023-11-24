@@ -33,11 +33,13 @@ export function FileUploader({
                   success: "Done!",
                   error: "Failed to process image!",
                 })
-                .then(() => {
+                .finally(() => {
                   setProcessing(false);
                 });
             });
         } catch (e) {
+          setLoading(false);
+          setProcessing(false);
           console.error(e);
           return null;
         }
