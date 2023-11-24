@@ -3,7 +3,6 @@ import { Analytics } from "@vercel/analytics/react";
 import { GeistSans } from "geist/font/sans";
 
 import { SITE_METADATA } from "@/data/marketing";
-import { getSettings } from "@/lib/hooks/user";
 import classNames from "classnames";
 import { cookies } from "next/headers";
 import "./globals.css";
@@ -18,9 +17,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const settings = await getSettings();
-
-  const theme = cookies().get("theme")?.value ?? settings?.theme ?? "light";
+  const theme = cookies().get("theme")?.value ?? "light";
 
   return (
     <ClerkProvider>
