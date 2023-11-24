@@ -12,6 +12,8 @@ export function FileUploader({
   onUploadComplete: (url: string) => Promise<void>;
 }) {
   const [loading, setLoading] = useState(false);
+  const [processing, setProcessing] = useState(false);
+
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       setLoading(true);
@@ -24,11 +26,16 @@ export function FileUploader({
           })
             .then((res) => res.json())
             .then((result) => {
-              toast.promise(onUploadComplete(result.url), {
-                loading: "Processing...",
-                success: "Done!",
-                error: "Failed to process image!",
-              });
+              setProcessing(true);
+              toast
+                .promise(onUploadComplete(result.url), {
+                  loading: "Processing...",
+                  success: "Done!",
+                  error: "Failed to process image!",
+                })
+                .then(() => {
+                  setProcessing(false);
+                });
             });
         } catch (e) {
           console.error(e);
@@ -42,7 +49,6 @@ export function FileUploader({
           success: "Upload completed!",
           error: "Failed to upload file(s)",
         })
-        // .then(() => notifyInfo("Processing..."))
         .finally(() => setLoading(false));
     },
     [onUploadComplete]
@@ -62,8 +68,11 @@ export function FileUploader({
       {...getRootProps()}
       className="mt-2 flex justify-center rounded-lg border border-dashed border-blue-500 dark:border-blue-600 px-6 py-10"
     >
-      {loading ? (
-        <Spinner className="ml-2" />
+      {loading || processing ? (
+        <Spinner
+          className="ml-2"
+          message={loading ? "Uploading Image" : "Running AI Model"}
+        />
       ) : (
         <div className="text-center">
           <PhotoIcon
