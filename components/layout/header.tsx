@@ -24,7 +24,7 @@ export function Header() {
             <p className="hero relative">
               Manage<span className="font-semibold">Prompt</span>
               <sup className="absolute top-0 left-[calc(100%+.1rem)] text-xs">
-                [alpha]
+                [beta]
               </sup>
             </p>
           </Link>
