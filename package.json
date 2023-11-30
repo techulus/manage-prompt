@@ -42,7 +42,7 @@
     "react-hot-toast": "^2.4.1",
     "react-markdown": "^8.0.7",
     "replicate": "^0.22.0",
-    "sharp": "^0.33.0",
+    "sharp": "^0.32.0",
     "slugify": "^1.6.6",
     "stripe": "^14.5.0",
     "svix": "^1.5.2",
