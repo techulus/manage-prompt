@@ -8,6 +8,9 @@ export async function GET(_: Request) {
   const orders = await prisma.imageOrder.findMany({
     where: {
       paymentStatus: "pending",
+      createdAt: {
+        lt: new Date(Date.now() - 60 * 60 * 1000),
+      },
     },
   });
 

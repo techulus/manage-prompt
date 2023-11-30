@@ -10,7 +10,7 @@
     },
     {
       "path": "/api/ai-tools/cancel-payment-links",
-      "schedule": "0 * * * *"
+      "schedule": "*/15 * * * *"
     }
   ]
 }
