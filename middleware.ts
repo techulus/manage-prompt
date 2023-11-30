@@ -11,11 +11,7 @@ export default authMiddleware({
     "/w/(.*)",
     "/og",
     "/ai-tools/(.*)",
-    "/api/ai-tools/cancel-payment-links",
-    "/api/ai-tools/order/download",
-    "/api/ai-tools/clean",
-    "/api/ai-tools/result",
-    "/api/ai-tools/upload",
+    "/api/ai-tools/(.*)",
   ],
 });
 
