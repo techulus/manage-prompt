@@ -75,20 +75,6 @@
   }
 }
 
-.watermarked {
-  position: relative;
-}
-
-.watermarked::after {
-  content: "ManagePrompt ManagePrompt ManagePrompt ManagePrompt ManagePrompt ManagePrompt";
-  position: absolute;
-  top: 25%;
-  left: 25%;
-  font-size: 36px;
-  color: rgba(255, 255, 255, 0.1);
-  transform: rotate(-45deg);
-}
-
 input[type="color"],
 input[type="date"],
 input[type="datetime"],

@@ -78,13 +78,15 @@ export default async function AIToolsResult({
             <div className="lg:col-span-4 lg:row-end-1">
               <div
                 className={cn(
-                  "output-image",
-                  "aspect-h-3 aspect-w-4 overflow-hidden rounded-lg border bg-gray-100 dark:bg-gray-900",
-                  isPaid ? "" : "watermarked"
+                  "aspect-h-3 aspect-w-4 overflow-hidden rounded-lg border bg-gray-100 dark:bg-gray-900"
                 )}
               >
                 <img
-                  src={String(order.outputUrl)}
+                  src={
+                    isPaid
+                      ? String(order.outputUrl)
+                      : `/api/ai-tools/result?id=${order.id}`
+                  }
                   alt="Result"
                   className="block object-cover object-center mx-auto"
                 />

@@ -93,6 +93,8 @@ model ImageOrder {
   type              String
   email             String?
   inputUrl          String
+  inputPrompt       String?
+  inputData         Json?
   outputUrl         String
   stripePaymentLink Json?
   paymentId         String?

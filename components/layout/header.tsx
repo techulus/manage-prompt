@@ -41,7 +41,7 @@ export function Header() {
           <SignedOut>
             <Link
               href="/console/workflows"
-              className="text-sm font-semibold leading-6 text-gray-900"
+              className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-200"
             >
               Log in <span aria-hidden="true">&rarr;</span>
             </Link>
