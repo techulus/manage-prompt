@@ -1,6 +1,7 @@
 "use client";
 
 import { PhotoIcon } from "@heroicons/react/20/solid";
+import Link from "next/link";
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
@@ -66,36 +67,57 @@ export function FileUploader({
   });
 
   return (
-    <div
-      {...getRootProps()}
-      className="mt-2 flex justify-center rounded-lg border border-dashed border-blue-500 dark:border-blue-600 px-6 py-10"
-    >
-      {loading || processing ? (
-        <Spinner
-          className="ml-2"
-          message={loading ? "Uploading Image" : "Running AI Model"}
-        />
-      ) : (
-        <div className="text-center">
-          <PhotoIcon
-            className="mx-auto h-12 w-12 text-blue-500 dark:text-blue-600"
-            aria-hidden="true"
+    <>
+      <div
+        {...getRootProps()}
+        className="mt-2 flex justify-center rounded-lg border border-dashed border-blue-500 dark:border-blue-600 px-6 py-10"
+      >
+        {loading || processing ? (
+          <Spinner
+            className="ml-2"
+            message={loading ? "Uploading Image" : "Running AI Model"}
           />
-          <div className="mt-4 flex text-sm leading-6 text-gray-600 dark:text-gray-400">
-            <label
-              htmlFor="file-upload"
-              className="relative cursor-pointer rounded-md font-semibold text-blue-500 dark:text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2 hover:text-blue-700 hover:dark:text-blue-500"
-            >
-              <span>Upload an image</span>
-              <input {...getInputProps()} disabled={loading} />
-            </label>
-            <p className="pl-1">or drag and drop</p>
+        ) : (
+          <div className="text-center">
+            <PhotoIcon
+              className="mx-auto h-12 w-12 text-blue-500 dark:text-blue-600"
+              aria-hidden="true"
+            />
+            <div className="mt-4 flex text-sm leading-6 text-gray-600 dark:text-gray-400">
+              <label
+                htmlFor="file-upload"
+                className="relative cursor-pointer rounded-md font-semibold text-blue-500 dark:text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2 hover:text-blue-700 hover:dark:text-blue-500"
+              >
+                <span>Upload an image</span>
+                <input {...getInputProps()} disabled={loading} />
+              </label>
+              <p className="pl-1">or drag and drop</p>
+            </div>
+            <p className="text-xs leading-5 text-gray-600 dark:text-gray-400">
+              PNG, JPG up to 5MB
+            </p>
           </div>
-          <p className="text-xs leading-5 text-gray-600 dark:text-gray-400">
-            PNG, JPG up to 5MB
-          </p>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+
+      <p className="text-sm text-center leading-5 text-gray-600 dark:text-gray-400 p-2">
+        By uploading an image, you agree to our{" "}
+        <Link
+          href="/terms"
+          className="font-semibold text-blue-500 dark:text-blue-600 hover:text-blue-700 hover:dark:text-blue-500"
+        >
+          Terms of Service
+        </Link>{" "}
+        and
+        <Link
+          href="/privacy"
+          className="font-semibold text-blue-500 dark:text-blue-600 hover:text-blue-700 hover:dark:text-blue-500"
+        >
+          {" "}
+          Privacy Policy
+        </Link>
+        .
+      </p>
+    </>
   );
 }

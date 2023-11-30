@@ -16,6 +16,9 @@ export const ThemedOrgSwitcher = ({ appearance }: Props) => {
 
 export const ThemedUserButton = ({ appearance }: Props) => {
   return (
-    <UserButton appearance={appearance === "dark" ? { baseTheme: dark } : {}} />
+    <UserButton
+      appearance={appearance === "dark" ? { baseTheme: dark } : {}}
+      afterSignOutUrl="/"
+    />
   );
 };

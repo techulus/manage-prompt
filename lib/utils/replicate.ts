@@ -19,6 +19,19 @@ export async function runModel(
   });
 }
 
+export async function runModelWithPrompt(
+  name: `${string}/${string}:${string}`,
+  prompt: string,
+  input: any = {}
+) {
+  return await replicate.run(name, {
+    input: {
+      prompt,
+      ...input,
+    },
+  });
+}
+
 export async function createOrder({
   inputUrl,
   outputUrl,
@@ -41,6 +54,39 @@ export async function createOrder({
     data: {
       email: user?.email,
       inputUrl,
+      outputUrl,
+      type,
+      paymentStatus: "pending",
+    },
+  });
+}
+
+export async function createPromptOrder({
+  inputPrompt,
+  inputData,
+  outputUrl,
+  type,
+}: {
+  inputPrompt: string;
+  inputData: any;
+  outputUrl: string;
+  type: string;
+}) {
+  const { userId } = owner();
+  const user = userId
+    ? await prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
+      })
+    : null;
+
+  return await prisma.imageOrder.create({
+    data: {
+      email: user?.email,
+      inputUrl: "",
+      inputPrompt,
+      inputData,
       outputUrl,
       type,
       paymentStatus: "pending",

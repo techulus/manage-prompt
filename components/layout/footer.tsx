@@ -14,6 +14,10 @@ const navigation = {
       href: "/ai-tools/black-and-white-to-color",
     },
     {
+      name: "Realistic Image Creator",
+      href: "/ai-tools/photo-realistic-image-creator",
+    },
+    {
       name: "Image Upscale",
       href: "/ai-tools/image-upscale",
     },
