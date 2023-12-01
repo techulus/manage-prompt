@@ -23,7 +23,7 @@ export function AIImageProcessingPage({
         subTitle="$1 per image, Pay after viewing the result."
       />
 
-      <div className="h-8"></div>
+      <div className="hidden md:visible h-8"></div>
 
       <ContentBlock>
         <CardContent>
