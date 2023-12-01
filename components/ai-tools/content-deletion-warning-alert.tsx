@@ -1,10 +1,9 @@
 import { AlertOctagonIcon } from "lucide-react";
-import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
+import { Alert, AlertDescription } from "../ui/alert";
 
 export const ContentDeleteWarningAlert = () => (
   <Alert className="my-6">
     <AlertOctagonIcon className="h-5 w-5" />
-    <AlertTitle className="text-lg">Heads up!</AlertTitle>
     <AlertDescription>
       <p>
         All uploaded content and processed images are are automatically deleted
