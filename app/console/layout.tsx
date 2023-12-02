@@ -1,14 +1,14 @@
-import NavBar from "@/components/console/navbar";
-import { cookies } from "next/headers";
+"use client";
 
-export const dynamic = "force-dynamic";
+import NavBar from "@/components/console/navbar";
+import { useTheme } from "@/lib/hooks/useTheme";
 
 export default function ConsoleLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const theme = cookies().get("theme")?.value ?? "light";
+  const theme = useTheme();
 
   return (
     <div className="relative flex min-h-full flex-col">

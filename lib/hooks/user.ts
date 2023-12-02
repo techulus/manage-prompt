@@ -4,13 +4,12 @@ import { prisma } from "../utils/db";
 import { owner } from "./useOwner";
 
 export type UserSetting = {
-  theme?: string;
   chat_model?: string;
 };
 
 export const updateSettings = async (settings: UserSetting) => {
   const { userId } = owner();
-  if (!userId) throw new Error("User not found");
+  if (!userId) return;
 
   const currentSettings = await getSettings();
 
