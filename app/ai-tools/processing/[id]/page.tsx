@@ -26,13 +26,16 @@ export default function AIToolsResult({
   useEffect(() => {
     if (!id) return;
 
-    const interval = setInterval(() => {
+    let intervalId: NodeJS.Timer;
+
+    intervalId = setInterval(() => {
       getStatus(id).catch(() => {
         notifyError("Something went wrong. Please try again later.");
+        if (intervalId) clearInterval(intervalId);
       });
     }, 2500);
 
-    return () => clearInterval(interval);
+    return () => clearInterval(intervalId);
   }, [id, getStatus]);
 
   return (
