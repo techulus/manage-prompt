@@ -4,14 +4,11 @@ import PageTitle from "@/components/layout/page-title";
 import { owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
 import { clerkClient } from "@clerk/nextjs";
-import { cookies } from "next/headers";
 import { purgeWorkflowData } from "./actions";
 
 export const dynamic = "force-dynamic";
 
 export default async function Settings() {
-  const theme = cookies().get("theme")?.value ?? "light";
-
   const { userId, ownerId } = owner();
 
   const user = await clerkClient.users.getUser(userId ?? "");

@@ -19,17 +19,22 @@ export async function runModel(
   });
 }
 
-export async function runModelWithPrompt(
-  name: `${string}/${string}:${string}`,
+export async function createPrediction(
+  name: string,
   prompt: string,
   input: any = {}
 ) {
-  return await replicate.run(name, {
+  return await replicate.predictions.create({
+    version: name,
     input: {
       prompt,
       ...input,
     },
   });
+}
+
+export async function getPrediction(id: string) {
+  return await replicate.predictions.get(id);
 }
 
 export async function createOrder({

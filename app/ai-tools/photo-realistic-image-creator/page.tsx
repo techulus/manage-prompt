@@ -6,7 +6,7 @@ import { CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { buildMetadata } from "@/lib/utils/metadata";
-import { createPromptOrder, runModelWithPrompt } from "@/lib/utils/replicate";
+import { createPrediction } from "@/lib/utils/replicate";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -27,9 +27,9 @@ export default async function ImageUpscale() {
 
     const prompt = formData.get("prompt") as string;
 
-    console.log("starting replicate", prompt);
-    const output = await runModelWithPrompt(
-      "konieshadow/fooocus-api:70e29df26dc5c2b06cf19532965867447f912b609b380138bee7f62c6980e772",
+    console.log("creating prediction", prompt);
+    const prediction = await createPrediction(
+      "70e29df26dc5c2b06cf19532965867447f912b609b380138bee7f62c6980e772",
       prompt,
       {
         cn_type1: "ImagePrompt",
@@ -50,19 +50,9 @@ export default async function ImageUpscale() {
         aspect_ratios_selection: "1152×896",
       }
     );
+    console.log("prediction created", prediction);
 
-    // @ts-ignore
-    const outputUrl = (output as unknown as string[])[0];
-    console.log("replicate done", outputUrl);
-
-    const order = await createPromptOrder({
-      inputPrompt: prompt,
-      inputData: null,
-      outputUrl: outputUrl,
-      type: "photo-realistic-image-creator",
-    });
-
-    redirect(`/ai-tools/order/${order.id}`);
+    redirect(`/ai-tools/processing/${prediction.id}`);
   }
 
   return (
@@ -72,7 +62,7 @@ export default async function ImageUpscale() {
         subTitle="$1 per image, Pay after viewing the result."
       />
 
-      <div className="hidden md:visible h-8"></div>
+      <div className="hidden md:block h-8"></div>
 
       <ContentBlock className="pb-4">
         <CardContent>
