@@ -62,7 +62,7 @@ export default async function ImageUpscale() {
         subTitle="$1 per image, Pay after viewing the result."
       />
 
-      <div className="hidden md:visible h-8"></div>
+      <div className="hidden md:block h-8"></div>
 
       <ContentBlock className="pb-4">
         <CardContent>
