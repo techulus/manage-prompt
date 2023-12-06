@@ -44,7 +44,7 @@ export default function AIToolsResult({
 
       <ContentBlock>
         <CardContent className="p-32">
-          <Spinner />
+          <Spinner className="h-8 w-8" />
         </CardContent>
       </ContentBlock>
     </>
