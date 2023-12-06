@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import usePrefersColorScheme from "./usePrefersColorScheme";
 
-export const useTheme = () => {
+export const useTheme = (): "dark" | "light" => {
   const colorScheme = usePrefersColorScheme();
 
   useEffect(() => {
@@ -12,5 +12,5 @@ export const useTheme = () => {
     root.classList.add(colorScheme);
   }, [colorScheme]);
 
-  return colorScheme == "no-preference" ? "light" : colorScheme;
+  return colorScheme == "no-preference" ? "dark" : colorScheme;
 };

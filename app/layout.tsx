@@ -21,7 +21,7 @@ export default async function RootLayout({
       <html
         lang="en"
         className={classNames(
-          "flex min-w-full min-h-full",
+          "flex min-w-full min-h-full dark",
           GeistSans.className
         )}
       >
