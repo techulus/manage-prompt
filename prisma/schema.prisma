@@ -90,12 +90,13 @@ model WorkflowRun {
 
 model ImageOrder {
   id                Int      @id @default(autoincrement())
+  predictionId      String?  @unique
   type              String
   email             String?
   inputUrl          String
   inputPrompt       String?
   inputData         Json?
-  outputUrl         String
+  outputUrl         String?
   stripePaymentLink Json?
   paymentId         String?
   paymentStatus     String

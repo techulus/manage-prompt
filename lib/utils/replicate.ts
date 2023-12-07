@@ -38,10 +38,12 @@ export async function getPrediction(id: string) {
 }
 
 export async function createOrder({
+  predictionId,
   inputUrl,
-  outputUrl,
+  outputUrl = "",
   type,
 }: {
+  predictionId: string;
   inputUrl: string;
   outputUrl: string;
   type: string;
@@ -58,6 +60,7 @@ export async function createOrder({
   return await prisma.imageOrder.create({
     data: {
       email: user?.email,
+      predictionId,
       inputUrl,
       outputUrl,
       type,
@@ -66,15 +69,15 @@ export async function createOrder({
   });
 }
 
-export async function createPromptOrder({
+export async function createPredictionOrder({
+  predictionId,
   inputPrompt,
-  inputData,
-  outputUrl,
+  inputData = null,
   type,
 }: {
+  predictionId: string;
   inputPrompt: string;
-  inputData: any;
-  outputUrl: string;
+  inputData?: any;
   type: string;
 }) {
   const { userId } = owner();
@@ -88,13 +91,24 @@ export async function createPromptOrder({
 
   return await prisma.imageOrder.create({
     data: {
+      predictionId,
       email: user?.email,
       inputUrl: "",
       inputPrompt,
       inputData,
-      outputUrl,
       type,
       paymentStatus: "pending",
+    },
+  });
+}
+
+export async function updatePredictionOrder(id: string, outputUrl: string) {
+  return await prisma.imageOrder.update({
+    where: {
+      predictionId: id,
+    },
+    data: {
+      outputUrl,
     },
   });
 }

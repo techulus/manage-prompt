@@ -3,7 +3,6 @@
 import { ContentBlock } from "@/components/core/content-block";
 import { Spinner } from "@/components/core/loaders";
 import { notifyError } from "@/components/core/toast";
-import PageTitle from "@/components/layout/page-title";
 import { CardContent } from "@/components/ui/card";
 import { useCallback, useEffect } from "react";
 
@@ -40,11 +39,12 @@ export default function AIToolsResult({
 
   return (
     <>
-      <PageTitle title="Processing..." />
-
+      <div className="hidden md:block h-8"></div>
       <ContentBlock>
         <CardContent className="p-32">
-          <Spinner className="h-8 w-8" />
+          <Spinner />
+
+          <p className="text-center font-bold mt-4">Processing your image...</p>
         </CardContent>
       </ContentBlock>
     </>
