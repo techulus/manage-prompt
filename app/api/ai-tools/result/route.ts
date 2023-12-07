@@ -17,7 +17,7 @@ export async function GET(request: Request) {
     },
   });
 
-  if (!order) {
+  if (!order?.outputUrl) {
     return NextResponse.error();
   }
 
