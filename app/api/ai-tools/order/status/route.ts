@@ -1,4 +1,4 @@
-import { createPromptOrder, getPrediction } from "@/lib/utils/replicate";
+import { getPrediction, updatePredictionOrder } from "@/lib/utils/replicate";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -17,12 +17,7 @@ export async function GET(request: Request) {
     const outputUrl = (prediction.output as unknown as string[])[0];
     console.log("replicate done", outputUrl);
 
-    const order = await createPromptOrder({
-      inputPrompt: (prediction.input as any).prompt,
-      inputData: null,
-      outputUrl: outputUrl,
-      type: "photo-realistic-image-creator",
-    });
+    const order = await updatePredictionOrder(id, outputUrl);
 
     return NextResponse.json({
       order_id: order.id,

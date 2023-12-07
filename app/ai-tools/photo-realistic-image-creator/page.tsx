@@ -6,7 +6,7 @@ import { CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { buildMetadata } from "@/lib/utils/metadata";
-import { createPrediction } from "@/lib/utils/replicate";
+import { createPrediction, createPredictionOrder } from "@/lib/utils/replicate";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -51,6 +51,13 @@ export default async function ImageUpscale() {
       }
     );
     console.log("prediction created", prediction);
+
+    const order = await createPredictionOrder({
+      predictionId: prediction.id,
+      inputPrompt: prompt,
+      type: "photo-realistic-image-creator",
+    });
+    console.log("order created", order);
 
     redirect(`/ai-tools/processing/${prediction.id}`);
   }
