@@ -43,7 +43,7 @@ export async function createOrder({
   outputUrl = "",
   type,
 }: {
-  predictionId: string;
+  predictionId?: string;
   inputUrl: string;
   outputUrl: string;
   type: string;
