@@ -19,17 +19,10 @@ export async function runModel(
   });
 }
 
-export async function createPrediction(
-  name: string,
-  prompt: string,
-  input: any = {}
-) {
+export async function createPrediction(version: string, input: any = {}) {
   return await replicate.predictions.create({
-    version: name,
-    input: {
-      prompt,
-      ...input,
-    },
+    version,
+    input,
   });
 }
 
@@ -72,11 +65,13 @@ export async function createOrder({
 export async function createPredictionOrder({
   predictionId,
   inputPrompt,
+  inputUrl = "",
   inputData = null,
   type,
 }: {
   predictionId: string;
-  inputPrompt: string;
+  inputPrompt?: string;
+  inputUrl?: string;
   inputData?: any;
   type: string;
 }) {
@@ -93,7 +88,7 @@ export async function createPredictionOrder({
     data: {
       predictionId,
       email: user?.email,
-      inputUrl: "",
+      inputUrl,
       inputPrompt,
       inputData,
       type,

@@ -26,21 +26,45 @@ export async function GET(request: Request) {
     Buffer.from(await res.arrayBuffer())
   );
 
-  const overlayBuf = await fetch(
-    "https://manageprompt.com/images/logo.png"
-  ).then(async (res) => Buffer.from(await res.arrayBuffer()));
+  try {
+    const overlayBuf = await fetch(
+      "https://manageprompt.com/images/logo.png"
+    ).then(async (res) => Buffer.from(await res.arrayBuffer()));
 
-  const image = await sharp(imageBuf)
-    .composite([{ input: overlayBuf, gravity: "northeast", blend: "overlay" }])
-    .toFormat("png")
-    .png({ quality: 100 })
-    .toBuffer();
+    const image = await sharp(imageBuf)
+      .composite([
+        { input: overlayBuf, gravity: "northeast", blend: "overlay" },
+      ])
+      .toFormat("png")
+      .png({ quality: 100 })
+      .toBuffer();
 
-  return new Response(image, {
-    headers: {
-      "Content-Type": "image/png",
-      "Cache-Control": "public, max-age=31536000, immutable",
-      ETag: `"${createHash("md5").update(image).digest("hex")}"`,
-    },
-  });
+    return new Response(image, {
+      headers: {
+        "Content-Type": "image/png",
+        "Cache-Control": "public, max-age=31536000, immutable",
+        ETag: `"${createHash("md5").update(image).digest("hex")}"`,
+      },
+    });
+  } catch (e) {
+    const overlayBuf = await fetch(
+      "https://manageprompt.com/images/logo_small.png"
+    ).then(async (res) => Buffer.from(await res.arrayBuffer()));
+
+    const image = await sharp(imageBuf)
+      .composite([
+        { input: overlayBuf, gravity: "northeast", blend: "overlay" },
+      ])
+      .toFormat("png")
+      .png({ quality: 100 })
+      .toBuffer();
+
+    return new Response(image, {
+      headers: {
+        "Content-Type": "image/png",
+        "Cache-Control": "public, max-age=31536000, immutable",
+        ETag: `"${createHash("md5").update(image).digest("hex")}"`,
+      },
+    });
+  }
 }

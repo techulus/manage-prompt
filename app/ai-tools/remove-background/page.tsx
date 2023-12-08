@@ -1,7 +1,6 @@
 import { AIImageProcessingPage } from "@/components/ai-tools/page-layout";
 import { buildMetadata } from "@/lib/utils/metadata";
-import { createOrder, runModel } from "@/lib/utils/replicate";
-import { del } from "@vercel/blob";
+import { createPrediction, createPredictionOrder } from "@/lib/utils/replicate";
 import { Metadata } from "next";
 import { redirect } from "next/navigation";
 import input from "./input.jpeg";
@@ -19,25 +18,22 @@ export default async function ImageUpscale() {
   async function renderImage(image: string) {
     "use server";
 
-    console.log("starting replicate", image);
-    const output = await runModel(
-      "cjwbw/rembg:fb8af171cfa1616ddcf1242c093f9c46bcada5ad4cf6f2fbe8b81b330ec5c003",
-      image
+    console.log("creating prediction", image);
+    const prediction = await createPrediction(
+      "fb8af171cfa1616ddcf1242c093f9c46bcada5ad4cf6f2fbe8b81b330ec5c003",
+      {
+        image,
+      }
     );
+    console.log("prediction created", prediction);
 
-    // @ts-ignore
-    const outputUrl = output as unknown as string;
-    console.log("replicate done", outputUrl);
-
-    const order = await createOrder({
+    await createPredictionOrder({
+      predictionId: prediction.id,
       inputUrl: image,
-      outputUrl: outputUrl,
       type: "remove-background",
     });
 
-    await del(image);
-
-    redirect(`/ai-tools/order/${order.id}`);
+    redirect(`/ai-tools/processing/${prediction.id}`);
   }
 
   return (
