@@ -30,8 +30,8 @@ export default async function ImageUpscale() {
     console.log("creating prediction", prompt);
     const prediction = await createPrediction(
       "70e29df26dc5c2b06cf19532965867447f912b609b380138bee7f62c6980e772",
-      prompt,
       {
+        prompt,
         cn_type1: "ImagePrompt",
         cn_type2: "ImagePrompt",
         cn_type3: "ImagePrompt",

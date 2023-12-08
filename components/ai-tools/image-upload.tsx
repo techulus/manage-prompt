@@ -30,8 +30,8 @@ export function FileUploader({
               setProcessing(true);
               toast
                 .promise(onUploadComplete(result.url), {
-                  loading: "Processing...",
-                  success: "Done!",
+                  loading: "Starting AI Model...",
+                  success: "Processing",
                   error: "Failed to process image!",
                 })
                 .finally(() => {
