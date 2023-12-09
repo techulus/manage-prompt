@@ -37,6 +37,7 @@
     "openai-edge": "^1.0.0",
     "postcss": "8.4.23",
     "react": "experimental",
+    "react-cookie": "^6.1.1",
     "react-dom": "experimental",
     "react-dropzone": "^14.2.3",
     "react-hot-toast": "^2.4.1",

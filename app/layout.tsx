@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans";
 
 import { SITE_METADATA } from "@/data/marketing";
 import classNames from "classnames";
+import { cookies } from "next/headers";
 import "./globals.css";
 
 export const metadata = {
@@ -16,12 +17,15 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const theme = cookies().get("theme")?.value ?? "light";
+
   return (
     <ClerkProvider>
       <html
         lang="en"
         className={classNames(
-          "flex min-w-full min-h-full dark",
+          "flex min-w-full min-h-full",
+          theme,
           GeistSans.className
         )}
       >
