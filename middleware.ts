@@ -7,14 +7,16 @@ export default authMiddleware({
     "/sign-up",
     "/terms",
     "/privacy",
-    "/webhooks/(.*)",
     "/w/(.*)",
+  ],
+  ignoredRoutes: [
+    "/webhooks/(.*)",
     "/og",
     "/ai-tools/(.*)",
     "/api/ai-tools/(.*)",
-  ],
+  ]
 });
 
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: ["/((?!.+\\.[\\w]+$|_next|webhooks|ai-tools|og).*)", "/", "/(api|trpc)(.*)"],
 };
