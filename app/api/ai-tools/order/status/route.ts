@@ -14,6 +14,11 @@ export async function GET(request: Request) {
   const prediction = await getPrediction(id);
   console.log("replicate status", prediction.status);
 
+  if (prediction.status === "failed") {
+    console.log("failed prediction", id);
+    return NextResponse.error();
+  }
+
   if (prediction.status === "succeeded") {
     const order = await prisma.imageOrder.findUnique({
       where: {
