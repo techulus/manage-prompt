@@ -7,7 +7,6 @@ import { getCompletion } from "@/lib/utils/openai";
 import { WorkflowSchema } from "@/lib/utils/workflow";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import slugify from "slugify";
 
 export async function saveWorkflow(formData: FormData) {
   const { userId, ownerId } = owner();
@@ -125,46 +124,6 @@ export async function toggleWorkflowState(formData: FormData) {
     },
     data: {
       published: !published,
-    },
-  });
-
-  revalidatePath(`/console/workflows/${id}`);
-  revalidatePath(`/console/workflows`);
-  redirect(`/console/workflows/${id}`);
-}
-
-export async function makeWorkflowPublic(formData: FormData) {
-  const id = Number(formData.get("id"));
-
-  const workflow = await prisma.workflow.findUnique({
-    where: {
-      id,
-    },
-  });
-
-  await prisma.workflow.update({
-    where: {
-      id,
-    },
-    data: {
-      publicUrl: slugify(`${id}-${workflow?.name}`, { lower: true }),
-    },
-  });
-
-  revalidatePath(`/console/workflows/${id}`);
-  revalidatePath(`/console/workflows`);
-  redirect(`/console/workflows/${id}`);
-}
-
-export async function makeWorkflowPrivate(formData: FormData) {
-  const id = Number(formData.get("id"));
-
-  await prisma.workflow.update({
-    where: {
-      id,
-    },
-    data: {
-      publicUrl: null,
     },
   });
 

@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fullTextSearch"]
+  previewFeatures = ["driverAdapters", "fullTextSearch"]
 }
 
 datasource db {
@@ -61,8 +61,6 @@ model Workflow {
   template      String
   instruction   String?
   inputs        Json
-
-  publicUrl String? @unique
 
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt

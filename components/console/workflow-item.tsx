@@ -1,6 +1,5 @@
 import {
   ChevronRightIcon,
-  GlobeAltIcon,
   PencilIcon,
   PlayIcon,
 } from "@heroicons/react/20/solid";
@@ -58,9 +57,6 @@ export async function WorkflowItem({ workflow }: Props) {
           </div>
           <div className="group relative flex items-center space-x-2.5">
             <Badge variant="outline">{workflow.model}</Badge>
-            {workflow.publicUrl ? (
-              <GlobeAltIcon className="h-4 w-4 inline text-orange-400 dark:text-orange-500" />
-            ) : null}
           </div>
         </Link>
         <div className="sm:hidden">
