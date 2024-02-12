@@ -1,33 +1,70 @@
 import { ContentBlock } from "@/components/core/content-block";
-import { DeleteButton, UpdateProfileButton } from "@/components/form/button";
+import {
+  ActionButton,
+  DeleteButton,
+  UpdateProfileButton,
+} from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
 import { clerkClient } from "@clerk/nextjs";
-import { purgeWorkflowData } from "./actions";
-
-export const dynamic = "force-dynamic";
+import {
+  createSecretKey,
+  purgeWorkflowData,
+  revokeSecretKey,
+  upgradePlan,
+} from "./actions";
 
 export default async function Settings() {
   const { userId, ownerId } = owner();
 
-  const user = await clerkClient.users.getUser(userId ?? "");
+  if (!ownerId || !userId) {
+    throw new Error("User not found");
+  }
 
-  const organization = await prisma.organization.findUnique({
-    where: {
-      id: ownerId,
-    },
-  });
-
-  const dataCount = await prisma.workflow.count({
-    where: {
-      organization: {
-        id: {
-          equals: ownerId,
+  const [user, organization, secretKeys, dataCount] = await Promise.all([
+    clerkClient.users.getUser(userId),
+    prisma.organization.findUnique({
+      where: {
+        id: ownerId,
+      },
+    }),
+    prisma.secretKey.findMany({
+      include: {
+        user: {
+          select: {
+            first_name: true,
+            last_name: true,
+          },
         },
       },
-    },
-  });
+      where: {
+        organization: {
+          id: {
+            equals: ownerId,
+          },
+        },
+      },
+    }),
+    prisma.workflow.count({
+      where: {
+        organization: {
+          id: {
+            equals: ownerId,
+          },
+        },
+      },
+    }),
+  ]);
 
   return (
     <>
@@ -38,11 +75,10 @@ export default async function Settings() {
           <div className="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
             <div>
               <h2 className="text-base font-semibold leading-7 text-gray-900 dark:text-gray-200">
-                Profile
+                Account
               </h2>
               <p className="mt-1 text-sm leading-6 text-gray-500">
-                Your full name / user name will be displayed publicly when you
-                share workflows.
+                Manage your account settings and billing information.
               </p>
 
               <dl className="mt-6 space-y-6 divide-y divide-gray-100 dark:divide-gray-800 border-t border-gray-200 dark:border-gray-800 text-sm leading-6">
@@ -55,7 +91,13 @@ export default async function Settings() {
                       {organization?.credits ?? 0} credits left
                     </div>
                     <div className="text-gray-900 dark:text-gray-200">
-                      Free plan (100 credits/mo)
+                      <form action={upgradePlan}>
+                        <ActionButton
+                          variant="default"
+                          label="Upgrade"
+                          loadingLabel="Redirecting to checkout..."
+                        />
+                      </form>
                     </div>
                   </dd>
                 </div>
@@ -96,6 +138,63 @@ export default async function Settings() {
                   </div>
                 ) : null}
               </dl>
+            </div>
+          </div>
+
+          <div className="mt-16 mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
+            <div>
+              <h2 className="text-base font-semibold leading-7 text-gray-900 dark:text-gray-200">
+                API Credentials
+              </h2>
+              <p className="mt-1 text-sm leading-6 text-gray-500">
+                Manage your API credentials. You can create multiple keys to use
+                with the API. These keys should be kept secret and not shared
+                publicly.
+              </p>
+
+              <Table className="mt-6">
+                {!secretKeys.length ? (
+                  <TableCaption>
+                    You have not created any secret keys yet.
+                    <form action={createSecretKey}>
+                      <ActionButton
+                        variant="link"
+                        label="Generate Key"
+                        loadingLabel="Creating..."
+                      />
+                    </form>
+                  </TableCaption>
+                ) : null}
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Key</TableHead>
+                    <TableHead>Created by</TableHead>
+                    <TableHead>Last used</TableHead>
+                    <TableHead></TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {secretKeys.map((key) => (
+                    <TableRow key={key.id}>
+                      <TableCell>{key.key}</TableCell>
+                      <TableCell>
+                        {key.user.first_name} {key.user.last_name}
+                      </TableCell>
+                      <TableCell>
+                        {key.lastUsed
+                          ? new Date(key.lastUsed).toLocaleDateString()
+                          : "Never"}
+                      </TableCell>
+                      <TableCell>
+                        <form action={revokeSecretKey}>
+                          <input type="hidden" name="id" value={key.id} />
+                          <DeleteButton label="Revoke" />
+                        </form>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </div>
           </div>
 

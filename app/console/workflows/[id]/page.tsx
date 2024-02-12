@@ -18,8 +18,6 @@ interface Props {
   };
 }
 
-export const dynamic = "force-dynamic";
-
 export default async function WorkflowDetails({ params, searchParams }: Props) {
   const currentPage = searchParams.page ? parseInt(searchParams.page) : 1;
   const { workflow, workflowRuns, count } = await getWorkflowAndRuns(
@@ -75,7 +73,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                       <ActionButton
                         icon={
                           <PauseCircleIcon
-                            className="mr-2 h-5 w-5"
+                            className="mr-2 h-4 w-4"
                             aria-hidden="true"
                           />
                         }
@@ -86,7 +84,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                       <ActionButton
                         icon={
                           <PlayCircleIcon
-                            className="mr-2 h-5 w-5"
+                            className="mr-2 h-4 w-4"
                             aria-hidden="true"
                           />
                         }
@@ -128,7 +126,6 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
             className="border-t divide-y divide-gray-200 dark:divide-gray-800 border-b border-gray-200 dark:border-gray-800"
           >
             {workflowRuns.map((run) => (
-              // @ts-ignore React server component
               <WorkflowRunItem key={run.id} workflowRun={run} />
             ))}
           </ul>

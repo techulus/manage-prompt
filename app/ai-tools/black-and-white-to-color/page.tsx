@@ -6,8 +6,6 @@ import { redirect } from "next/navigation";
 import input from "./input.jpg";
 import output from "./output.png";
 
-export const dynamic = "force-dynamic";
-
 const title = "AI Black and White Photo Colorizer";
 const description =
   "Elevate your photos with our AI Black and White Photo Colorizer. Effortlessly bring vintage images to life in vibrant colors. Try our advanced tool for unparalleled results in photo transformation. Restore and revitalize your memories with ease – explore the future of photo coloring now!";

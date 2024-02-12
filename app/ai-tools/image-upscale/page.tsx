@@ -6,8 +6,6 @@ import { redirect } from "next/navigation";
 import input from "./input.jpg";
 import output from "./output.png";
 
-export const dynamic = "force-dynamic";
-
 const title = "AI Image Upscaling";
 const description =
   "Witness a leap in image quality with our state-of-the-art AI Image Upscaling Tool. Enhance the details and sharpness of your pictures effortlessly. Uncover a new realm of visual clarity as our advanced algorithms redefine image resolution.";

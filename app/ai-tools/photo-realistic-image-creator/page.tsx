@@ -13,8 +13,6 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import output from "./output.png";
 
-export const dynamic = "force-dynamic";
-
 const title = "Photo Realistic Image Creator";
 const description =
   "This tool lets you create a photo-realistic image from a natural language text description.";

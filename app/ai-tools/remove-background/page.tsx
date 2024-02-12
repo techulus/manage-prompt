@@ -6,8 +6,6 @@ import { redirect } from "next/navigation";
 import input from "./input.jpeg";
 import output from "./output.png";
 
-export const dynamic = "force-dynamic";
-
 const title = "AI Image Background Removal";
 const description =
   "Discover the ultimate solution for removing image backgrounds seamlessly with our cutting-edge AI-powered tool. Effortlessly transform your photos with just a few clicks, saving time and ensuring professional, stunning results. Say goodbye to tedious manual editing – experience the power of AI background removal today!";

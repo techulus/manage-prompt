@@ -22,6 +22,7 @@ model User {
   Workflow           Workflow[]
   WorkflowRun        WorkflowRun[]
   OrganizationToUser OrganizationToUser[]
+  SecretKey          SecretKey[]
 }
 
 model Organization {
@@ -33,10 +34,12 @@ model Organization {
   credits            Int                  @default(0)
   createdByUser      String
   createdBy          User                 @relation(fields: [createdByUser], references: [id], onDelete: Cascade)
+  stripe             Stripe?
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
   workflows          Workflow[]
   OrganizationToUser OrganizationToUser[]
+  SecretKey          SecretKey[]
 }
 
 model OrganizationToUser {
@@ -47,6 +50,19 @@ model OrganizationToUser {
   user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+}
+
+model SecretKey {
+  id        Int       @id @default(autoincrement())
+  key       String    @unique
+  createdBy String
+  ownerId   String
+  lastUsed  DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user         User         @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 }
 
 model Workflow {
@@ -100,4 +116,15 @@ model ImageOrder {
   paymentStatus     String
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+}
+
+model Stripe {
+  id             Int          @id @default(autoincrement())
+  customerId     String       @unique
+  subscriptionId String?      @unique
+  subscription   Json?
+  ownerId        String       @unique
+  organization   Organization @relation(fields: [ownerId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 }

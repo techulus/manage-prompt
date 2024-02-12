@@ -14,8 +14,6 @@ interface Props {
   };
 }
 
-export const dynamic = "force-dynamic";
-
 export default async function Workflows({ searchParams }: Props) {
   const { userId, orgId } = owner();
 
@@ -91,7 +89,6 @@ export default async function Workflows({ searchParams }: Props) {
           ) : null}
 
           {workflows.map((workflow) => (
-            // @ts-ignore React server component
             <WorkflowItem key={workflow.id} workflow={workflow} />
           ))}
         </ul>

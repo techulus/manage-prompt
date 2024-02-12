@@ -3,7 +3,7 @@ import { Alert, AlertDescription } from "../ui/alert";
 
 export const ContentDeleteWarningAlert = () => (
   <Alert className="my-6">
-    <AlertOctagonIcon className="h-5 w-5" />
+    <AlertOctagonIcon className="h-4 w-4" />
     <AlertDescription>
       <p>
         All uploaded content and processed images are are automatically deleted

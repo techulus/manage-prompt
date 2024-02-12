@@ -9,13 +9,21 @@ import Link from "next/link";
 import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
 
-type WorkflowWithUser = Workflow & {
-  user: {
-    first_name: string;
-  };
-};
 interface Props {
-  workflow: WorkflowWithUser;
+  workflow: Pick<
+    Workflow,
+    | "id"
+    | "name"
+    | "createdAt"
+    | "updatedAt"
+    | "published"
+    | "model"
+    | "ownerId"
+  > & {
+    user: {
+      first_name: string;
+    };
+  };
 }
 
 export async function WorkflowItem({ workflow }: Props) {
@@ -61,7 +69,7 @@ export async function WorkflowItem({ workflow }: Props) {
         </Link>
         <div className="sm:hidden">
           <ChevronRightIcon
-            className="h-5 w-5 text-gray-400"
+            className="h-4 w-4 text-gray-400"
             aria-hidden="true"
           />
         </div>

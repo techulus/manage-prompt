@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/utils/db";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
+import Stripe from "stripe";
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
@@ -38,6 +39,34 @@ export async function POST(req: Request) {
             paymentStatus: "paid",
           },
         });
+        break;
+
+      case "customer.subscription.created":
+        const createdSubscription: Stripe.Subscription = event.data.object;
+        await prisma.stripe.update({
+          where: {
+            customerId: String(createdSubscription.customer),
+          },
+          data: {
+            subscriptionId: createdSubscription.id,
+            subscription: JSON.parse(JSON.stringify(createdSubscription)),
+          },
+        });
+        break;
+      case "customer.subscription.updated":
+        const updatedSubscription: Stripe.Subscription = event.data.object;
+        await prisma.stripe.update({
+          where: {
+            subscriptionId: updatedSubscription.id,
+          },
+          data: {
+            subscriptionId: updatedSubscription.id,
+            subscription: JSON.parse(JSON.stringify(updatedSubscription)),
+          },
+        });
+        break;
+      default:
+        console.log(`Unhandled event type ${event.type}`, event);
         break;
     }
 
