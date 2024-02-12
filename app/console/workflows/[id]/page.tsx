@@ -4,6 +4,7 @@ import { ContentBlock } from "@/components/core/content-block";
 import { ActionButton, DeleteButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { LIMIT, getWorkflowAndRuns } from "@/lib/utils/useWorkflow";
 import { PauseCircleIcon, PlayCircleIcon } from "@heroicons/react/20/solid";
 import { Terminal } from "lucide-react";
@@ -36,7 +37,11 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
         backUrl="/console/workflows"
         actionLabel="Edit"
         actionLink={`/console/workflows/${workflow.id}/edit`}
-      />
+      >
+        <Badge variant="outline" className="mt-2">
+          {workflow.shortId}
+        </Badge>
+      </PageTitle>
 
       {!workflow.published ? (
         <Alert variant="destructive" className="mx-auto max-w-7xl mt-4">

@@ -7,6 +7,7 @@ export default authMiddleware({
     "/og",
     "/ai-tools/(.*)",
     "/api/ai-tools/(.*)",
+    "/api/run/(.*)",
   ],
 });
 

@@ -67,6 +67,7 @@ model SecretKey {
 
 model Workflow {
   id        Int     @id @default(autoincrement())
+  shortId   String? @unique
   createdBy String
   ownerId   String
   name      String
