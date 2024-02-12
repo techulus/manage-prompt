@@ -9,7 +9,7 @@ import {
 import { randomBytes } from "crypto";
 import { redirect } from "next/navigation";
 
-export async function upgradePlan() {
+export async function redirectToBilling() {
   const { ownerId } = owner();
 
   if (!ownerId) {

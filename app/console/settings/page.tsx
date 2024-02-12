@@ -17,11 +17,12 @@ import {
 import { owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
 import { clerkClient } from "@clerk/nextjs";
+import Stripe from "stripe";
 import {
   createSecretKey,
   purgeWorkflowData,
+  redirectToBilling,
   revokeSecretKey,
-  upgradePlan,
 } from "./actions";
 
 export default async function Settings() {
@@ -34,6 +35,9 @@ export default async function Settings() {
   const [user, organization, secretKeys, dataCount] = await Promise.all([
     clerkClient.users.getUser(userId),
     prisma.organization.findUnique({
+      include: {
+        stripe: true,
+      },
       where: {
         id: ownerId,
       },
@@ -66,6 +70,9 @@ export default async function Settings() {
     }),
   ]);
 
+  const subscription = organization?.stripe
+    ?.subscription as unknown as Stripe.Subscription;
+
   return (
     <>
       <PageTitle title="Settings" />
@@ -86,20 +93,37 @@ export default async function Settings() {
                   <dt className="font-medium text-gray-900 dark:text-gray-200 sm:w-64 sm:flex-none sm:pr-6">
                     Billing
                   </dt>
-                  <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                    <div className="text-gray-900 dark:text-gray-200">
-                      {organization?.credits ?? 0} credits left
-                    </div>
-                    <div className="text-gray-900 dark:text-gray-200">
-                      <form action={upgradePlan}>
-                        <ActionButton
-                          variant="default"
-                          label="Upgrade"
-                          loadingLabel="Redirecting to checkout..."
-                        />
-                      </form>
-                    </div>
-                  </dd>
+                  {subscription ? (
+                    <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                      <div className="text-gray-900 dark:text-gray-200">
+                        {subscription?.status.toUpperCase()}
+                      </div>
+                      <div className="text-gray-900 dark:text-gray-200">
+                        <form action={redirectToBilling}>
+                          <ActionButton
+                            variant="default"
+                            label="Manage"
+                            loadingLabel="Redirecting..."
+                          />
+                        </form>
+                      </div>
+                    </dd>
+                  ) : (
+                    <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                      <div className="text-gray-900 dark:text-gray-200">
+                        {organization?.credits ?? 0} credits left
+                      </div>
+                      <div className="text-gray-900 dark:text-gray-200">
+                        <form action={redirectToBilling}>
+                          <ActionButton
+                            variant="default"
+                            label="Upgrade"
+                            loadingLabel="Redirecting to checkout..."
+                          />
+                        </form>
+                      </div>
+                    </dd>
+                  )}
                 </div>
 
                 <div className="pt-6 sm:flex">
