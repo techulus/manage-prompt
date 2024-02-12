@@ -6,8 +6,8 @@ import {
   createOrRetrieveCustomer,
   getCheckoutSession,
 } from "@/lib/utils/stripe";
-import { randomBytes } from "crypto";
 import { redirect } from "next/navigation";
+import { randomBytes } from "node:crypto";
 
 export async function redirectToBilling() {
   const { ownerId } = owner();

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/utils/db";
-import { randomUUID } from "crypto";
+import { randomUUID } from "node:crypto";
 import Stripe from "stripe";
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
