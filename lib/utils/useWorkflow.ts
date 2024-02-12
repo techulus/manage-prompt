@@ -24,10 +24,7 @@ export async function getWorkflowsForOwner({
   userId: string;
   search?: string;
   page?: number;
-}): Promise<{
-  workflows: Workflow[];
-  count: number;
-}> {
+}) {
   const dbQuery: Prisma.WorkflowFindManyArgs = {
     select: {
       id: true,
@@ -63,7 +60,7 @@ export async function getWorkflowsForOwner({
     };
   }
 
-  const [workflows, count]: [Workflow[], number] = await prisma.$transaction([
+  const [workflows, count] = await prisma.$transaction([
     prisma.workflow.findMany(dbQuery),
     prisma.workflow.count({
       where: {

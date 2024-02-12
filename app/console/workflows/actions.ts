@@ -4,10 +4,10 @@ import { OpenAIModel, WorkflowInput } from "@/data/workflow";
 import { owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
 import { getCompletion } from "@/lib/utils/openai";
+import { reportUsage } from "@/lib/utils/stripe";
 import { WorkflowSchema } from "@/lib/utils/workflow";
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import slugify from "slugify";
+import Stripe from "stripe";
 
 export async function saveWorkflow(formData: FormData) {
   const { userId, ownerId } = owner();
@@ -54,7 +54,6 @@ export async function saveWorkflow(formData: FormData) {
     },
   });
 
-  revalidatePath(`/console/workflows`);
   redirect("/console/workflows");
 }
 
@@ -96,8 +95,6 @@ export async function updateWorkflow(formData: FormData) {
     },
   });
 
-  revalidatePath(`/console/workflows/${id}`);
-  revalidatePath(`/console/workflows`);
   redirect(`/console/workflows/${id}`);
 }
 
@@ -110,8 +107,6 @@ export async function deleteWorkflow(formData: FormData) {
     },
   });
 
-  revalidatePath(`/console/workflows/${id}`);
-  revalidatePath(`/console/workflows`);
   redirect("/console/workflows");
 }
 
@@ -128,48 +123,6 @@ export async function toggleWorkflowState(formData: FormData) {
     },
   });
 
-  revalidatePath(`/console/workflows/${id}`);
-  revalidatePath(`/console/workflows`);
-  redirect(`/console/workflows/${id}`);
-}
-
-export async function makeWorkflowPublic(formData: FormData) {
-  const id = Number(formData.get("id"));
-
-  const workflow = await prisma.workflow.findUnique({
-    where: {
-      id,
-    },
-  });
-
-  await prisma.workflow.update({
-    where: {
-      id,
-    },
-    data: {
-      publicUrl: slugify(`${id}-${workflow?.name}`, { lower: true }),
-    },
-  });
-
-  revalidatePath(`/console/workflows/${id}`);
-  revalidatePath(`/console/workflows`);
-  redirect(`/console/workflows/${id}`);
-}
-
-export async function makeWorkflowPrivate(formData: FormData) {
-  const id = Number(formData.get("id"));
-
-  await prisma.workflow.update({
-    where: {
-      id,
-    },
-    data: {
-      publicUrl: null,
-    },
-  });
-
-  revalidatePath(`/console/workflows/${id}`);
-  revalidatePath(`/console/workflows`);
   redirect(`/console/workflows/${id}`);
 }
 
@@ -185,18 +138,29 @@ export async function runWorkflow(formData: FormData) {
   if (!userId && !ownerId) throw "User/Owner ID is missing";
 
   const organization = await prisma.organization.findUnique({
+    include: {
+      stripe: true,
+    },
     where: {
       id: ownerId,
     },
   });
 
-  if (organization?.credits === 0) throw "No credits remaining";
+  if (organization?.credits === 0 && !organization?.stripe?.subscription)
+    throw "No credits remaining";
 
   const { result, rawResult } = await getCompletion(
     model,
     content,
     instruction
   );
+
+  if (organization?.stripe?.subscription) {
+    await reportUsage(
+      organization?.stripe?.subscription as unknown as Stripe.Subscription,
+      rawResult?.usage?.total_tokens ?? 0
+    );
+  }
 
   if (!result) throw "No result returned from OpenAI";
 
@@ -230,47 +194,5 @@ export async function runWorkflow(formData: FormData) {
     }),
   ]);
 
-  revalidatePath(`/console/workflows/${id}`);
   redirect(`/console/workflows/${id}`);
-}
-
-export async function copyWorkflow(formData: FormData) {
-  const id = Number(formData.get("id"));
-  const { userId, ownerId } = owner();
-
-  if (!id) throw "ID is missing";
-
-  const workflow = await prisma.workflow.findUnique({
-    where: {
-      id,
-    },
-  });
-
-  if (!workflow) throw "Workflow not found";
-
-  const { name, model, template, instruction, inputs } = workflow;
-
-  const { id: newId } = await prisma.workflow.create({
-    data: {
-      name: `${name} (copy)`,
-      model,
-      template,
-      instruction,
-      inputs: JSON.parse(JSON.stringify(inputs)),
-      published: true,
-      user: {
-        connect: {
-          id: userId!,
-        },
-      },
-      organization: {
-        connect: {
-          id: ownerId,
-        },
-      },
-    },
-  });
-
-  revalidatePath(`/console/workflows/${newId}`);
-  redirect(`/console/workflows/${newId}`);
 }

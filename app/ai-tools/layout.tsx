@@ -4,8 +4,6 @@ import NavBar from "@/components/console/navbar";
 import { Footer } from "@/components/layout/footer";
 import { useTheme } from "@/lib/hooks/useTheme";
 
-export const dynamic = "force-dynamic";
-
 export default function PublicLayout({
   children,
 }: {

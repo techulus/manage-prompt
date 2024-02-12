@@ -14,8 +14,6 @@ interface Props {
   };
 }
 
-export const dynamic = "force-dynamic";
-
 export default async function Workflows({ searchParams }: Props) {
   const { userId, orgId } = owner();
 

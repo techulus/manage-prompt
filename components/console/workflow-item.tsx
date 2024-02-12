@@ -1,6 +1,5 @@
 import {
   ChevronRightIcon,
-  GlobeAltIcon,
   PencilIcon,
   PlayIcon,
 } from "@heroicons/react/20/solid";
@@ -10,13 +9,21 @@ import Link from "next/link";
 import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
 
-type WorkflowWithUser = Workflow & {
-  user: {
-    first_name: string;
-  };
-};
 interface Props {
-  workflow: WorkflowWithUser;
+  workflow: Pick<
+    Workflow,
+    | "id"
+    | "name"
+    | "createdAt"
+    | "updatedAt"
+    | "published"
+    | "model"
+    | "ownerId"
+  > & {
+    user: {
+      first_name: string;
+    };
+  };
 }
 
 export async function WorkflowItem({ workflow }: Props) {
@@ -58,14 +65,11 @@ export async function WorkflowItem({ workflow }: Props) {
           </div>
           <div className="group relative flex items-center space-x-2.5">
             <Badge variant="outline">{workflow.model}</Badge>
-            {workflow.publicUrl ? (
-              <GlobeAltIcon className="h-4 w-4 inline text-orange-400 dark:text-orange-500" />
-            ) : null}
           </div>
         </Link>
         <div className="sm:hidden">
           <ChevronRightIcon
-            className="h-5 w-5 text-gray-400"
+            className="h-4 w-4 text-gray-400"
             aria-hidden="true"
           />
         </div>

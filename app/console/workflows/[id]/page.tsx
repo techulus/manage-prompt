@@ -4,21 +4,11 @@ import { ContentBlock } from "@/components/core/content-block";
 import { ActionButton, DeleteButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { LIMIT, getWorkflowAndRuns } from "@/lib/utils/useWorkflow";
-import {
-  LockClosedIcon,
-  LockOpenIcon,
-  PauseCircleIcon,
-  PlayCircleIcon,
-} from "@heroicons/react/20/solid";
+import { PauseCircleIcon, PlayCircleIcon } from "@heroicons/react/20/solid";
 import { Terminal } from "lucide-react";
-import Link from "next/link";
-import {
-  deleteWorkflow,
-  makeWorkflowPrivate,
-  makeWorkflowPublic,
-  toggleWorkflowState,
-} from "../actions";
+import { deleteWorkflow, toggleWorkflowState } from "../actions";
 
 interface Props {
   params: {
@@ -28,8 +18,6 @@ interface Props {
     page: string;
   };
 }
-
-export const dynamic = "force-dynamic";
 
 export default async function WorkflowDetails({ params, searchParams }: Props) {
   const currentPage = searchParams.page ? parseInt(searchParams.page) : 1;
@@ -49,7 +37,11 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
         backUrl="/console/workflows"
         actionLabel="Edit"
         actionLink={`/console/workflows/${workflow.id}/edit`}
-      />
+      >
+        <Badge variant="outline" className="mt-2">
+          {workflow.shortId}
+        </Badge>
+      </PageTitle>
 
       {!workflow.published ? (
         <Alert variant="destructive" className="mx-auto max-w-7xl mt-4">
@@ -57,23 +49,6 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
           <AlertTitle>Heads up!</AlertTitle>
           <AlertDescription>
             This workflow is not published and hence cannot be run.
-          </AlertDescription>
-        </Alert>
-      ) : null}
-
-      {workflow.publicUrl ? (
-        <Alert variant="default" className="mx-auto max-w-7xl mt-4">
-          <Terminal className="h-4 w-4" />
-          <AlertTitle>Heads up!</AlertTitle>
-          <AlertDescription>
-            This workflow is public and can be accessed by anyone{" "}
-            <Link
-              className="inline underline"
-              href={`/w/${workflow.publicUrl}`}
-            >
-              here
-            </Link>
-            .
           </AlertDescription>
         </Alert>
       ) : null}
@@ -103,7 +78,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                       <ActionButton
                         icon={
                           <PauseCircleIcon
-                            className="mr-2 h-5 w-5"
+                            className="mr-2 h-4 w-4"
                             aria-hidden="true"
                           />
                         }
@@ -114,7 +89,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                       <ActionButton
                         icon={
                           <PlayCircleIcon
-                            className="mr-2 h-5 w-5"
+                            className="mr-2 h-4 w-4"
                             aria-hidden="true"
                           />
                         }
@@ -123,46 +98,6 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                       />
                     )}
                   </form>
-
-                  {workflow.publicUrl ? (
-                    <form action={makeWorkflowPrivate}>
-                      <input
-                        className="hidden"
-                        type="text"
-                        name="id"
-                        defaultValue={workflow.id}
-                      />
-                      <ActionButton
-                        icon={
-                          <LockClosedIcon
-                            className="mr-2 h-5 w-5"
-                            aria-hidden="true"
-                          />
-                        }
-                        label="Make private"
-                        className="hover:bg-orange-50 hover:text-orange-600 dark:hover:text-orange-500"
-                      />
-                    </form>
-                  ) : (
-                    <form action={makeWorkflowPublic}>
-                      <input
-                        className="hidden"
-                        type="text"
-                        name="id"
-                        defaultValue={workflow.id}
-                      />
-                      <ActionButton
-                        icon={
-                          <LockOpenIcon
-                            className="mr-2 h-5 w-5"
-                            aria-hidden="true"
-                          />
-                        }
-                        label="Make public"
-                        className="hover:bg-orange-50 hover:text-orange-600 dark:hover:text-orange-500"
-                      />
-                    </form>
-                  )}
                 </span>
               </div>
 

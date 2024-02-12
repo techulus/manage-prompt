@@ -1,6 +1,6 @@
 "use client";
 
-import { copyWorkflow, runWorkflow } from "@/app/console/workflows/actions";
+import { runWorkflow } from "@/app/console/workflows/actions";
 import {
   WorkflowInput,
   WorkflowInputType,
@@ -18,10 +18,9 @@ import { Textarea } from "../ui/textarea";
 
 interface Props {
   workflow: Workflow;
-  isPublicPage?: boolean;
 }
 
-export function WorkflowComposer({ workflow, isPublicPage = false }: Props) {
+export function WorkflowComposer({ workflow }: Props) {
   const { id, inputs, template, instruction, model } = workflow;
 
   const [inputValues, updateInput] = useReducer((state: any, action: any) => {
@@ -53,7 +52,7 @@ export function WorkflowComposer({ workflow, isPublicPage = false }: Props) {
 
   return (
     <>
-      <form className="p-6" action={isPublicPage ? copyWorkflow : runWorkflow}>
+      <form className="p-6" action={runWorkflow}>
         <input
           type="number"
           name="id"
@@ -190,19 +189,15 @@ export function WorkflowComposer({ workflow, isPublicPage = false }: Props) {
 
         <SignedIn>
           <div className="mt-2 flex justify-end">
-            {isPublicPage ? (
-              <SaveButton label="Copy to my workflows" loadingLabel="Copying" />
-            ) : (
-              <SaveButton
-                label="Run"
-                loadingLabel="Running"
-                disabled={
-                  !workflow.published ||
-                  Object.keys(inputValues).length !==
-                    (inputs as WorkflowInput[])?.length
-                }
-              />
-            )}
+            <SaveButton
+              label="Run"
+              loadingLabel="Running"
+              disabled={
+                !workflow.published ||
+                Object.keys(inputValues).length !==
+                  (inputs as WorkflowInput[])?.length
+              }
+            />
           </div>
         </SignedIn>
       </form>
