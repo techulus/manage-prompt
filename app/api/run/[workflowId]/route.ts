@@ -1,7 +1,7 @@
 import { OpenAIModel, WorkflowInput } from "@/data/workflow";
 import { prisma } from "@/lib/utils/db";
 import { getCompletion } from "@/lib/utils/openai";
-import { reportUsage } from "@/lib/utils/stripe";
+import { isSubscriptionActive, reportUsage } from "@/lib/utils/stripe";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -64,7 +64,10 @@ export async function POST(
   }
 
   const organization = key.organization;
-  if (organization?.credits === 0 && !organization?.stripe?.subscription) {
+  if (
+    organization?.credits === 0 &&
+    !isSubscriptionActive(organization?.stripe?.subscription)
+  ) {
     return ErrorResponse(
       "You do not have any free credits left, please upgrade your plan.",
       402
@@ -89,12 +92,32 @@ export async function POST(
     workflow.instruction ?? ""
   );
 
-  if (organization?.stripe?.subscription) {
+  if (isSubscriptionActive(organization?.stripe?.subscription)) {
     await reportUsage(
       organization?.stripe?.subscription as unknown as Stripe.Subscription,
       rawResult?.usage?.total_tokens ?? 0
     );
+  } else {
+    await prisma.organization.update({
+      where: {
+        id: ownerId,
+      },
+      data: {
+        credits: {
+          decrement: 1,
+        },
+      },
+    });
   }
+
+  await prisma.secretKey.update({
+    where: {
+      key: token,
+    },
+    data: {
+      lastUsed: new Date(),
+    },
+  });
 
   if (!result) {
     return ErrorResponse("Failed to run workflow", 500);

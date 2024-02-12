@@ -105,3 +105,7 @@ export async function reportUsage(
     }
   );
 }
+
+export function isSubscriptionActive(subscription: any) {
+  return ["trialing", "active"].includes(subscription?.status);
+}

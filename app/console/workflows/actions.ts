@@ -4,7 +4,7 @@ import { OpenAIModel, WorkflowInput } from "@/data/workflow";
 import { owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
 import { getCompletion } from "@/lib/utils/openai";
-import { reportUsage } from "@/lib/utils/stripe";
+import { isSubscriptionActive, reportUsage } from "@/lib/utils/stripe";
 import { WorkflowSchema } from "@/lib/utils/workflow";
 import { redirect } from "next/navigation";
 import { randomBytes } from "node:crypto";
@@ -148,7 +148,10 @@ export async function runWorkflow(formData: FormData) {
     },
   });
 
-  if (organization?.credits === 0 && !organization?.stripe?.subscription)
+  if (
+    organization?.credits === 0 &&
+    !isSubscriptionActive(organization?.stripe?.subscription)
+  )
     throw "No credits remaining";
 
   const { result, rawResult } = await getCompletion(
@@ -157,34 +160,33 @@ export async function runWorkflow(formData: FormData) {
     instruction
   );
 
-  if (organization?.stripe?.subscription) {
+  if (!result) throw "No result returned from OpenAI";
+
+  await prisma.workflowRun.create({
+    data: {
+      result,
+      rawRequest: JSON.parse(JSON.stringify({ model, content, instruction })),
+      rawResult: JSON.parse(JSON.stringify(rawResult)),
+      user: {
+        connect: {
+          id: userId,
+        },
+      },
+      workflow: {
+        connect: {
+          id,
+        },
+      },
+    },
+  });
+
+  if (isSubscriptionActive(organization?.stripe?.subscription)) {
     await reportUsage(
       organization?.stripe?.subscription as unknown as Stripe.Subscription,
       rawResult?.usage?.total_tokens ?? 0
     );
-  }
-
-  if (!result) throw "No result returned from OpenAI";
-
-  await prisma.$transaction([
-    prisma.workflowRun.create({
-      data: {
-        result,
-        rawRequest: JSON.parse(JSON.stringify({ model, content, instruction })),
-        rawResult: JSON.parse(JSON.stringify(rawResult)),
-        user: {
-          connect: {
-            id: userId,
-          },
-        },
-        workflow: {
-          connect: {
-            id,
-          },
-        },
-      },
-    }),
-    prisma.organization.update({
+  } else {
+    await prisma.organization.update({
       where: {
         id: ownerId,
       },
@@ -193,8 +195,8 @@ export async function runWorkflow(formData: FormData) {
           decrement: 1,
         },
       },
-    }),
-  ]);
+    });
+  }
 
   redirect(`/console/workflows/${id}`);
 }

@@ -5,6 +5,7 @@ import {
   UpdateProfileButton,
 } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -96,12 +97,14 @@ export default async function Settings() {
                   {subscription ? (
                     <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
                       <div className="text-gray-900 dark:text-gray-200">
-                        {subscription?.status.toUpperCase()}
+                        <Badge variant="default">
+                          {subscription?.status.toUpperCase()}
+                        </Badge>
                       </div>
                       <div className="text-gray-900 dark:text-gray-200">
                         <form action={redirectToBilling}>
                           <ActionButton
-                            variant="default"
+                            variant="link"
                             label="Manage"
                             loadingLabel="Redirecting..."
                           />
@@ -116,7 +119,7 @@ export default async function Settings() {
                       <div className="text-gray-900 dark:text-gray-200">
                         <form action={redirectToBilling}>
                           <ActionButton
-                            variant="default"
+                            variant="link"
                             label="Upgrade"
                             loadingLabel="Redirecting to checkout..."
                           />
