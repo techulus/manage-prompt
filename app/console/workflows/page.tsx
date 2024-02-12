@@ -89,6 +89,7 @@ export default async function Workflows({ searchParams }: Props) {
           ) : null}
 
           {workflows.map((workflow) => (
+            // @ts-ignore React server component
             <WorkflowItem key={workflow.id} workflow={workflow} />
           ))}
         </ul>

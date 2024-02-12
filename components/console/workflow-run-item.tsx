@@ -1,11 +1,15 @@
 import { WorkflowRun } from "@prisma/client";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
-type WorkflowRunWithUser = WorkflowRun & {
+type WorkflowRunWithUser = Pick<
+  WorkflowRun,
+  "result" | "id" | "createdAt" | "rawResult"
+> & {
   user: {
-    first_name: string;
+    first_name: string | null;
   };
 };
+
 interface Props {
   workflowRun: WorkflowRunWithUser;
 }
