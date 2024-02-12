@@ -24,6 +24,7 @@ export async function createOrRetrieveCustomer(
   }
 
   const customer = await stripe.customers.create({
+    name: organization.name ?? "",
     metadata: {
       organizationId: organization?.id,
     },
