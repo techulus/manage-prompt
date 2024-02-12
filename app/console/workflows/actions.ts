@@ -7,6 +7,7 @@ import { getCompletion } from "@/lib/utils/openai";
 import { reportUsage } from "@/lib/utils/stripe";
 import { WorkflowSchema } from "@/lib/utils/workflow";
 import { redirect } from "next/navigation";
+import { randomBytes } from "node:crypto";
 import Stripe from "stripe";
 
 export async function saveWorkflow(formData: FormData) {
@@ -46,6 +47,7 @@ export async function saveWorkflow(formData: FormData) {
         },
       },
       published: true,
+      shortId: `wf_${randomBytes(16).toString("hex")}`,
       name,
       model,
       template,
