@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/utils/db";
 import { randomUUID } from "node:crypto";
 import Stripe from "stripe";
+import { owner } from "../hooks/useOwner";
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export async function createOrRetrieveCustomer(
@@ -80,6 +81,21 @@ export async function reportUsage(
   subscription: Stripe.Subscription,
   quantity: number
 ) {
+  if (!isSubscriptionActive(subscription)) {
+    const { ownerId } = owner();
+    await prisma.organization.update({
+      where: {
+        id: ownerId,
+      },
+      data: {
+        credits: {
+          decrement: 1,
+        },
+      },
+    });
+    return;
+  }
+
   console.log(
     `Report usage for subscription ${subscription.id}, quantity ${quantity}`
   );

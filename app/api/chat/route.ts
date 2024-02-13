@@ -1,6 +1,5 @@
 import { owner } from "@/lib/hooks/useOwner";
 import { getSettings } from "@/lib/hooks/user";
-import { prisma } from "@/lib/utils/db";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 import { Configuration, OpenAIApi } from "openai-edge";
 
@@ -14,7 +13,7 @@ const openai = new OpenAIApi(config);
 export async function POST(req: Request) {
   const { userId, ownerId } = owner();
 
-  if (!userId) {
+  if (!ownerId || !userId) {
     return new Response("Unauthorized", { status: 401 });
   }
 
@@ -28,17 +27,6 @@ export async function POST(req: Request) {
     model,
     stream: true,
     messages,
-  });
-
-  await prisma.organization.update({
-    where: {
-      id: ownerId,
-    },
-    data: {
-      credits: {
-        decrement: 1,
-      },
-    },
   });
 
   const stream = OpenAIStream(response);

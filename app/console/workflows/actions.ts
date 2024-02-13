@@ -180,23 +180,10 @@ export async function runWorkflow(formData: FormData) {
     },
   });
 
-  if (isSubscriptionActive(organization?.stripe?.subscription)) {
-    await reportUsage(
-      organization?.stripe?.subscription as unknown as Stripe.Subscription,
-      rawResult?.usage?.total_tokens ?? 0
-    );
-  } else {
-    await prisma.organization.update({
-      where: {
-        id: ownerId,
-      },
-      data: {
-        credits: {
-          decrement: 1,
-        },
-      },
-    });
-  }
+  await reportUsage(
+    organization?.stripe?.subscription as unknown as Stripe.Subscription,
+    rawResult?.usage?.total_tokens ?? 0
+  );
 
   redirect(`/console/workflows/${id}`);
 }
