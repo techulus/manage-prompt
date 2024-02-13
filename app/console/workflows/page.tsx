@@ -1,8 +1,15 @@
 import { WorkflowItem } from "@/components/console/workflow-item";
 import { ContentBlock } from "@/components/core/content-block";
 import PageTitle from "@/components/layout/page-title";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { owner } from "@/lib/hooks/useOwner";
 import { LIMIT, getWorkflowsForOwner } from "@/lib/utils/useWorkflow";
 import Link from "next/link";
@@ -24,6 +31,8 @@ export default async function Workflows({ searchParams }: Props) {
     search: searchParams.search,
     page: currentPage,
   });
+
+  const totalPages = Math.ceil(count / LIMIT);
 
   return (
     <>
@@ -93,45 +102,37 @@ export default async function Workflows({ searchParams }: Props) {
             <WorkflowItem key={workflow.id} workflow={workflow} />
           ))}
         </ul>
-
-        {workflows.length > 0 && !searchParams.search ? (
-          <nav className="flex items-center justify-between border-t border-gray-200 dark:border-gray-800 px-4 py-3 sm:px-6">
-            <div className="hidden sm:block">
-              <p className="text-sm text-gray-700 dark:text-gray-400">
-                Showing{" "}
-                <span className="font-medium">
-                  {(currentPage - 1) * LIMIT + 1}
-                </span>{" "}
-                to{" "}
-                <span className="font-medium">
-                  {Math.min(currentPage * LIMIT, count)}
-                </span>{" "}
-                of <span className="font-medium">{count}</span> workflows
-              </p>
-            </div>
-
-            <div className="flex flex-1 justify-between sm:justify-end">
-              {currentPage > 1 ? (
-                <form action="/console/workflows">
-                  <input type="hidden" name="page" value={currentPage - 1} />
-                  <Button type="submit" variant="ghost">
-                    Previous
-                  </Button>
-                </form>
-              ) : null}
-
-              {(currentPage - 1) * LIMIT + workflows.length < count ? (
-                <form action="/console/workflows">
-                  <input type="hidden" name="page" value={currentPage + 1} />
-                  <Button type="submit" variant="ghost">
-                    Next
-                  </Button>
-                </form>
-              ) : null}
-            </div>
-          </nav>
-        ) : null}
       </ContentBlock>
+
+      {workflows?.length > 0 && totalPages > 1 ? (
+        <div className="py-4">
+          <Pagination>
+            <PaginationContent>
+              {currentPage > 1 ? (
+                <PaginationItem>
+                  <PaginationPrevious
+                    href={`/console/workflows?page=${currentPage - 1}`}
+                  />
+                </PaginationItem>
+              ) : null}
+              {new Array(Math.min(totalPages, 5)).fill(0).map((_, idx) => (
+                <PaginationItem key={idx}>
+                  <PaginationLink href={`/console/workflows?page=${idx + 1}`}>
+                    {idx + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              {(currentPage - 1) * LIMIT + workflows.length < count ? (
+                <PaginationItem>
+                  <PaginationNext
+                    href={`/console/workflows?page=${currentPage + 1}`}
+                  />
+                </PaginationItem>
+              ) : null}
+            </PaginationContent>
+          </Pagination>
+        </div>
+      ) : null}
     </>
   );
 }
