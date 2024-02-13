@@ -26,7 +26,8 @@ export async function WorkflowRunItem({ workflowRun }: Props) {
       <div className="flex justify-between space-x-3">
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-semibold text-gray-900 dark:text-gray-100 space-x-2">
-            <span>{user?.first_name}</span>
+            <span>{user?.first_name ?? "API"}</span>
+
             {model ? (
               <>
                 <span aria-hidden="true">&middot;</span>
