@@ -191,7 +191,18 @@ export default async function Settings() {
                       />
                     </form>
                   </TableCaption>
-                ) : null}
+                ) : (
+                  <TableCaption>
+                    You can create multiple secret keys to use with the API.
+                    <form action={createSecretKey}>
+                      <ActionButton
+                        variant="link"
+                        label="Create Key"
+                        loadingLabel="Creating..."
+                      />
+                    </form>
+                  </TableCaption>
+                )}
                 <TableHeader>
                   <TableRow>
                     <TableHead>Key</TableHead>
@@ -203,7 +214,9 @@ export default async function Settings() {
                 <TableBody>
                   {secretKeys.map((key) => (
                     <TableRow key={key.id}>
-                      <TableCell>{key.key}</TableCell>
+                      <TableCell>
+                        <pre>{key.key}</pre>
+                      </TableCell>
                       <TableCell>
                         {key.user.first_name} {key.user.last_name}
                       </TableCell>
