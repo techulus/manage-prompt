@@ -1,5 +1,4 @@
 import Replicate from "replicate";
-import { owner } from "../hooks/useOwner";
 import { prisma } from "./db";
 
 const replicate = new Replicate({
@@ -50,7 +49,6 @@ export async function createPredictionOrder({
       inputPrompt,
       inputData,
       type,
-      paymentStatus: "pending",
     },
   });
 }

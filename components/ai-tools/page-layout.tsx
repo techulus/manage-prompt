@@ -7,21 +7,20 @@ import { FileUploader } from "./image-upload";
 
 export function AIImageProcessingPage({
   title,
+  subTitle,
   renderImage,
   input,
   output,
 }: {
   title: string;
+  subTitle: string;
   renderImage: (image: string) => Promise<void>;
   input: StaticImageData;
   output: StaticImageData;
 }) {
   return (
     <>
-      <PageTitle
-        title={title}
-        subTitle="$1 per image, Pay after viewing the result."
-      />
+      <PageTitle title={title} subTitle={subTitle} />
 
       <div className="hidden md:block h-8"></div>
 

@@ -37,6 +37,7 @@ export default async function ImageUpscale() {
   return (
     <AIImageProcessingPage
       title={String(metadata.title)}
+      subTitle={String(metadata.description)}
       input={input}
       output={output}
       renderImage={renderImage}
