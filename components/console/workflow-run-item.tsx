@@ -28,7 +28,6 @@ export async function WorkflowRunItem({ workflowRun }: Props) {
   const { result, user, createdAt, rawResult } = workflowRun;
   const model = (rawResult as any)?.model as string;
   const totalTokens = (rawResult as any)?.usage.total_tokens as number;
-  console.log(totalTokens);
 
   return (
     <li

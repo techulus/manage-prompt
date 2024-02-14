@@ -4,7 +4,7 @@ import { runWorkflow } from "@/app/console/workflows/actions";
 import {
   WorkflowInput,
   WorkflowInputType,
-  WorkflowModels,
+  modelHasInstruction,
 } from "@/data/workflow";
 import { SignedIn } from "@clerk/nextjs";
 import { Tab } from "@headlessui/react";
@@ -170,8 +170,7 @@ export function WorkflowComposer({ workflow }: Props) {
 
                 <Tab.Panel className="-m-0.5 rounded-lg p-0.5">
                   <div className="border-b">
-                    {model === WorkflowModels.edit ||
-                    model === WorkflowModels.code ? (
+                    {modelHasInstruction[model] ? (
                       <div className="mx-px mt-px px-3 pb-12 pt-2 text-sm leading-5 text-gray-800 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 whitespace-pre-wrap">
                         <span className="font-semibold">Instruction:</span>{" "}
                         {geneatedInstruction}

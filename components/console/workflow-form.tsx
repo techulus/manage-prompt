@@ -1,9 +1,10 @@
 "use client";
 
 import {
+  AIModels,
   WorkflowInput,
   WorkflowInputType,
-  WorkflowModels,
+  modelHasInstruction,
 } from "@/data/workflow";
 import { parseInputs } from "@/lib/utils/workflow";
 import { Workflow } from "@prisma/client";
@@ -23,7 +24,7 @@ interface Props {
 }
 
 export function WorkflowForm({ workflow }: Props) {
-  const [model, setModel] = useState(workflow?.model ?? WorkflowModels.chat);
+  const [model, setModel] = useState(workflow?.model ?? AIModels[0]);
   const [template, setTemplate] = useState(workflow?.template ?? "");
   const [instruction, setInstruction] = useState(workflow?.instruction ?? "");
   const [inputs, setInputs] = useState<WorkflowInput[]>(
@@ -34,7 +35,7 @@ export function WorkflowForm({ workflow }: Props) {
     (value: any) => {
       const updatedValue = { template, instruction, model, ...value };
 
-      if (model === WorkflowModels.edit || model === WorkflowModels.code) {
+      if (modelHasInstruction[model]) {
         setInputs(
           parseInputs(`${updatedValue.template} ${updatedValue.instruction}`)
         );
@@ -79,10 +80,10 @@ export function WorkflowForm({ workflow }: Props) {
                   <SelectValue placeholder="Model" />
                 </SelectTrigger>
                 <SelectContent>
-                  {Object.keys(WorkflowModels).map((model) => (
-                    <SelectItem key={model} value={WorkflowModels[model]}>
+                  {AIModels.map((model) => (
+                    <SelectItem key={model} value={model}>
                       {" "}
-                      {model} ({WorkflowModels[model]})
+                      {model}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -106,7 +107,7 @@ export function WorkflowForm({ workflow }: Props) {
             </div>
           </div>
 
-          {model === WorkflowModels.edit || model === WorkflowModels.code ? (
+          {modelHasInstruction[model] ? (
             <div className="mt-10 space-y-8 border-b pb-12 sm:space-y-0 sm:divide-y sm:border-t sm:pb-0">
               <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
                 <label
