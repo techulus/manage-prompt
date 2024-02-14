@@ -5,6 +5,14 @@ import { ActionButton, DeleteButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { LIMIT, getWorkflowAndRuns } from "@/lib/utils/useWorkflow";
 import { PauseCircleIcon, PlayCircleIcon } from "@heroicons/react/20/solid";
 import { Terminal } from "lucide-react";
@@ -25,6 +33,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
     Number(params.id),
     currentPage
   );
+  const totalPages = Math.ceil(count / LIMIT);
 
   if (!workflow) {
     throw new Error("Workflow not found");
@@ -55,7 +64,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
 
       {/* Toolbar*/}
       <ContentBlock>
-        <div className="hidden md:flex h-12 flex-col justify-center border-b border-gray-200 dark:border-gray-800">
+        <div className="hidden md:flex h-12 flex-col justify-center border-b">
           <div className="px-4 sm:px-6 lg:px-8 lg:-mx-4">
             <div className="flex justify-between py-3">
               {/* Left buttons */}
@@ -83,7 +92,6 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                           />
                         }
                         label="Deactivate"
-                        className="hover:bg-orange-50 hover:text-orange-600 dark:hover:text-orange-500"
                       />
                     ) : (
                       <ActionButton
@@ -94,7 +102,6 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                           />
                         }
                         label="Activate"
-                        className="hover:bg-green-50 hover:text-green-600 dark:hover:text-green-500"
                       />
                     )}
                   </form>
@@ -126,58 +133,49 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
 
       {workflowRuns.length ? (
         <ContentBlock>
-          <ul
-            role="list"
-            className="border-t divide-y divide-gray-200 dark:divide-gray-800 border-b border-gray-200 dark:border-gray-800"
-          >
+          <ul role="list" className="border-t divide-y border-b">
             {workflowRuns.map((run) => (
               // @ts-ignore React server component
               <WorkflowRunItem key={run.id} workflowRun={run} />
             ))}
           </ul>
-
-          <nav className="flex items-center justify-between border-t border-gray-200 dark:border-gray-800 px-4 py-3 sm:px-6">
-            <div className="hidden sm:block">
-              <p className="text-sm text-gray-700 dark:text-gray-400">
-                Showing{" "}
-                <span className="font-medium">
-                  {(currentPage - 1) * LIMIT + 1}
-                </span>{" "}
-                to{" "}
-                <span className="font-medium">
-                  {Math.min(currentPage * LIMIT, count)}
-                </span>{" "}
-                of <span className="font-medium">{count}</span> workflow runs
-              </p>
-            </div>
-
-            <div className="flex flex-1 justify-between sm:justify-end">
-              {currentPage > 1 ? (
-                <form action={`/console/workflows/${workflow.id}`}>
-                  <input type="hidden" name="page" value={currentPage - 1} />
-                  <button
-                    type="submit"
-                    className="relative inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold text-gray-900 dark:text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 focus-visible:outline-offset-0"
-                  >
-                    Previous
-                  </button>
-                </form>
-              ) : null}
-
-              {(currentPage - 1) * LIMIT + workflowRuns.length < count ? (
-                <form action={`/console/workflows/${workflow.id}`}>
-                  <input type="hidden" name="page" value={currentPage + 1} />
-                  <button
-                    type="submit"
-                    className="relative ml-3 inline-flex items-center rounded-md px-3 py-2 text-sm font-semibold text-gray-900 dark:text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-700 hover:bg-gray-50 dark:hover:bg-gray-900 focus-visible:outline-offset-0"
-                  >
-                    Next
-                  </button>
-                </form>
-              ) : null}
-            </div>
-          </nav>
         </ContentBlock>
+      ) : null}
+
+      {workflowRuns?.length > 0 && totalPages > 1 ? (
+        <div className="py-4">
+          <Pagination>
+            <PaginationContent>
+              {currentPage > 1 ? (
+                <PaginationItem>
+                  <PaginationPrevious
+                    href={`/console/workflows/${params.id}?page=${
+                      currentPage - 1
+                    }`}
+                  />
+                </PaginationItem>
+              ) : null}
+              {new Array(Math.min(totalPages, 5)).fill(0).map((_, idx) => (
+                <PaginationItem key={idx}>
+                  <PaginationLink
+                    href={`/console/workflows/${params.id}?page=${idx + 1}`}
+                  >
+                    {idx + 1}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              {(currentPage - 1) * LIMIT + workflowRuns.length < count ? (
+                <PaginationItem>
+                  <PaginationNext
+                    href={`/console/workflows/${params.id}?page=${
+                      currentPage + 1
+                    }`}
+                  />
+                </PaginationItem>
+              ) : null}
+            </PaginationContent>
+          </Pagination>
+        </div>
       ) : null}
     </div>
   );

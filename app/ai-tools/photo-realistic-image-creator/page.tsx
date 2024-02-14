@@ -2,6 +2,7 @@ import { ContentDeleteWarningAlert } from "@/components/ai-tools/content-deletio
 import { ContentBlock } from "@/components/core/content-block";
 import { ActionButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
+import { buttonVariants } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -91,14 +92,20 @@ export default async function ImageUpscale() {
                         By using this service, you agree to our{" "}
                         <Link
                           href="/terms"
-                          className="font-semibold text-blue-500 dark:text-blue-600 hover:text-blue-700 hover:dark:text-blue-500"
+                          className={buttonVariants({
+                            variant: "link",
+                            className: "px-0",
+                          })}
                         >
                           Terms of Service
                         </Link>{" "}
-                        and
+                        and{" "}
                         <Link
                           href="/privacy"
-                          className="font-semibold text-blue-500 dark:text-blue-600 hover:text-blue-700 hover:dark:text-blue-500"
+                          className={buttonVariants({
+                            variant: "link",
+                            className: "px-0",
+                          })}
                         >
                           {" "}
                           Privacy Policy

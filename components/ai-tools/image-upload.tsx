@@ -6,6 +6,7 @@ import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
 import { Spinner } from "../core/loaders";
+import { buttonVariants } from "../ui/button";
 
 export function FileUploader({
   onUploadComplete,
@@ -104,14 +105,17 @@ export function FileUploader({
         By uploading an image, you agree to our{" "}
         <Link
           href="/terms"
-          className="font-semibold text-blue-500 dark:text-blue-600 hover:text-blue-700 hover:dark:text-blue-500"
+          className={buttonVariants({
+            variant: "link",
+            className: "px-0",
+          })}
         >
           Terms of Service
         </Link>{" "}
-        and
+        and{" "}
         <Link
           href="/privacy"
-          className="font-semibold text-blue-500 dark:text-blue-600 hover:text-blue-700 hover:dark:text-blue-500"
+          className={buttonVariants({ variant: "link", className: "px-0" })}
         >
           {" "}
           Privacy Policy

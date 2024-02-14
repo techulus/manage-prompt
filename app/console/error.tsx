@@ -17,7 +17,7 @@ export default function Error({
 
   return (
     <div className="mx-auto flex w-full max-w-7xl flex-auto flex-col justify-center px-6 py-24 lg:px-8">
-      <p className="text-base font-semibold leading-8 text-blue-600">Oops!</p>
+      <p className="text-base font-semibold leading-8 text-primary">Oops!</p>
       <h1 className="mt-4 text-3xl font-bold tracking-tight text-red-600 sm:text-3xl">
         <ExclamationTriangleIcon className="h-8 w-8 inline" /> Something went
         wrong.
@@ -25,7 +25,7 @@ export default function Error({
       <div className="mt-10">
         <button
           onClick={reset}
-          className="text-sm font-semibold leading-7 text-blue-600"
+          className="text-sm font-semibold leading-7 text-primary"
         >
           <span aria-hidden="true">&larr;</span> Retry
         </button>

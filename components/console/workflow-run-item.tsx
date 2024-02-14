@@ -21,7 +21,7 @@ export async function WorkflowRunItem({ workflowRun }: Props) {
   return (
     <li
       key={workflowRun.id}
-      className="relative overflow-x-scroll px-6 py-5 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600 hover:bg-gray-50 dark:hover:bg-gray-900"
+      className="relative overflow-x-scroll px-6 py-5 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600 hover:bg-gray-50 dark:hover:bg-card"
     >
       <div className="flex justify-between space-x-3">
         <div className="min-w-0 flex-1">
