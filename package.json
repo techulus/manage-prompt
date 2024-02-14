@@ -42,6 +42,7 @@
     "openai-edge": "^1.0.0",
     "postcss": "8.4.23",
     "react": "^18.2.0",
+    "react-apiembed": "^0.1.9",
     "react-cookie": "^6.1.1",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
