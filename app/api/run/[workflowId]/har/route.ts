@@ -1,5 +1,4 @@
 import { WorkflowInput } from "@/data/workflow";
-import { owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
 import { NextResponse } from "next/server";
 
@@ -7,12 +6,9 @@ export async function GET(
   _: Request,
   { params }: { params: { workflowId: string } }
 ) {
-  const { ownerId } = owner();
-
   const workflow = await prisma.workflow.findUnique({
     where: {
       shortId: params.workflowId,
-      ownerId,
     },
   });
   if (!workflow || !workflow?.published) {
