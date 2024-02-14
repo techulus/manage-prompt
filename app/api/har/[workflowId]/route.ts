@@ -29,7 +29,7 @@ export async function GET(
 
   return NextResponse.json({
     method: "POST",
-    url: `https://${process.env.APP_BASE_URL}/api/run/${params.workflowId}`,
+    url: `${process.env.APP_BASE_URL}/api/run/${params.workflowId}`,
     queryString: [],
     headers: [
       {
