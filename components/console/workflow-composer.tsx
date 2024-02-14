@@ -9,6 +9,7 @@ import {
 import { SignedIn } from "@clerk/nextjs";
 import { Workflow } from "@prisma/client";
 import { useMemo, useReducer } from "react";
+import { ApiCodeSnippet } from "../code/snippet";
 import { SaveButton } from "../form/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -17,9 +18,10 @@ import { Textarea } from "../ui/textarea";
 
 interface Props {
   workflow: Workflow;
+  apiSecretKey?: string;
 }
 
-export function WorkflowComposer({ workflow }: Props) {
+export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
   const { id, inputs, template, instruction, model } = workflow;
 
   const [inputValues, updateInput] = useReducer((state: any, action: any) => {
@@ -134,7 +136,22 @@ export function WorkflowComposer({ workflow }: Props) {
                 There are no inputs, you can run the workflow!
               </p>
             )}
+
+            <SignedIn>
+              <div className="mt-2 flex justify-end">
+                <SaveButton
+                  label="Run"
+                  loadingLabel="Running"
+                  disabled={
+                    !workflow.published ||
+                    Object.keys(inputValues).length !==
+                      (inputs as WorkflowInput[])?.length
+                  }
+                />
+              </div>
+            </SignedIn>
           </TabsContent>
+
           <TabsContent value="review">
             <div className="border-b">
               {modelHasInstruction[model] ? (
@@ -147,30 +164,54 @@ export function WorkflowComposer({ workflow }: Props) {
                 {generatedTemplate}
               </div>
             </div>
+
+            <SignedIn>
+              <div className="mt-2 flex justify-end">
+                <SaveButton
+                  label="Run"
+                  loadingLabel="Running"
+                  disabled={
+                    !workflow.published ||
+                    Object.keys(inputValues).length !==
+                      (inputs as WorkflowInput[])?.length
+                  }
+                />
+              </div>
+            </SignedIn>
           </TabsContent>
+
           <TabsContent value="deploy">
-            <iframe
-              src={`//api.apiembed.com/?source=${process.env.NEXT_PUBLIC_APP_BASE_URL}/api/run/${workflow.shortId}/har&targets=shell:curl,node:unirest,java:unirest,python:requests,php:curl,ruby:native,objc:nsurlsession,go:native,javascript:fetch,python:python3,swift:nsurlsession`}
-              width="100%"
-              height="500px"
-              seamless
-            ></iframe>
+            <ApiCodeSnippet
+              har={{
+                method: "POST",
+                url: `${process.env.NEXT_PUBLIC_APP_BASE_URL}/api/run/${workflow.shortId}`,
+                queryString: [],
+                headers: [
+                  {
+                    name: "Authorization",
+                    value: `Bearer ${apiSecretKey ?? "api-secret-key"}`,
+                  },
+                  {
+                    name: "Content-Type",
+                    value: "application/json",
+                  },
+                ],
+                postData: {
+                  mimeType: "application/json",
+                  text: JSON.stringify(
+                    ((inputs ?? []) as WorkflowInput[]).reduce(
+                      (acc, input) => ({
+                        ...acc,
+                        [input.name]: "value",
+                      }),
+                      {}
+                    )
+                  ),
+                },
+              }}
+            />
           </TabsContent>
         </Tabs>
-
-        <SignedIn>
-          <div className="mt-2 flex justify-end">
-            <SaveButton
-              label="Run"
-              loadingLabel="Running"
-              disabled={
-                !workflow.published ||
-                Object.keys(inputValues).length !==
-                  (inputs as WorkflowInput[])?.length
-              }
-            />
-          </div>
-        </SignedIn>
       </form>
     </>
   );

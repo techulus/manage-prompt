@@ -13,6 +13,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { owner } from "@/lib/hooks/useOwner";
+import { prisma } from "@/lib/utils/db";
 import { LIMIT, getWorkflowAndRuns } from "@/lib/utils/useWorkflow";
 import { PauseCircleIcon, PlayCircleIcon } from "@heroicons/react/20/solid";
 import { Terminal } from "lucide-react";
@@ -28,12 +30,19 @@ interface Props {
 }
 
 export default async function WorkflowDetails({ params, searchParams }: Props) {
+  const { ownerId } = owner();
   const currentPage = searchParams.page ? parseInt(searchParams.page) : 1;
   const { workflow, workflowRuns, count } = await getWorkflowAndRuns(
     Number(params.id),
     currentPage
   );
   const totalPages = Math.ceil(count / LIMIT);
+
+  const apiSecretKey = await prisma.secretKey.findFirst({
+    where: {
+      ownerId,
+    },
+  });
 
   if (!workflow) {
     throw new Error("Workflow not found");
@@ -128,7 +137,10 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
       </ContentBlock>
 
       <ContentBlock>
-        <WorkflowComposer workflow={workflow} />
+        <WorkflowComposer
+          workflow={workflow}
+          apiSecretKey={apiSecretKey?.key}
+        />
       </ContentBlock>
 
       {workflowRuns.length ? (
