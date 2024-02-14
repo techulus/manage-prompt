@@ -7,10 +7,7 @@ import Link from "next/link";
 import logo from "../../public/images/logo.png";
 
 const navigation = {
-  solutions: [
-    { name: "Workflows", href: "/console/workflows" },
-    { name: "Chat", href: "/console/chat" },
-  ],
+  solutions: [{ name: "Workflows", href: "/console/workflows" }],
   tools: [
     {
       name: "Photo Colorizer",

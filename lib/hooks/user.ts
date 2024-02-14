@@ -3,9 +3,7 @@
 import { prisma } from "../utils/db";
 import { owner } from "./useOwner";
 
-export type UserSetting = {
-  chat_model?: string;
-};
+export type UserSetting = {};
 
 export const updateSettings = async (settings: UserSetting) => {
   const { userId } = owner();
