@@ -150,7 +150,7 @@ export function WorkflowComposer({ workflow }: Props) {
           </TabsContent>
           <TabsContent value="deploy">
             <iframe
-              src={`https//api.apiembed.com/?source=https://${process.env.APP_BASE_URL}/api/har/${workflow.shortId}&targets=shell:curl,node:unirest,java:unirest,python:requests,php:curl,ruby:native,objc:nsurlsession,go:native`}
+              src={`https//api.apiembed.com/?source=https://${process.env.NEXT_PUBLIC_APP_BASE_URL}/api/har/${workflow.shortId}&targets=shell:curl,node:unirest,java:unirest,python:requests,php:curl,ruby:native,objc:nsurlsession,go:native`}
               width="100%"
               height="500px"
               seamless
