@@ -6,20 +6,35 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
 const UnauthorizedResponse = () =>
-  NextResponse.json("Unauthorized", {
-    status: 401,
-  });
+  NextResponse.json(
+    {
+      error: "Unauthorized. Please provide a valid secret key.",
+      success: false,
+    },
+    {
+      status: 401,
+    }
+  );
 
-const ErrorResponse = (message: string, status = 400) =>
+const ErrorResponse = (message: string, status = 400, code?: string) =>
   NextResponse.json(
     {
       error: message,
       success: false,
+      code,
     },
     {
       status,
     }
   );
+
+enum ErrorCodes {
+  MissingInput = "missing_input",
+  WorkflowNotFound = "workflow_not_found",
+  WorkflowRunFailed = "workflow_run_failed",
+  InvalidBilling = "invalid_billing",
+  InternalServerError = "internal_server_error",
+}
 
 export async function POST(
   req: Request,
@@ -54,25 +69,26 @@ export async function POST(
 
     const ownerId = key.ownerId;
 
-    const workflow = await prisma.workflow.findUnique({
-      where: {
-        shortId: params.workflowId,
-        ownerId,
-      },
-    });
-    if (!workflow) {
-      return ErrorResponse("Workflow not found", 404);
-    }
-
     const organization = key.organization;
     if (
       organization?.credits === 0 &&
       !isSubscriptionActive(organization?.stripe?.subscription)
     ) {
       return ErrorResponse(
-        "You do not have any free credits left, please upgrade your plan.",
-        402
+        "Invalid billing. Please contact support.",
+        402,
+        ErrorCodes.InvalidBilling
       );
+    }
+
+    const workflow = await prisma.workflow.findUnique({
+      where: {
+        shortId: params.workflowId,
+        ownerId,
+      },
+    });
+    if (!workflow || !workflow?.published) {
+      return ErrorResponse("Workflow not found", 404);
     }
 
     const body = (await req.json()) ?? {};
@@ -84,7 +100,11 @@ export async function POST(
     // Handle inputs
     for (const input of inputs) {
       if (!body[input.name] || !body[input.name].trim()) {
-        return ErrorResponse(`Missing input: ${input.name}`);
+        return ErrorResponse(
+          `Missing input: ${input.name}`,
+          400,
+          ErrorCodes.MissingInput
+        );
       }
       content = workflow.template.replace(
         `{{${input.name}}}`,
@@ -99,15 +119,18 @@ export async function POST(
     );
 
     if (!result) {
-      return ErrorResponse("Failed to run workflow", 500);
+      return ErrorResponse(
+        "Failed to run workflow",
+        500,
+        ErrorCodes.InternalServerError
+      );
     }
 
-    await reportUsage(
-      organization?.stripe?.subscription as unknown as Stripe.Subscription,
-      rawResult?.usage?.total_tokens ?? 0
-    );
-
-    await prisma.$transaction([
+    await Promise.all([
+      reportUsage(
+        organization?.stripe?.subscription as unknown as Stripe.Subscription,
+        rawResult?.usage?.total_tokens ?? 0
+      ),
       prisma.workflowRun.create({
         data: {
           result,
@@ -135,6 +158,10 @@ export async function POST(
     return NextResponse.json({ success: true, result: result });
   } catch (error) {
     console.error(error);
-    return ErrorResponse("Failed to run workflow", 500);
+    return ErrorResponse(
+      "Failed to run workflow",
+      500,
+      ErrorCodes.InternalServerError
+    );
   }
 }

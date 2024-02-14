@@ -31,7 +31,7 @@ export async function WorkflowItem({ workflow }: Props) {
   return (
     <li
       key={workflow.id}
-      className="relative py-5 pl-4 pr-6 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-card sm:py-6 sm:pl-6 lg:pl-8 xl:pl-6"
+      className="relative py-5 pl-4 pr-6 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-slate-900 sm:py-6 sm:pl-6 lg:pl-8 xl:pl-6"
     >
       <div className="flex items-center justify-between space-x-4">
         <Link

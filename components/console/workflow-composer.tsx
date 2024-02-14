@@ -7,13 +7,12 @@ import {
   modelHasInstruction,
 } from "@/data/workflow";
 import { SignedIn } from "@clerk/nextjs";
-import { Tab } from "@headlessui/react";
 import { Workflow } from "@prisma/client";
-import classNames from "classnames";
 import { useMemo, useReducer } from "react";
 import { SaveButton } from "../form/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Textarea } from "../ui/textarea";
 
 interface Props {
@@ -84,107 +83,80 @@ export function WorkflowComposer({ workflow }: Props) {
           onChange={() => null}
         />
 
-        <Tab.Group>
-          {() => (
-            <>
-              <Tab.List className="flex items-center">
-                <Tab
-                  className={({ selected }) =>
-                    classNames(
-                      selected
-                        ? "bg-gray-100 text-gray-900 hover:bg-gray-200"
-                        : "bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-900",
-                      selected
-                        ? "dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
-                        : "dark:bg-black dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100",
-                      "rounded-md border border-transparent px-3 py-1.5 text-sm font-medium"
-                    )
-                  }
-                >
-                  Write
-                </Tab>
-                <Tab
-                  className={({ selected }) =>
-                    classNames(
-                      selected
-                        ? "bg-gray-100 text-gray-900 hover:bg-gray-200"
-                        : "bg-white text-gray-500 hover:bg-gray-100 hover:text-gray-900",
-                      selected
-                        ? "dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-700 dark:hover:text-white"
-                        : "dark:bg-black dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-gray-100",
-                      "ml-2 rounded-md border border-transparent px-3 py-1.5 text-sm font-medium"
-                    )
-                  }
-                >
-                  Preview
-                </Tab>
-              </Tab.List>
+        <Tabs defaultValue="compose">
+          <TabsList>
+            <TabsTrigger value="compose">Compose</TabsTrigger>
+            <TabsTrigger value="review">Review</TabsTrigger>
+            <TabsTrigger value="deploy">Deploy</TabsTrigger>
+          </TabsList>
+          <TabsContent value="compose">
+            {(inputs as [])?.length ? (
+              <div className="mt-4 space-y-4">
+                {(inputs as WorkflowInput[]).map(
+                  ({ name, type = WorkflowInputType.text, label }) => (
+                    <div
+                      key={name}
+                      className="grid w-full items-center gap-1.5"
+                    >
+                      <Label>{label ?? name}</Label>
 
-              <Tab.Panels className="mt-2">
-                <Tab.Panel className="-m-0.5 rounded-lg p-0.5">
-                  {(inputs as [])?.length ? (
-                    <div className="mt-4 space-y-4">
-                      {(inputs as WorkflowInput[]).map(
-                        ({ name, type = WorkflowInputType.text, label }) => (
-                          <div
-                            key={name}
-                            className="grid w-full items-center gap-1.5"
-                          >
-                            <Label>{label ?? name}</Label>
+                      {type === WorkflowInputType.textarea ? (
+                        <Textarea
+                          rows={5}
+                          placeholder={`Enter value for ${name}`}
+                          value={inputValues[name] ?? ""}
+                          onChange={(e) =>
+                            updateInput({ [name]: e.target.value })
+                          }
+                        />
+                      ) : null}
 
-                            {type === WorkflowInputType.textarea ? (
-                              <Textarea
-                                rows={5}
-                                placeholder={`Enter value for ${name}`}
-                                value={inputValues[name] ?? ""}
-                                onChange={(e) =>
-                                  updateInput({ [name]: e.target.value })
-                                }
-                              />
-                            ) : null}
-
-                            {[
-                              WorkflowInputType.text,
-                              WorkflowInputType.date,
-                              WorkflowInputType.number,
-                            ].includes(type) ? (
-                              <Input
-                                type={type}
-                                placeholder={`Enter value for ${name}`}
-                                value={inputValues[name] ?? ""}
-                                onChange={(e) =>
-                                  updateInput({ [name]: e.target.value })
-                                }
-                              />
-                            ) : null}
-                          </div>
-                        )
-                      )}
+                      {[
+                        WorkflowInputType.text,
+                        WorkflowInputType.date,
+                        WorkflowInputType.number,
+                      ].includes(type) ? (
+                        <Input
+                          type={type}
+                          placeholder={`Enter value for ${name}`}
+                          value={inputValues[name] ?? ""}
+                          onChange={(e) =>
+                            updateInput({ [name]: e.target.value })
+                          }
+                        />
+                      ) : null}
                     </div>
-                  ) : (
-                    <p className="dark:text-white">
-                      There are no inputs, you can run the workflow!
-                    </p>
-                  )}
-                </Tab.Panel>
-
-                <Tab.Panel className="-m-0.5 rounded-lg p-0.5">
-                  <div className="border-b">
-                    {modelHasInstruction[model] ? (
-                      <div className="mx-px mt-px px-3 pb-12 pt-2 text-sm leading-5 text-gray-800 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 whitespace-pre-wrap">
-                        <span className="font-semibold">Instruction:</span>{" "}
-                        {geneatedInstruction}
-                      </div>
-                    ) : null}
-                    <div className="mx-px mt-px px-3 pb-12 pt-2 text-sm leading-5 text-gray-800 dark:text-gray-100 bg-gray-50 dark:bg-gray-900 whitespace-pre-wrap">
-                      {generatedTemplate}
-                    </div>
-                  </div>
-                </Tab.Panel>
-              </Tab.Panels>
-            </>
-          )}
-        </Tab.Group>
+                  )
+                )}
+              </div>
+            ) : (
+              <p className="dark:text-white">
+                There are no inputs, you can run the workflow!
+              </p>
+            )}
+          </TabsContent>
+          <TabsContent value="review">
+            <div className="border-b">
+              {modelHasInstruction[model] ? (
+                <div className="mx-px mt-px px-3 pb-12 pt-2 text-sm leading-5 text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-900 whitespace-pre-wrap">
+                  <span className="font-semibold">Instruction:</span>{" "}
+                  {geneatedInstruction}
+                </div>
+              ) : null}
+              <div className="mx-px mt-px px-3 pb-12 pt-2 text-sm leading-5 text-slate-800 dark:text-slate-100 bg-slate-50 dark:bg-slate-900 whitespace-pre-wrap">
+                {generatedTemplate}
+              </div>
+            </div>
+          </TabsContent>
+          <TabsContent value="deploy">
+            <iframe
+              src={`//api.apiembed.com/?source=${process.env.NEXT_PUBLIC_APP_BASE_URL}/api/run/${workflow.shortId}/har&targets=shell:curl,node:unirest,java:unirest,python:requests,php:curl,ruby:native,objc:nsurlsession,go:native,javascript:fetch,python:python3,swift:nsurlsession`}
+              width="100%"
+              height="500px"
+              seamless
+            ></iframe>
+          </TabsContent>
+        </Tabs>
 
         <SignedIn>
           <div className="mt-2 flex justify-end">
