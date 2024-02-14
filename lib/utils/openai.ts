@@ -1,4 +1,3 @@
-import { AiModel } from "@/data/workflow";
 import {
   Configuration,
   CreateChatCompletionResponse,
@@ -14,7 +13,7 @@ const openai = new OpenAIApi(
 );
 
 export const getCompletion = async (
-  model: AiModel,
+  model: string,
   content: string,
   instruction?: string
 ): Promise<{
