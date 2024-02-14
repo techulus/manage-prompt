@@ -64,7 +64,7 @@ export default async function ImageUpscale() {
     <>
       <PageTitle
         title={title}
-        subTitle="$1 per image, Pay after viewing the result."
+        subTitle="Create a photo-realistic image from a natural language text description."
       />
 
       <div className="hidden md:block h-8"></div>

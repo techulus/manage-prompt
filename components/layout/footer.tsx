@@ -117,7 +117,9 @@ export function Footer({ isHome = false }: { isHome?: boolean }) {
                 </ul>
               </div>
               <div className="mt-10 md:mt-0">
-                <h3 className="text-sm font-semibold leading-6">Tools</h3>
+                <h3 className="text-sm font-semibold leading-6">
+                  Free AI Tools
+                </h3>
                 <ul role="list" className="mt-6 space-y-2">
                   {navigation.tools.map((item) => (
                     <li key={item.name}>
