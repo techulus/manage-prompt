@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Button } from "../ui/button";
+import "./styles.css";
 
 // @ts-expect-error Types are missing
 import { CodeSnippet } from "react-apiembed";
@@ -53,7 +54,7 @@ export function ApiCodeSnippet({ har }: { har: any }) {
         </Button>
       ))}
 
-      <div className="bg-secondary mt-4 p-4 overflow-scroll rounded-md">
+      <div className="mt-4 overflow-scroll rounded-md">
         <CodeSnippet
           key={selectedLanguage.language}
           har={har}
