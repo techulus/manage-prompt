@@ -7,6 +7,7 @@ import { Workflow } from "@prisma/client";
 import classNames from "classnames";
 import Link from "next/link";
 import { Badge } from "../ui/badge";
+import { buttonVariants } from "../ui/button";
 import { Separator } from "../ui/separator";
 
 interface Props {
@@ -30,7 +31,7 @@ export async function WorkflowItem({ workflow }: Props) {
   return (
     <li
       key={workflow.id}
-      className="relative py-5 pl-4 pr-6 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-900 sm:py-6 sm:pl-6 lg:pl-8 xl:pl-6"
+      className="relative py-5 pl-4 pr-6 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-card sm:py-6 sm:pl-6 lg:pl-8 xl:pl-6"
     >
       <div className="flex items-center justify-between space-x-4">
         <Link
@@ -42,7 +43,7 @@ export async function WorkflowItem({ workflow }: Props) {
               className={classNames(
                 workflow.published
                   ? "bg-green-100 dark:bg-green-900"
-                  : "bg-gray-100 dark:bg-gray-900",
+                  : "bg-gray-100 dark:bg-card",
                 "h-4 w-4 flex items-center justify-center rounded-full"
               )}
               aria-hidden="true"
@@ -74,11 +75,14 @@ export async function WorkflowItem({ workflow }: Props) {
           />
         </div>
         <div className="hidden flex-shrink-0 flex-col items-end space-y-3 sm:flex">
-          <p className="flex items-center space-x-4 text-blue-500 hover:text-blue-900 dark:hover:text-blue-400">
+          <p className="flex items-center space-x-4 text-primary">
             {workflow.published ? (
               <Link
                 href={`/console/workflows/${workflow.id}`}
-                className="relative text-sm font-medium"
+                className={buttonVariants({
+                  variant: "link",
+                  className: "px-0 py-0",
+                })}
               >
                 <PlayIcon className="h-3 w-3 inline mr-1 -mt-0.5" />
                 Run
@@ -86,7 +90,10 @@ export async function WorkflowItem({ workflow }: Props) {
             ) : (
               <Link
                 href={`/console/workflows/${workflow.id}/edit`}
-                className="relative text-sm font-medium text-gray-500 hover:text-gray-900"
+                className={buttonVariants({
+                  variant: "link",
+                  className: "px-0 py-0",
+                })}
               >
                 <PencilIcon className="h-3 w-3 inline mr-1 -mt-0.5" />
                 Edit

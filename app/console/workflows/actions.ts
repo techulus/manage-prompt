@@ -1,6 +1,6 @@
 "use server";
 
-import { OpenAIModel, WorkflowInput } from "@/data/workflow";
+import { WorkflowInput } from "@/data/workflow";
 import { owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
 import { getCompletion } from "@/lib/utils/openai";
@@ -132,7 +132,7 @@ export async function runWorkflow(formData: FormData) {
   const { userId, ownerId } = owner();
 
   const id = Number(formData.get("id"));
-  const model = formData.get("model") as OpenAIModel;
+  const model = formData.get("model") as string;
   const content = formData.get("content") as string;
   const instruction = formData.get("instruction") as string;
 

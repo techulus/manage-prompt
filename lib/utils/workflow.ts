@@ -1,6 +1,7 @@
-import { OpenAIModel, WorkflowInput } from "@/data/workflow";
+import { WorkflowInput } from "@/data/workflow";
 import slugify from "slugify";
 import * as Yup from "yup";
+import { AIModels } from "./../../data/workflow";
 
 export const WorkflowSchema = Yup.object().shape({
   name: Yup.string()
@@ -12,9 +13,7 @@ export const WorkflowSchema = Yup.object().shape({
     .min(2, "Template too Short!")
     .max(9669, "Template too Long!"),
   instruction: Yup.string().optional(),
-  model: Yup.mixed<OpenAIModel>()
-    .oneOf(Object.values(OpenAIModel))
-    .required("Select valid model"),
+  model: Yup.string().oneOf(AIModels).required("Select valid model"),
   inputs: Yup.array().of(
     Yup.object().shape({
       name: Yup.string(),

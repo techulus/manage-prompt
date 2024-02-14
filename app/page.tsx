@@ -1,5 +1,6 @@
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
+import { buttonVariants } from "@/components/ui/button";
 import { SITE_METADATA } from "@/data/marketing";
 import Link from "next/link";
 
@@ -60,7 +61,7 @@ export default async function Home() {
             <div className="mt-10 flex flex-col space-y-4 md:space-y-0 md:flex-row items-center justify-center gap-x-6">
               <Link
                 href="/console/workflows"
-                className="rounded-full bg-blue-600 px-8 py-2.5 text-sm font-semibold text-white hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 hover:shadow"
+                className={buttonVariants({ variant: "default" })}
               >
                 Get started
               </Link>

@@ -1,4 +1,3 @@
-import { OpenAIModel } from "@/data/workflow";
 import {
   Configuration,
   CreateChatCompletionResponse,
@@ -14,7 +13,7 @@ const openai = new OpenAIApi(
 );
 
 export const getCompletion = async (
-  model: OpenAIModel,
+  model: string,
   content: string,
   instruction?: string
 ): Promise<{
@@ -34,6 +33,8 @@ export const getCompletion = async (
   switch (model) {
     case "gpt-3.5-turbo":
     case "gpt-4-1106-preview":
+    case "gpt-4-0125-preview":
+    case "gpt-4":
       const { data: chatData } = await openai.createChatCompletion({
         model,
         messages: [

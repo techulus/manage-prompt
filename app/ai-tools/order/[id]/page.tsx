@@ -37,7 +37,7 @@ export default async function AIToolsResult({
             <div className="lg:col-span-4 lg:row-end-1">
               <div
                 className={cn(
-                  "aspect-h-3 aspect-w-4 overflow-hidden rounded-lg border bg-gray-100 dark:bg-gray-900"
+                  "aspect-h-3 aspect-w-4 overflow-hidden rounded-lg border bg-gray-100 dark:bg-card"
                 )}
               >
                 <img

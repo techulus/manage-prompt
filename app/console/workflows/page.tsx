@@ -1,6 +1,7 @@
 import { WorkflowItem } from "@/components/console/workflow-item";
 import { ContentBlock } from "@/components/core/content-block";
 import PageTitle from "@/components/layout/page-title";
+import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Pagination,
@@ -60,15 +61,12 @@ export default async function Workflows({ searchParams }: Props) {
       </form>
 
       <ContentBlock>
-        <ul
-          role="list"
-          className="divide-y divide-gray-200 dark:divide-gray-800 border-b border-gray-200 dark:border-gray-800"
-        >
+        <ul role="list" className="divide-y border-b">
           {workflows.length === 0 ? (
             <div className="p-6">
               <Link
                 href="/console/workflows/new"
-                className="relative block w-full rounded-lg border-2 border-dashed border-gray-300 dark:border-gray-700 p-12 text-center hover:border-gray-400 dark:hover:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                className={buttonVariants({ variant: "default" })}
               >
                 <svg
                   className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500"

@@ -1,4 +1,4 @@
-import { OpenAIModel, WorkflowInput } from "@/data/workflow";
+import { WorkflowInput } from "@/data/workflow";
 import { prisma } from "@/lib/utils/db";
 import { getCompletion } from "@/lib/utils/openai";
 import { isSubscriptionActive, reportUsage } from "@/lib/utils/stripe";
@@ -78,7 +78,7 @@ export async function POST(
     const body = (await req.json()) ?? {};
 
     let content = workflow.template;
-    const model = workflow.model as OpenAIModel;
+    const model = workflow.model;
     const instruction = workflow.instruction ?? "";
     const inputs = workflow.inputs as unknown as WorkflowInput[];
     // Handle inputs

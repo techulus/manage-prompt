@@ -56,7 +56,7 @@ export default function NavBar({ isPublicPage = false, appearance }: Props) {
       <nav
         className={cn(
           "flex-shrink-0 text-black dark:text-white",
-          isPublicPage && "border-b border-gray-200 dark:border-gray-800"
+          isPublicPage && "border-b"
         )}
       >
         <div className="mx-auto px-4 lg:px-8">
@@ -116,7 +116,7 @@ export default function NavBar({ isPublicPage = false, appearance }: Props) {
 
       <div
         className={classNames(
-          "flex px-4 lg:px-8 min-w-full bg-background border-b border-gray-200 dark:border-gray-800 -mb-px self-start sticky -top-[1px] z-10",
+          "flex px-4 lg:px-8 min-w-full bg-background border-b -mb-px self-start sticky -top-[1px] z-10",
           isSticky ? "pt-[1px] bg-red shadow-md" : "",
           isPublicPage ? "hidden" : ""
         )}
@@ -151,7 +151,7 @@ export default function NavBar({ isPublicPage = false, appearance }: Props) {
               href={tab.href}
               className={classNames(
                 tab.current
-                  ? "border-blue-500 text-blue-600 dark:text-blue-500"
+                  ? "border-primary text-primary"
                   : "border-transparent text-gray-500 dark:text-gray-400",
                 "whitespace-nowrap border-b-2 py-3 text-sm font-medium"
               )}
