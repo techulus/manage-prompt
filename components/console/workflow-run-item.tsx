@@ -7,13 +7,13 @@ import {
   DrawerContent,
   DrawerFooter,
   DrawerHeader,
-  DrawerTitle,
   DrawerTrigger,
 } from "../ui/drawer";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
 type WorkflowRunWithUser = Pick<
   WorkflowRun,
-  "result" | "id" | "createdAt" | "rawResult"
+  "result" | "id" | "createdAt" | "rawResult" | "rawRequest"
 > & {
   user: {
     first_name: string | null;
@@ -25,7 +25,7 @@ interface Props {
 }
 
 export async function WorkflowRunItem({ workflowRun }: Props) {
-  const { result, user, createdAt, rawResult } = workflowRun;
+  const { result, user, createdAt, rawResult, rawRequest } = workflowRun;
   const model = (rawResult as any)?.model as string;
   const totalTokens = (rawResult as any)?.usage.total_tokens as number;
 
@@ -70,16 +70,27 @@ export async function WorkflowRunItem({ workflowRun }: Props) {
         <DrawerTrigger
           className={buttonVariants({ variant: "link", className: "pl-0" })}
         >
-          View Raw Response
+          View Raw
         </DrawerTrigger>
         <DrawerContent>
-          <DrawerHeader>
-            <DrawerTitle>{model}</DrawerTitle>
-          </DrawerHeader>
+          <DrawerHeader></DrawerHeader>
 
-          <pre className="p-4 bg-secondary overflow-scroll">
-            {JSON.stringify(rawResult, null, 2)}
-          </pre>
+          <Tabs defaultValue="response">
+            <TabsList className="ml-4">
+              <TabsTrigger value="response">Response</TabsTrigger>
+              <TabsTrigger value="request">Request</TabsTrigger>
+            </TabsList>
+            <TabsContent value="response">
+              <pre className="p-4 bg-secondary overflow-scroll">
+                {JSON.stringify(rawResult, null, 2)}
+              </pre>
+            </TabsContent>
+            <TabsContent value="request">
+              <pre className="p-4 bg-secondary overflow-scroll">
+                {JSON.stringify(rawRequest, null, 2)}
+              </pre>
+            </TabsContent>
+          </Tabs>
 
           <DrawerFooter>
             <DrawerClose>

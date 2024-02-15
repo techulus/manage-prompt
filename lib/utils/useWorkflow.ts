@@ -100,6 +100,7 @@ export async function getWorkflowAndRuns(id: number, page: number = 1) {
         result: true,
         createdAt: true,
         rawResult: true,
+        rawRequest: true,
         user: {
           select: {
             first_name: true,

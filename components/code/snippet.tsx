@@ -1,10 +1,15 @@
-import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { Button } from "../ui/button";
 import "./styles.css";
 
 // @ts-expect-error Types are missing
 import { CodeSnippet } from "react-apiembed";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 export function ApiCodeSnippet({ har }: { har: any }) {
   const languages = [
@@ -40,21 +45,27 @@ export function ApiCodeSnippet({ har }: { har: any }) {
 
   return (
     <div className="mt-4">
-      {languages.map(({ language, client }) => (
-        <Button
-          type="button"
-          key={language}
-          variant="ghost"
-          className={cn(
-            language === selectedLanguage.language && "text-primary font-bold"
-          )}
-          onClick={() => setSelectedLanguage({ language, client })}
-        >
-          {language}
-        </Button>
-      ))}
+      <Select
+        value={selectedLanguage.language}
+        onValueChange={(value) =>
+          setSelectedLanguage(
+            languages.find(({ language }) => language === value)!
+          )
+        }
+      >
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Language" />
+        </SelectTrigger>
+        <SelectContent>
+          {languages.map((lang) => (
+            <SelectItem key={lang.language} value={lang.language}>
+              {lang.language}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
 
-      <div className="mt-4 overflow-scroll rounded-md">
+      <div className="mt-2 overflow-scroll rounded-md">
         <CodeSnippet
           key={selectedLanguage.language}
           har={har}
