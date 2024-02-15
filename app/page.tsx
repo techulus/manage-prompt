@@ -2,7 +2,43 @@ import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { buttonVariants } from "@/components/ui/button";
 import { SITE_METADATA } from "@/data/marketing";
+import promoImage from "@/public/images/promo.png";
+import {
+  CheckIcon,
+  CloudArrowUpIcon,
+  LockClosedIcon,
+  ServerIcon,
+} from "@heroicons/react/20/solid";
+import Image from "next/image";
 import Link from "next/link";
+
+const includedFeatures = [
+  "Unlimited workflows",
+  "Team collaboration",
+  "Up to 5 members per organization",
+  "Email support",
+];
+
+const features = [
+  {
+    name: "Backend as a service.",
+    description:
+      "Using our workflows, you can tweak prompts, update models, and deliver changes to your users instanty.",
+    icon: CloudArrowUpIcon,
+  },
+  {
+    name: "Security controls.",
+    description:
+      "Filter and control malicious requests with our security features. (coming soon)",
+    icon: LockClosedIcon,
+  },
+  {
+    name: "Scalable & Open source.",
+    description:
+      "Proudly open source. Build and deploy your AI projects with confidence.",
+    icon: ServerIcon,
+  },
+];
 
 async function getGitHubStars(): Promise<string | null> {
   try {
@@ -102,6 +138,114 @@ export default async function Home() {
                 "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
             }}
           />
+        </div>
+      </div>
+
+      <div className="overflow-hidden bg-secondary dark:bg-slate-900 py-24 sm:py-32">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
+            <div className="lg:pr-8 lg:pt-4">
+              <div className="lg:max-w-lg">
+                <h2 className="text-base font-semibold leading-7 text-primary">
+                  Build faster
+                </h2>
+                <p className="mt-2 text-3xl font-bold tracking-tight text-accent-foreground sm:text-4xl">
+                  Building blocks for your next AI project
+                </p>
+                <p className="mt-6 text-lg leading-8 text-foreground">
+                  We provide the tools to help you build and deploy your AI
+                  projects faster. We take care of the infrastructure so you can
+                  focus on what you do best.
+                </p>
+                <dl className="mt-10 max-w-xl space-y-8 text-base leading-7 text-accent-foreground lg:max-w-none">
+                  {features.map((feature) => (
+                    <div key={feature.name} className="relative pl-9">
+                      <dt className="inline font-semibold text-foreground">
+                        <feature.icon
+                          className="absolute left-1 top-1 h-5 w-5 text-primary"
+                          aria-hidden="true"
+                        />
+                        {feature.name}
+                      </dt>{" "}
+                      <dd className="inline">{feature.description}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            </div>
+            <Image
+              src={promoImage}
+              alt="Product screenshot"
+              className="w-[48rem] max-w-none rounded-xl shadow-xl ring-1 ring-white/10 sm:w-[57rem] md:-ml-4 lg:-ml-0"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="py-24 sm:py-32">
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+          <div className="mx-auto max-w-2xl sm:text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-primary sm:text-4xl">
+              Pay as you go
+            </h2>
+            <p className="mt-6 text-lg leading-8 text-foreground-accent">
+              Only pay for what you use. No long-term contracts. No hidden fees.
+            </p>
+          </div>
+          <div className="mx-auto mt-16 max-w-2xl rounded-3xl ring-1 sm:mt-20 lg:mx-0 lg:flex lg:max-w-none">
+            <div className="p-8 sm:p-10 lg:flex-auto">
+              <h3 className="text-lg font-bold tracking-tight text-primary">
+                Prices are per 1,000 tokens. You can think of tokens as pieces
+                of words, where 1,000 tokens is about 750 words.
+              </h3>
+              <div className="mt-10 flex items-center gap-x-4">
+                <h4 className="flex-none text-sm font-semibold leading-6 text-primary">
+                  What&apos;s included
+                </h4>
+                <div className="h-px flex-auto bg-primary" />
+              </div>
+              <ul
+                role="list"
+                className="mt-8 grid grid-cols-1 gap-4 text-sm leading-6 text-foreground sm:grid-cols-2 sm:gap-6"
+              >
+                {includedFeatures.map((feature) => (
+                  <li key={feature} className="flex gap-x-3">
+                    <CheckIcon
+                      className="h-6 w-5 flex-none text-primary"
+                      aria-hidden="true"
+                    />
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="-mt-2 p-2 lg:mt-0 lg:w-full lg:max-w-md lg:flex-shrink-0">
+              <div className="rounded-2xl bg-secondary py-10 text-center ring-1 ring-inset ring-gray-900/5 lg:flex lg:flex-col lg:justify-center lg:py-16">
+                <div className="mx-auto max-w-xs px-8">
+                  <p className="text-base font-semibold text-primary-muted">
+                    Billed Monthly
+                  </p>
+                  <p className="mt-6 flex items-baseline justify-center gap-x-2">
+                    <span className="text-5xl font-bold tracking-tight text-foreground">
+                      $0.01
+                    </span>
+                    <span className="text-sm font-semibold leading-6 tracking-wide text-primary">
+                      /1K tokens
+                    </span>
+                  </p>
+                  <Link
+                    href="/console/workflows"
+                    className={buttonVariants({
+                      variant: "default",
+                      className: "mt-8",
+                    })}
+                  >
+                    Get Started
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
