@@ -1,0 +1,10 @@
+
+SCHEMA >
+    `model` String `json:$.model`,
+    `owner_id` String `json:$.owner_id`,
+    `timestamp` String `json:$.timestamp`,
+    `total_tokens` Int16 `json:$.total_tokens`,
+    `workflow_id` Int16 `json:$.workflow_id`
+
+ENGINE "MergeTree"
+ENGINE_SORTING_KEY "model, timestamp, total_tokens, workflow_id"

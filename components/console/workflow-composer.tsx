@@ -22,7 +22,8 @@ interface Props {
 }
 
 export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
-  const { id, inputs, template, instruction, model } = workflow;
+  const { id, template, instruction, model } = workflow;
+  const inputs = (workflow.inputs ?? []) as WorkflowInput[];
 
   const [inputValues, updateInput] = useReducer((state: any, action: any) => {
     return {
@@ -85,14 +86,16 @@ export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
           onChange={() => null}
         />
 
-        <Tabs defaultValue="compose">
+        <Tabs defaultValue={inputs?.length ? "compose" : "review"}>
           <TabsList>
-            <TabsTrigger value="compose">Compose</TabsTrigger>
+            {inputs?.length ? (
+              <TabsTrigger value="compose">Compose</TabsTrigger>
+            ) : null}
             <TabsTrigger value="review">Review</TabsTrigger>
             <TabsTrigger value="deploy">Deploy</TabsTrigger>
           </TabsList>
-          <TabsContent value="compose">
-            {(inputs as [])?.length ? (
+          {inputs?.length ? (
+            <TabsContent value="compose">
               <div className="mt-4 space-y-4">
                 {(inputs as WorkflowInput[]).map(
                   ({ name, type = WorkflowInputType.text, label }) => (
@@ -131,26 +134,22 @@ export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
                   )
                 )}
               </div>
-            ) : (
-              <p className="dark:text-white">
-                There are no inputs, you can run the workflow!
-              </p>
-            )}
 
-            <SignedIn>
-              <div className="mt-2 flex justify-end">
-                <SaveButton
-                  label="Run"
-                  loadingLabel="Running"
-                  disabled={
-                    !workflow.published ||
-                    Object.keys(inputValues).length !==
-                      (inputs as WorkflowInput[])?.length
-                  }
-                />
-              </div>
-            </SignedIn>
-          </TabsContent>
+              <SignedIn>
+                <div className="mt-2 flex justify-end">
+                  <SaveButton
+                    label="Run"
+                    loadingLabel="Running"
+                    disabled={
+                      !workflow.published ||
+                      Object.keys(inputValues).length !==
+                        (inputs as WorkflowInput[])?.length
+                    }
+                  />
+                </div>
+              </SignedIn>
+            </TabsContent>
+          ) : null}
 
           <TabsContent value="review">
             <div className="border-b">
