@@ -1,0 +1,16 @@
+TOKEN "workflow_runs_count_by_hour_endpoint_read_7341" READ
+
+NODE workflow_runs_count_by_hour_0
+SQL >
+
+    SELECT Date(timestamp), workflow_id, count(*) FROM run_workflow GROUP BY Date(timestamp), workflow_id
+
+
+
+NODE workflow_runs_count_by_hour_1
+SQL >
+
+    %
+    SELECT * FROM workflow_runs_count_by_hour_0 where workflow_id = {{Int16(workflow_id, required=True)}} limit 24
+
+
