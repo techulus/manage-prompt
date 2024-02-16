@@ -5,6 +5,7 @@ import { owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
 import { getCompletion } from "@/lib/utils/openai";
 import { isSubscriptionActive, reportUsage } from "@/lib/utils/stripe";
+import { EventName, logEvent } from "@/lib/utils/tinybird";
 import { WorkflowSchema } from "@/lib/utils/workflow";
 import { redirect } from "next/navigation";
 import { randomBytes } from "node:crypto";
@@ -162,28 +163,35 @@ export async function runWorkflow(formData: FormData) {
 
   if (!result) throw "No result returned from OpenAI";
 
-  await prisma.workflowRun.create({
-    data: {
-      result,
-      rawRequest: JSON.parse(JSON.stringify({ model, content, instruction })),
-      rawResult: JSON.parse(JSON.stringify(rawResult)),
-      user: {
-        connect: {
-          id: userId,
+  await Promise.all([
+    prisma.workflowRun.create({
+      data: {
+        result,
+        rawRequest: JSON.parse(JSON.stringify({ model, content, instruction })),
+        rawResult: JSON.parse(JSON.stringify(rawResult)),
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+        workflow: {
+          connect: {
+            id,
+          },
         },
       },
-      workflow: {
-        connect: {
-          id,
-        },
-      },
-    },
-  });
-
-  await reportUsage(
-    organization?.stripe?.subscription as unknown as Stripe.Subscription,
-    rawResult?.usage?.total_tokens ?? 0
-  );
+    }),
+    reportUsage(
+      organization?.stripe?.subscription as unknown as Stripe.Subscription,
+      rawResult?.usage?.total_tokens ?? 0
+    ),
+    logEvent(EventName.RunWorkflow, {
+      workflow_id: id,
+      owner_id: ownerId,
+      model,
+      total_tokens: rawResult?.usage?.total_tokens,
+    }),
+  ]);
 
   redirect(`/console/workflows/${id}`);
 }

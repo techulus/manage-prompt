@@ -53,13 +53,14 @@ model OrganizationToUser {
 }
 
 model SecretKey {
-  id        Int       @id @default(autoincrement())
-  key       String    @unique
-  createdBy String
-  ownerId   String
-  lastUsed  DateTime?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id                 Int       @id @default(autoincrement())
+  key                String    @unique
+  rateLimitPerSecond Int       @default(10)
+  createdBy          String
+  ownerId            String
+  lastUsed           DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
 
   user         User         @relation(fields: [createdBy], references: [id], onDelete: Cascade)
   organization Organization @relation(fields: [ownerId], references: [id], onDelete: Cascade)

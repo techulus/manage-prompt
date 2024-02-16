@@ -11,7 +11,7 @@ export function Spinner({
     <div className="flex items-center justify-center">
       <svg
         className={classnames(
-          "animate-spin h-4 w-4 text-primary dark:text-white",
+          "animate-spin h-4 w-4 text-black dark:text-white",
           className
         )}
         xmlns="http://www.w3.org/2000/svg"
