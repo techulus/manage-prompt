@@ -1,14 +1,10 @@
-import {
-  ChevronRightIcon,
-  PencilIcon,
-  PlayIcon,
-} from "@heroicons/react/20/solid";
+import { getWorkflowRunsByHour } from "@/lib/utils/tinybird";
+import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { Workflow } from "@prisma/client";
+import { SparkAreaChart } from "@tremor/react";
 import classNames from "classnames";
 import Link from "next/link";
 import { Badge } from "../ui/badge";
-import { buttonVariants } from "../ui/button";
-import { Separator } from "../ui/separator";
 
 interface Props {
   workflow: Pick<
@@ -28,6 +24,8 @@ interface Props {
 }
 
 export async function WorkflowItem({ workflow }: Props) {
+  const chartdata = await getWorkflowRunsByHour(workflow.id);
+
   return (
     <li
       key={workflow.id}
@@ -68,41 +66,26 @@ export async function WorkflowItem({ workflow }: Props) {
             <Badge variant="outline">{workflow.model}</Badge>
           </div>
         </Link>
+
         <div className="sm:hidden">
           <ChevronRightIcon
             className="h-4 w-4 text-gray-400"
             aria-hidden="true"
           />
         </div>
+
         <div className="hidden flex-shrink-0 flex-col items-end space-y-3 sm:flex">
-          <p className="flex items-center space-x-4 text-primary">
-            {workflow.published ? (
-              <Link
-                href={`/console/workflows/${workflow.id}`}
-                className={buttonVariants({
-                  variant: "link",
-                  className: "px-0 py-0",
-                })}
-              >
-                <PlayIcon className="h-3 w-3 inline mr-1 -mt-0.5" />
-                Run
-              </Link>
-            ) : (
-              <Link
-                href={`/console/workflows/${workflow.id}/edit`}
-                className={buttonVariants({
-                  variant: "link",
-                  className: "px-0 py-0",
-                })}
-              >
-                <PencilIcon className="h-3 w-3 inline mr-1 -mt-0.5" />
-                Edit
-              </Link>
-            )}
-          </p>
+          <SparkAreaChart
+            data={chartdata}
+            index="hour"
+            categories={["total"]}
+            colors={["blue"]}
+            minValue={0}
+            className="h-8 w-20 sm:h-10 sm:w-36"
+          />
           <div className="flex space-x-2 text-sm text-gray-500">
             <span>{workflow.user?.first_name}</span>
-            <Separator orientation="vertical" />
+            <span aria-hidden="true">&middot;</span>
             <span>
               Last updated {new Date(workflow.updatedAt).toLocaleDateString()}
             </span>
