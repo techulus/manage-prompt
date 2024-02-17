@@ -29,13 +29,13 @@ const features = [
   {
     name: "Security controls.",
     description:
-      "Filter and control malicious requests with our security features. (coming soon)",
+      "Filter and control malicious requests with our security features.",
     icon: LockClosedIcon,
   },
   {
-    name: "Scalable & Open source.",
+    name: "Several models to choose from.",
     description:
-      "Proudly open source. Build and deploy your AI projects with confidence.",
+      "Use multiple models using the same API, models from OpenAI, Meta, Mixtral and more.",
     icon: ServerIcon,
   },
 ];
