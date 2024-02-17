@@ -23,6 +23,7 @@ export const getCompletion = async (
     | CreateCompletionResponse
     | CreateEditResponse
     | undefined;
+  totalTokenCount: number;
 }> => {
   console.log("OPENAI: Request ->", {
     model,
@@ -55,6 +56,7 @@ export const getCompletion = async (
       return {
         result: chatData.choices[0].message?.content,
         rawResult: chatData,
+        totalTokenCount: chatData.usage?.total_tokens ?? 0,
       };
 
     case "text-davinci-003":
@@ -72,7 +74,11 @@ export const getCompletion = async (
         if (!textData.choices)
           throw new Error("No choices returned from OpenAI");
 
-        return { result: textData.choices[0].text, rawResult: textData };
+        return {
+          result: textData.choices[0].text,
+          rawResult: textData,
+          totalTokenCount: textData?.usage?.total_tokens ?? 0,
+        };
       } catch (e: any) {
         console.error(e?.response?.data);
         throw new Error("Request failed");
@@ -94,12 +100,16 @@ export const getCompletion = async (
         if (!editData.choices)
           throw new Error("No choices returned from OpenAI");
 
-        return { result: editData.choices[0].text, rawResult: editData };
+        return {
+          result: editData.choices[0].text,
+          rawResult: editData,
+          totalTokenCount: editData?.usage?.total_tokens ?? 0,
+        };
       } catch (e: any) {
         console.error(e?.response?.data);
         throw new Error("Request failed");
       }
   }
 
-  return { result: undefined, rawResult: undefined };
+  return { result: undefined, rawResult: undefined, totalTokenCount: 0 };
 };

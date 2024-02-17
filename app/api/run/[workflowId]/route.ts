@@ -1,7 +1,12 @@
 import { WorkflowInput } from "@/data/workflow";
 import { prisma } from "@/lib/utils/db";
+import { runLlamaModel } from "@/lib/utils/llama";
+import { runMixtralModel } from "@/lib/utils/mixtral";
 import { getCompletion } from "@/lib/utils/openai";
+import { redis } from "@/lib/utils/redis";
 import { isSubscriptionActive, reportUsage } from "@/lib/utils/stripe";
+import { EventName, logEvent } from "@/lib/utils/tinybird";
+import { Ratelimit } from "@upstash/ratelimit";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -34,6 +39,7 @@ enum ErrorCodes {
   WorkflowRunFailed = "workflow_run_failed",
   InvalidBilling = "invalid_billing",
   InternalServerError = "internal_server_error",
+  RequestBlocked = "request_blocked",
 }
 
 export async function POST(
@@ -67,8 +73,23 @@ export async function POST(
       return UnauthorizedResponse();
     }
 
-    const ownerId = key.ownerId;
+    // Rate limit
+    const keyRateLimit = new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(key.rateLimitPerSecond, "1 s"),
+      analytics: true,
+      prefix: "mp_ratelimit",
+    });
+    const {
+      success: keyRateLimitSuccess,
+      limit,
+      remaining,
+    } = await keyRateLimit.limit(`key_${key.id}`);
+    if (!keyRateLimitSuccess) {
+      return ErrorResponse("Rate limit exceeded", 429);
+    }
 
+    // Check if the organization has valid billing
     const organization = key.organization;
     if (
       organization?.credits === 0 &&
@@ -84,7 +105,7 @@ export async function POST(
     const workflow = await prisma.workflow.findUnique({
       where: {
         shortId: params.workflowId,
-        ownerId,
+        ownerId: key.ownerId,
       },
     });
     if (!workflow || !workflow?.published) {
@@ -112,11 +133,19 @@ export async function POST(
       );
     }
 
-    const { result, rawResult } = await getCompletion(
-      model,
-      content,
-      instruction
-    );
+    let response;
+    switch (model) {
+      case "llama-2-70b-chat":
+        response = await runLlamaModel(content, instruction);
+        break;
+      case "mistralai/mixtral-8x7b-instruct-v0.1":
+        response = await runMixtralModel(content);
+        break;
+      default:
+        response = await getCompletion(model, content, instruction);
+    }
+
+    const { result, rawResult, totalTokenCount } = response;
 
     if (!result) {
       return ErrorResponse(
@@ -129,8 +158,14 @@ export async function POST(
     await Promise.all([
       reportUsage(
         organization?.stripe?.subscription as unknown as Stripe.Subscription,
-        rawResult?.usage?.total_tokens ?? 0
+        totalTokenCount
       ),
+      logEvent(EventName.RunWorkflow, {
+        workflow_id: workflow.id,
+        owner_id: key.ownerId,
+        model,
+        total_tokens: totalTokenCount,
+      }),
       prisma.workflowRun.create({
         data: {
           result,
@@ -138,6 +173,7 @@ export async function POST(
             JSON.stringify({ model, content, instruction })
           ),
           rawResult: JSON.parse(JSON.stringify(rawResult)),
+          totalTokenCount,
           workflow: {
             connect: {
               id: workflow.id,
@@ -155,7 +191,15 @@ export async function POST(
       }),
     ]);
 
-    return NextResponse.json({ success: true, result: result });
+    return NextResponse.json(
+      { success: true, result: result },
+      {
+        headers: {
+          "x-ratelimit-limit": limit.toString(),
+          "x-ratelimit-remaining": remaining.toString(),
+        },
+      }
+    );
   } catch (error) {
     console.error(error);
     return ErrorResponse(

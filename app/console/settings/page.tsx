@@ -4,6 +4,7 @@ import {
   DeleteButton,
   UpdateProfileButton,
 } from "@/components/form/button";
+import { EditableValue } from "@/components/form/editable-text";
 import PageTitle from "@/components/layout/page-title";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -21,9 +22,9 @@ import { clerkClient } from "@clerk/nextjs";
 import Stripe from "stripe";
 import {
   createSecretKey,
-  purgeWorkflowData,
   redirectToBilling,
   revokeSecretKey,
+  updateRateLimit,
 } from "./actions";
 
 export default async function Settings() {
@@ -33,7 +34,7 @@ export default async function Settings() {
     throw new Error("User not found");
   }
 
-  const [user, organization, secretKeys, dataCount] = await Promise.all([
+  const [user, organization, secretKeys] = await Promise.all([
     clerkClient.users.getUser(userId),
     prisma.organization.findUnique({
       include: {
@@ -44,14 +45,6 @@ export default async function Settings() {
       },
     }),
     prisma.secretKey.findMany({
-      include: {
-        user: {
-          select: {
-            first_name: true,
-            last_name: true,
-          },
-        },
-      },
       where: {
         organization: {
           id: {
@@ -59,14 +52,8 @@ export default async function Settings() {
           },
         },
       },
-    }),
-    prisma.workflow.count({
-      where: {
-        organization: {
-          id: {
-            equals: ownerId,
-          },
-        },
+      orderBy: {
+        createdAt: "desc",
       },
     }),
   ]);
@@ -206,7 +193,7 @@ export default async function Settings() {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Key</TableHead>
-                    <TableHead>Created by</TableHead>
+                    <TableHead>Rate Limit (Req/sec)</TableHead>
                     <TableHead>Last used</TableHead>
                     <TableHead></TableHead>
                   </TableRow>
@@ -218,11 +205,17 @@ export default async function Settings() {
                         <pre>{key.key}</pre>
                       </TableCell>
                       <TableCell>
-                        {key.user.first_name} {key.user.last_name}
+                        <form action={updateRateLimit}>
+                          <EditableValue
+                            id={key.id}
+                            name="rateLimitPerSecond"
+                            value={key.rateLimitPerSecond}
+                          />
+                        </form>
                       </TableCell>
                       <TableCell>
                         {key.lastUsed
-                          ? new Date(key.lastUsed).toLocaleDateString()
+                          ? new Date(key.lastUsed).toLocaleString()
                           : "Never"}
                       </TableCell>
                       <TableCell>
@@ -235,45 +228,6 @@ export default async function Settings() {
                   ))}
                 </TableBody>
               </Table>
-            </div>
-          </div>
-
-          <div className="mt-16 mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
-            <div>
-              <h2 className="text-base font-semibold leading-7 text-gray-900 dark:text-gray-200">
-                Data
-              </h2>
-              <p className="mt-1 text-sm leading-6 text-gray-500">
-                You can request all workflow data to be deleted, this does not
-                delete your user account.
-              </p>
-
-              <dl className="mt-6 space-y-6 divide-y border-t text-sm leading-6">
-                <div className="pt-6 sm:flex">
-                  <dt className="font-medium text-gray-900 dark:text-gray-200 sm:w-64 sm:flex-none sm:pr-6">
-                    Workflow data
-                  </dt>
-                  <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                    <div className="text-gray-900 dark:text-gray-200">
-                      {dataCount} workflow(s)
-                    </div>
-                  </dd>
-                </div>
-
-                <div className="pt-6 sm:flex">
-                  <dt className="font-medium text-gray-900 dark:text-gray-200 sm:w-64 sm:flex-none sm:pr-6">
-                    Delete workflows
-                  </dt>
-                  <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                    <p className="mt-1 text-sm leading-6 text-red-500 dark:text-red-600 font-bold">
-                      This action is permanent and cannot be undone.
-                    </p>
-                    <form action={purgeWorkflowData}>
-                      <DeleteButton />
-                    </form>
-                  </dd>
-                </div>
-              </dl>
             </div>
           </div>
         </main>

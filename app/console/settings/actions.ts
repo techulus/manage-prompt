@@ -21,26 +21,6 @@ export async function redirectToBilling() {
   redirect(url);
 }
 
-export async function purgeWorkflowData() {
-  const { ownerId } = owner();
-
-  if (ownerId) {
-    throw new Error("User and org ID not found");
-  }
-
-  await prisma.workflow.deleteMany({
-    where: {
-      organization: {
-        id: {
-          equals: ownerId,
-        },
-      },
-    },
-  });
-
-  redirect("/console/settings");
-}
-
 export async function createSecretKey() {
   const { userId, ownerId } = owner();
 
@@ -74,6 +54,25 @@ export async function revokeSecretKey(data: FormData) {
   await prisma.secretKey.delete({
     where: {
       id: +id,
+    },
+  });
+  redirect(`/console/settings`);
+}
+
+export async function updateRateLimit(data: FormData) {
+  const id = data.get("id");
+  const rateLimitPerSecond = Number(data.get("rateLimitPerSecond"));
+
+  if (rateLimitPerSecond > 25) {
+    throw new Error("Rate limit cannot exceed 25");
+  }
+
+  await prisma.secretKey.update({
+    where: {
+      id: +id!,
+    },
+    data: {
+      rateLimitPerSecond,
     },
   });
   redirect(`/console/settings`);

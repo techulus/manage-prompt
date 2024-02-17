@@ -3,8 +3,11 @@
 import { WorkflowInput } from "@/data/workflow";
 import { owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
+import { runLlamaModel } from "@/lib/utils/llama";
+import { runMixtralModel } from "@/lib/utils/mixtral";
 import { getCompletion } from "@/lib/utils/openai";
 import { isSubscriptionActive, reportUsage } from "@/lib/utils/stripe";
+import { EventName, logEvent } from "@/lib/utils/tinybird";
 import { WorkflowSchema } from "@/lib/utils/workflow";
 import { redirect } from "next/navigation";
 import { randomBytes } from "node:crypto";
@@ -154,36 +157,52 @@ export async function runWorkflow(formData: FormData) {
   )
     throw "No credits remaining";
 
-  const { result, rawResult } = await getCompletion(
-    model,
-    content,
-    instruction
-  );
+  let response;
+  switch (model) {
+    case "llama-2-70b-chat":
+      response = await runLlamaModel(content, instruction);
+      break;
+    case "mistralai/mixtral-8x7b-instruct-v0.1":
+      response = await runMixtralModel(content);
+      break;
+    default:
+      response = await getCompletion(model, content, instruction);
+  }
+
+  const { result, rawResult, totalTokenCount } = response;
 
   if (!result) throw "No result returned from OpenAI";
 
-  await prisma.workflowRun.create({
-    data: {
-      result,
-      rawRequest: JSON.parse(JSON.stringify({ model, content, instruction })),
-      rawResult: JSON.parse(JSON.stringify(rawResult)),
-      user: {
-        connect: {
-          id: userId,
+  await Promise.all([
+    prisma.workflowRun.create({
+      data: {
+        result,
+        rawRequest: JSON.parse(JSON.stringify({ model, content, instruction })),
+        rawResult: JSON.parse(JSON.stringify(rawResult)),
+        totalTokenCount,
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+        workflow: {
+          connect: {
+            id,
+          },
         },
       },
-      workflow: {
-        connect: {
-          id,
-        },
-      },
-    },
-  });
-
-  await reportUsage(
-    organization?.stripe?.subscription as unknown as Stripe.Subscription,
-    rawResult?.usage?.total_tokens ?? 0
-  );
+    }),
+    reportUsage(
+      organization?.stripe?.subscription as unknown as Stripe.Subscription,
+      totalTokenCount
+    ),
+    logEvent(EventName.RunWorkflow, {
+      workflow_id: id,
+      owner_id: ownerId,
+      model,
+      total_tokens: totalTokenCount,
+    }),
+  ]);
 
   redirect(`/console/workflows/${id}`);
 }
