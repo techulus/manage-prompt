@@ -1,42 +1,24 @@
-import {
-  Configuration,
-  CreateChatCompletionResponse,
-  CreateCompletionResponse,
-  CreateEditResponse,
-  OpenAIApi,
-} from "openai";
+import { OpenAI } from "openai";
+import { ChatCompletion } from "openai/resources";
 
-const openai = new OpenAIApi(
-  new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
-  })
-);
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 export const getCompletion = async (
   model: string,
-  content: string,
-  instruction?: string
+  content: string
 ): Promise<{
   result: string | undefined;
-  rawResult:
-    | CreateChatCompletionResponse
-    | CreateCompletionResponse
-    | CreateEditResponse
-    | undefined;
+  rawResult: ChatCompletion;
   totalTokenCount: number;
 }> => {
-  console.log("OPENAI: Request ->", {
-    model,
-    content,
-    instruction,
-  });
-
   switch (model) {
     case "gpt-3.5-turbo":
     case "gpt-4-1106-preview":
     case "gpt-4-0125-preview":
     case "gpt-4":
-      const { data: chatData } = await openai.createChatCompletion({
+      const chatData = await openai.chat.completions.create({
         model,
         messages: [
           {
@@ -54,62 +36,11 @@ export const getCompletion = async (
       if (!chatData.choices) throw new Error("No choices returned from OpenAI");
 
       return {
-        result: chatData.choices[0].message?.content,
+        result: chatData.choices[0].message?.content ?? "",
         rawResult: chatData,
         totalTokenCount: chatData.usage?.total_tokens ?? 0,
       };
-
-    case "text-davinci-003":
-      try {
-        const { data: textData } = await openai.createCompletion({
-          model,
-          prompt: content,
-          temperature: 0.7,
-          max_tokens: 512,
-          top_p: 1,
-          frequency_penalty: 0,
-          presence_penalty: 0,
-        });
-
-        if (!textData.choices)
-          throw new Error("No choices returned from OpenAI");
-
-        return {
-          result: textData.choices[0].text,
-          rawResult: textData,
-          totalTokenCount: textData?.usage?.total_tokens ?? 0,
-        };
-      } catch (e: any) {
-        console.error(e?.response?.data);
-        throw new Error("Request failed");
-      }
-
-    case "code-davinci-edit-001":
-    case "text-davinci-edit-001":
-      if (!instruction) throw new Error("Instruction is missing");
-
-      try {
-        const { data: editData } = await openai.createEdit({
-          model,
-          input: content,
-          instruction,
-          temperature: 0.7,
-          top_p: 1,
-        });
-
-        if (!editData.choices)
-          throw new Error("No choices returned from OpenAI");
-
-        return {
-          result: editData.choices[0].text,
-          rawResult: editData,
-          totalTokenCount: editData?.usage?.total_tokens ?? 0,
-        };
-      } catch (e: any) {
-        console.error(e?.response?.data);
-        throw new Error("Request failed");
-      }
+    default:
+      throw new Error("Unsupported model");
   }
-
-  return { result: undefined, rawResult: undefined, totalTokenCount: 0 };
 };
