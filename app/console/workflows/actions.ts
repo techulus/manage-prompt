@@ -37,7 +37,7 @@ export async function saveWorkflow(formData: FormData) {
     inputs,
   });
 
-  await prisma.workflow.create({
+  const created = await prisma.workflow.create({
     data: {
       user: {
         connect: {
@@ -59,7 +59,7 @@ export async function saveWorkflow(formData: FormData) {
     },
   });
 
-  redirect("/console/workflows");
+  redirect(`/console/workflows/${created.id}`);
 }
 
 export async function updateWorkflow(formData: FormData) {
@@ -166,7 +166,7 @@ export async function runWorkflow(formData: FormData) {
       response = await runMixtralModel(content);
       break;
     default:
-      response = await getCompletion(model, content, instruction);
+      response = await getCompletion(model, content);
   }
 
   const { result, rawResult, totalTokenCount } = response;

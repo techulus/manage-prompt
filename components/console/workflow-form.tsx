@@ -119,7 +119,7 @@ export function WorkflowForm({ workflow }: Props) {
                 <div className="mt-2 sm:col-span-2 sm:mt-0">
                   <Textarea
                     name="instruction"
-                    rows={3}
+                    rows={8}
                     value={instruction}
                     onChange={(e) => {
                       setInstruction(e.target.value);
@@ -146,7 +146,7 @@ export function WorkflowForm({ workflow }: Props) {
               <div className="mt-2 sm:col-span-2 sm:mt-0">
                 <Textarea
                   name="template"
-                  rows={3}
+                  rows={8}
                   value={template}
                   onChange={(e) => {
                     setTemplate(e.target.value);

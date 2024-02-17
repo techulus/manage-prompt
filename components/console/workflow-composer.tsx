@@ -107,7 +107,7 @@ export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
 
                       {type === WorkflowInputType.textarea ? (
                         <Textarea
-                          rows={5}
+                          rows={10}
                           placeholder={`Enter value for ${name}`}
                           value={inputValues[name] ?? ""}
                           onChange={(e) =>

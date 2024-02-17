@@ -142,7 +142,7 @@ export async function POST(
         response = await runMixtralModel(content);
         break;
       default:
-        response = await getCompletion(model, content, instruction);
+        response = await getCompletion(model, content);
     }
 
     const { result, rawResult, totalTokenCount } = response;
