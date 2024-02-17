@@ -4,7 +4,7 @@ export const AIModels = [
   "gpt-4-0125-preview",
   "gpt-4",
   "llama-2-70b-chat",
-  "mistralai/mixtral-8x7b-instruct-v0.1",
+  "mixtral-8x7b-instruct-v0.1",
 ];
 
 export const modelHasInstruction: Record<string, boolean> = {
