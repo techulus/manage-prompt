@@ -34,7 +34,7 @@ export async function WorkflowItem({ workflow }: Props) {
       <div className="flex items-center justify-between space-x-4">
         <Link
           href={`/console/workflows/${workflow.id}`}
-          className="min-w-0 space-y-3"
+          className="min-w-0 space-y-3 z-10"
         >
           <div className="flex items-center space-x-3">
             <span
@@ -62,7 +62,7 @@ export async function WorkflowItem({ workflow }: Props) {
               </span>
             </h2>
           </div>
-          <div className="group relative flex items-center space-x-2.5">
+          <div className="group relative flex items-center space-x-2.5 pl-6">
             <Badge variant="outline">{workflow.model}</Badge>
             <span className="hidden sm:block" aria-hidden="true">
               &middot;
@@ -80,33 +80,21 @@ export async function WorkflowItem({ workflow }: Props) {
         </Link>
 
         <div className="sm:hidden">
-          <SparkAreaChart
-            data={chartdata}
-            index="hour"
-            categories={["total"]}
-            colors={["blue"]}
-            minValue={0}
-            className="h-8 w-20 sm:h-10 sm:w-36"
-          />
-        </div>
-
-        <div className="sm:hidden">
           <ChevronRightIcon
             className="h-4 w-4 text-gray-400"
             aria-hidden="true"
           />
         </div>
 
-        <div className="hidden flex-shrink-0 flex-col items-end space-y-3 sm:flex">
-          <SparkAreaChart
-            data={chartdata}
-            index="hour"
-            categories={["total"]}
-            colors={["blue"]}
-            minValue={0}
-            className="h-8 w-20 sm:h-10 sm:w-36"
-          />
-        </div>
+        <SparkAreaChart
+          data={chartdata}
+          index="hour"
+          curveType="monotone"
+          categories={["total"]}
+          colors={["blue"]}
+          minValue={0}
+          className="absolute opacity-25 h-24 w-full right-0 top-2 pt-2"
+        />
       </div>
     </li>
   );

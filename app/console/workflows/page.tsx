@@ -12,6 +12,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { owner } from "@/lib/hooks/useOwner";
+import { cn } from "@/lib/utils";
 import { LIMIT, getWorkflowsForOwner } from "@/lib/utils/useWorkflow";
 import Link from "next/link";
 
@@ -115,7 +116,12 @@ export default async function Workflows({ searchParams }: Props) {
               ) : null}
               {new Array(Math.min(totalPages, 5)).fill(0).map((_, idx) => (
                 <PaginationItem key={idx}>
-                  <PaginationLink href={`/console/workflows?page=${idx + 1}`}>
+                  <PaginationLink
+                    href={`/console/workflows?page=${idx + 1}`}
+                    className={cn(
+                      idx + 1 === currentPage && "text-primary font-semibold"
+                    )}
+                  >
                     {idx + 1}
                   </PaginationLink>
                 </PaginationItem>
