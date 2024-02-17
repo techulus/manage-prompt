@@ -37,3 +37,5 @@ next-env.d.ts
 
 .idea
 .tinyb
+.tinyb-dev
+.tinyb-prod
