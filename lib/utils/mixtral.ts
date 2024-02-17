@@ -4,25 +4,23 @@ const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
 });
 
-export async function runLlamaModel(
-  prompt: string,
-  system_prompt: string
-): Promise<{
+export async function runMixtralModel(prompt: string): Promise<{
   result: string;
   rawResult: any;
   totalTokenCount: number;
 }> {
-  console.log("Creating Llama Prediction...");
+  console.log("Creating mistralai Prediction...");
   const prediction = await replicate.predictions.create({
-    version: "02e509c789964a7ea8736978a43525956ef40397be9033abf9fd2badfe68c9e3",
+    version: "7b3212fbaf88310cfef07a061ce94224e82efc8403c26fc67e8f6c065de51f21",
     input: {
-      debug: true,
-      top_p: 1,
+      top_k: 50,
+      top_p: 0.9,
       prompt,
-      temperature: 0.5,
-      system_prompt,
-      max_new_tokens: 500,
-      min_new_tokens: -1,
+      temperature: 0.6,
+      max_new_tokens: 1024,
+      prompt_template: "<s>[INST] {prompt} [/INST] ",
+      presence_penalty: 0,
+      frequency_penalty: 0,
     },
   });
   console.log("Created", prediction.id);

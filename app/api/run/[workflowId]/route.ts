@@ -1,6 +1,7 @@
 import { WorkflowInput } from "@/data/workflow";
 import { prisma } from "@/lib/utils/db";
-import { runModel } from "@/lib/utils/llama";
+import { runLlamaModel } from "@/lib/utils/llama";
+import { runMixtralModel } from "@/lib/utils/mixtral";
 import { getCompletion } from "@/lib/utils/openai";
 import { redis } from "@/lib/utils/redis";
 import { isSubscriptionActive, reportUsage } from "@/lib/utils/stripe";
@@ -135,7 +136,10 @@ export async function POST(
     let response;
     switch (model) {
       case "llama-2-70b-chat":
-        response = await runModel(content, instruction);
+        response = await runLlamaModel(content, instruction);
+        break;
+      case "mistralai/mixtral-8x7b-instruct-v0.1":
+        response = await runMixtralModel(content);
         break;
       default:
         response = await getCompletion(model, content, instruction);
