@@ -11,10 +11,7 @@ import {
 } from "../ui/drawer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 
-type WorkflowRunWithUser = Pick<
-  WorkflowRun,
-  "result" | "id" | "createdAt" | "rawResult" | "rawRequest"
-> & {
+type WorkflowRunWithUser = WorkflowRun & {
   user: {
     first_name: string | null;
   };
@@ -25,9 +22,9 @@ interface Props {
 }
 
 export async function WorkflowRunItem({ workflowRun }: Props) {
-  const { result, user, createdAt, rawResult, rawRequest } = workflowRun;
+  const { result, user, createdAt, rawResult, rawRequest, totalTokenCount } =
+    workflowRun;
   const model = (rawResult as any)?.model as string;
-  const totalTokens = (rawResult as any)?.usage.total_tokens as number;
 
   return (
     <li
@@ -47,7 +44,7 @@ export async function WorkflowRunItem({ workflowRun }: Props) {
                 </span>
                 <span aria-hidden="true">&middot;</span>
                 <span className="text-gray-600 dark:text-gray-400 font-normal">
-                  {totalTokens} tokens
+                  {totalTokenCount} tokens
                 </span>
               </>
             ) : null}

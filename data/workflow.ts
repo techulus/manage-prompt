@@ -6,11 +6,13 @@ export const AIModels = [
   "text-davinci-003",
   "text-davinci-edit-001",
   "code-davinci-edit-001",
+  "llama-2-70b-chat",
 ];
 
 export const modelHasInstruction: Record<string, boolean> = {
   "text-davinci-edit-001": true,
   "code-davinci-edit-001": true,
+  "llama-2-70b-chat": true,
 };
 
 export type WorkflowInput = {

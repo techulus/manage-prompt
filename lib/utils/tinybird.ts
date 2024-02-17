@@ -36,7 +36,7 @@ export async function getWorkflowRunsByHour(
     const d = new Date(now);
     d.setHours(d.getUTCHours() - i);
     return d.getHours();
-  });
+  }).reverse();
 
   return last24Hours.map((hour) => {
     const entry = entries.find((e) => e.hour === hour);

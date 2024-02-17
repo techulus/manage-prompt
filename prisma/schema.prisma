@@ -91,16 +91,17 @@ model Workflow {
 }
 
 model WorkflowRun {
-  id         Int      @id @default(autoincrement())
-  workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
-  workflowId Int
-  result     String
-  rawRequest Json?
-  rawResult  Json?
-  createdBy  String?
-  user       User?    @relation(fields: [createdBy], references: [id], onDelete: Cascade)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id              Int      @id @default(autoincrement())
+  workflow        Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  workflowId      Int
+  result          String
+  rawRequest      Json?
+  rawResult       Json?
+  totalTokenCount Int      @default(0)
+  createdBy       String?
+  user            User?    @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
 
 model Stripe {

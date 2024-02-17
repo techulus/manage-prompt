@@ -1,5 +1,6 @@
 import { WorkflowInput } from "@/data/workflow";
 import { prisma } from "@/lib/utils/db";
+import { runModel } from "@/lib/utils/llama";
 import { getCompletion } from "@/lib/utils/openai";
 import { redis } from "@/lib/utils/redis";
 import { isSubscriptionActive, reportUsage } from "@/lib/utils/stripe";
@@ -131,11 +132,16 @@ export async function POST(
       );
     }
 
-    const { result, rawResult } = await getCompletion(
-      model,
-      content,
-      instruction
-    );
+    let response;
+    switch (model) {
+      case "llama-2-70b-chat":
+        response = await runModel(content, instruction);
+        break;
+      default:
+        response = await getCompletion(model, content, instruction);
+    }
+
+    const { result, rawResult, totalTokenCount } = response;
 
     if (!result) {
       return ErrorResponse(
@@ -148,13 +154,13 @@ export async function POST(
     await Promise.all([
       reportUsage(
         organization?.stripe?.subscription as unknown as Stripe.Subscription,
-        rawResult?.usage?.total_tokens ?? 0
+        totalTokenCount
       ),
       logEvent(EventName.RunWorkflow, {
         workflow_id: workflow.id,
         owner_id: key.ownerId,
         model,
-        total_tokens: rawResult?.usage?.total_tokens,
+        total_tokens: totalTokenCount,
       }),
       prisma.workflowRun.create({
         data: {
@@ -163,6 +169,7 @@ export async function POST(
             JSON.stringify({ model, content, instruction })
           ),
           rawResult: JSON.parse(JSON.stringify(rawResult)),
+          totalTokenCount,
           workflow: {
             connect: {
               id: workflow.id,

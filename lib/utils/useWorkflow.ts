@@ -95,12 +95,7 @@ export async function getWorkflowAndRuns(id: number, page: number = 1) {
 
   const [workflowRuns, count] = await prisma.$transaction([
     prisma.workflowRun.findMany({
-      select: {
-        id: true,
-        result: true,
-        createdAt: true,
-        rawResult: true,
-        rawRequest: true,
+      include: {
         user: {
           select: {
             first_name: true,

@@ -54,7 +54,7 @@ export async function WorkflowItem({ workflow }: Props) {
               />
             </span>
 
-            <h2 className="font-semibold">
+            <h2 className="text-lg font-semibold">
               <span className="absolute inset-0" aria-hidden="true" />
               {workflow.name}{" "}
               <span className="sr-only">
@@ -64,8 +64,31 @@ export async function WorkflowItem({ workflow }: Props) {
           </div>
           <div className="group relative flex items-center space-x-2.5">
             <Badge variant="outline">{workflow.model}</Badge>
+            <span className="hidden sm:block" aria-hidden="true">
+              &middot;
+            </span>
+            <span className="hidden sm:block text-sm">
+              {workflow.user?.first_name}
+            </span>
+            <span aria-hidden="true" className="hidden sm:block">
+              &middot;
+            </span>
+            <span className="hidden sm:block text-sm">
+              Last updated {new Date(workflow.updatedAt).toLocaleDateString()}
+            </span>
           </div>
         </Link>
+
+        <div className="sm:hidden">
+          <SparkAreaChart
+            data={chartdata}
+            index="hour"
+            categories={["total"]}
+            colors={["blue"]}
+            minValue={0}
+            className="h-8 w-20 sm:h-10 sm:w-36"
+          />
+        </div>
 
         <div className="sm:hidden">
           <ChevronRightIcon
@@ -83,13 +106,6 @@ export async function WorkflowItem({ workflow }: Props) {
             minValue={0}
             className="h-8 w-20 sm:h-10 sm:w-36"
           />
-          <div className="flex space-x-2 text-sm text-gray-500">
-            <span>{workflow.user?.first_name}</span>
-            <span aria-hidden="true">&middot;</span>
-            <span>
-              Last updated {new Date(workflow.updatedAt).toLocaleDateString()}
-            </span>
-          </div>
         </div>
       </div>
     </li>

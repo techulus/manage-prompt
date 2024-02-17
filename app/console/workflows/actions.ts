@@ -3,6 +3,7 @@
 import { WorkflowInput } from "@/data/workflow";
 import { owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
+import { runModel } from "@/lib/utils/llama";
 import { getCompletion } from "@/lib/utils/openai";
 import { isSubscriptionActive, reportUsage } from "@/lib/utils/stripe";
 import { EventName, logEvent } from "@/lib/utils/tinybird";
@@ -155,11 +156,16 @@ export async function runWorkflow(formData: FormData) {
   )
     throw "No credits remaining";
 
-  const { result, rawResult } = await getCompletion(
-    model,
-    content,
-    instruction
-  );
+  let response;
+  switch (model) {
+    case "llama-2-70b-chat":
+      response = await runModel(content, instruction);
+      break;
+    default:
+      response = await getCompletion(model, content, instruction);
+  }
+
+  const { result, rawResult, totalTokenCount } = response;
 
   if (!result) throw "No result returned from OpenAI";
 
@@ -169,6 +175,7 @@ export async function runWorkflow(formData: FormData) {
         result,
         rawRequest: JSON.parse(JSON.stringify({ model, content, instruction })),
         rawResult: JSON.parse(JSON.stringify(rawResult)),
+        totalTokenCount,
         user: {
           connect: {
             id: userId,
@@ -183,13 +190,13 @@ export async function runWorkflow(formData: FormData) {
     }),
     reportUsage(
       organization?.stripe?.subscription as unknown as Stripe.Subscription,
-      rawResult?.usage?.total_tokens ?? 0
+      totalTokenCount
     ),
     logEvent(EventName.RunWorkflow, {
       workflow_id: id,
       owner_id: ownerId,
       model,
-      total_tokens: rawResult?.usage?.total_tokens,
+      total_tokens: totalTokenCount,
     }),
   ]);
 
