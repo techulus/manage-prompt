@@ -14,6 +14,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { owner } from "@/lib/hooks/useOwner";
+import { cn } from "@/lib/utils";
 import { prisma } from "@/lib/utils/db";
 import { LIMIT, getWorkflowAndRuns } from "@/lib/utils/useWorkflow";
 import { PauseCircleIcon, PlayCircleIcon } from "@heroicons/react/20/solid";
@@ -171,6 +172,9 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                 <PaginationItem key={idx}>
                   <PaginationLink
                     href={`/console/workflows/${params.id}?page=${idx + 1}`}
+                    className={cn(
+                      idx + 1 === currentPage && "text-primary font-semibold"
+                    )}
                   >
                     {idx + 1}
                   </PaginationLink>
