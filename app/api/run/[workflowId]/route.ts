@@ -145,7 +145,7 @@ export async function POST(
         response = await getCompletion(model, content);
     }
 
-    const { result, rawResult, totalTokenCount } = response;
+    const { result, totalTokenCount } = response;
 
     if (!result) {
       return ErrorResponse(
@@ -165,21 +165,6 @@ export async function POST(
         owner_id: key.ownerId,
         model,
         total_tokens: totalTokenCount,
-      }),
-      prisma.workflowRun.create({
-        data: {
-          result,
-          rawRequest: JSON.parse(
-            JSON.stringify({ model, content, instruction })
-          ),
-          rawResult: JSON.parse(JSON.stringify(rawResult)),
-          totalTokenCount,
-          workflow: {
-            connect: {
-              id: workflow.id,
-            },
-          },
-        },
       }),
       prisma.secretKey.update({
         where: {
