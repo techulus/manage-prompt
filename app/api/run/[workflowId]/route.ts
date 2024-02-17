@@ -138,7 +138,7 @@ export async function POST(
       case "llama-2-70b-chat":
         response = await runLlamaModel(content, instruction);
         break;
-      case "mistralai/mixtral-8x7b-instruct-v0.1":
+      case "mixtral-8x7b-instruct-v0.1":
         response = await runMixtralModel(content);
         break;
       default:
