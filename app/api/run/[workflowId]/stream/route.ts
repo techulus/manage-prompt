@@ -108,6 +108,7 @@ export async function POST(
     });
 
     if (!result.ok) {
+      console.error("Failed to authenticate request", result.status);
       return UnauthorizedResponse();
     }
 

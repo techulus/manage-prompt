@@ -1,4 +1,5 @@
-import { Reader } from "@/components/core/reader";
+import { Spinner } from "@/components/core/loaders";
+import StreamingText from "@/components/core/streaming-text";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { buttonVariants } from "@/components/ui/button";
@@ -72,21 +73,7 @@ export const runtime = "edge";
 
 export default async function Home() {
   const stars = (await getGitHubStars()) ?? "-";
-
-  const response = await fetch(
-    `${process.env.APP_BASE_URL}/api/run/${process.env.MP_DEMO_WORKFLOW_ID}/stream`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }
-  );
-
-  const reader =
-    response.ok && response.body
-      ? response.body.getReader()
-      : new Response(SITE_METADATA.DESCRIPTION).body!.getReader();
+  const streamUrl = `${process.env.APP_BASE_URL}/api/run/${process.env.MP_DEMO_WORKFLOW_ID}/stream`;
 
   return (
     <div className="h-full">
@@ -111,11 +98,11 @@ export default async function Home() {
               {SITE_METADATA.TAGLINE}
             </h1>
             <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-400">
-              <Suspense>
-                {
-                  // @ts-ignore React server component}
-                  <Reader reader={reader} />
-                }
+              <Suspense fallback={<Spinner />}>
+                <StreamingText
+                  url={streamUrl}
+                  fallbackText={SITE_METADATA.DESCRIPTION}
+                />
               </Suspense>
             </p>
             <div className="mt-10 flex flex-col space-y-4 md:space-y-0 md:flex-row items-center justify-center gap-x-6">
