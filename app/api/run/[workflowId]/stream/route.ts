@@ -1,11 +1,13 @@
 import { WorkflowInput } from "@/data/workflow";
 import { prisma } from "@/lib/utils/db";
+import { runStreamingLlamaModel } from "@/lib/utils/llama";
+import { runStreamingMixtralModel } from "@/lib/utils/mixtral";
 import { getStreamingCompletion } from "@/lib/utils/openai";
 import { redis } from "@/lib/utils/redis";
 import { reportUsage } from "@/lib/utils/stripe";
 import { EventName, logEvent } from "@/lib/utils/tinybird";
 import { Ratelimit } from "@upstash/ratelimit";
-import { OpenAIStream, StreamingTextResponse } from "ai";
+import { OpenAIStream, ReplicateStream, StreamingTextResponse } from "ai";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -111,6 +113,7 @@ export async function POST(
 
     let content = workflow.template;
     const model = workflow.model;
+    const instruction = workflow.instruction ?? "";
     const inputs = workflow.inputs as unknown as WorkflowInput[];
 
     // Handle inputs
@@ -128,22 +131,10 @@ export async function POST(
       );
     }
 
-    let response;
-    switch (model) {
-      // case "llama-2-70b-chat":
-      //   response = await runLlamaModel(content, instruction);
-      //   break;
-      // case "mixtral-8x7b-instruct-v0.1":
-      //   response = await runMixtralModel(content);
-      //   break;
-      default:
-        response = await getStreamingCompletion(model, content);
-    }
-
     let wordCount = content.split(" ").length;
     let totalTokenCount = Math.floor(wordCount * 0.6);
 
-    const stream = OpenAIStream(response, {
+    const callbacks = {
       onToken: () => {
         totalTokenCount++;
       },
@@ -162,9 +153,30 @@ export async function POST(
           }),
         ]);
       },
-    });
+    };
 
-    return new StreamingTextResponse(stream, {
+    let stream;
+    switch (model) {
+      case "llama-2-70b-chat":
+        stream = await ReplicateStream(
+          await runStreamingLlamaModel(content, instruction),
+          callbacks
+        );
+        break;
+      case "mixtral-8x7b-instruct-v0.1":
+        stream = await ReplicateStream(
+          await runStreamingMixtralModel(content),
+          callbacks
+        );
+        break;
+      default:
+        stream = OpenAIStream(
+          await getStreamingCompletion(model, content),
+          callbacks
+        );
+    }
+
+    return new StreamingTextResponse(stream!, {
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "POST, OPTIONS",
