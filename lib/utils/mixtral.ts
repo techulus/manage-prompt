@@ -33,3 +33,23 @@ export async function runMixtralModel(prompt: string): Promise<{
     totalTokenCount: completedPrediction.output.length,
   };
 }
+
+export async function runStreamingMixtralModel(prompt: string) {
+  console.log("Creating mistralai Prediction...");
+  const prediction = await replicate.predictions.create({
+    stream: true,
+    version: "7b3212fbaf88310cfef07a061ce94224e82efc8403c26fc67e8f6c065de51f21",
+    input: {
+      top_k: 50,
+      top_p: 0.9,
+      prompt,
+      temperature: 0.6,
+      max_new_tokens: 1024,
+      prompt_template: "<s>[INST] {prompt} [/INST] ",
+      presence_penalty: 0,
+      frequency_penalty: 0,
+    },
+  });
+  console.log("Created", prediction.id);
+  return prediction;
+}
