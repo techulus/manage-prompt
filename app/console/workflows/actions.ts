@@ -20,6 +20,7 @@ export async function saveWorkflow(formData: FormData) {
   const model = formData.get("model") as string;
   const template = formData.get("template") as string;
   const instruction = (formData.get("instruction") as string) ?? "";
+  const authWebhookUrl = formData.get("authWebhookUrl") as string;
 
   let inputs: WorkflowInput[] = [];
   try {
@@ -35,6 +36,7 @@ export async function saveWorkflow(formData: FormData) {
     template,
     instruction,
     inputs,
+    authWebhookUrl,
   });
 
   const created = await prisma.workflow.create({
@@ -51,6 +53,7 @@ export async function saveWorkflow(formData: FormData) {
       },
       published: true,
       shortId: `wf_${randomBytes(16).toString("hex")}`,
+      authWebhookUrl,
       name,
       model,
       template,
@@ -69,6 +72,7 @@ export async function updateWorkflow(formData: FormData) {
   const model = formData.get("model") as string;
   const template = formData.get("template") as string;
   const instruction = (formData.get("instruction") as string) ?? "";
+  const authWebhookUrl = formData.get("authWebhookUrl") as string;
 
   let inputs: WorkflowInput[] = [];
   try {
@@ -84,6 +88,7 @@ export async function updateWorkflow(formData: FormData) {
     template,
     instruction,
     inputs,
+    authWebhookUrl,
   });
 
   await prisma.workflow.update({
@@ -97,6 +102,7 @@ export async function updateWorkflow(formData: FormData) {
       template,
       instruction,
       inputs,
+      authWebhookUrl,
     },
   });
 
