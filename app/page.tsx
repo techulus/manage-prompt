@@ -112,7 +112,10 @@ export default async function Home() {
             </h1>
             <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-400">
               <Suspense>
-                <Reader reader={reader} />
+                {
+                  // @ts-ignore React server component}
+                  <Reader reader={reader} />
+                }
               </Suspense>
             </p>
             <div className="mt-10 flex flex-col space-y-4 md:space-y-0 md:flex-row items-center justify-center gap-x-6">
