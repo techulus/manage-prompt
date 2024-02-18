@@ -7,6 +7,7 @@ export async function POST(request: Request) {
     console.log("Received request for demo workflow");
     return NextResponse.json({
       success: true,
+      ttl: 60 * 60 * 24,
     });
   }
 
