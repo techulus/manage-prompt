@@ -131,7 +131,7 @@ export function WorkflowForm({ workflow }: Props) {
                       updateInputs({ instruction: e.target.value });
                     }}
                   />
-                  <p className="mt-3 text-sm leading-6 text-gray-600">
+                  <p className="mt-3 text-sm leading-6 text-primary">
                     Write the edit instruction, you can insert varibles using
                     this syntax <span>{`{{ variable }}`}</span>.
                   </p>
@@ -158,7 +158,7 @@ export function WorkflowForm({ workflow }: Props) {
                     updateInputs({ template: e.target.value });
                   }}
                 />
-                <p className="mt-3 text-sm leading-6 text-gray-600">
+                <p className="mt-3 text-sm leading-6 text-primary">
                   Write the prompt template, you can insert varibles using this
                   syntax <span>{`{{ variable }}`}</span>.
                 </p>

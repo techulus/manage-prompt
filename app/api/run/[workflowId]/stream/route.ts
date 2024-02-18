@@ -1,8 +1,10 @@
 import { WorkflowInput } from "@/data/workflow";
 import { prisma } from "@/lib/utils/db";
 import { getStreamingCompletion } from "@/lib/utils/openai";
+import { redis } from "@/lib/utils/redis";
 import { reportUsage } from "@/lib/utils/stripe";
 import { EventName, logEvent } from "@/lib/utils/tinybird";
+import { Ratelimit } from "@upstash/ratelimit";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
@@ -56,6 +58,18 @@ export async function POST(
   req: Request,
   { params }: { params: { workflowId: string } }
 ) {
+  // Global Rate limit
+  const keyRateLimit = new Ratelimit({
+    redis,
+    limiter: Ratelimit.slidingWindow(25, "1 s"),
+    analytics: true,
+    prefix: "mp_ratelimit",
+  });
+  const { success: globalRateLimit } = await keyRateLimit.limit(`global`);
+  if (!globalRateLimit) {
+    return ErrorResponse("Rate limit exceeded", 429);
+  }
+
   try {
     const workflow = await prisma.workflow.findUnique({
       include: {
