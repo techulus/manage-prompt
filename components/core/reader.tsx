@@ -17,7 +17,10 @@ export async function Reader({
     <span>
       {text}
       <Suspense>
-        <Reader reader={reader} />
+        {
+          // @ts-ignore React server component}
+          <Reader reader={reader} />
+        }
       </Suspense>
     </span>
   );
