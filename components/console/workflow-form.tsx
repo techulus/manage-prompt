@@ -17,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Switch } from "../ui/switch";
 import { Textarea } from "../ui/textarea";
 
 interface Props {
@@ -29,6 +30,10 @@ export function WorkflowForm({ workflow }: Props) {
   const [instruction, setInstruction] = useState(workflow?.instruction ?? "");
   const [inputs, setInputs] = useState<WorkflowInput[]>(
     (workflow?.inputs as WorkflowInput[]) ?? []
+  );
+
+  const [enableStreaming, setEnableStreaming] = useState(
+    !!workflow?.authWebhookUrl
   );
 
   const updateInputs = useCallback(
@@ -234,6 +239,34 @@ export function WorkflowForm({ workflow }: Props) {
               </div>
             </div>
           ) : null}
+        </div>
+
+        <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
+          <label className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200 sm:pt-1.5">
+            Enable Authenticated Streaming
+          </label>
+          <div className="mt-2 sm:col-span-2 sm:mt-0">
+            <Switch
+              checked={enableStreaming}
+              onCheckedChange={setEnableStreaming}
+              aria-readonly
+            />
+
+            {enableStreaming ? (
+              <div className="mt-4">
+                <Input
+                  type="text"
+                  name="authWebhookUrl"
+                  placeholder="Auth Webhook URL"
+                  defaultValue={workflow?.authWebhookUrl ?? ""}
+                />
+                <p className="mt-3 text-sm leading-6 text-primary">
+                  This endpoint will be used to authenticate the request and
+                  start the streaming.
+                </p>
+              </div>
+            ) : null}
+          </div>
         </div>
       </div>
     </div>

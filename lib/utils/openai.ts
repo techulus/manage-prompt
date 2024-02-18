@@ -44,3 +44,34 @@ export const getCompletion = async (
       throw new Error("Unsupported model");
   }
 };
+
+export const getStreamingCompletion = async (
+  model: string,
+  content: string
+) => {
+  switch (model) {
+    case "gpt-3.5-turbo":
+    case "gpt-4-1106-preview":
+    case "gpt-4-0125-preview":
+    case "gpt-4":
+      const chatData = await openai.chat.completions.create({
+        model,
+        messages: [
+          {
+            role: "user",
+            content,
+          },
+        ],
+        temperature: 0.7,
+        max_tokens: 512,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
+        stream: true,
+      });
+
+      return chatData;
+    default:
+      throw new Error("Unsupported model");
+  }
+};

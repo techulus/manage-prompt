@@ -19,6 +19,7 @@ export const WorkflowSchema = Yup.object().shape({
       name: Yup.string(),
     })
   ),
+  authWebhookUrl: Yup.string().optional(),
 });
 
 export const parseInputs = (inputs: string): WorkflowInput[] =>
