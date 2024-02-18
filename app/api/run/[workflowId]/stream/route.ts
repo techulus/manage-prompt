@@ -56,6 +56,11 @@ export async function OPTIONS() {
   );
 }
 
+type AuthWebhookResponse = {
+  success: boolean;
+  ttl?: number;
+};
+
 export async function POST(
   req: Request,
   { params }: { params: { workflowId: string } }
@@ -95,21 +100,40 @@ export async function POST(
 
     const body = (await req.json().catch(() => {})) ?? {};
 
-    const result = await fetch(workflow.authWebhookUrl, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        workflowId: workflow.shortId,
-        body,
-        headers: req.headers,
-      }),
-    });
+    const authResultCacheKey = `streaming-auth:${workflow.shortId}:${workflow.authWebhookUrl}`;
+    const authResultCached: AuthWebhookResponse | null = await redis.get(
+      authResultCacheKey
+    );
 
-    if (!result.ok) {
-      console.error("Failed to authenticate request", result.status);
+    if (authResultCached && !authResultCached.success) {
       return UnauthorizedResponse();
+    } else {
+      const authResult = await fetch(workflow.authWebhookUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          workflowId: workflow.shortId,
+          body,
+          headers: req.headers,
+        }),
+      });
+
+      if (!authResult.ok) {
+        console.error("Failed to authenticate request", authResult.status);
+        return UnauthorizedResponse();
+      }
+
+      const authResultBody: AuthWebhookResponse = await authResult.json();
+      if (!authResultBody.success) {
+        console.error("Failed to authenticate request", authResultBody);
+        return UnauthorizedResponse();
+      } else if (authResultBody.ttl) {
+        await redis.set(authResultCacheKey, JSON.stringify(authResultBody), {
+          ex: authResultBody.ttl,
+        });
+      }
     }
 
     let content = workflow.template;
