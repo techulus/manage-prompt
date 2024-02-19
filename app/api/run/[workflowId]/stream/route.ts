@@ -82,7 +82,7 @@ export async function POST(
     const workflow = await prisma.workflow.findUnique({
       include: {
         organization: {
-          select: {
+          include: {
             stripe: true,
           },
         },
@@ -181,6 +181,7 @@ export async function POST(
       onFinal: async () => {
         await Promise.all([
           reportUsage(
+            workflow?.organization?.id,
             workflow?.organization?.stripe
               ?.subscription as unknown as Stripe.Subscription,
             totalTokenCount
