@@ -157,6 +157,7 @@ export async function POST(
 
     await Promise.all([
       reportUsage(
+        organization?.id,
         organization?.stripe?.subscription as unknown as Stripe.Subscription,
         totalTokenCount
       ),

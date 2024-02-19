@@ -216,6 +216,7 @@ export async function runWorkflow(formData: FormData) {
       },
     }),
     reportUsage(
+      ownerId,
       organization?.stripe?.subscription as unknown as Stripe.Subscription,
       totalTokenCount
     ),

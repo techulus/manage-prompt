@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/utils/db";
 import { randomUUID } from "node:crypto";
 import Stripe from "stripe";
-import { owner } from "../hooks/useOwner";
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export async function createOrRetrieveCustomer(
@@ -78,11 +77,15 @@ export async function getCheckoutSession(customerId: string): Promise<string> {
 }
 
 export async function reportUsage(
+  ownerId: string,
   subscription: Stripe.Subscription,
   quantity: number
 ) {
+  if (!ownerId) {
+    throw new Error("[reportUsage]: Owner ID not found");
+  }
+
   if (!isSubscriptionActive(subscription)) {
-    const { ownerId } = owner();
     await prisma.organization.update({
       where: {
         id: ownerId,
