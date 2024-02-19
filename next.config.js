@@ -3,7 +3,7 @@ const nextConfig = {
   images: {
     domains: ["images.clerk.dev"],
   },
-  reactStrictMode: true,
+  reactStrictMode: false,
 };
 
 module.exports = nextConfig;

@@ -205,13 +205,13 @@ export default async function Settings() {
                         <pre>{key.key}</pre>
                       </TableCell>
                       <TableCell>
-                        <form action={updateRateLimit}>
-                          <EditableValue
-                            id={key.id}
-                            name="rateLimitPerSecond"
-                            value={key.rateLimitPerSecond}
-                          />
-                        </form>
+                        <EditableValue
+                          id={key.id}
+                          name="rateLimitPerSecond"
+                          type="number"
+                          value={key.rateLimitPerSecond}
+                          action={updateRateLimit}
+                        />
                       </TableCell>
                       <TableCell>
                         {key.lastUsed

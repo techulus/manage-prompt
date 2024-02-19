@@ -1,11 +1,10 @@
 import { WorkflowForm } from "@/components/console/workflow-form";
 import { ContentBlock } from "@/components/core/content-block";
-import { SaveButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
-import { buttonVariants } from "@/components/ui/button";
-import { CardContent, CardFooter } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { CardContent, CardHeader } from "@/components/ui/card";
 import { getWorkflowById } from "@/lib/utils/useWorkflow";
-import Link from "next/link";
+import { Terminal } from "lucide-react";
 import { updateWorkflow } from "../../actions";
 
 interface Props {
@@ -28,24 +27,21 @@ export default async function EditWorkflow({ params }: Props) {
         backUrl="/console/workflows"
       />
 
-      <form action={updateWorkflow}>
-        <ContentBlock>
-          <CardContent>
-            <WorkflowForm workflow={workflow} />
-          </CardContent>
-          <CardFooter>
-            <div className="flex items-center justify-end gap-x-6">
-              <Link
-                href="/console/workflows"
-                className={buttonVariants({ variant: "link" })}
-              >
-                Cancel
-              </Link>
-              <SaveButton />
-            </div>
-          </CardFooter>
-        </ContentBlock>
-      </form>
+      <ContentBlock>
+        <CardHeader>
+          <Alert>
+            <Terminal className="h-4 w-4" />
+            <AlertTitle>Heads up!</AlertTitle>
+            <AlertDescription>
+              All updates to the workflow will be reflected in the API and
+              console immediately.
+            </AlertDescription>
+          </Alert>
+        </CardHeader>
+        <CardContent>
+          <WorkflowForm workflow={workflow} action={updateWorkflow} />
+        </CardContent>
+      </ContentBlock>
     </>
   );
 }

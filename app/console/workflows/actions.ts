@@ -12,8 +12,9 @@ import { WorkflowSchema } from "@/lib/utils/workflow";
 import { redirect } from "next/navigation";
 import { randomBytes } from "node:crypto";
 import Stripe from "stripe";
+import { fromZodError } from "zod-validation-error";
 
-export async function saveWorkflow(formData: FormData) {
+export async function createWorkflow(formData: FormData) {
   const { userId, ownerId } = owner();
 
   const name = formData.get("name") as string;
@@ -21,6 +22,7 @@ export async function saveWorkflow(formData: FormData) {
   const template = formData.get("template") as string;
   const instruction = (formData.get("instruction") as string) ?? "";
   const authWebhookUrl = formData.get("authWebhookUrl") as string;
+  const rateLimitPerSecond = Number(formData.get("rateLimitPerSecond") ?? 10);
 
   let inputs: WorkflowInput[] = [];
   try {
@@ -29,15 +31,21 @@ export async function saveWorkflow(formData: FormData) {
     inputs = [];
   }
 
-  // validate form data
-  await WorkflowSchema.validate({
+  const validationResult = WorkflowSchema.safeParse({
     name,
     model,
     template,
     instruction,
     inputs,
     authWebhookUrl,
+    rateLimitPerSecond,
   });
+
+  if (!validationResult.success) {
+    return {
+      error: fromZodError(validationResult.error).toString(),
+    };
+  }
 
   const created = await prisma.workflow.create({
     data: {
@@ -54,6 +62,7 @@ export async function saveWorkflow(formData: FormData) {
       published: true,
       shortId: `wf_${randomBytes(16).toString("hex")}`,
       authWebhookUrl,
+      rateLimitPerSecond,
       name,
       model,
       template,
@@ -73,6 +82,7 @@ export async function updateWorkflow(formData: FormData) {
   const template = formData.get("template") as string;
   const instruction = (formData.get("instruction") as string) ?? "";
   const authWebhookUrl = formData.get("authWebhookUrl") as string;
+  const rateLimitPerSecond = Number(formData.get("rateLimitPerSecond") ?? 10);
 
   let inputs: WorkflowInput[] = [];
   try {
@@ -81,15 +91,21 @@ export async function updateWorkflow(formData: FormData) {
     inputs = [];
   }
 
-  // validate form data
-  await WorkflowSchema.validate({
+  const validationResult = WorkflowSchema.safeParse({
     name,
     model,
     template,
     instruction,
     inputs,
     authWebhookUrl,
+    rateLimitPerSecond,
   });
+
+  if (!validationResult.success) {
+    return {
+      error: fromZodError(validationResult.error).toString(),
+    };
+  }
 
   await prisma.workflow.update({
     where: {
@@ -103,6 +119,7 @@ export async function updateWorkflow(formData: FormData) {
       instruction,
       inputs,
       authWebhookUrl,
+      rateLimitPerSecond,
     },
   });
 

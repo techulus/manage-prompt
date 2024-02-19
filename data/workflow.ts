@@ -5,7 +5,7 @@ export const AIModels = [
   "gpt-4",
   "llama-2-70b-chat",
   "mixtral-8x7b-instruct-v0.1",
-];
+] as const;
 
 export const modelHasInstruction: Record<string, boolean> = {
   "llama-2-70b-chat": true,
@@ -22,7 +22,6 @@ export enum WorkflowInputType {
   "text" = "text",
   "textarea" = "textarea",
   "number" = "number",
-  "date" = "date",
   // "select" = "select",
   // "checkbox" = "checkbox",
   // "radio" = "radio",

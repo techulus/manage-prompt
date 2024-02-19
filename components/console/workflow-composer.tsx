@@ -118,7 +118,6 @@ export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
 
                       {[
                         WorkflowInputType.text,
-                        WorkflowInputType.date,
                         WorkflowInputType.number,
                       ].includes(type) ? (
                         <Input
