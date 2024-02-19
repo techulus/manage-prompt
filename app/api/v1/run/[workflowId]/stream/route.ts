@@ -6,10 +6,8 @@ import { getStreamingCompletion } from "@/lib/utils/openai";
 import { redis } from "@/lib/utils/redis";
 import { reportUsage } from "@/lib/utils/stripe";
 import { EventName, logEvent } from "@/lib/utils/tinybird";
-import { MAX_GLOBAL_RATE_LIMIT_RPS } from "@/lib/utils/workflow";
-import { Ratelimit } from "@upstash/ratelimit";
 import { OpenAIStream, ReplicateStream, StreamingTextResponse } from "ai";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
 const UnauthorizedResponse = () =>
@@ -57,25 +55,22 @@ export async function OPTIONS() {
   );
 }
 
-type AuthWebhookResponse = {
-  success: boolean;
-  ttl?: number;
-};
-
 export async function POST(
-  req: Request,
+  req: NextRequest,
   { params }: { params: { workflowId: string } }
 ) {
-  // Global Rate limit
-  const mpRateLimiter = new Ratelimit({
-    redis,
-    limiter: Ratelimit.slidingWindow(MAX_GLOBAL_RATE_LIMIT_RPS, "1 s"),
-    analytics: true,
-    prefix: "mp_ratelimit",
-  });
-  const { success: globalRateLimit } = await mpRateLimiter.limit(`global`);
-  if (!globalRateLimit) {
-    return ErrorResponse("Rate limit exceeded", 429);
+  const searchParams = req.nextUrl.searchParams;
+  const token = searchParams.get("token");
+
+  if (!token) {
+    return UnauthorizedResponse();
+  }
+
+  const validateToken = await redis.get(token);
+  if (!validateToken) {
+    return UnauthorizedResponse();
+  } else {
+    await redis.del(token);
   }
 
   try {
@@ -95,61 +90,7 @@ export async function POST(
       return ErrorResponse("Workflow not found", 404);
     }
 
-    if (!workflow.authWebhookUrl) {
-      return UnauthorizedResponse();
-    }
-
-    // Workflow Rate limit
-    const workflowRateLimiter = new Ratelimit({
-      redis,
-      limiter: Ratelimit.slidingWindow(workflow.rateLimitPerSecond, "1 s"),
-      analytics: true,
-      prefix: "mp_ratelimit",
-    });
-    const { success: workflowRateLimit } = await workflowRateLimiter.limit(
-      `streaming:workflow:${workflow.id}`
-    );
-    if (!workflowRateLimit) {
-      return ErrorResponse("Rate limit exceeded", 429);
-    }
-
     const body = (await req.json().catch(() => {})) ?? {};
-
-    const authResultCacheKey = `streaming-auth:${workflow.shortId}:${workflow.authWebhookUrl}`;
-    const authResultCached: AuthWebhookResponse | null = await redis.get(
-      authResultCacheKey
-    );
-
-    if (authResultCached && !authResultCached.success) {
-      return UnauthorizedResponse();
-    } else {
-      const authResult = await fetch(workflow.authWebhookUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          workflowId: workflow.shortId,
-          body,
-          headers: req.headers,
-        }),
-      });
-
-      if (!authResult.ok) {
-        console.error("Failed to authenticate request", authResult.status);
-        return UnauthorizedResponse();
-      }
-
-      const authResultBody: AuthWebhookResponse = await authResult.json();
-      if (!authResultBody.success) {
-        console.error("Failed to authenticate request", authResultBody);
-        return UnauthorizedResponse();
-      } else if (authResultBody.ttl) {
-        await redis.set(authResultCacheKey, JSON.stringify(authResultBody), {
-          ex: authResultBody.ttl,
-        });
-      }
-    }
 
     let content = workflow.template;
     const model = workflow.model;

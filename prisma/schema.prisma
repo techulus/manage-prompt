@@ -74,13 +74,11 @@ model Workflow {
   name      String
   published Boolean @default(false)
 
-  model              String
-  modelSettings      Json?
-  template           String
-  instruction        String?
-  inputs             Json
-  authWebhookUrl     String?
-  rateLimitPerSecond Int     @default(10)
+  model         String
+  modelSettings Json?
+  template      String
+  instruction   String?
+  inputs        Json
 
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt

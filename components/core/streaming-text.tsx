@@ -6,9 +6,11 @@ import { Spinner } from "./loaders";
 export default function StreamingText({
   url,
   fallbackText,
+  className,
 }: {
   url: string;
   fallbackText: string;
+  className?: string;
 }) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
@@ -53,5 +55,9 @@ export default function StreamingText({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return loading ? <Spinner /> : <span>{result}</span>;
+  return loading ? (
+    <Spinner className={className} />
+  ) : (
+    <p className={className}>{result}</p>
+  );
 }

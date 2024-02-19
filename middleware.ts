@@ -7,8 +7,7 @@ export default authMiddleware({
     "/og",
     "/ai-tools/(.*)",
     "/api/ai-tools/(.*)",
-    "/api/v1/run/(.*)",
-    "/webhooks/streaming-auth",
+    "/api/v1/(.*)",
   ],
 });
 
