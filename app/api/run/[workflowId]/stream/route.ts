@@ -6,6 +6,7 @@ import { getStreamingCompletion } from "@/lib/utils/openai";
 import { redis } from "@/lib/utils/redis";
 import { reportUsage } from "@/lib/utils/stripe";
 import { EventName, logEvent } from "@/lib/utils/tinybird";
+import { MAX_GLOBAL_RATE_LIMIT_RPS } from "@/lib/utils/workflow";
 import { Ratelimit } from "@upstash/ratelimit";
 import { OpenAIStream, ReplicateStream, StreamingTextResponse } from "ai";
 import { NextResponse } from "next/server";
@@ -68,7 +69,7 @@ export async function POST(
   // Global Rate limit
   const keyRateLimit = new Ratelimit({
     redis,
-    limiter: Ratelimit.slidingWindow(25, "1 s"),
+    limiter: Ratelimit.slidingWindow(MAX_GLOBAL_RATE_LIMIT_RPS, "1 s"),
     analytics: true,
     prefix: "mp_ratelimit",
   });
@@ -96,6 +97,20 @@ export async function POST(
 
     if (!workflow.authWebhookUrl) {
       return UnauthorizedResponse();
+    }
+
+    // Workflow Rate limit
+    const keyRateLimit = new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(workflow.rateLimitPerSecond, "1 s"),
+      analytics: true,
+      prefix: "mp_ratelimit",
+    });
+    const { success: workflowRateLimit } = await keyRateLimit.limit(
+      `streaming:workflow:${workflow.id}`
+    );
+    if (!workflowRateLimit) {
+      return ErrorResponse("Rate limit exceeded", 429);
     }
 
     const body = (await req.json().catch(() => {})) ?? {};

@@ -4,6 +4,9 @@ const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
 });
 
+const version =
+  "02e509c789964a7ea8736978a43525956ef40397be9033abf9fd2badfe68c9e3";
+
 export async function runLlamaModel(
   prompt: string,
   system_prompt: string
@@ -12,9 +15,8 @@ export async function runLlamaModel(
   rawResult: any;
   totalTokenCount: number;
 }> {
-  console.log("Creating Llama Prediction...");
   const prediction = await replicate.predictions.create({
-    version: "02e509c789964a7ea8736978a43525956ef40397be9033abf9fd2badfe68c9e3",
+    version,
     input: {
       debug: true,
       top_p: 1,
@@ -25,7 +27,6 @@ export async function runLlamaModel(
       min_new_tokens: -1,
     },
   });
-  console.log("Created", prediction.id);
 
   const completedPrediction = await replicate.wait(prediction);
 
@@ -40,10 +41,9 @@ export async function runStreamingLlamaModel(
   prompt: string,
   system_prompt: string
 ) {
-  console.log("Creating Llama Prediction...");
   const prediction = await replicate.predictions.create({
     stream: true,
-    version: "02e509c789964a7ea8736978a43525956ef40397be9033abf9fd2badfe68c9e3",
+    version,
     input: {
       debug: true,
       top_p: 1,
@@ -54,7 +54,6 @@ export async function runStreamingLlamaModel(
       min_new_tokens: -1,
     },
   });
-  console.log("Created", prediction.id);
 
   return prediction;
 }

@@ -6,8 +6,11 @@ import {
   createOrRetrieveCustomer,
   getCheckoutSession,
 } from "@/lib/utils/stripe";
+import { MAX_RATE_LIMIT_RPS } from "@/lib/utils/workflow";
 import { redirect } from "next/navigation";
 import { randomBytes } from "node:crypto";
+import { z } from "zod";
+import { fromZodError } from "zod-validation-error";
 
 export async function redirectToBilling() {
   const { ownerId } = owner();
@@ -59,12 +62,21 @@ export async function revokeSecretKey(data: FormData) {
   redirect(`/console/settings`);
 }
 
+const RateLimitSettingsSchema = z.object({
+  rateLimitPerSecond: z.number().min(1).max(MAX_RATE_LIMIT_RPS),
+});
+
 export async function updateRateLimit(data: FormData) {
   const id = data.get("id");
   const rateLimitPerSecond = Number(data.get("rateLimitPerSecond"));
 
-  if (rateLimitPerSecond > 25) {
-    throw new Error("Rate limit cannot exceed 25");
+  const result = RateLimitSettingsSchema.safeParse({
+    rateLimitPerSecond,
+  });
+  if (!result.success) {
+    return {
+      error: fromZodError(result.error).toString(),
+    };
   }
 
   await prisma.secretKey.update({
@@ -75,5 +87,6 @@ export async function updateRateLimit(data: FormData) {
       rateLimitPerSecond,
     },
   });
+
   redirect(`/console/settings`);
 }

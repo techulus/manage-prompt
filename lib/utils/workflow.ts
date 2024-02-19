@@ -1,25 +1,25 @@
 import { WorkflowInput } from "@/data/workflow";
 import slugify from "slugify";
-import * as Yup from "yup";
+import { z } from "zod";
 import { AIModels } from "./../../data/workflow";
 
-export const WorkflowSchema = Yup.object().shape({
-  name: Yup.string()
-    .required("Name cannot be empty")
-    .min(2, "Name too Short!")
-    .max(75, "Name too Long!"),
-  template: Yup.string()
-    .required("Template cannot be empty")
-    .min(2, "Template too Short!")
-    .max(9669, "Template too Long!"),
-  instruction: Yup.string().optional(),
-  model: Yup.string().oneOf(AIModels).required("Select valid model"),
-  inputs: Yup.array().of(
-    Yup.object().shape({
-      name: Yup.string(),
+export const MAX_GLOBAL_RATE_LIMIT_RPS = 100;
+export const MAX_RATE_LIMIT_RPS = 50;
+
+export const WorkflowSchema = z.object({
+  name: z.string().min(2).max(150),
+  template: z.string().min(1).max(9999),
+  instruction: z.string().optional().default(""),
+  model: z.enum([...AIModels]),
+  inputs: z.array(
+    z.object({
+      name: z.string(),
+      label: z.string().optional(),
+      type: z.enum(["text", "textarea", "number"]).optional(),
     })
   ),
-  authWebhookUrl: Yup.string().optional(),
+  rateLimitPerSecond: z.number().min(1).max(MAX_RATE_LIMIT_RPS),
+  authWebhookUrl: z.string().url().nullable(),
 });
 
 export const parseInputs = (inputs: string): WorkflowInput[] =>

@@ -4,14 +4,16 @@ const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
 });
 
+const version =
+  "7b3212fbaf88310cfef07a061ce94224e82efc8403c26fc67e8f6c065de51f21";
+
 export async function runMixtralModel(prompt: string): Promise<{
   result: string;
   rawResult: any;
   totalTokenCount: number;
 }> {
-  console.log("Creating mistralai Prediction...");
   const prediction = await replicate.predictions.create({
-    version: "7b3212fbaf88310cfef07a061ce94224e82efc8403c26fc67e8f6c065de51f21",
+    version,
     input: {
       top_k: 50,
       top_p: 0.9,
@@ -23,7 +25,6 @@ export async function runMixtralModel(prompt: string): Promise<{
       frequency_penalty: 0,
     },
   });
-  console.log("Created", prediction.id);
 
   const completedPrediction = await replicate.wait(prediction);
 
@@ -35,10 +36,9 @@ export async function runMixtralModel(prompt: string): Promise<{
 }
 
 export async function runStreamingMixtralModel(prompt: string) {
-  console.log("Creating mistralai Prediction...");
   const prediction = await replicate.predictions.create({
     stream: true,
-    version: "7b3212fbaf88310cfef07a061ce94224e82efc8403c26fc67e8f6c065de51f21",
+    version,
     input: {
       top_k: 50,
       top_p: 0.9,
@@ -50,6 +50,5 @@ export async function runStreamingMixtralModel(prompt: string) {
       frequency_penalty: 0,
     },
   });
-  console.log("Created", prediction.id);
   return prediction;
 }
