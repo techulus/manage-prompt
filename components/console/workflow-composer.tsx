@@ -182,7 +182,7 @@ export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
             <ApiCodeSnippet
               har={{
                 method: "POST",
-                url: `${process.env.NEXT_PUBLIC_APP_BASE_URL}/api/run/${workflow.shortId}`,
+                url: `${process.env.NEXT_PUBLIC_APP_BASE_URL}/api/v1/run/${workflow.shortId}`,
                 queryString: [],
                 headers: [
                   {
