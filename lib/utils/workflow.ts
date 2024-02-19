@@ -18,8 +18,6 @@ export const WorkflowSchema = z.object({
       type: z.enum(["text", "textarea", "number"]).optional(),
     })
   ),
-  rateLimitPerSecond: z.number().min(1).max(MAX_RATE_LIMIT_RPS),
-  authWebhookUrl: z.string().url().nullable(),
 });
 
 export const parseInputs = (inputs: string): WorkflowInput[] =>

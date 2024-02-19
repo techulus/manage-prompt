@@ -21,8 +21,6 @@ export async function createWorkflow(formData: FormData) {
   const model = formData.get("model") as string;
   const template = formData.get("template") as string;
   const instruction = (formData.get("instruction") as string) ?? "";
-  const authWebhookUrl = formData.get("authWebhookUrl") as string;
-  const rateLimitPerSecond = Number(formData.get("rateLimitPerSecond") ?? 10);
 
   let inputs: WorkflowInput[] = [];
   try {
@@ -37,8 +35,6 @@ export async function createWorkflow(formData: FormData) {
     template,
     instruction,
     inputs,
-    authWebhookUrl,
-    rateLimitPerSecond,
   });
 
   if (!validationResult.success) {
@@ -61,8 +57,6 @@ export async function createWorkflow(formData: FormData) {
       },
       published: true,
       shortId: `wf_${randomBytes(16).toString("hex")}`,
-      authWebhookUrl,
-      rateLimitPerSecond,
       name,
       model,
       template,
@@ -81,8 +75,6 @@ export async function updateWorkflow(formData: FormData) {
   const model = formData.get("model") as string;
   const template = formData.get("template") as string;
   const instruction = (formData.get("instruction") as string) ?? "";
-  const authWebhookUrl = formData.get("authWebhookUrl") as string;
-  const rateLimitPerSecond = Number(formData.get("rateLimitPerSecond") ?? 10);
 
   let inputs: WorkflowInput[] = [];
   try {
@@ -97,8 +89,6 @@ export async function updateWorkflow(formData: FormData) {
     template,
     instruction,
     inputs,
-    authWebhookUrl,
-    rateLimitPerSecond,
   });
 
   if (!validationResult.success) {
@@ -118,8 +108,6 @@ export async function updateWorkflow(formData: FormData) {
       template,
       instruction,
       inputs,
-      authWebhookUrl,
-      rateLimitPerSecond,
     },
   });
 

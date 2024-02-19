@@ -1,4 +1,3 @@
-import { Spinner } from "@/components/core/loaders";
 import StreamingText from "@/components/core/streaming-text";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
@@ -13,7 +12,6 @@ import {
 } from "@heroicons/react/20/solid";
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense } from "react";
 
 const includedFeatures = [
   "Unlimited workflows",
@@ -73,7 +71,14 @@ export const runtime = "edge";
 
 export default async function Home() {
   const stars = (await getGitHubStars()) ?? "-";
-  const streamUrl = `${process.env.APP_BASE_URL}/api/v1/run/${process.env.MP_DEMO_WORKFLOW_ID}/stream`;
+
+  const { token } = await fetch(`${process.env.APP_BASE_URL}/api/v1/token`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${process.env.MANAGEPROMPT_SECRET_TOKEN}`,
+    },
+  }).then((res) => res.json());
+  const streamUrl = `${process.env.APP_BASE_URL}/api/v1/run/${process.env.MANAGEPROMPT_DEMO_WORKFLOW_ID}/stream?token=${token}`;
 
   return (
     <div className="h-full">
@@ -97,14 +102,11 @@ export default async function Home() {
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl hero text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-700">
               {SITE_METADATA.TAGLINE}
             </h1>
-            <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-400">
-              <Suspense fallback={<Spinner />}>
-                <StreamingText
-                  url={streamUrl}
-                  fallbackText={SITE_METADATA.DESCRIPTION}
-                />
-              </Suspense>
-            </p>
+            <StreamingText
+              url={streamUrl}
+              fallbackText={SITE_METADATA.DESCRIPTION}
+              className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-400"
+            />
             <div className="mt-10 flex flex-col space-y-4 md:space-y-0 md:flex-row items-center justify-center gap-x-6">
               <Link
                 href="/console/workflows"

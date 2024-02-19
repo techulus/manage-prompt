@@ -6,9 +6,8 @@ import {
   WorkflowInputType,
   modelHasInstruction,
 } from "@/data/workflow";
-import { MAX_RATE_LIMIT_RPS, parseInputs } from "@/lib/utils/workflow";
+import { parseInputs } from "@/lib/utils/workflow";
 import { Workflow } from "@prisma/client";
-import { InfoCircledIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import { notifyError, notifySuccess } from "../core/toast";
@@ -22,7 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { Switch } from "../ui/switch";
 import { Textarea } from "../ui/textarea";
 
 interface Props {
@@ -36,9 +34,6 @@ export function WorkflowForm({ workflow, action }: Props) {
   const [instruction, setInstruction] = useState(workflow?.instruction ?? "");
   const [inputs, setInputs] = useState<WorkflowInput[]>(
     (workflow?.inputs as WorkflowInput[]) ?? []
-  );
-  const [enableStreaming, setEnableStreaming] = useState(
-    !!workflow?.authWebhookUrl
   );
 
   const updateInputs = useCallback(
@@ -254,58 +249,6 @@ export function WorkflowForm({ workflow, action }: Props) {
               </div>
             </div>
           ) : null}
-
-          <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
-            <label
-              htmlFor="rateLimitPerSecond"
-              className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200 sm:pt-1.5"
-            >
-              Request Rate Limit (req/sec)
-            </label>
-            <div className="mt-2 sm:col-span-2 sm:mt-0">
-              <Input
-                type="number"
-                name="rateLimitPerSecond"
-                defaultValue={workflow?.rateLimitPerSecond ?? 10}
-              />
-              <p className="mt-3 text-sm leading-6 text-primary">
-                All requests will be rate limited, this cannot be disabled in
-                order to prevent abuse.
-              </p>
-              <p className="text-sm leading-6 text-orange-500">
-                <InfoCircledIcon className="w-4 h-4 inline-block mr-1 -mt-1" />
-                Rate limit is per second and cannot exceed {MAX_RATE_LIMIT_RPS}.
-              </p>
-            </div>
-          </div>
-
-          <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
-            <label className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200 sm:pt-1.5">
-              Enable Authenticated Streaming
-            </label>
-            <div className="mt-2 sm:col-span-2 sm:mt-0">
-              <Switch
-                checked={enableStreaming}
-                onCheckedChange={setEnableStreaming}
-                aria-readonly
-              />
-
-              {enableStreaming ? (
-                <div className="mt-4">
-                  <Input
-                    type="text"
-                    name="authWebhookUrl"
-                    placeholder="Auth Webhook URL"
-                    defaultValue={workflow?.authWebhookUrl ?? ""}
-                  />
-                  <p className="mt-3 text-sm leading-6 text-primary">
-                    This endpoint will be used to authenticate the request and
-                    start the streaming.
-                  </p>
-                </div>
-              ) : null}
-            </div>
-          </div>
         </div>
 
         <div className="flex items-center justify-end gap-x-6 mt-6">
