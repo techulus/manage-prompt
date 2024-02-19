@@ -73,7 +73,7 @@ export const runtime = "edge";
 
 export default async function Home() {
   const stars = (await getGitHubStars()) ?? "-";
-  const streamUrl = `${process.env.APP_BASE_URL}/api/run/${process.env.MP_DEMO_WORKFLOW_ID}/stream`;
+  const streamUrl = `${process.env.APP_BASE_URL}/api/v1/run/${process.env.MP_DEMO_WORKFLOW_ID}/stream`;
 
   return (
     <div className="h-full">
