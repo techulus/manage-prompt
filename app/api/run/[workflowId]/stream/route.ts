@@ -67,13 +67,13 @@ export async function POST(
   { params }: { params: { workflowId: string } }
 ) {
   // Global Rate limit
-  const keyRateLimit = new Ratelimit({
+  const mpRateLimiter = new Ratelimit({
     redis,
     limiter: Ratelimit.slidingWindow(MAX_GLOBAL_RATE_LIMIT_RPS, "1 s"),
     analytics: true,
     prefix: "mp_ratelimit",
   });
-  const { success: globalRateLimit } = await keyRateLimit.limit(`global`);
+  const { success: globalRateLimit } = await mpRateLimiter.limit(`global`);
   if (!globalRateLimit) {
     return ErrorResponse("Rate limit exceeded", 429);
   }
@@ -100,13 +100,13 @@ export async function POST(
     }
 
     // Workflow Rate limit
-    const keyRateLimit = new Ratelimit({
+    const workflowRateLimiter = new Ratelimit({
       redis,
       limiter: Ratelimit.slidingWindow(workflow.rateLimitPerSecond, "1 s"),
       analytics: true,
       prefix: "mp_ratelimit",
     });
-    const { success: workflowRateLimit } = await keyRateLimit.limit(
+    const { success: workflowRateLimit } = await workflowRateLimiter.limit(
       `streaming:workflow:${workflow.id}`
     );
     if (!workflowRateLimit) {
