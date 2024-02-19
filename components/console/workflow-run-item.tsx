@@ -79,7 +79,7 @@ export async function WorkflowRunItem({ workflowRun }: Props) {
             </TabsList>
             <TabsContent value="response">
               <pre className="p-4 bg-secondary overflow-scroll">
-                {JSON.stringify(rawResult, null, 2)}
+                {JSON.stringify(result, null, 2)}
               </pre>
             </TabsContent>
             <TabsContent value="request">
