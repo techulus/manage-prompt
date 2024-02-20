@@ -90,7 +90,11 @@ export async function GET(req: NextRequest) {
     const pub_token = `pub_tok_${randomBytes(16).toString("hex")}`;
 
     const searchParams = req.nextUrl.searchParams;
-    const ttl = Number(searchParams.get("ttl") ?? "60") ?? 60;
+
+    const ttlFromQuery = Number(searchParams.get("ttl"));
+    const ttl = Number.isNaN(ttlFromQuery)
+      ? 60
+      : Math.min(Math.max(ttlFromQuery, 1), 300);
 
     await redis.set(
       pub_token,
@@ -98,7 +102,7 @@ export async function GET(req: NextRequest) {
         ownerId: organization?.id,
       },
       {
-        ex: Math.min(ttl, 300),
+        ex: ttl,
       }
     );
 
