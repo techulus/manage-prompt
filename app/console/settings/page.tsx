@@ -161,9 +161,16 @@ export default async function Settings() {
                 API Credentials
               </h2>
               <p className="mt-1 text-sm leading-6 text-gray-500">
-                Manage your API credentials. You can create multiple keys to use
-                with the API. These keys should be kept secret and not shared
-                publicly.
+                Manage your API credentials. These keys should be kept secret
+                and not shared publicly. You can find our API documentation{" "}
+                <a
+                  href="https://manageprompt.readme.io"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary font-semibold"
+                >
+                  here.
+                </a>
               </p>
 
               <Table className="mt-6">
