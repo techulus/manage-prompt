@@ -3,6 +3,7 @@ import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { buttonVariants } from "@/components/ui/button";
 import { SITE_METADATA } from "@/data/marketing";
+import { getManagePromptToken } from "@/lib/utils/manageprompt";
 import promoImage from "@/public/images/promo.png";
 import {
   CheckIcon,
@@ -71,13 +72,7 @@ export const runtime = "edge";
 
 export default async function Home() {
   const stars = (await getGitHubStars()) ?? "-";
-
-  const { token } = await fetch(`${process.env.APP_BASE_URL}/api/v1/token`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${process.env.MANAGEPROMPT_SECRET_TOKEN}`,
-    },
-  }).then((res) => res.json());
+  const token = await getManagePromptToken();
   const streamUrl = `${process.env.APP_BASE_URL}/api/v1/run/${process.env.MANAGEPROMPT_DEMO_WORKFLOW_ID}/stream?token=${token}`;
 
   return (

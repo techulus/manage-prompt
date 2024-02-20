@@ -1,6 +1,7 @@
 import { MetadataRoute } from "next";
 
 const aiToolsRoutes = [
+  "proof-reading",
   "black-and-white-to-color",
   "image-upscale",
   "remove-background",

@@ -1,16 +1,23 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { Spinner } from "./loaders";
 
 export default function StreamingText({
   url,
+  body,
   fallbackText,
   className,
+  renderMarkdown = false,
+  onCompleted,
 }: {
   url: string;
+  body?: any;
   fallbackText: string;
   className?: string;
+  renderMarkdown?: boolean;
+  onCompleted?: () => void;
 }) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
@@ -22,6 +29,7 @@ export default function StreamingText({
       headers: {
         "Content-Type": "application/json",
       },
+      body: body ? JSON.stringify(body) : null,
     });
 
     if (!response.ok) {
@@ -46,7 +54,9 @@ export default function StreamingText({
       const chunkValue = decoder.decode(value);
       setResult((prev) => (prev ?? "") + chunkValue);
     }
-  }, [url, fallbackText]);
+
+    onCompleted?.();
+  }, [url, fallbackText, body, onCompleted]);
 
   useEffect(() => {
     if (url) {
@@ -57,6 +67,10 @@ export default function StreamingText({
 
   return loading ? (
     <Spinner className={className} />
+  ) : renderMarkdown ? (
+    <ReactMarkdown className="prose dark:prose-invert prose-a:text-blue-600 dark:prose-a:text-blue-500">
+      {result}
+    </ReactMarkdown>
   ) : (
     <p className={className}>{result}</p>
   );
