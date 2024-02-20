@@ -1,8 +1,8 @@
 import { prisma } from "@/lib/utils/db";
+import { validateRateLimit } from "@/lib/utils/ratelimit";
 import { redis } from "@/lib/utils/redis";
 import { isSubscriptionActive } from "@/lib/utils/stripe";
-import { Ratelimit } from "@upstash/ratelimit";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { randomBytes } from "node:crypto";
 
 const UnauthorizedResponse = () =>
@@ -33,7 +33,7 @@ enum ErrorCodes {
   InternalServerError = "internal_server_error",
 }
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
   try {
     const authorization = req.headers.get("authorization");
     if (!authorization) {
@@ -62,17 +62,14 @@ export async function GET(req: Request) {
     }
 
     // Rate limit
-    const keyRateLimit = new Ratelimit({
-      redis,
-      limiter: Ratelimit.slidingWindow(key.rateLimitPerSecond, "1 s"),
-      analytics: true,
-      prefix: "mp_ratelimit",
-    });
     const {
       success: keyRateLimitSuccess,
       limit,
       remaining,
-    } = await keyRateLimit.limit(`key_${key.id}`);
+    } = await validateRateLimit(
+      `key_${key.ownerId}_${key.id}`,
+      key.rateLimitPerSecond
+    );
     if (!keyRateLimitSuccess) {
       return ErrorResponse("Rate limit exceeded", 429);
     }
@@ -92,18 +89,21 @@ export async function GET(req: Request) {
 
     const pub_token = `pub_tok_${randomBytes(16).toString("hex")}`;
 
+    const searchParams = req.nextUrl.searchParams;
+    const ttl = searchParams.get("ttl");
+
     await redis.set(
       pub_token,
       {
         ownerId: organization?.id,
       },
       {
-        ex: 60,
+        ex: Math.min(parseInt(ttl ?? "60"), 300),
       }
     );
 
     return NextResponse.json(
-      { success: true, token: pub_token, ttl: 60 },
+      { success: true, token: pub_token, ttl },
       {
         headers: {
           "x-ratelimit-limit": limit.toString(),
@@ -114,7 +114,7 @@ export async function GET(req: Request) {
   } catch (error) {
     console.error(error);
     return ErrorResponse(
-      "Failed to run workflow",
+      "Failed to create token, please try  or contact support.",
       500,
       ErrorCodes.InternalServerError
     );

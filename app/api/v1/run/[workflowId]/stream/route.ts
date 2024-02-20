@@ -66,14 +66,14 @@ export async function POST(
     return UnauthorizedResponse();
   }
 
-  const validateToken = await redis.get(token);
-  if (!validateToken) {
-    return UnauthorizedResponse();
-  } else {
-    await redis.del(token);
-  }
-
   try {
+    const validateToken: { ownerId: string } | null = await redis.get(token);
+    if (!validateToken) {
+      return UnauthorizedResponse();
+    } else {
+      await redis.del(token);
+    }
+
     const workflow = await prisma.workflow.findUnique({
       include: {
         organization: {
@@ -88,6 +88,10 @@ export async function POST(
     });
     if (!workflow || !workflow?.published) {
       return ErrorResponse("Workflow not found", 404);
+    }
+
+    if (workflow.ownerId !== validateToken.ownerId) {
+      return UnauthorizedResponse();
     }
 
     const body = (await req.json().catch(() => {})) ?? {};

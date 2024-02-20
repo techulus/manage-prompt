@@ -3,6 +3,17 @@ import Image from "next/image";
 import Link from "next/link";
 import logo from "../../public/images/logo.png";
 
+const navigation = [
+  {
+    name: "Documentation",
+    href: "https://manageprompt.readme.io/reference/run-workflow",
+  },
+  {
+    name: "Support",
+    href: "https://techulus.atlassian.net/servicedesk/customer/portal/5",
+  },
+];
+
 export function Header() {
   return (
     <header className="absolute inset-x-0 top-0 z-50 text-black dark:text-white">
@@ -28,6 +39,19 @@ export function Header() {
               </sup>
             </p>
           </Link>
+        </div>
+        <div className="hidden lg:flex lg:gap-x-12">
+          {navigation.map((item) => (
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              key={item.name}
+              href={item.href}
+              className="text-sm font-semibold leading-6 text-gray-900"
+            >
+              {item.name}
+            </a>
+          ))}
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <SignedIn>

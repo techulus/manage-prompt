@@ -13,7 +13,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-const includedFeatures = [
+const pricingIncludedFeatures = [
   "Unlimited workflows",
   "Team collaboration",
   "Up to 5 members per organization",
@@ -30,7 +30,7 @@ const features = [
   {
     name: "Security controls.",
     description:
-      "Filter and control malicious requests with our security features.",
+      "Filter and control malicious requests with our security features such as single use tokens and rate limiting.",
     icon: LockClosedIcon,
   },
   {
@@ -221,7 +221,7 @@ export default async function Home() {
                 role="list"
                 className="mt-8 grid grid-cols-1 gap-4 text-sm leading-6 text-foreground sm:grid-cols-2 sm:gap-6"
               >
-                {includedFeatures.map((feature) => (
+                {pricingIncludedFeatures.map((feature) => (
                   <li key={feature} className="flex gap-x-3">
                     <CheckIcon
                       className="h-6 w-5 flex-none text-primary"
