@@ -3,10 +3,9 @@ import { prisma } from "@/lib/utils/db";
 import { runLlamaModel } from "@/lib/utils/llama";
 import { runMixtralModel } from "@/lib/utils/mixtral";
 import { getCompletion } from "@/lib/utils/openai";
-import { redis } from "@/lib/utils/redis";
+import { validateRateLimit } from "@/lib/utils/ratelimit";
 import { isSubscriptionActive, reportUsage } from "@/lib/utils/stripe";
 import { EventName, logEvent } from "@/lib/utils/tinybird";
-import { Ratelimit } from "@upstash/ratelimit";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -74,17 +73,14 @@ export async function POST(
     }
 
     // Rate limit
-    const keyRateLimit = new Ratelimit({
-      redis,
-      limiter: Ratelimit.slidingWindow(key.rateLimitPerSecond, "1 s"),
-      analytics: true,
-      prefix: "mp_ratelimit",
-    });
     const {
       success: keyRateLimitSuccess,
       limit,
       remaining,
-    } = await keyRateLimit.limit(`key_${key.id}`);
+    } = await validateRateLimit(
+      `key_${key.ownerId}_${key.id}`,
+      key.rateLimitPerSecond
+    );
     if (!keyRateLimitSuccess) {
       return ErrorResponse("Rate limit exceeded", 429);
     }

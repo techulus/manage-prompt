@@ -30,7 +30,7 @@ const features = [
   {
     name: "Security controls.",
     description:
-      "Filter and control malicious requests with our security features.",
+      "Filter and control malicious requests with our security features such as single use tokens and rate limiting.",
     icon: LockClosedIcon,
   },
   {
