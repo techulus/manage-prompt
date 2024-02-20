@@ -105,7 +105,7 @@ export default async function Home() {
             <StreamingText
               url={streamUrl}
               fallbackText={SITE_METADATA.DESCRIPTION}
-              className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-400"
+              className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300"
             />
             <div className="mt-10 flex flex-col space-y-4 md:space-y-0 md:flex-row items-center justify-center gap-x-6">
               <Link

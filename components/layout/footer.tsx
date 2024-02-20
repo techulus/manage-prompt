@@ -30,11 +30,11 @@ const navigation = {
     { name: "Source code", href: "https://github.com/techulus/manage-prompt" },
     {
       name: "Support",
-      href: "https://github.com/techulus/manage-prompt/issues",
+      href: "https://techulus.atlassian.net/servicedesk/customer/portal/5",
     },
     {
-      name: "Discussions",
-      href: "https://github.com/techulus/manage-prompt/discussions",
+      name: "Documentation",
+      href: "https://manageprompt.readme.io",
     },
   ],
   legal: [
@@ -103,12 +103,12 @@ export function Footer({ isHome = false }: { isHome?: boolean }) {
                 <ul role="list" className="mt-6 space-y-2">
                   {navigation.solutions.map((item) => (
                     <li key={item.name}>
-                      <a
+                      <Link
                         href={item.href}
                         className="text-sm leading-6 text-gray-700 dark:text-gray-300 hover:text-black hover:dark:text-white"
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -120,12 +120,12 @@ export function Footer({ isHome = false }: { isHome?: boolean }) {
                 <ul role="list" className="mt-6 space-y-2">
                   {navigation.tools.map((item) => (
                     <li key={item.name}>
-                      <a
+                      <Link
                         href={item.href}
                         className="text-sm leading-6 text-gray-700 dark:text-gray-300 hover:text-black hover:dark:text-white"
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -137,12 +137,14 @@ export function Footer({ isHome = false }: { isHome?: boolean }) {
                 <ul role="list" className="mt-6 space-y-2">
                   {navigation.project.map((item) => (
                     <li key={item.name}>
-                      <a
+                      <Link
+                        target="_blank"
+                        rel="noopener noreferrer"
                         href={item.href}
                         className="text-sm leading-6 text-gray-700 dark:text-gray-300 hover:text-black hover:dark:text-white"
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>

@@ -47,7 +47,7 @@ export function Header() {
               rel="noopener noreferrer"
               key={item.name}
               href={item.href}
-              className="text-sm font-semibold leading-6 text-gray-900"
+              className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-200"
             >
               {item.name}
             </a>
