@@ -1,10 +1,12 @@
 import { WorkflowComposer } from "@/components/console/workflow-composer";
 import { WorkflowRunItem } from "@/components/console/workflow-run-item";
+import { WorkflowUsageCharts } from "@/components/console/workflow-usage-charts";
 import { ContentBlock } from "@/components/core/content-block";
 import { ActionButton, DeleteButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { CardHeader } from "@/components/ui/card";
 import {
   Pagination,
   PaginationContent,
@@ -16,6 +18,7 @@ import {
 import { owner } from "@/lib/hooks/useOwner";
 import { cn } from "@/lib/utils";
 import { prisma } from "@/lib/utils/db";
+import { getWorkflowRunStats } from "@/lib/utils/tinybird";
 import { LIMIT, getWorkflowAndRuns } from "@/lib/utils/useWorkflow";
 import { PauseCircleIcon, PlayCircleIcon } from "@heroicons/react/20/solid";
 import { Terminal } from "lucide-react";
@@ -38,6 +41,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
     currentPage
   );
   const totalPages = Math.ceil(count / LIMIT);
+  const usageData = await getWorkflowRunStats(workflow.id);
 
   const apiSecretKey = await prisma.secretKey.findFirst({
     where: {
@@ -135,6 +139,13 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
             </div>
           </div>
         </div>
+      </ContentBlock>
+
+      <ContentBlock>
+        <CardHeader>
+          <h3 className="text-lg font-semibold">Usage (Last 24 hours)</h3>
+          <WorkflowUsageCharts usageData={usageData} />
+        </CardHeader>
       </ContentBlock>
 
       <ContentBlock>

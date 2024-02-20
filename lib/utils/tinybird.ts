@@ -20,9 +20,13 @@ export async function logEvent(eventName: string, payload: any) {
     .then((data) => console.log("[TinyBird] Log Event:", data));
 }
 
-export type WorkflowRunStat = { hour: number; total: number };
+export type WorkflowRunStat = {
+  hour: number | string;
+  total: number;
+  tokens: number;
+};
 
-export async function getWorkflowRunsByHour(
+export async function getWorkflowRunStats(
   id: number | string
 ): Promise<WorkflowRunStat[]> {
   const entries = await fetch(
@@ -36,10 +40,24 @@ export async function getWorkflowRunsByHour(
     const d = new Date(now);
     d.setHours(d.getUTCHours() - i);
     return d.getHours();
-  }).reverse();
-
-  return last24Hours.map((hour) => {
-    const entry = entries.find((e) => e.hour === hour);
-    return entry || { hour, total: 0 };
   });
+
+  return last24Hours
+    .map((hour, idx) => {
+      const date = new Date();
+      date.setHours(date.getHours() + 1 - idx);
+      const formattedHourString = date.toLocaleString("en-US", {
+        hour: "numeric",
+        hour12: true,
+      });
+
+      const entry = entries.find((e) => e.hour === hour);
+      return (
+        {
+          ...(entry as WorkflowRunStat),
+          hour: formattedHourString,
+        } || { hour: formattedHourString, total: 0, tokens: 0 }
+      );
+    })
+    .reverse();
 }
