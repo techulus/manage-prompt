@@ -10,6 +10,10 @@ const navigation = {
   solutions: [{ name: "Workflows", href: "/console/workflows" }],
   tools: [
     {
+      name: "Proof Reading",
+      href: "/ai-tools/proof-reading",
+    },
+    {
       name: "Photo Colorizer",
       href: "/ai-tools/black-and-white-to-color",
     },
