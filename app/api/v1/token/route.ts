@@ -91,7 +91,7 @@ export async function GET(req: NextRequest) {
 
     const searchParams = req.nextUrl.searchParams;
 
-    const ttlFromQuery = Number(searchParams.get("ttl"));
+    const ttlFromQuery = Number(searchParams.get("ttl") ?? 60);
     const ttl = Number.isNaN(ttlFromQuery)
       ? 60
       : Math.min(Math.max(ttlFromQuery, 1), 300);
