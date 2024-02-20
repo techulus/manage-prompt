@@ -33,6 +33,8 @@ enum ErrorCodes {
   InternalServerError = "internal_server_error",
 }
 
+export const dynamic = "force-dynamic";
+
 export async function GET(req: NextRequest) {
   try {
     const authorization = req.headers.get("authorization");
