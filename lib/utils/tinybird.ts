@@ -43,21 +43,9 @@ export async function getWorkflowRunStats(
   });
 
   return last24Hours
-    .map((hour, idx) => {
-      const date = new Date();
-      date.setHours(date.getHours() + 1 - idx);
-      const formattedHourString = date.toLocaleString("en-US", {
-        hour: "numeric",
-        hour12: true,
-      });
-
-      const entry = entries.find((e) => e.hour === hour);
-      return (
-        {
-          ...(entry as WorkflowRunStat),
-          hour: formattedHourString,
-        } || { hour: formattedHourString, total: 0, tokens: 0 }
-      );
-    })
+    .map(
+      (hour) =>
+        entries.find((e) => e.hour === hour) || { hour, total: 0, tokens: 0 }
+    )
     .reverse();
 }
