@@ -22,7 +22,7 @@ const pricingIncludedFeatures = [
 
 const features = [
   {
-    name: "Backend as a service.",
+    name: "Deploy instantly.",
     description:
       "Using our workflows, you can tweak prompts, update models, and deliver changes to your users instanty.",
     icon: CloudArrowUpIcon,
