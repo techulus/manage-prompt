@@ -2,7 +2,7 @@
 
 import { AreaChart } from "@tremor/react";
 
-export async function WorkflowUsageCharts({ usageData }: { usageData: any }) {
+export function WorkflowUsageCharts({ usageData }: { usageData: any }) {
   return (
     <div className="flex flex-col md:flex-row items-center justify-between pr-4">
       <AreaChart
