@@ -90,7 +90,7 @@ export async function GET(req: NextRequest) {
     const pub_token = `pub_tok_${randomBytes(16).toString("hex")}`;
 
     const searchParams = req.nextUrl.searchParams;
-    const ttl = Number(searchParams.get("ttl")) ?? 60;
+    const ttl = Number(searchParams.get("ttl") ?? "60") ?? 60;
 
     await redis.set(
       pub_token,
@@ -114,7 +114,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error(error);
     return ErrorResponse(
-      "Failed to create token, please try  or contact support.",
+      "Failed to create token, please try again or contact support.",
       500,
       ErrorCodes.InternalServerError
     );
