@@ -1,4 +1,4 @@
-import { getWorkflowRunsByHour } from "@/lib/utils/tinybird";
+import { getWorkflowRunStats } from "@/lib/utils/tinybird";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { Workflow } from "@prisma/client";
 import { SparkAreaChart } from "@tremor/react";
@@ -24,7 +24,7 @@ interface Props {
 }
 
 export async function WorkflowItem({ workflow }: Props) {
-  const chartdata = await getWorkflowRunsByHour(workflow.id);
+  const usageData = await getWorkflowRunStats(workflow.id);
 
   return (
     <li
@@ -87,13 +87,15 @@ export async function WorkflowItem({ workflow }: Props) {
         </div>
 
         <SparkAreaChart
-          data={chartdata}
+          data={usageData}
           index="hour"
           curveType="monotone"
           categories={["total"]}
           colors={["blue"]}
           minValue={0}
-          className="absolute opacity-25 h-24 w-full right-0 top-2 pt-2"
+          className="hidden lg:block max-w-[400px] w-full border rounded-md border-gray-200 dark:border-gray-800"
+          // @ts-ignore
+          showAnimation
         />
       </div>
     </li>

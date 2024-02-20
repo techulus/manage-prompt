@@ -3,7 +3,7 @@ TOKEN "workflow_runs_count_by_hour_endpoint_read_7341" READ
 NODE workflow_runs_count_by_hour_0
 SQL >
 
-    SELECT Hour(timestamp) as hour, workflow_id, count(*) as total FROM run_workflow GROUP BY Hour(timestamp), workflow_id
+    SELECT Hour(timestamp) as hour, workflow_id, count(*) as total, sum(total_tokens) as tokens FROM run_workflow GROUP BY Hour(timestamp), workflow_id
 
 
 
@@ -11,20 +11,21 @@ NODE workflow_runs_count_by_hour_1
 SQL >
 
     %
-    WITH generated_hours AS (
-        SELECT number AS hour FROM numbers(24)
-    ),
-    aggregated_data AS (
-      SELECT hour, total FROM workflow_runs_count_by_hour_0 where workflow_id = {{Int16(workflow_id, required=True)}} order by hour desc limit 24
-    ),
-    data_with_zeros AS (
-        SELECT 
-            gh.hour,
-            IF(ad.total IS NULL, 0, ad.total) AS total
-        FROM generated_hours gh
-        LEFT JOIN aggregated_data ad ON gh.hour = ad.hour
-    )
-    SELECT * FROM data_with_zeros
-    ORDER BY hour DESC
+        WITH generated_hours AS (
+            SELECT number AS hour FROM numbers(24)
+        ),
+        aggregated_data AS (
+          SELECT hour, total, tokens FROM workflow_runs_count_by_hour_0 where workflow_id = {{Int16(workflow_id, required=True)}} order by hour desc limit 24
+        ),
+        data_with_zeros AS (
+            SELECT 
+                gh.hour,
+                IF(ad.total IS NULL, 0, ad.total) AS total,
+                IF(ad.tokens IS NULL, 0, ad.tokens) AS tokens
+            FROM generated_hours gh
+            LEFT JOIN aggregated_data ad ON gh.hour = ad.hour
+        )
+        SELECT * FROM data_with_zeros
+        ORDER BY hour DESC
 
 
