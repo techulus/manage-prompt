@@ -3,13 +3,11 @@ export const AIModels = [
   "gpt-4-1106-preview",
   "gpt-4-0125-preview",
   "gpt-4",
-  "llama-2-70b-chat",
-  "mixtral-8x7b-instruct-v0.1",
+  "meta-llama/Llama-2-70b-chat-hf",
+  "mistralai/Mixtral-8x7B-Instruct-v0.1",
 ] as const;
 
-export const modelHasInstruction: Record<string, boolean> = {
-  "llama-2-70b-chat": true,
-};
+export const modelHasInstruction: Record<string, boolean> = {};
 
 export type WorkflowInput = {
   name: string;

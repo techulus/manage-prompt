@@ -3,8 +3,6 @@
 import { WorkflowInput } from "@/data/workflow";
 import { owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
-import { runLlamaModel } from "@/lib/utils/llama";
-import { runMixtralModel } from "@/lib/utils/mixtral";
 import { getCompletion } from "@/lib/utils/openai";
 import { isSubscriptionActive, reportUsage } from "@/lib/utils/stripe";
 import { EventName, logEvent } from "@/lib/utils/tinybird";
@@ -168,17 +166,7 @@ export async function runWorkflow(formData: FormData) {
   )
     throw "No credits remaining";
 
-  let response;
-  switch (model) {
-    case "llama-2-70b-chat":
-      response = await runLlamaModel(content, instruction);
-      break;
-    case "mixtral-8x7b-instruct-v0.1":
-      response = await runMixtralModel(content);
-      break;
-    default:
-      response = await getCompletion(model, content);
-  }
+  const response = await getCompletion(model, content);
 
   const { result, rawResult, totalTokenCount } = response;
 
