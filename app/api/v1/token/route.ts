@@ -98,15 +98,25 @@ export async function GET(req: NextRequest) {
       ? 60
       : Math.min(Math.max(ttlFromQuery, 1), 300);
 
-    await redis.set(
-      pub_token,
-      {
-        ownerId: organization?.id,
-      },
-      {
-        ex: ttl,
-      }
-    );
+    await Promise.all([
+      redis.set(
+        pub_token,
+        {
+          ownerId: organization?.id,
+        },
+        {
+          ex: ttl,
+        }
+      ),
+      prisma.secretKey.update({
+        where: {
+          key: token,
+        },
+        data: {
+          lastUsed: new Date(),
+        },
+      }),
+    ]);
 
     return NextResponse.json(
       { success: true, token: pub_token, ttl },

@@ -1,12 +1,10 @@
 import { WorkflowInput } from "@/data/workflow";
 import { prisma } from "@/lib/utils/db";
-import { runStreamingLlamaModel } from "@/lib/utils/llama";
-import { runStreamingMixtralModel } from "@/lib/utils/mixtral";
 import { getStreamingCompletion } from "@/lib/utils/openai";
 import { redis } from "@/lib/utils/redis";
 import { reportUsage } from "@/lib/utils/stripe";
 import { EventName, logEvent } from "@/lib/utils/tinybird";
-import { OpenAIStream, ReplicateStream, StreamingTextResponse } from "ai";
+import { OpenAIStream, StreamingTextResponse } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -141,26 +139,10 @@ export async function POST(
       },
     };
 
-    let stream;
-    switch (model) {
-      case "llama-2-70b-chat":
-        stream = await ReplicateStream(
-          await runStreamingLlamaModel(content, instruction),
-          callbacks
-        );
-        break;
-      case "mixtral-8x7b-instruct-v0.1":
-        stream = await ReplicateStream(
-          await runStreamingMixtralModel(content),
-          callbacks
-        );
-        break;
-      default:
-        stream = OpenAIStream(
-          await getStreamingCompletion(model, content),
-          callbacks
-        );
-    }
+    const stream = OpenAIStream(
+      await getStreamingCompletion(model, content),
+      callbacks
+    );
 
     return new StreamingTextResponse(stream!, {
       headers: {
