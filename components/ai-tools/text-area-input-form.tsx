@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 
-export default function ProofReadForm({ streamUrl }: { streamUrl: string }) {
+export default function TextAreaForm({ streamUrl }: { streamUrl: string }) {
   const [content, setContent] = useState("");
   const [ready, setReady] = useState(false);
   const [loading, setLoading] = useState(false);
