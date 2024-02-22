@@ -68,6 +68,7 @@ async function getGitHubStars(): Promise<string | null> {
   }
 }
 
+export const dynamic = "force-dynamic";
 export const runtime = "edge";
 
 export default async function Home() {
