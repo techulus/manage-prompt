@@ -39,3 +39,6 @@ next-env.d.ts
 .tinyb
 .tinyb-dev
 .tinyb-prod
+
+# Sentry Config File
+.sentryclirc
