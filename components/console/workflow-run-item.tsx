@@ -78,12 +78,12 @@ export async function WorkflowRunItem({ workflowRun }: Props) {
               <TabsTrigger value="request">Request</TabsTrigger>
             </TabsList>
             <TabsContent value="response">
-              <pre className="p-4 bg-secondary overflow-scroll">
+              <pre className="p-4 bg-secondary overflow-scroll whitespace-pre-wrap">
                 {JSON.stringify(result, null, 2)}
               </pre>
             </TabsContent>
             <TabsContent value="request">
-              <pre className="p-4 bg-secondary overflow-scroll">
+              <pre className="p-4 bg-secondary overflow-scroll whitespace-pre-wrap">
                 {JSON.stringify(rawRequest, null, 2)}
               </pre>
             </TabsContent>
@@ -91,7 +91,9 @@ export async function WorkflowRunItem({ workflowRun }: Props) {
 
           <DrawerFooter>
             <DrawerClose>
-              <Button variant="outline">Close</Button>
+              <Button variant="outline" className="mb-6">
+                Close
+              </Button>
             </DrawerClose>
           </DrawerFooter>
         </DrawerContent>
