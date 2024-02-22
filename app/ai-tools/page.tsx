@@ -1,7 +1,9 @@
 import { ContentBlock } from "@/components/core/content-block";
 import PageTitle from "@/components/layout/page-title";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { buildMetadata } from "@/lib/utils/metadata";
+import { MagicWandIcon } from "@radix-ui/react-icons";
 import { Metadata } from "next";
 import Link from "next/link";
 
@@ -10,7 +12,6 @@ const description =
   "Here are some free AI tools that you can use to improve your productivity.";
 
 export const metadata: Metadata = buildMetadata(title, description);
-export const dynamic = "force-dynamic";
 
 export default async function FreeAiTools() {
   const actions = [
@@ -19,6 +20,12 @@ export default async function FreeAiTools() {
       description:
         "Use AI to proofread your text and correct any grammatical errors.",
       href: "/ai-tools/proof-reading",
+    },
+    {
+      title: "Summarise Text",
+      description:
+        "Use AI to summarise your text and generate a short summary.",
+      href: "/ai-tools/summarise-text",
     },
     {
       title: "Photo Colorizer",
@@ -47,7 +54,17 @@ export default async function FreeAiTools() {
 
   return (
     <>
-      <PageTitle title={title} subTitle={description} />
+      <PageTitle title={title} subTitle={description}>
+        <div className="flex">
+          <Button variant="link" className="px-0">
+            <MagicWandIcon
+              className="mr-3 h-5 w-5 text-primary"
+              aria-hidden="true"
+            />
+            <Link href="/">Build Your Own AI Tools Using ManagePrompt</Link>
+          </Button>
+        </div>
+      </PageTitle>
 
       <div className="hidden md:block h-8"></div>
 

@@ -2,12 +2,13 @@ import { ContentDeleteWarningAlert } from "@/components/ai-tools/content-deletio
 import { ContentBlock } from "@/components/core/content-block";
 import { ActionButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { buildMetadata } from "@/lib/utils/metadata";
 import { createPrediction, createPredictionOrder } from "@/lib/utils/replicate";
+import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -66,7 +67,17 @@ export default async function ImageUpscale() {
       <PageTitle
         title={title}
         subTitle="Create a photo-realistic image from a natural language text description."
-      />
+      >
+        <div className="flex">
+          <Button variant="link" className="px-0">
+            <ArrowLeftIcon
+              className="mr-3 h-5 w-5 text-primary"
+              aria-hidden="true"
+            />
+            <Link href="/ai-tools">View all tools</Link>
+          </Button>
+        </div>
+      </PageTitle>
 
       <div className="hidden md:block h-8"></div>
 

@@ -9,16 +9,16 @@ import { Metadata } from "next";
 import Link from "next/link";
 import TextAreaForm from "../../../components/ai-tools/text-area-input-form";
 
-const title = "AI Proof Reading";
+const title = "AI Text Summarizer";
 const description =
-  "Use AI to proofread your text and correct any grammatical errors.";
+  "Use AI to summarise your text and generate a short summary.";
 
 export const metadata: Metadata = buildMetadata(title, description);
 export const dynamic = "force-dynamic";
 
 export default async function ProofRead() {
   const token = await getManagePromptToken(300);
-  const streamUrl = `${process.env.APP_BASE_URL}/api/v1/run/${process.env.MANAGEPROMPT_PROOFREAD_WORKFLOW_ID}/stream?token=${token}`;
+  const streamUrl = `${process.env.APP_BASE_URL}/api/v1/run/${process.env.MANAGEPROMPT_SUMMARISE_WORKFLOW_ID}/stream?token=${token}`;
 
   return (
     <>

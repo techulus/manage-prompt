@@ -1,6 +1,9 @@
+import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import Image, { StaticImageData } from "next/image";
+import Link from "next/link";
 import { ContentBlock } from "../core/content-block";
 import PageTitle from "../layout/page-title";
+import { Button } from "../ui/button";
 import { CardContent } from "../ui/card";
 import { ContentDeleteWarningAlert } from "./content-deletion-warning-alert";
 import { FileUploader } from "./image-upload";
@@ -20,7 +23,17 @@ export function AIImageProcessingPage({
 }) {
   return (
     <>
-      <PageTitle title={title} subTitle={subTitle} />
+      <PageTitle title={title} subTitle={subTitle}>
+        <div className="flex">
+          <Button variant="link" className="px-0">
+            <ArrowLeftIcon
+              className="mr-3 h-5 w-5 text-primary"
+              aria-hidden="true"
+            />
+            <Link href="/ai-tools">View all tools</Link>
+          </Button>
+        </div>
+      </PageTitle>
 
       <div className="hidden md:block h-8"></div>
 
