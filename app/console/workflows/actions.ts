@@ -146,7 +146,6 @@ export async function runWorkflow(formData: FormData) {
   const id = Number(formData.get("id"));
   const model = formData.get("model") as string;
   const content = formData.get("content") as string;
-  const instruction = formData.get("instruction") as string;
 
   if (!id) throw "ID is missing";
   if (!userId && !ownerId) throw "User/Owner ID is missing";
@@ -176,7 +175,7 @@ export async function runWorkflow(formData: FormData) {
     prisma.workflowRun.create({
       data: {
         result,
-        rawRequest: JSON.parse(JSON.stringify({ model, content, instruction })),
+        rawRequest: JSON.parse(JSON.stringify({ model, content })),
         rawResult: JSON.parse(JSON.stringify(rawResult)),
         totalTokenCount,
         user: {

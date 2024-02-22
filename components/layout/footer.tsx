@@ -7,7 +7,10 @@ import Link from "next/link";
 import logo from "../../public/images/logo.png";
 
 const navigation = {
-  solutions: [{ name: "Workflows", href: "/console/workflows" }],
+  solutions: [
+    { name: "Workflows", href: "/console/workflows" },
+    { name: "Free AI Tools", href: "/ai-tools" },
+  ],
   tools: [
     {
       name: "Proof Reading",

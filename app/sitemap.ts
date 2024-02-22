@@ -28,6 +28,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "yearly",
       priority: 1,
     },
+    {
+      url: "https://manageprompt.com/ai-tools",
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 1,
+    },
     ...aiToolsRoutes.map<{
       url: string;
       lastModified?: string | Date;
