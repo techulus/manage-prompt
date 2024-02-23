@@ -17,7 +17,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { owner } from "@/lib/hooks/useOwner";
+import { DateTime } from "@/lib/utils/datetime";
 import { prisma } from "@/lib/utils/db";
+import { getUpcomingInvoice } from "@/lib/utils/stripe";
 import { clerkClient } from "@clerk/nextjs";
 import Stripe from "stripe";
 import {
@@ -61,6 +63,10 @@ export default async function Settings() {
   const subscription = organization?.stripe
     ?.subscription as unknown as Stripe.Subscription;
 
+  const invoice: Stripe.Invoice | null = organization?.stripe?.customerId
+    ? await getUpcomingInvoice(organization?.stripe?.customerId)
+    : null;
+
   return (
     <>
       <PageTitle title="Settings" />
@@ -87,6 +93,15 @@ export default async function Settings() {
                         <Badge variant="default">
                           {subscription?.status.toUpperCase()}
                         </Badge>
+                        {invoice?.amount_remaining && invoice?.period_end ? (
+                          <p className="mt-2">
+                            Next Invoice: USD{" "}
+                            {(invoice.amount_remaining / 100).toFixed(2)} on{" "}
+                            {DateTime.fromSeconds(
+                              invoice.period_end
+                            ).toDateString()}
+                          </p>
+                        ) : null}
                       </div>
                       <div className="text-gray-900 dark:text-gray-200">
                         <form action={redirectToBilling}>
@@ -222,7 +237,7 @@ export default async function Settings() {
                       </TableCell>
                       <TableCell>
                         {key.lastUsed
-                          ? new Date(key.lastUsed).toLocaleString()
+                          ? DateTime.fromJSDate(key.lastUsed).toNiceFormat()
                           : "Never"}
                       </TableCell>
                       <TableCell>
