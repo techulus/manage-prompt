@@ -1,3 +1,4 @@
+import { DateTime } from "@/lib/utils/datetime";
 import { WorkflowRun } from "@prisma/client";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { Button, buttonVariants } from "../ui/button";
@@ -51,10 +52,10 @@ export async function WorkflowRunItem({ workflowRun }: Props) {
           </p>
         </div>
         <time
-          dateTime={new Date(createdAt).toISOString()}
+          dateTime={createdAt.toISOString()}
           className="flex-shrink-0 whitespace-nowrap text-sm text-gray-500"
         >
-          {new Date(createdAt).toLocaleTimeString()}
+          {DateTime.fromJSDate(createdAt).toNiceFormat()}
         </time>
       </div>
       <div className="mt-1 text-gray-600 dark:text-gray-200">

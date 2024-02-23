@@ -128,3 +128,11 @@ export async function reportUsage(
 export function isSubscriptionActive(subscription: any) {
   return ["trialing", "active"].includes(subscription?.status);
 }
+
+export async function getUpcomingInvoice(
+  customer: string
+): Promise<Stripe.Invoice> {
+  return stripe.invoices.retrieveUpcoming({
+    customer,
+  });
+}

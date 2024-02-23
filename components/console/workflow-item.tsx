@@ -1,3 +1,4 @@
+import { DateTime } from "@/lib/utils/datetime";
 import { getWorkflowRunStats } from "@/lib/utils/tinybird";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { Workflow } from "@prisma/client";
@@ -74,7 +75,8 @@ export async function WorkflowItem({ workflow }: Props) {
               &middot;
             </span>
             <span className="hidden sm:block text-sm">
-              Last updated {new Date(workflow.updatedAt).toLocaleDateString()}
+              Last updated{" "}
+              {DateTime.fromJSDate(workflow.updatedAt).toNiceFormat()}
             </span>
           </div>
         </Link>
