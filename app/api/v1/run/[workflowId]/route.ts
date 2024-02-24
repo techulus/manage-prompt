@@ -3,7 +3,7 @@ import { prisma } from "@/lib/utils/db";
 import { getCompletion } from "@/lib/utils/openai";
 import { validateRateLimit } from "@/lib/utils/ratelimit";
 import {
-  getUpcomingInvoice,
+  hasExceededSpendLimit,
   isSubscriptionActive,
   reportUsage,
 } from "@/lib/utils/stripe";
@@ -102,17 +102,17 @@ export async function POST(
     }
 
     // Spend limit
-    if (organization.spendLimit && organization?.stripe?.customerId) {
-      const invoice = await getUpcomingInvoice(
+    if (
+      await hasExceededSpendLimit(
+        organization?.spendLimit,
         organization?.stripe?.customerId
+      )
+    ) {
+      return ErrorResponse(
+        "Spend limit exceeded. Please increase your spend limit to continue using the service.",
+        402,
+        ErrorCodes.SpendLimitReached
       );
-      if (invoice.amount_due / 100 > organization.spendLimit) {
-        return ErrorResponse(
-          "Spend limit exceeded. Please increase your spend limit to continue using the service.",
-          402,
-          ErrorCodes.SpendLimitReached
-        );
-      }
     }
 
     const workflow = await prisma.workflow.findUnique({

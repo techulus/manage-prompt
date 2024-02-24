@@ -136,3 +136,14 @@ export async function getUpcomingInvoice(
     customer,
   });
 }
+
+export async function hasExceededSpendLimit(
+  spendLimit: number | null | undefined,
+  stripeCustomerId: string | null | undefined
+): Promise<boolean> {
+  if (spendLimit && stripeCustomerId) {
+    const invoice = await getUpcomingInvoice(stripeCustomerId);
+    return invoice.amount_due / 100 > spendLimit;
+  }
+  return false;
+}

@@ -4,7 +4,11 @@ import { WorkflowInput } from "@/data/workflow";
 import { owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
 import { getCompletion } from "@/lib/utils/openai";
-import { isSubscriptionActive, reportUsage } from "@/lib/utils/stripe";
+import {
+  hasExceededSpendLimit,
+  isSubscriptionActive,
+  reportUsage,
+} from "@/lib/utils/stripe";
 import { EventName, logEvent } from "@/lib/utils/tinybird";
 import { WorkflowSchema } from "@/lib/utils/workflow";
 import { redirect } from "next/navigation";
@@ -147,61 +151,77 @@ export async function runWorkflow(formData: FormData) {
   const model = formData.get("model") as string;
   const content = formData.get("content") as string;
 
-  if (!id) throw "ID is missing";
-  if (!userId && !ownerId) throw "User/Owner ID is missing";
+  try {
+    if (!id) throw "ID is missing";
+    if (!userId && !ownerId) throw "User/Owner ID is missing";
 
-  const organization = await prisma.organization.findUnique({
-    include: {
-      stripe: true,
-    },
-    where: {
-      id: ownerId,
-    },
-  });
-
-  if (
-    organization?.credits === 0 &&
-    !isSubscriptionActive(organization?.stripe?.subscription)
-  )
-    throw "No credits remaining";
-
-  const response = await getCompletion(model, content);
-
-  const { result, rawResult, totalTokenCount } = response;
-
-  if (!result) throw "No result returned from OpenAI";
-
-  await Promise.all([
-    prisma.workflowRun.create({
-      data: {
-        result,
-        rawRequest: JSON.parse(JSON.stringify({ model, content })),
-        rawResult: JSON.parse(JSON.stringify(rawResult)),
-        totalTokenCount,
-        user: {
-          connect: {
-            id: userId,
-          },
-        },
-        workflow: {
-          connect: {
-            id,
-          },
-        },
+    const organization = await prisma.organization.findUnique({
+      include: {
+        stripe: true,
       },
-    }),
-    reportUsage(
-      ownerId,
-      organization?.stripe?.subscription as unknown as Stripe.Subscription,
-      totalTokenCount
-    ),
-    logEvent(EventName.RunWorkflow, {
-      workflow_id: id,
-      owner_id: ownerId,
-      model,
-      total_tokens: totalTokenCount,
-    }),
-  ]);
+      where: {
+        id: ownerId,
+      },
+    });
+
+    if (
+      organization?.credits === 0 &&
+      !isSubscriptionActive(organization?.stripe?.subscription)
+    )
+      throw "No credits remaining";
+
+    if (
+      await hasExceededSpendLimit(
+        organization?.spendLimit,
+        organization?.stripe?.customerId
+      )
+    ) {
+      throw "Spend limit exceeded";
+    }
+
+    const response = await getCompletion(model, content);
+
+    const { result, rawResult, totalTokenCount } = response;
+
+    if (!result) throw "No result returned from OpenAI";
+
+    await Promise.all([
+      prisma.workflowRun.create({
+        data: {
+          result,
+          rawRequest: JSON.parse(JSON.stringify({ model, content })),
+          rawResult: JSON.parse(JSON.stringify(rawResult)),
+          totalTokenCount,
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
+          workflow: {
+            connect: {
+              id,
+            },
+          },
+        },
+      }),
+      reportUsage(
+        ownerId,
+        organization?.stripe?.subscription as unknown as Stripe.Subscription,
+        totalTokenCount
+      ),
+      logEvent(EventName.RunWorkflow, {
+        workflow_id: id,
+        owner_id: ownerId,
+        model,
+        total_tokens: totalTokenCount,
+      }),
+    ]);
+  } catch (error) {
+    console.error(error);
+    return {
+      error,
+    };
+  }
 
   redirect(`/console/workflows/${id}`);
 }

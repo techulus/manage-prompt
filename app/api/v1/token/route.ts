@@ -1,7 +1,10 @@
 import { prisma } from "@/lib/utils/db";
 import { validateRateLimit } from "@/lib/utils/ratelimit";
 import { redis } from "@/lib/utils/redis";
-import { getUpcomingInvoice, isSubscriptionActive } from "@/lib/utils/stripe";
+import {
+  hasExceededSpendLimit,
+  isSubscriptionActive,
+} from "@/lib/utils/stripe";
 import { NextRequest, NextResponse } from "next/server";
 import { randomBytes } from "node:crypto";
 
@@ -91,17 +94,17 @@ export async function GET(req: NextRequest) {
     }
 
     // Spend limit
-    if (organization.spendLimit && organization?.stripe?.customerId) {
-      const invoice = await getUpcomingInvoice(
+    if (
+      await hasExceededSpendLimit(
+        organization?.spendLimit,
         organization?.stripe?.customerId
+      )
+    ) {
+      return ErrorResponse(
+        "Spend limit exceeded. Please increase your spend limit to continue using the service.",
+        402,
+        ErrorCodes.SpendLimitReached
       );
-      if (invoice.amount_due / 100 > organization.spendLimit) {
-        return ErrorResponse(
-          "Spend limit exceeded. Please increase your spend limit to continue using the service.",
-          402,
-          ErrorCodes.SpendLimitReached
-        );
-      }
     }
 
     const pub_token = `pub_tok_${randomBytes(16).toString("hex")}`;
