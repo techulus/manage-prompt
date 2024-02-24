@@ -48,6 +48,7 @@ export const getCompletion = async (
       };
     case "mistralai/Mixtral-8x7B-Instruct-v0.1":
     case "meta-llama/Llama-2-70b-chat-hf":
+    case "google/gemma-7b-it":
       const anyscaleCompletion = await anyscale.chat.completions.create({
         model,
         messages: [
@@ -104,6 +105,7 @@ export const getStreamingCompletion = async (
       return chatData;
     case "mistralai/Mixtral-8x7B-Instruct-v0.1":
     case "meta-llama/Llama-2-70b-chat-hf":
+    case "google/gemma-7b-it":
       const anyscaleCompletion = await anyscale.chat.completions.create({
         stream: true,
         model,
