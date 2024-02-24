@@ -90,3 +90,25 @@ export async function updateRateLimit(data: FormData) {
 
   redirect(`/console/settings`);
 }
+
+export async function updateSpendLimit(data: FormData) {
+  const id = data.get("id") as string;
+  const spendLimit = Number(data.get("spendLimit"));
+
+  if (spendLimit < 10) {
+    return {
+      error: "Spend limit must be at least $10",
+    };
+  }
+
+  await prisma.organization.update({
+    where: {
+      id,
+    },
+    data: {
+      spendLimit,
+    },
+  });
+
+  redirect(`/console/settings`);
+}

@@ -2,7 +2,11 @@ import { WorkflowInput } from "@/data/workflow";
 import { prisma } from "@/lib/utils/db";
 import { getCompletion } from "@/lib/utils/openai";
 import { validateRateLimit } from "@/lib/utils/ratelimit";
-import { isSubscriptionActive, reportUsage } from "@/lib/utils/stripe";
+import {
+  getUpcomingInvoice,
+  isSubscriptionActive,
+  reportUsage,
+} from "@/lib/utils/stripe";
 import { EventName, logEvent } from "@/lib/utils/tinybird";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
@@ -37,6 +41,7 @@ enum ErrorCodes {
   InvalidBilling = "invalid_billing",
   InternalServerError = "internal_server_error",
   RequestBlocked = "request_blocked",
+  SpendLimitReached = "spend_limit_reached",
 }
 
 export async function POST(
@@ -94,6 +99,20 @@ export async function POST(
         402,
         ErrorCodes.InvalidBilling
       );
+    }
+
+    // Spend limit
+    if (organization.spendLimit && organization?.stripe?.customerId) {
+      const invoice = await getUpcomingInvoice(
+        organization?.stripe?.customerId
+      );
+      if (invoice.amount_due / 100 > organization.spendLimit) {
+        return ErrorResponse(
+          "Spend limit exceeded. Please increase your spend limit to continue using the service.",
+          402,
+          ErrorCodes.SpendLimitReached
+        );
+      }
     }
 
     const workflow = await prisma.workflow.findUnique({

@@ -27,6 +27,7 @@ import {
   redirectToBilling,
   revokeSecretKey,
   updateRateLimit,
+  updateSpendLimit,
 } from "./actions";
 
 export default async function Settings() {
@@ -95,13 +96,30 @@ export default async function Settings() {
                         </Badge>
                         {invoice?.amount_remaining && invoice?.period_end ? (
                           <p className="mt-2">
-                            Next Invoice: USD{" "}
-                            {(invoice.amount_remaining / 100).toFixed(2)} on{" "}
-                            {DateTime.fromSeconds(
-                              invoice.period_end
-                            ).toDateString()}
+                            <span className="font-bold">Next Invoice:</span>
+                            <span className="ml-2">
+                              USD {(invoice.amount_remaining / 100).toFixed(2)}{" "}
+                              on{" "}
+                              {DateTime.fromSeconds(
+                                invoice.period_end
+                              ).toDateString()}
+                            </span>
                           </p>
                         ) : null}
+                        <div className="mt-2 flex items-center">
+                          <span className="font-bold">
+                            Monthly Spend Limit:
+                          </span>
+                          <span className="ml-2">
+                            <EditableValue
+                              id={ownerId}
+                              name="spendLimit"
+                              type="number"
+                              value={organization?.spendLimit ?? "-"}
+                              action={updateSpendLimit}
+                            />
+                          </span>
+                        </div>
                       </div>
                       <div className="text-gray-900 dark:text-gray-200">
                         <form action={redirectToBilling}>
