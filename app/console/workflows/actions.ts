@@ -217,7 +217,6 @@ export async function runWorkflow(formData: FormData) {
       }),
     ]);
   } catch (error) {
-    console.error(error);
     return {
       error,
     };
