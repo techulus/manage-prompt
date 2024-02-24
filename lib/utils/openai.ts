@@ -73,7 +73,7 @@ export const getCompletion = async (
         totalTokenCount: anyscaleCompletion.usage?.total_tokens ?? 0,
       };
     default:
-      throw new Error("Unsupported model");
+      throw "Unsupported model";
   }
 };
 

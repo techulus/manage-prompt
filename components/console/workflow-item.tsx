@@ -35,7 +35,7 @@ export async function WorkflowItem({ workflow }: Props) {
       <div className="flex items-center justify-between space-x-4">
         <Link
           href={`/console/workflows/${workflow.id}`}
-          className="min-w-0 space-y-3 z-10"
+          className="min-w-0 space-y-3"
         >
           <div className="flex items-center space-x-3">
             <span
@@ -49,7 +49,7 @@ export async function WorkflowItem({ workflow }: Props) {
             >
               <span
                 className={classNames(
-                  workflow.published ? "bg-green-400" : "bg-gray-400",
+                  workflow.published ? "bg-green-400" : "bg-red-500",
                   "h-2 w-2 rounded-full"
                 )}
               />

@@ -10,6 +10,7 @@ import { SignedIn } from "@clerk/nextjs";
 import { Workflow } from "@prisma/client";
 import { useMemo, useReducer } from "react";
 import { ApiCodeSnippet } from "../code/snippet";
+import { notifyError } from "../core/toast";
 import { SaveButton } from "../form/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -54,7 +55,15 @@ export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
 
   return (
     <>
-      <form className="p-6" action={runWorkflow}>
+      <form
+        className="p-6"
+        action={async (data: FormData) => {
+          const result = await runWorkflow(data);
+          if (result?.error) {
+            notifyError(result.error as string);
+          }
+        }}
+      >
         <input
           type="number"
           name="id"

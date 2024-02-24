@@ -1,7 +1,10 @@
 import { prisma } from "@/lib/utils/db";
 import { validateRateLimit } from "@/lib/utils/ratelimit";
 import { redis } from "@/lib/utils/redis";
-import { isSubscriptionActive } from "@/lib/utils/stripe";
+import {
+  hasExceededSpendLimit,
+  isSubscriptionActive,
+} from "@/lib/utils/stripe";
 import { NextRequest, NextResponse } from "next/server";
 import { randomBytes } from "node:crypto";
 
@@ -30,6 +33,7 @@ const ErrorResponse = (message: string, status = 400, code?: string) =>
 
 enum ErrorCodes {
   InvalidBilling = "invalid_billing",
+  SpendLimitReached = "spend_limit_reached",
   InternalServerError = "internal_server_error",
 }
 
@@ -86,6 +90,20 @@ export async function GET(req: NextRequest) {
         "Invalid billing. Please contact support.",
         402,
         ErrorCodes.InvalidBilling
+      );
+    }
+
+    // Spend limit
+    if (
+      await hasExceededSpendLimit(
+        organization?.spendLimit,
+        organization?.stripe?.customerId
+      )
+    ) {
+      return ErrorResponse(
+        "Spend limit exceeded. Please increase your spend limit to continue using the service.",
+        402,
+        ErrorCodes.SpendLimitReached
       );
     }
 

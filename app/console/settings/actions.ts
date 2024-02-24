@@ -66,6 +66,10 @@ const RateLimitSettingsSchema = z.object({
   rateLimitPerSecond: z.number().min(1).max(MAX_RATE_LIMIT_RPS),
 });
 
+const SpendLimitSettingsSchema = z.object({
+  spendLimit: z.number().min(10).max(10000),
+});
+
 export async function updateRateLimit(data: FormData) {
   const id = data.get("id");
   const rateLimitPerSecond = Number(data.get("rateLimitPerSecond"));
@@ -85,6 +89,31 @@ export async function updateRateLimit(data: FormData) {
     },
     data: {
       rateLimitPerSecond,
+    },
+  });
+
+  redirect(`/console/settings`);
+}
+
+export async function updateSpendLimit(data: FormData) {
+  const id = data.get("id") as string;
+  const spendLimit = Number(data.get("spendLimit"));
+
+  const result = SpendLimitSettingsSchema.safeParse({
+    spendLimit,
+  });
+  if (!result.success) {
+    return {
+      error: fromZodError(result.error).toString(),
+    };
+  }
+
+  await prisma.organization.update({
+    where: {
+      id,
+    },
+    data: {
+      spendLimit,
     },
   });
 
