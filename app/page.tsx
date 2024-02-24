@@ -37,7 +37,7 @@ const features = [
   {
     name: "Several models to choose from.",
     description:
-      "Use multiple models using the same API, models from OpenAI, Meta, Mixtral and more.",
+      "Use multiple models using the same API, models from OpenAI, Meta, Google, Mixtral and more.",
     icon: ServerIcon,
   },
 ];

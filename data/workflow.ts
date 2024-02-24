@@ -5,6 +5,7 @@ export const AIModels = [
   "gpt-4",
   "meta-llama/Llama-2-70b-chat-hf",
   "mistralai/Mixtral-8x7B-Instruct-v0.1",
+  "google/gemma-7b-it",
 ] as const;
 
 export const modelHasInstruction: Record<string, boolean> = {};
