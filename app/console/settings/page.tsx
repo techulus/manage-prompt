@@ -26,6 +26,7 @@ import {
   createSecretKey,
   redirectToBilling,
   revokeSecretKey,
+  updateKeyName,
   updateRateLimit,
   updateSpendLimit,
 } from "./actions";
@@ -108,7 +109,7 @@ export default async function Settings() {
                         ) : null}
                         <div className="mt-2 flex items-center">
                           <span className="font-bold">
-                            Monthly Spend Limit:
+                            Monthly Spend Limit (USD):
                           </span>
                           <span className="ml-2">
                             <EditableValue
@@ -232,6 +233,7 @@ export default async function Settings() {
                 )}
                 <TableHeader>
                   <TableRow>
+                    <TableHead>Name</TableHead>
                     <TableHead>Key</TableHead>
                     <TableHead>Rate Limit (Req/sec)</TableHead>
                     <TableHead>Last used</TableHead>
@@ -241,6 +243,15 @@ export default async function Settings() {
                 <TableBody>
                   {secretKeys.map((key) => (
                     <TableRow key={key.id}>
+                      <TableCell>
+                        <EditableValue
+                          id={key.id}
+                          name="keyName"
+                          type="text"
+                          value={key.name ?? "-"}
+                          action={updateKeyName}
+                        />
+                      </TableCell>
                       <TableCell>
                         <pre>{key.key}</pre>
                       </TableCell>

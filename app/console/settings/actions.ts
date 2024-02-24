@@ -62,21 +62,17 @@ export async function revokeSecretKey(data: FormData) {
   redirect(`/console/settings`);
 }
 
-const RateLimitSettingsSchema = z.object({
-  rateLimitPerSecond: z.number().min(1).max(MAX_RATE_LIMIT_RPS),
-});
-
-const SpendLimitSettingsSchema = z.object({
-  spendLimit: z.number().min(10).max(10000),
-});
-
 export async function updateRateLimit(data: FormData) {
   const id = data.get("id");
   const rateLimitPerSecond = Number(data.get("rateLimitPerSecond"));
 
-  const result = RateLimitSettingsSchema.safeParse({
-    rateLimitPerSecond,
-  });
+  const result = z
+    .object({
+      rateLimitPerSecond: z.number().min(1).max(MAX_RATE_LIMIT_RPS),
+    })
+    .safeParse({
+      rateLimitPerSecond,
+    });
   if (!result.success) {
     return {
       error: fromZodError(result.error).toString(),
@@ -99,9 +95,13 @@ export async function updateSpendLimit(data: FormData) {
   const id = data.get("id") as string;
   const spendLimit = Number(data.get("spendLimit"));
 
-  const result = SpendLimitSettingsSchema.safeParse({
-    spendLimit,
-  });
+  const result = z
+    .object({
+      spendLimit: z.number().min(10).max(10000),
+    })
+    .safeParse({
+      spendLimit,
+    });
   if (!result.success) {
     return {
       error: fromZodError(result.error).toString(),
@@ -114,6 +114,35 @@ export async function updateSpendLimit(data: FormData) {
     },
     data: {
       spendLimit,
+    },
+  });
+
+  redirect(`/console/settings`);
+}
+
+export async function updateKeyName(data: FormData) {
+  const id = data.get("id");
+  const name = data.get("keyName") as string;
+
+  const result = z
+    .object({
+      name: z.string().min(3).max(50),
+    })
+    .safeParse({
+      name,
+    });
+  if (!result.success) {
+    return {
+      error: fromZodError(result.error).toString(),
+    };
+  }
+
+  await prisma.secretKey.update({
+    where: {
+      id: +id!,
+    },
+    data: {
+      name,
     },
   });
 
