@@ -50,9 +50,6 @@ async function getGitHubStars(): Promise<string | null> {
         headers: {
           Accept: "application/vnd.github+json",
         },
-        next: {
-          revalidate: 86400,
-        },
       }
     );
 
