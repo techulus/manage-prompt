@@ -21,6 +21,8 @@ import { DateTime } from "@/lib/utils/datetime";
 import { prisma } from "@/lib/utils/db";
 import { getUpcomingInvoice } from "@/lib/utils/stripe";
 import { clerkClient } from "@clerk/nextjs";
+import { User } from "@clerk/nextjs/dist/types/server";
+import { Stripe as DbStripe, Organization, SecretKey } from "@prisma/client";
 import Stripe from "stripe";
 import {
   createSecretKey,
@@ -38,7 +40,13 @@ export default async function Settings() {
     throw new Error("User not found");
   }
 
-  const [user, organization, secretKeys] = await Promise.all([
+  const [user, organization, secretKeys]: [
+    User,
+    Organization & {
+      stripe: DbStripe;
+    },
+    SecretKey[]
+  ] = await Promise.all([
     clerkClient.users.getUser(userId),
     prisma.organization.findUnique({
       include: {
