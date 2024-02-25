@@ -5,8 +5,8 @@ import {
   hasExceededSpendLimit,
   isSubscriptionActive,
 } from "@/lib/utils/stripe";
+import { createId } from "@paralleldrive/cuid2";
 import { NextRequest, NextResponse } from "next/server";
-import { randomBytes } from "node:crypto";
 
 const UnauthorizedResponse = () =>
   NextResponse.json(
@@ -38,6 +38,7 @@ enum ErrorCodes {
 }
 
 export const dynamic = "force-dynamic";
+export const runtime = "edge";
 
 export async function GET(req: NextRequest) {
   try {
@@ -106,7 +107,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const pub_token = `pub_tok_${randomBytes(16).toString("hex")}`;
+    const pub_token = `pub_tok_${createId()}`;
 
     const searchParams = req.nextUrl.searchParams;
 

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/utils/db";
-import { randomUUID } from "node:crypto";
+import { createId } from "@paralleldrive/cuid2";
 import Stripe from "stripe";
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
@@ -120,7 +120,7 @@ export async function reportUsage(
       action: "increment",
     },
     {
-      idempotencyKey: `${subscription.id}-${randomUUID()}`,
+      idempotencyKey: `${subscription.id}-${createId()}`,
     }
   );
 }

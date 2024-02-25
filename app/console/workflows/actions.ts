@@ -11,8 +11,8 @@ import {
 } from "@/lib/utils/stripe";
 import { EventName, logEvent } from "@/lib/utils/tinybird";
 import { WorkflowSchema } from "@/lib/utils/workflow";
+import { createId } from "@paralleldrive/cuid2";
 import { redirect } from "next/navigation";
-import { randomBytes } from "node:crypto";
 import Stripe from "stripe";
 import { fromZodError } from "zod-validation-error";
 
@@ -58,7 +58,7 @@ export async function createWorkflow(formData: FormData) {
         },
       },
       published: true,
-      shortId: `wf_${randomBytes(16).toString("hex")}`,
+      shortId: `wf_${createId()}`,
       name,
       model,
       template,

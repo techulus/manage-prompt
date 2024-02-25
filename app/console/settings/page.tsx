@@ -33,6 +33,8 @@ import {
   updateSpendLimit,
 } from "./actions";
 
+export const runtime = "edge";
+
 export default async function Settings() {
   const { userId, ownerId } = owner();
 

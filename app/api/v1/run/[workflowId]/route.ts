@@ -12,6 +12,7 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
 export const maxDuration = 120;
+export const runtime = "edge";
 
 const UnauthorizedResponse = () =>
   NextResponse.json(

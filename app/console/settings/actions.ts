@@ -7,10 +7,14 @@ import {
   getCheckoutSession,
 } from "@/lib/utils/stripe";
 import { MAX_RATE_LIMIT_RPS } from "@/lib/utils/workflow";
+import { init } from "@paralleldrive/cuid2";
 import { redirect } from "next/navigation";
-import { randomBytes } from "node:crypto";
 import { z } from "zod";
 import { fromZodError } from "zod-validation-error";
+
+const createId = init({
+  length: 32,
+});
 
 export async function redirectToBilling() {
   const { ownerId } = owner();
@@ -31,9 +35,9 @@ export async function createSecretKey() {
     throw new Error("User and org ID not found");
   }
 
-  const apiKey = await prisma.secretKey.create({
+  await prisma.secretKey.create({
     data: {
-      key: `sk_${randomBytes(32).toString("hex")}`,
+      key: `sk_${createId()}`,
       user: {
         connect: {
           id: userId,
@@ -46,7 +50,6 @@ export async function createSecretKey() {
       },
     },
   });
-  console.log(apiKey);
 
   redirect(`/console/settings`);
 }
