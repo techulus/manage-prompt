@@ -42,7 +42,7 @@ const features = [
   },
 ];
 
-async function getGitHubStars(): Promise<string | null> {
+async function getGitHubStars(): Promise<string> {
   try {
     const response = await fetch(
       "https://api.github.com/repos/techulus/manage-prompt",
@@ -50,27 +50,31 @@ async function getGitHubStars(): Promise<string | null> {
         headers: {
           Accept: "application/vnd.github+json",
         },
+        next: {
+          revalidate: 86400,
+        },
       }
     );
 
     if (!response?.ok) {
-      return null;
+      return "-";
     }
 
     const json = await response.json();
 
     return parseInt(json["stargazers_count"]).toLocaleString();
   } catch (error) {
-    return null;
+    return "-";
   }
 }
 
-export const dynamic = "force-dynamic";
 export const runtime = "edge";
 
 export default async function Home() {
-  const stars = (await getGitHubStars()) ?? "-";
-  const token = await getManagePromptToken();
+  const [token, stars] = await Promise.all([
+    getManagePromptToken(),
+    getGitHubStars(),
+  ]);
   const streamUrl = `${process.env.APP_BASE_URL}/api/v1/run/${process.env.MANAGEPROMPT_DEMO_WORKFLOW_ID}/stream?token=${token}`;
 
   return (
