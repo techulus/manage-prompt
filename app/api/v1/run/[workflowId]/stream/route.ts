@@ -8,6 +8,8 @@ import { OpenAIStream, StreamingTextResponse } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
+export const maxDuration = 120;
+
 const UnauthorizedResponse = () =>
   NextResponse.json(
     {

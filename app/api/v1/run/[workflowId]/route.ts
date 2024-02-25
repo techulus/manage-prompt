@@ -11,6 +11,8 @@ import { EventName, logEvent } from "@/lib/utils/tinybird";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
+export const maxDuration = 120;
+
 const UnauthorizedResponse = () =>
   NextResponse.json(
     {
@@ -76,14 +78,13 @@ export async function POST(
     }
 
     // Rate limit
+    const rateLimitKey =
+      req.headers.get("x-user-id") ?? `key_${key.ownerId}_${key.id}`;
     const {
       success: keyRateLimitSuccess,
       limit,
       remaining,
-    } = await validateRateLimit(
-      `key_${key.ownerId}_${key.id}`,
-      key.rateLimitPerSecond
-    );
+    } = await validateRateLimit(rateLimitKey, key.rateLimitPerSecond);
     if (!keyRateLimitSuccess) {
       return ErrorResponse("Rate limit exceeded", 429);
     }

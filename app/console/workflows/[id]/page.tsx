@@ -33,6 +33,8 @@ interface Props {
   };
 }
 
+export const maxDuration = 120;
+
 export default async function WorkflowDetails({ params, searchParams }: Props) {
   const { ownerId } = owner();
   const currentPage = searchParams.page ? parseInt(searchParams.page) : 1;

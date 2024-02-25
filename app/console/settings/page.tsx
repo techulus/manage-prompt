@@ -26,6 +26,7 @@ import {
   createSecretKey,
   redirectToBilling,
   revokeSecretKey,
+  updateKeyName,
   updateRateLimit,
   updateSpendLimit,
 } from "./actions";
@@ -79,7 +80,7 @@ export default async function Settings() {
               <h2 className="text-base font-semibold leading-7 text-gray-900 dark:text-gray-200">
                 Account
               </h2>
-              <p className="mt-1 text-sm leading-6 text-gray-500">
+              <p className="mt-1 text-sm leading-6 text-gray-500 dark:text-gray-400">
                 Manage your account settings and billing information.
               </p>
 
@@ -108,7 +109,7 @@ export default async function Settings() {
                         ) : null}
                         <div className="mt-2 flex items-center">
                           <span className="font-bold">
-                            Monthly Spend Limit:
+                            Monthly Spend Limit (USD):
                           </span>
                           <span className="ml-2">
                             <EditableValue
@@ -193,9 +194,10 @@ export default async function Settings() {
               <h2 className="text-base font-semibold leading-7 text-gray-900 dark:text-gray-200">
                 API Credentials
               </h2>
-              <p className="mt-1 text-sm leading-6 text-gray-500">
+              <p className="mt-1 text-sm leading-6 text-gray-500 dark:text-gray-400">
                 Manage your API credentials. These keys should be kept secret
-                and not shared publicly. You can find our API documentation{" "}
+                and not shared publicly. You can read more about our API and
+                rate limting{" "}
                 <a
                   href="https://manageprompt.readme.io"
                   target="_blank"
@@ -204,6 +206,9 @@ export default async function Settings() {
                 >
                   here.
                 </a>
+                <br />
+                You can revoke a key at any time if you believe it has been
+                compromised.
               </p>
 
               <Table className="mt-6">
@@ -232,6 +237,7 @@ export default async function Settings() {
                 )}
                 <TableHeader>
                   <TableRow>
+                    <TableHead>Name</TableHead>
                     <TableHead>Key</TableHead>
                     <TableHead>Rate Limit (Req/sec)</TableHead>
                     <TableHead>Last used</TableHead>
@@ -241,6 +247,15 @@ export default async function Settings() {
                 <TableBody>
                   {secretKeys.map((key) => (
                     <TableRow key={key.id}>
+                      <TableCell>
+                        <EditableValue
+                          id={key.id}
+                          name="keyName"
+                          type="text"
+                          value={key.name ?? "-"}
+                          action={updateKeyName}
+                        />
+                      </TableCell>
                       <TableCell>
                         <pre>{key.key}</pre>
                       </TableCell>

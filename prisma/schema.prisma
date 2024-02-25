@@ -55,6 +55,7 @@ model OrganizationToUser {
 
 model SecretKey {
   id                 Int       @id @default(autoincrement())
+  name               String?
   key                String    @unique
   rateLimitPerSecond Int       @default(10)
   createdBy          String
