@@ -23,6 +23,8 @@ interface Props {
   };
 }
 
+export const runtime = "edge";
+
 export default async function Workflows({ searchParams }: Props) {
   const { userId, orgId } = owner();
 

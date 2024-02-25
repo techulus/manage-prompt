@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/utils/db";
-import { Prisma, Workflow } from "@prisma/client";
+import { Prisma, User, Workflow } from "@prisma/client";
 import { owner } from "../hooks/useOwner";
 
 export const LIMIT = 15;
@@ -24,21 +24,16 @@ export async function getWorkflowsForOwner({
   userId: string;
   search?: string;
   page?: number;
-}) {
+}): Promise<{
+  workflows: Workflow &
+    {
+      user: User;
+    }[];
+  count: number;
+}> {
   const dbQuery: Prisma.WorkflowFindManyArgs = {
-    select: {
-      id: true,
-      name: true,
-      createdAt: true,
-      updatedAt: true,
-      published: true,
-      model: true,
-      ownerId: true,
-      user: {
-        select: {
-          first_name: true,
-        },
-      },
+    include: {
+      user: true,
     },
     where: {
       organization: {
@@ -76,7 +71,16 @@ export async function getWorkflowsForOwner({
   return { workflows, count };
 }
 
-export async function getWorkflowAndRuns(id: number, page: number = 1) {
+export async function getWorkflowAndRuns(
+  id: number,
+  page: number = 1
+): Promise<{
+  workflow: Workflow;
+  workflowRuns: (Workflow & {
+    user: User;
+  })[];
+  count: number;
+}> {
   const { ownerId } = owner();
   const workflow: Workflow | null = await prisma.workflow.findFirst({
     where: {
@@ -96,11 +100,7 @@ export async function getWorkflowAndRuns(id: number, page: number = 1) {
   const [workflowRuns, count] = await prisma.$transaction([
     prisma.workflowRun.findMany({
       include: {
-        user: {
-          select: {
-            first_name: true,
-          },
-        },
+        user: true,
       },
       where: {
         workflowId: id,
