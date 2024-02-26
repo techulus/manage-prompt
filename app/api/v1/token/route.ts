@@ -63,6 +63,9 @@ export async function GET(req: NextRequest) {
           },
         },
       },
+      cacheStrategy: {
+        ttl: 60,
+      },
     });
     if (!key) {
       return UnauthorizedResponse();

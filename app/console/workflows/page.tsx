@@ -1,3 +1,4 @@
+import { ImportWorkflowDialog } from "@/components/console/workflow-import";
 import { WorkflowItem } from "@/components/console/workflow-item";
 import { ContentBlock } from "@/components/core/content-block";
 import PageTitle from "@/components/layout/page-title";
@@ -49,19 +50,18 @@ export default async function Workflows({ searchParams }: Props) {
         actionLink="/console/workflows/new"
       />
 
-      <form
-        action="/console/workflows"
-        className="flex flex-1 justify-center lg:justify-end mx-4 py-4 xl:pt-4 xl:pb-0 xl:m-0"
-      >
-        <div className="w-full max-w-7xl mx-auto">
+      <div className="flex w-full max-w-7xl mx-2 sm:mx-auto py-4 space-x-4 items-center">
+        <form className="flex-1" action="/console/workflows">
           <label htmlFor="search" className="sr-only">
             Search workflows
           </label>
           <div className="relative text-gray-600 dark:text-gray-400 focus-within:text-gray-800 dark:focus-within:text-gray-200">
             <Input name="search" placeholder="Search Workflows" type="search" />
           </div>
-        </div>
-      </form>
+        </form>
+
+        <ImportWorkflowDialog />
+      </div>
 
       <ContentBlock>
         <ul role="list" className="divide-y border-b">

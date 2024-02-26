@@ -6,6 +6,7 @@ import { ActionButton, DeleteButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
 import { CardHeader } from "@/components/ui/card";
 import {
   Pagination,
@@ -21,7 +22,9 @@ import { prisma } from "@/lib/utils/db";
 import { getWorkflowRunStats } from "@/lib/utils/tinybird";
 import { LIMIT, getWorkflowAndRuns } from "@/lib/utils/useWorkflow";
 import { PauseCircleIcon, PlayCircleIcon } from "@heroicons/react/20/solid";
+import { DownloadIcon } from "@radix-ui/react-icons";
 import { Terminal } from "lucide-react";
+import Link from "next/link";
 import { deleteWorkflow, toggleWorkflowState } from "../actions";
 
 interface Props {
@@ -73,7 +76,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
           <Terminal className="h-4 w-4" />
           <AlertTitle>Heads up!</AlertTitle>
           <AlertDescription>
-            This workflow is not published and hence cannot be run.
+            This workflow is not active and hence cannot be run.
           </AlertDescription>
         </Alert>
       ) : null}
@@ -121,6 +124,14 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                       />
                     )}
                   </form>
+
+                  <Link
+                    href={`/console/workflows/${workflow.id}/export`}
+                    className={buttonVariants({ variant: "ghost" })}
+                  >
+                    <DownloadIcon className="mr-2 h-4 w-4" aria-hidden="true" />
+                    Export
+                  </Link>
                 </span>
               </div>
 
