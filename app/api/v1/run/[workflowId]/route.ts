@@ -73,6 +73,9 @@ export async function POST(
           },
         },
       },
+      cacheStrategy: {
+        ttl: 60,
+      },
     });
     if (!key) {
       return UnauthorizedResponse();
@@ -122,6 +125,9 @@ export async function POST(
         shortId: params.workflowId,
         ownerId: key.ownerId,
       },
+      cacheStrategy: {
+        ttl: 60,
+      },
     });
     if (!workflow || !workflow?.published) {
       return ErrorResponse("Workflow not found", 404);
@@ -131,7 +137,6 @@ export async function POST(
 
     let content = workflow.template;
     const model = workflow.model;
-    const instruction = workflow.instruction ?? "";
     const inputs = workflow.inputs as unknown as WorkflowInput[];
     // Handle inputs
     for (const input of inputs) {

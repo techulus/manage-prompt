@@ -42,10 +42,10 @@ export async function getWorkflowRunStats(
     return d.getHours();
   });
 
-  return last24Hours
+  return (last24Hours ?? [])
     .map(
       (hour) =>
-        entries.find((e) => e.hour === hour) || { hour, total: 0, tokens: 0 }
+        entries?.find((e) => e.hour === hour) || { hour, total: 0, tokens: 0 }
     )
     .reverse();
 }

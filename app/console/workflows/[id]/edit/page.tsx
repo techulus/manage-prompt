@@ -33,8 +33,8 @@ export default async function EditWorkflow({ params }: Props) {
             <Terminal className="h-4 w-4" />
             <AlertTitle>Heads up!</AlertTitle>
             <AlertDescription>
-              All updates to the workflow will be reflected in the API and
-              console immediately.
+              Updates to the workflow may take upto a minute to reflect in the
+              API.
             </AlertDescription>
           </Alert>
         </CardHeader>

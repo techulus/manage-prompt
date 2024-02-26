@@ -8,7 +8,12 @@ declare global {
 
 export const prisma =
   global.prisma ||
-  new PrismaClient({ log: ["warn", "error"] }).$extends(withAccelerate());
+  new PrismaClient({
+    log:
+      process.env.NODE_ENV === "development"
+        ? ["info", "warn", "error"]
+        : ["warn", "error"],
+  }).$extends(withAccelerate());
 
 // cache on global for HOT RELOAD in dev
 if (process.env.NODE_ENV === "development") global.prisma = prisma;
