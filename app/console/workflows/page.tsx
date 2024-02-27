@@ -50,7 +50,7 @@ export default async function Workflows({ searchParams }: Props) {
         actionLink="/console/workflows/new"
       />
 
-      <div className="flex w-full max-w-7xl mx-2 sm:mx-auto py-4 space-x-4 items-center">
+      <div className="flex max-w-7xl px-4 xl:px-0 sm:mx-auto py-4 space-x-4 items-center">
         <form className="flex-1" action="/console/workflows">
           <label htmlFor="search" className="sr-only">
             Search workflows
