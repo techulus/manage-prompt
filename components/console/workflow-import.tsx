@@ -66,7 +66,12 @@ export const ImportWorkflowDialog = () => {
 
   return (
     <Dialog>
-      <DialogTrigger className={buttonVariants({ variant: "secondary" })}>
+      <DialogTrigger
+        className={buttonVariants({
+          variant: "outline",
+          className: "hidden lg:block",
+        })}
+      >
         Import
       </DialogTrigger>
       <DialogContent>
@@ -91,7 +96,7 @@ export const ImportWorkflowDialog = () => {
                       htmlFor="file-upload"
                       className="relative cursor-pointer rounded-md font-semibold text-blue-500 dark:text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-600 focus-within:ring-offset-2 hover:text-blue-700 hover:dark:text-blue-500"
                     >
-                      <span>Select JSON</span>
+                      <span>Select JSON file</span>
                       <input {...getInputProps()} disabled={loading} />
                     </label>
                     <p className="pl-1">or drag and drop</p>
