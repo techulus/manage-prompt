@@ -46,7 +46,7 @@ export function EditableValue({
             type={type}
             value={localValue}
             onChange={(e) => setLocalValue(e.target.value)}
-            className="h-5 w-auto"
+            className="h-6 w-auto max-w-[160px]"
           />
           <ActionButton label="Save" className="h-5" />
         </div>

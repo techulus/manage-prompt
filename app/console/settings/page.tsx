@@ -94,8 +94,8 @@ export default async function Settings() {
                 Manage your account settings and billing information.
               </p>
 
-              <dl className="mt-6 space-y-6 divide-y border-t text-sm leading-6">
-                <div className="pt-6 sm:flex">
+              <dl className="mt-6 space-y-4 divide-y border-t text-sm leading-6">
+                <div className="pt-2 sm:flex">
                   <dt className="font-medium text-gray-900 dark:text-gray-200 sm:w-64 sm:flex-none sm:pr-6">
                     Billing
                   </dt>
@@ -160,7 +160,7 @@ export default async function Settings() {
                   )}
                 </div>
 
-                <div className="pt-6 sm:flex">
+                <div className="pt-2 sm:flex">
                   <dt className="font-medium text-gray-900 dark:text-gray-200 sm:w-64 sm:flex-none sm:pr-6">
                     User name
                   </dt>
@@ -172,7 +172,7 @@ export default async function Settings() {
                   </dd>
                 </div>
 
-                <div className="pt-6 sm:flex">
+                <div className="pt-2 sm:flex">
                   <dt className="font-medium text-gray-900 dark:text-gray-200 sm:w-64 sm:flex-none sm:pr-6">
                     Full name
                   </dt>
@@ -184,7 +184,7 @@ export default async function Settings() {
                 </div>
 
                 {user?.emailAddresses?.length ? (
-                  <div className="pt-6 sm:flex">
+                  <div className="pt-2 sm:flex">
                     <dt className="font-medium text-gray-900 dark:text-gray-200 sm:w-64 sm:flex-none sm:pr-6">
                       Email address
                     </dt>
