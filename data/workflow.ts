@@ -6,12 +6,10 @@ export const AIModelToLabel = {
   "meta-llama/Llama-2-70b-chat-hf": "Meta Llama 2 70b",
   "mistralai/Mixtral-8x7B-Instruct-v0.1": "Mixtral 8x7B",
   "google/gemma-7b-it": "Google Gemma 7B",
-};
+} as const;
 
-export type Model = keyof typeof AIModelToLabel;
-export const AIModels: Array<Model> = Object.keys(
-  AIModelToLabel
-) as Array<Model>;
+export type AIModel = keyof typeof AIModelToLabel;
+export const AIModels = Object.keys(AIModelToLabel) as Array<AIModel>;
 
 export const modelHasInstruction: Record<string, boolean> = {};
 

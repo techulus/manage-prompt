@@ -1,4 +1,4 @@
-import { AIModelToLabel, Model } from "@/data/workflow";
+import { AIModel, AIModelToLabel } from "@/data/workflow";
 import { DateTime } from "@/lib/utils/datetime";
 import { WorkflowRun } from "@prisma/client";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
@@ -26,7 +26,7 @@ interface Props {
 export async function WorkflowRunItem({ workflowRun }: Props) {
   const { result, user, createdAt, rawResult, rawRequest, totalTokenCount } =
     workflowRun;
-  const model = (rawResult as any)?.model as Model;
+  const model = (rawResult as any)?.model as AIModel;
 
   return (
     <li
