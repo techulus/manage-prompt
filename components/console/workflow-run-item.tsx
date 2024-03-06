@@ -1,3 +1,4 @@
+import { AIModelToLabel, Model } from "@/data/workflow";
 import { DateTime } from "@/lib/utils/datetime";
 import { WorkflowRun } from "@prisma/client";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
@@ -25,7 +26,7 @@ interface Props {
 export async function WorkflowRunItem({ workflowRun }: Props) {
   const { result, user, createdAt, rawResult, rawRequest, totalTokenCount } =
     workflowRun;
-  const model = (rawResult as any)?.model as string;
+  const model = (rawResult as any)?.model as Model;
 
   return (
     <li
@@ -41,7 +42,7 @@ export async function WorkflowRunItem({ workflowRun }: Props) {
               <>
                 <span aria-hidden="true">&middot;</span>
                 <span className="text-gray-600 dark:text-gray-400 font-normal">
-                  {model}
+                  {AIModelToLabel[model] ?? model}
                 </span>
                 <span aria-hidden="true">&middot;</span>
                 <span className="text-gray-600 dark:text-gray-400 font-normal">

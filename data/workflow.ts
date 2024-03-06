@@ -1,12 +1,17 @@
-export const AIModels = [
-  "gpt-3.5-turbo",
-  "gpt-4-1106-preview",
-  "gpt-4-0125-preview",
-  "gpt-4",
-  "meta-llama/Llama-2-70b-chat-hf",
-  "mistralai/Mixtral-8x7B-Instruct-v0.1",
-  "google/gemma-7b-it",
-] as const;
+export const AIModelToLabel = {
+  "gpt-3.5-turbo": "GPT-3.5 Turbo",
+  "gpt-4-1106-preview": "GPT-4 1106 Preview",
+  "gpt-4-0125-preview": "GPT-4 0125 Preview",
+  "gpt-4": "GPT-4",
+  "meta-llama/Llama-2-70b-chat-hf": "Meta Llama 2 70b",
+  "mistralai/Mixtral-8x7B-Instruct-v0.1": "Mixtral 8x7B",
+  "google/gemma-7b-it": "Google Gemma 7B",
+};
+
+export type Model = keyof typeof AIModelToLabel;
+export const AIModels: Array<Model> = Object.keys(
+  AIModelToLabel
+) as Array<Model>;
 
 export const modelHasInstruction: Record<string, boolean> = {};
 

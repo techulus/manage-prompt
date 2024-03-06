@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  AIModelToLabel,
   AIModels,
   WorkflowInput,
   WorkflowInputType,
@@ -97,8 +98,7 @@ export function WorkflowForm({ workflow, action }: Props) {
                 <SelectContent>
                   {AIModels.map((model) => (
                     <SelectItem key={model} value={model}>
-                      {" "}
-                      {model}
+                      {AIModelToLabel[model] ?? model}
                     </SelectItem>
                   ))}
                 </SelectContent>
