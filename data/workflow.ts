@@ -1,5 +1,7 @@
 export const AIModelToLabel = {
   "gpt-3.5-turbo": "GPT-3.5 Turbo",
+  "gpt-3.5-turbo-0125": "GPT-3.5 Turbo 0125",
+  "gpt-4-32k-0613": "GPT-4 32k 0613",
   "gpt-4-1106-preview": "GPT-4 1106 Preview",
   "gpt-4-0125-preview": "GPT-4 0125 Preview",
   "gpt-4": "GPT-4",

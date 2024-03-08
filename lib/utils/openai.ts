@@ -43,14 +43,6 @@ export const getCompletion = async (
 
   let completion: ChatCompletion | null = null;
   switch (model) {
-    case "gpt-3.5-turbo":
-    case "gpt-4-1106-preview":
-    case "gpt-4-0125-preview":
-    case "gpt-4":
-      completion = await openai.chat.completions.create({
-        model,
-        ...modelParams,
-      });
     case "mistralai/Mixtral-8x7B-Instruct-v0.1":
       completion = await groq.chat.completions.create({
         model: "mixtral-8x7b-32768",
@@ -67,7 +59,10 @@ export const getCompletion = async (
         ...modelParams,
       });
     default:
-      console.log("Unsupported", model);
+      completion = await openai.chat.completions.create({
+        model,
+        ...modelParams,
+      });
   }
 
   if (!completion?.choices) throw new Error("No choices returned from OpenAI");
@@ -99,14 +94,6 @@ export const getStreamingCompletion = async (
   };
 
   switch (model) {
-    case "gpt-3.5-turbo":
-    case "gpt-4-1106-preview":
-    case "gpt-4-0125-preview":
-    case "gpt-4":
-      return openai.chat.completions.create({
-        model,
-        ...modelParams,
-      });
     case "mistralai/Mixtral-8x7B-Instruct-v0.1":
       return groq.chat.completions.create({
         model: "mixtral-8x7b-32768",
@@ -123,6 +110,9 @@ export const getStreamingCompletion = async (
         ...modelParams,
       });
     default:
-      throw new Error("Unsupported model");
+      return openai.chat.completions.create({
+        model,
+        ...modelParams,
+      });
   }
 };

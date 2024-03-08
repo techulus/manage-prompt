@@ -217,8 +217,10 @@ export async function runWorkflow(formData: FormData) {
       }),
     ]);
   } catch (error) {
+    console.error(error);
     return {
-      error,
+      error:
+        error instanceof Error ? error?.message : "Oops! Something went wrong.",
     };
   }
 
