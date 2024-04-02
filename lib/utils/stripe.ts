@@ -131,10 +131,15 @@ export function isSubscriptionActive(subscription: any) {
 
 export async function getUpcomingInvoice(
   customer: string
-): Promise<Stripe.Invoice> {
-  return stripe.invoices.retrieveUpcoming({
-    customer,
-  });
+): Promise<Stripe.Invoice | null> {
+  try {
+    return stripe.invoices.retrieveUpcoming({
+      customer,
+    });
+  } catch (error) {
+    console.error("Failed to get invoice for cutsomer: ", customer, error);
+    return null;
+  }
 }
 
 export async function hasExceededSpendLimit(
@@ -143,6 +148,7 @@ export async function hasExceededSpendLimit(
 ): Promise<boolean> {
   if (spendLimit && stripeCustomerId) {
     const invoice = await getUpcomingInvoice(stripeCustomerId);
+    if (!invoice) return false;
     return invoice.amount_due / 100 > spendLimit;
   }
   return false;
