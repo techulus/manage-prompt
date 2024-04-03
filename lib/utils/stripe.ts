@@ -45,13 +45,16 @@ export async function createOrRetrieveCustomer(
 }
 
 export async function getCheckoutSession(customerId: string): Promise<string> {
-  const subscription = await prisma.stripe.findUnique({
+  const stripeCustomer = await prisma.stripe.findUnique({
     where: {
       customerId,
     },
   });
 
-  if (subscription?.subscriptionId && !isSubscriptionCancelled(subscription)) {
+  if (
+    stripeCustomer?.subscriptionId &&
+    !isSubscriptionCancelled(stripeCustomer?.subscription)
+  ) {
     const { url } = await stripe.billingPortal.sessions.create({
       customer: customerId,
       return_url: `${process.env.APP_BASE_URL}/console/settings`,
