@@ -133,9 +133,10 @@ export async function getUpcomingInvoice(
   customer: string
 ): Promise<Stripe.Invoice | null> {
   try {
-    return stripe.invoices.retrieveUpcoming({
+    const invoice = await stripe.invoices.retrieveUpcoming({
       customer,
     });
+    return invoice;
   } catch (error) {
     console.error("Failed to get invoice for cutsomer: ", customer, error);
     return null;
