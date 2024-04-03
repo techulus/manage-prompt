@@ -19,7 +19,10 @@ import {
 import { owner } from "@/lib/hooks/useOwner";
 import { DateTime } from "@/lib/utils/datetime";
 import { prisma } from "@/lib/utils/db";
-import { getUpcomingInvoice } from "@/lib/utils/stripe";
+import {
+  getUpcomingInvoice,
+  isSubscriptionCancelled,
+} from "@/lib/utils/stripe";
 import { clerkClient } from "@clerk/nextjs";
 import { User } from "@clerk/nextjs/dist/types/server";
 import { Stripe as DbStripe, Organization, SecretKey } from "@prisma/client";
@@ -136,7 +139,11 @@ export default async function Settings() {
                         <form action={redirectToBilling}>
                           <ActionButton
                             variant="link"
-                            label="Manage"
+                            label={
+                              isSubscriptionCancelled(subscription)
+                                ? "Upgrade"
+                                : "Manage"
+                            }
                             loadingLabel="Redirecting..."
                           />
                         </form>
