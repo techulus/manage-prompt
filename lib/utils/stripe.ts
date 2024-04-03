@@ -51,7 +51,7 @@ export async function getCheckoutSession(customerId: string): Promise<string> {
     },
   });
 
-  if (subscription?.subscriptionId) {
+  if (subscription?.subscriptionId && !isSubscriptionCancelled(subscription)) {
     const { url } = await stripe.billingPortal.sessions.create({
       customer: customerId,
       return_url: `${process.env.APP_BASE_URL}/console/settings`,
@@ -127,6 +127,10 @@ export async function reportUsage(
 
 export function isSubscriptionActive(subscription: any) {
   return ["trialing", "active"].includes(subscription?.status);
+}
+
+export function isSubscriptionCancelled(subscription: any) {
+  return subscription?.status === "canceled";
 }
 
 export async function getUpcomingInvoice(
