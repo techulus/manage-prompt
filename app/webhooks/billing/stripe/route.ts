@@ -40,6 +40,7 @@ export async function POST(req: Request) {
         });
         break;
       case "customer.subscription.updated":
+      case "customer.subscription.deleted":
         const updatedSubscription: Stripe.Subscription = event.data.object;
         await prisma.stripe.update({
           where: {
