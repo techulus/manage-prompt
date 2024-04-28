@@ -143,7 +143,7 @@ export async function POST(
     };
 
     const stream = OpenAIStream(
-      await getStreamingCompletion(model, content),
+      await getStreamingCompletion(model, content, workflow.modelSettings),
       callbacks
     );
 
