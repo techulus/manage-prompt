@@ -153,7 +153,11 @@ export async function POST(
       );
     }
 
-    const response = await getCompletion(model, content);
+    const response = await getCompletion(
+      model,
+      content,
+      workflow.modelSettings
+    );
 
     const { result, totalTokenCount } = response;
 

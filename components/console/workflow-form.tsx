@@ -13,7 +13,7 @@ import Link from "next/link";
 import { useCallback, useState } from "react";
 import { notifyError, notifySuccess } from "../core/toast";
 import { SaveButton } from "../form/button";
-import { buttonVariants } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { Input } from "../ui/input";
 import {
   Select,
@@ -23,6 +23,10 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Textarea } from "../ui/textarea";
+import {
+  ModelSettings,
+  WorkflowModelSettings,
+} from "./workflow-model-settings";
 
 interface Props {
   workflow?: Workflow;
@@ -36,6 +40,9 @@ export function WorkflowForm({ workflow, action }: Props) {
   const [inputs, setInputs] = useState<WorkflowInput[]>(
     (workflow?.inputs as WorkflowInput[]) ?? []
   );
+
+  const [showAdvancedModelParams, setShowAdvancedModelParams] = useState(false);
+  const [modelSettings, setModelSettings] = useState({});
 
   const updateInputs = useCallback(
     (value: any) => {
@@ -103,6 +110,33 @@ export function WorkflowForm({ workflow, action }: Props) {
                   ))}
                 </SelectContent>
               </Select>
+
+              <Button
+                className="px-0"
+                variant="link"
+                onClick={() => setShowAdvancedModelParams((prev) => !prev)}
+                type="button"
+              >
+                {showAdvancedModelParams ? "Hide" : "Show"} Advanced Model
+                Params
+              </Button>
+
+              {showAdvancedModelParams ? (
+                <WorkflowModelSettings
+                  defaultValue={
+                    (workflow?.modelSettings as ModelSettings) ?? {}
+                  }
+                  onChange={(val) => {
+                    setModelSettings(val);
+                  }}
+                />
+              ) : null}
+
+              <Input
+                type="hidden"
+                name="modelSettings"
+                defaultValue={JSON.stringify(modelSettings)}
+              />
             </div>
           </div>
 

@@ -23,6 +23,7 @@ export async function createWorkflow(formData: FormData) {
   const model = formData.get("model") as string;
   const template = formData.get("template") as string;
   const instruction = (formData.get("instruction") as string) ?? "";
+  const modelSettings = (formData.get("modelSettings") as string) ?? null;
 
   let inputs: WorkflowInput[] = [];
   try {
@@ -34,6 +35,7 @@ export async function createWorkflow(formData: FormData) {
   const validationResult = WorkflowSchema.safeParse({
     name,
     model,
+    modelSettings,
     template,
     instruction,
     inputs,
@@ -61,6 +63,7 @@ export async function createWorkflow(formData: FormData) {
       shortId: `wf_${createId()}`,
       name,
       model,
+      modelSettings: modelSettings ? JSON.parse(modelSettings) : null,
       template,
       instruction,
       inputs,
@@ -77,6 +80,7 @@ export async function updateWorkflow(formData: FormData) {
   const model = formData.get("model") as string;
   const template = formData.get("template") as string;
   const instruction = (formData.get("instruction") as string) ?? "";
+  const modelSettings = (formData.get("modelSettings") as string) ?? null;
 
   let inputs: WorkflowInput[] = [];
   try {
@@ -88,6 +92,7 @@ export async function updateWorkflow(formData: FormData) {
   const validationResult = WorkflowSchema.safeParse({
     name,
     model,
+    modelSettings,
     template,
     instruction,
     inputs,
@@ -107,6 +112,7 @@ export async function updateWorkflow(formData: FormData) {
       published: true,
       name,
       model,
+      modelSettings: modelSettings ? JSON.parse(modelSettings) : null,
       template,
       instruction,
       inputs,
@@ -179,7 +185,20 @@ export async function runWorkflow(formData: FormData) {
       throw "Spend limit exceeded";
     }
 
-    const response = await getCompletion(model, content);
+    const workflow = await prisma.workflow.findUnique({
+      where: {
+        id,
+      },
+      select: {
+        modelSettings: true,
+      },
+    });
+
+    const response = await getCompletion(
+      model,
+      content,
+      workflow.modelSettings
+    );
 
     const { result, rawResult, totalTokenCount } = response;
 

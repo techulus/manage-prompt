@@ -12,6 +12,7 @@ export const WorkflowSchema = z.object({
   template: z.string().min(1).max(9999),
   instruction: z.string().optional().default(""),
   model: z.enum(zodEnum<AIModel>(AIModels)),
+  modelSettings: z.string().optional().nullable(),
   inputs: z.array(
     z.object({
       name: z.string(),

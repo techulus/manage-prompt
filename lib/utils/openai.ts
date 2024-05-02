@@ -1,3 +1,4 @@
+import { ModelSettings } from "@/components/console/workflow-model-settings";
 import { OpenAI } from "openai";
 import {
   ChatCompletion,
@@ -21,7 +22,8 @@ const groq = new OpenAI({
 
 export const getCompletion = async (
   model: string,
-  content: string
+  content: string,
+  settings?: ModelSettings
 ): Promise<{
   result: string | undefined;
   rawResult: ChatCompletion;
@@ -34,11 +36,11 @@ export const getCompletion = async (
         content,
       },
     ],
-    temperature: 0.5,
-    max_tokens: 1024,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
+    temperature: settings?.temperature ?? 0.5,
+    max_tokens: settings?.maxTokens ?? 1024,
+    top_p: settings?.topP ?? 1,
+    frequency_penalty: settings?.frequencyPenalty ?? 0,
+    presence_penalty: settings?.presencePenalty ?? 0,
   };
 
   let completion: ChatCompletion | null = null;
@@ -76,7 +78,8 @@ export const getCompletion = async (
 
 export const getStreamingCompletion = async (
   model: string,
-  content: string
+  content: string,
+  settings?: ModelSettings
 ) => {
   const modelParams: Omit<ChatCompletionCreateParamsStreaming, "model"> = {
     messages: [
@@ -85,11 +88,11 @@ export const getStreamingCompletion = async (
         content,
       },
     ],
-    temperature: 0.5,
-    max_tokens: 1024,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
+    temperature: settings?.temperature ?? 0.5,
+    max_tokens: settings?.maxTokens ?? 1024,
+    top_p: settings?.topP ?? 1,
+    frequency_penalty: settings?.frequencyPenalty ?? 0,
+    presence_penalty: settings?.presencePenalty ?? 0,
     stream: true,
   };
 
