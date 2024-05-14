@@ -4,6 +4,7 @@ export const AIModelToLabel = {
   "gpt-4-1106-preview": "GPT-4 1106 Preview",
   "gpt-4-0125-preview": "GPT-4 0125 Preview",
   "gpt-4": "GPT-4",
+  "gpt-4o": "GPT-4o",
   "meta-llama/Llama-2-70b-chat-hf": "Meta Llama 2 70b",
   "mistralai/Mixtral-8x7B-Instruct-v0.1": "Mixtral 8x7B",
   "google/gemma-7b-it": "Google Gemma 7B",
