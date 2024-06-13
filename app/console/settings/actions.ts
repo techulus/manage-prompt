@@ -8,6 +8,7 @@ import {
 } from "@/lib/utils/stripe";
 import { MAX_RATE_LIMIT_RPS } from "@/lib/utils/workflow";
 import { init } from "@paralleldrive/cuid2";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { fromZodError } from "zod-validation-error";
@@ -121,6 +122,21 @@ export async function updateSpendLimit(data: FormData) {
   });
 
   redirect(`/console/settings`);
+}
+
+export async function removeSpendLimit(data: FormData) {
+  const id = data.get("id") as string;
+
+  await prisma.organization.update({
+    where: {
+      id,
+    },
+    data: {
+      spendLimit: null,
+    },
+  });
+
+  revalidatePath(`/console/settings`);
 }
 
 export async function updateKeyName(data: FormData) {

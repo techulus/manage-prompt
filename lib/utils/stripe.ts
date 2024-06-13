@@ -144,8 +144,10 @@ export async function getUpcomingInvoice(
       customer,
     });
     return invoice;
-  } catch (error) {
-    console.error("Failed to get invoice for cutsomer: ", customer, error);
+  } catch (error: any) {
+    if (error?.statusCode !== 404) {
+      console.error("Failed to get invoice for cutsomer: ", customer, error);
+    }
     return null;
   }
 }

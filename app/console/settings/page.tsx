@@ -30,6 +30,7 @@ import Stripe from "stripe";
 import {
   createSecretKey,
   redirectToBilling,
+  removeSpendLimit,
   revokeSecretKey,
   updateKeyName,
   updateRateLimit,
@@ -133,6 +134,17 @@ export default async function Settings() {
                               action={updateSpendLimit}
                             />
                           </span>
+                          {organization?.spendLimit ? (
+                            <form action={removeSpendLimit}>
+                              <input type="hidden" name="id" value={ownerId} />
+                              <ActionButton
+                                className="p-0 m-0 h-5"
+                                variant="link"
+                                label="Remove"
+                                loadingLabel="Removing..."
+                              />
+                            </form>
+                          ) : null}
                         </div>
                       </div>
                       <div className="text-gray-900 dark:text-gray-200">
