@@ -51,7 +51,7 @@ export function EditableValue({
           <ActionButton label="Save" className="h-5" />
         </div>
       ) : (
-        <div className="flex">
+        <div className="flex items-center">
           <p>{value}</p>
           <Button
             className="h-5"
