@@ -34,9 +34,6 @@ export function Header() {
             <span className="sr-only">ManagePrompt</span>
             <p className="hero relative">
               Manage<span className="font-semibold">Prompt</span>
-              <sup className="absolute top-0 left-[calc(100%+.1rem)] text-xs">
-                [beta]
-              </sup>
             </p>
           </Link>
         </div>
