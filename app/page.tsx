@@ -42,36 +42,39 @@ const features = [
   },
 ];
 
-// async function getGitHubStars(): Promise<string> {
-//   try {
-//     const response = await fetch(
-//       "https://api.github.com/repos/techulus/manage-prompt",
-//       {
-//         headers: {
-//           Accept: "application/vnd.github+json",
-//         },
-//         next: {
-//           revalidate: 86400,
-//         },
-//       }
-//     );
+async function getGitHubStars(): Promise<string> {
+  try {
+    const response = await fetch(
+      "https://api.github.com/repos/techulus/manage-prompt",
+      {
+        headers: {
+          Accept: "application/vnd.github+json",
+        },
+        next: {
+          revalidate: 86400,
+        },
+      }
+    );
 
-//     if (!response?.ok) {
-//       return "-";
-//     }
+    if (!response?.ok) {
+      return "-";
+    }
 
-//     const json = await response.json();
+    const json = await response.json();
 
-//     return parseInt(json["stargazers_count"]).toLocaleString();
-//   } catch (error) {
-//     return "-";
-//   }
-// }
+    return parseInt(json["stargazers_count"]).toLocaleString();
+  } catch (error) {
+    return "-";
+  }
+}
 
 export const runtime = "edge";
 
 export default async function Home() {
-  const token = await getManagePromptToken();
+  const [token, stars] = await Promise.all([
+    getManagePromptToken(),
+    getGitHubStars(),
+  ]);
   const streamUrl = `${process.env.APP_BASE_URL}/api/v1/run/${process.env.MANAGEPROMPT_DEMO_WORKFLOW_ID}/stream?token=${token}`;
 
   return (
@@ -93,7 +96,7 @@ export default async function Home() {
         </div>
         <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
           <div className="text-center">
-            <h1 className="text-4xl py-4 font-bold text-heading text-gray-900 sm:text-6xl hero text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-700">
+            <h1 className="text-4xl py-4 text-heading text-gray-900 sm:text-6xl hero text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-700">
               {SITE_METADATA.TAGLINE}
             </h1>
             <StreamingText
@@ -127,7 +130,7 @@ export default async function Home() {
                 <div className="flex items-center">
                   <div className="h-4 w-4 border-y-8 border-l-0 border-r-8 border-solid border-muted border-y-transparent"></div>
                   <div className="flex h-10 items-center rounded-md border border-muted bg-muted px-4 font-medium">
-                    Star on GitHub
+                    {stars} stars on GitHub
                   </div>
                 </div>
               </Link>
