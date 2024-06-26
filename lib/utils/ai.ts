@@ -68,7 +68,7 @@ export const getStreamingCompletion = async (
   model: string,
   content: string,
   settings?: ModelSettings,
-  onFinish?: (evt) => Promise<void>
+  onFinish?: (evt: any) => Promise<void>
 ) => {
   const modelParams = {
     prompt: content,
