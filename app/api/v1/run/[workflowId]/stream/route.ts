@@ -1,10 +1,9 @@
 import { WorkflowInput } from "@/data/workflow";
+import { getStreamingCompletion } from "@/lib/utils/ai";
 import { prisma } from "@/lib/utils/db";
-import { getStreamingCompletion } from "@/lib/utils/openai";
 import { redis } from "@/lib/utils/redis";
 import { reportUsage } from "@/lib/utils/stripe";
 import { EventName, logEvent } from "@/lib/utils/tinybird";
-import { OpenAIStream, StreamingTextResponse } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -99,7 +98,7 @@ export async function POST(
 
     let content = workflow.template;
     const model = workflow.model;
-    const instruction = workflow.instruction ?? "";
+    // const instruction = workflow.instruction ?? "";
     const inputs = workflow.inputs as unknown as WorkflowInput[];
 
     // Handle inputs
@@ -117,43 +116,39 @@ export async function POST(
       );
     }
 
-    let wordCount = content.split(" ").length;
-    let totalTokenCount = Math.floor(wordCount * 0.6);
+    const onFinish = async (evt: any) => {
+      const inputWordCount = content.split(" ").length;
+      const outWordCount = (evt.text ?? "").split(" ").length;
+      const totalTokens = Math.floor(
+        !isNaN(evt?.usage?.totalTokens)
+          ? evt?.usage?.totalTokens
+          : (inputWordCount + outWordCount) * 0.6
+      );
 
-    const callbacks = {
-      onToken: () => {
-        totalTokenCount++;
-      },
-      onFinal: async () => {
-        await Promise.all([
-          reportUsage(
-            workflow?.organization?.id,
-            workflow?.organization?.stripe
-              ?.subscription as unknown as Stripe.Subscription,
-            totalTokenCount
-          ),
-          logEvent(EventName.RunWorkflow, {
-            workflow_id: workflow.id,
-            owner_id: workflow.ownerId,
-            model,
-            total_tokens: totalTokenCount,
-          }),
-        ]);
-      },
+      await Promise.all([
+        reportUsage(
+          workflow?.organization?.id,
+          workflow?.organization?.stripe
+            ?.subscription as unknown as Stripe.Subscription,
+          totalTokens
+        ),
+        logEvent(EventName.RunWorkflow, {
+          workflow_id: workflow.id,
+          owner_id: workflow.ownerId,
+          model,
+          total_tokens: totalTokens,
+        }),
+      ]);
     };
 
-    const stream = OpenAIStream(
-      await getStreamingCompletion(model, content, workflow.modelSettings),
-      callbacks
+    const response = await getStreamingCompletion(
+      model,
+      content,
+      workflow.modelSettings,
+      onFinish
     );
 
-    return new StreamingTextResponse(stream!, {
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST, OPTIONS",
-        "Access-Control-Allow-Headers": "*",
-      },
-    });
+    return response;
   } catch (error) {
     console.error(error);
     return ErrorResponse(

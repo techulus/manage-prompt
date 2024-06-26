@@ -23,8 +23,7 @@ import {
   getUpcomingInvoice,
   isSubscriptionCancelled,
 } from "@/lib/utils/stripe";
-import { clerkClient } from "@clerk/nextjs";
-import { User } from "@clerk/nextjs/dist/types/server";
+import { currentUser } from "@clerk/nextjs/server";
 import { Stripe as DbStripe, Organization, SecretKey } from "@prisma/client";
 import Stripe from "stripe";
 import {
@@ -41,19 +40,18 @@ export const runtime = "edge";
 
 export default async function Settings() {
   const { userId, ownerId } = owner();
+  const user = await currentUser();
 
   if (!ownerId || !userId) {
     throw new Error("User not found");
   }
 
-  const [user, organization, secretKeys]: [
-    User,
+  const [organization, secretKeys]: [
     Organization & {
       stripe: DbStripe;
     },
     SecretKey[]
   ] = await Promise.all([
-    clerkClient.users.getUser(userId),
     prisma.organization.findUnique({
       include: {
         stripe: true,

@@ -1,4 +1,3 @@
-import { AIModel, AIModelToLabel } from "@/data/workflow";
 import { DateTime } from "@/lib/utils/datetime";
 import { WorkflowRun } from "@prisma/client";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
@@ -24,9 +23,7 @@ interface Props {
 }
 
 export async function WorkflowRunItem({ workflowRun }: Props) {
-  const { result, user, createdAt, rawResult, rawRequest, totalTokenCount } =
-    workflowRun;
-  const model = (rawResult as any)?.model as AIModel;
+  const { result, user, createdAt, rawRequest, totalTokenCount } = workflowRun;
 
   return (
     <li
@@ -38,12 +35,8 @@ export async function WorkflowRunItem({ workflowRun }: Props) {
           <p className="truncate font-semibold text-gray-900 dark:text-gray-100 space-x-2">
             <span>{user?.first_name ?? "API"}</span>
 
-            {model ? (
+            {totalTokenCount ? (
               <>
-                <span aria-hidden="true">&middot;</span>
-                <span className="text-gray-600 dark:text-gray-400 font-normal">
-                  {AIModelToLabel[model] ?? model}
-                </span>
                 <span aria-hidden="true">&middot;</span>
                 <span className="text-gray-600 dark:text-gray-400 font-normal">
                   {totalTokenCount} tokens
