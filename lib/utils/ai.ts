@@ -32,7 +32,6 @@ export const getCompletion = async (
   };
 
   let completion = null;
-  console.log("Generating completion for model", model);
   switch (model) {
     case "mistralai/Mixtral-8x7B-Instruct-v0.1":
     case "meta-llama/Llama-2-70b-chat-hf":
