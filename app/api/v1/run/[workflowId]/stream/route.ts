@@ -4,7 +4,6 @@ import { prisma } from "@/lib/utils/db";
 import { redis } from "@/lib/utils/redis";
 import { reportUsage } from "@/lib/utils/stripe";
 import { EventName, logEvent } from "@/lib/utils/tinybird";
-import { TokenUsage } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -117,19 +116,27 @@ export async function POST(
       );
     }
 
-    const onFinish = async ({ usage }: { usage: TokenUsage }) => {
+    const onFinish = async (evt: any) => {
+      const inputWordCount = content.split(" ").length;
+      const outWordCount = (evt.text ?? "").split(" ").length;
+      const totalTokens = Math.floor(
+        !isNaN(evt?.usage?.totalTokens)
+          ? evt?.usage?.totalTokens
+          : (inputWordCount + outWordCount) * 0.6
+      );
+
       await Promise.all([
         reportUsage(
           workflow?.organization?.id,
           workflow?.organization?.stripe
             ?.subscription as unknown as Stripe.Subscription,
-          usage.totalTokens
+          totalTokens
         ),
         logEvent(EventName.RunWorkflow, {
           workflow_id: workflow.id,
           owner_id: workflow.ownerId,
           model,
-          total_tokens: usage.totalTokens,
+          total_tokens: totalTokens,
         }),
       ]);
     };

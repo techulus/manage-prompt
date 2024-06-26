@@ -2,7 +2,7 @@ import { ModelSettings } from "@/components/console/workflow-model-settings";
 import { modelToProviderId } from "@/data/workflow";
 import { anthropic } from "@ai-sdk/anthropic";
 import { createOpenAI } from "@ai-sdk/openai";
-import { TokenUsage, generateText, streamText } from "ai";
+import { generateText, streamText } from "ai";
 
 const openai = createOpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -68,7 +68,7 @@ export const getStreamingCompletion = async (
   model: string,
   content: string,
   settings?: ModelSettings,
-  onFinish?: ({ usage }: { usage: TokenUsage }) => Promise<void>
+  onFinish?: (evt) => Promise<void>
 ) => {
   const modelParams = {
     prompt: content,

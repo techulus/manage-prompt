@@ -12,6 +12,7 @@ import {
 import { EventName, logEvent } from "@/lib/utils/tinybird";
 import { WorkflowSchema } from "@/lib/utils/workflow";
 import { createId } from "@paralleldrive/cuid2";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import Stripe from "stripe";
 import { fromZodError } from "zod-validation-error";
@@ -119,6 +120,8 @@ export async function updateWorkflow(formData: FormData) {
     },
   });
 
+  revalidatePath(`/console/workflows`);
+  revalidatePath(`/console/workflows/${id}/edit`);
   redirect(`/console/workflows/${id}`);
 }
 
