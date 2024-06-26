@@ -37,7 +37,7 @@ const features = [
   {
     name: "Several models to choose from.",
     description:
-      "Use multiple models using the same API, models from OpenAI, Meta, Google, Mixtral and more.",
+      "Use multiple models using the same API, models from OpenAI, Meta, Google, Mixtral and Anthropic.",
     icon: ServerIcon,
   },
 ];
@@ -93,13 +93,13 @@ export default async function Home() {
         </div>
         <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
           <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl hero text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-700">
+            <h1 className="text-4xl py-4 font-bold text-heading text-gray-900 sm:text-6xl hero text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-700">
               {SITE_METADATA.TAGLINE}
             </h1>
             <StreamingText
               url={streamUrl}
               fallbackText={SITE_METADATA.DESCRIPTION}
-              className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300"
+              className="pt-4 text-lg leading-8 text-gray-600 dark:text-gray-300"
             />
             <div className="mt-10 flex flex-col space-y-4 md:space-y-0 md:flex-row items-center justify-center gap-x-6">
               <Link
@@ -156,7 +156,7 @@ export default async function Home() {
                 <h2 className="text-base font-semibold leading-7 text-primary">
                   Build faster
                 </h2>
-                <p className="mt-2 text-3xl font-bold tracking-tight text-accent-foreground sm:text-4xl">
+                <p className="mt-2 text-3xl font-bold text-heading text-accent-foreground sm:text-4xl">
                   Building blocks for your next AI project
                 </p>
                 <p className="mt-6 text-lg leading-8 text-foreground">
@@ -192,7 +192,7 @@ export default async function Home() {
       <div className="py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl sm:text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-primary sm:text-4xl">
+            <h2 className="text-3xl font-bold text-heading text-primary sm:text-4xl">
               Pay as you go
             </h2>
             <p className="mt-6 text-lg leading-8 text-foreground-accent">

@@ -2,8 +2,8 @@
 
 import { WorkflowInput } from "@/data/workflow";
 import { owner } from "@/lib/hooks/useOwner";
+import { getCompletion } from "@/lib/utils/ai";
 import { prisma } from "@/lib/utils/db";
-import { getCompletion } from "@/lib/utils/openai";
 import {
   hasExceededSpendLimit,
   isSubscriptionActive,

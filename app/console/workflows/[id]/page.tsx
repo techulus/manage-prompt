@@ -5,7 +5,6 @@ import { ContentBlock } from "@/components/core/content-block";
 import { ActionButton, DeleteButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { CardHeader } from "@/components/ui/card";
 import {
@@ -16,6 +15,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { AIModel, AIModelToLabel } from "@/data/workflow";
 import { owner } from "@/lib/hooks/useOwner";
 import { cn } from "@/lib/utils";
 import { prisma } from "@/lib/utils/db";
@@ -66,9 +66,12 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
         actionLabel="Edit"
         actionLink={`/console/workflows/${workflow.id}/edit`}
       >
-        <Badge variant="outline" className="mt-2">
-          {workflow.shortId}
-        </Badge>
+        <p className="text-gray-500 dark:text-gray-400">
+          {AIModelToLabel[workflow.model as AIModel] ?? workflow.model}
+        </p>
+        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400 font-mono">
+          ID: {workflow.shortId}
+        </p>
       </PageTitle>
 
       {!workflow.published ? (

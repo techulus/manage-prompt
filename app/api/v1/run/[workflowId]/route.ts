@@ -1,6 +1,6 @@
 import { WorkflowInput } from "@/data/workflow";
+import { getCompletion } from "@/lib/utils/ai";
 import { prisma } from "@/lib/utils/db";
-import { getCompletion } from "@/lib/utils/openai";
 import { validateRateLimit } from "@/lib/utils/ratelimit";
 import {
   hasExceededSpendLimit,
