@@ -22,7 +22,6 @@ export async function PUT(request: Request) {
     name: `Imported ${DateTime.fromJSDate(new Date()).toNiceFormat()}`,
   };
   delete workflow.id;
-  console.log("Importing workflow...", workflow);
 
   const validationResult = WorkflowSchema.safeParse(workflow);
 
@@ -32,6 +31,11 @@ export async function PUT(request: Request) {
       message: fromZodError(validationResult.error).toString(),
     });
   }
+
+  workflow.modelSettings = workflow.modelSettings
+    ? JSON.parse(workflow.modelSettings)
+    : null;
+  console.log("Importing workflow...", workflow);
 
   await prisma.workflow.create({
     data: {

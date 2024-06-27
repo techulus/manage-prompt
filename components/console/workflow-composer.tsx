@@ -217,6 +217,12 @@ export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
                 },
               }}
             />
+            <div className="mt-2 text-sm">
+              ID:{" "}
+              <span className="p-1 border border-secondary rounded-lg font-mono text-primary bg-secondary">
+                {workflow.shortId}
+              </span>
+            </div>
           </TabsContent>
         </Tabs>
       </form>

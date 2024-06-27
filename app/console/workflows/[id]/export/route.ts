@@ -31,6 +31,7 @@ export async function GET(
     model: workflow.model,
     template: workflow.template,
     inputs: workflow.inputs,
+    modelSettings: JSON.stringify(workflow.modelSettings),
   };
 
   return NextResponse.json(exportData, {
