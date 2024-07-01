@@ -1,6 +1,7 @@
 "use client";
 
 import { useDetectSticky } from "@/lib/hooks/useDetectSticky";
+import { useTheme } from "@/lib/hooks/useTheme";
 import { cn } from "@/lib/utils";
 import { SignedIn, useUser } from "@clerk/nextjs";
 import { Transition } from "@headlessui/react";
@@ -15,10 +16,10 @@ import { createToastWrapper } from "../core/toast";
 
 type Props = {
   isPublicPage?: boolean;
-  appearance: string;
 };
 
-export default function NavBar({ isPublicPage = false, appearance }: Props) {
+export default function NavBar({ isPublicPage = false }: Props) {
+  const appearance = useTheme();
   const { isLoaded, user } = useUser();
   const path = usePathname();
 

@@ -1,8 +1,8 @@
 import { ImportWorkflowDialog } from "@/components/console/workflow-import";
 import { WorkflowItem } from "@/components/console/workflow-item";
 import { ContentBlock } from "@/components/core/content-block";
+import EmptyState from "@/components/core/empty-state";
 import PageTitle from "@/components/layout/page-title";
-import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Pagination,
@@ -15,7 +15,6 @@ import {
 import { owner } from "@/lib/hooks/useOwner";
 import { cn } from "@/lib/utils";
 import { LIMIT, getWorkflowsForOwner } from "@/lib/utils/useWorkflow";
-import Link from "next/link";
 
 interface Props {
   searchParams: {
@@ -67,34 +66,18 @@ export default async function Workflows({ searchParams }: Props) {
         <ul role="list" className="divide-y border-b">
           {workflows.length === 0 ? (
             <div className="p-6">
-              <Link
-                href="/console/workflows/new"
-                className={buttonVariants({ variant: "default" })}
-              >
-                <svg
-                  className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500"
-                  stroke="currentColor"
-                  fill="none"
-                  viewBox="0 0 48 48"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 14v20c0 4.418 7.163 8 16 8 1.381 0 2.721-.087 4-.252M8 14c0 4.418 7.163 8 16 8s16-3.582 16-8M8 14c0-4.418 7.163-8 16-8s16 3.582 16 8m0 0v14m0-4c0 4.418-7.163 8-16 8S8 28.418 8 24m32 10v6m0 0v6m0-6h6m-6 0h-6"
-                  />
-                </svg>
-                {searchParams.search ? (
-                  <span className="mt-4 block text-sm font-semibold text-gray-900 dark:text-gray-300">
-                    We couldn&apos;t find any workflows matching{" "}
-                    {`"${searchParams.search}"`}
-                  </span>
-                ) : null}
-                <span className="mt-2 block text-sm font-semibold text-gray-900 dark:text-gray-300">
-                  Create a new workflow
-                </span>
-              </Link>
+              {searchParams.search ? (
+                <div className="text-center p-8 block text-sm font-semibold text-gray-900 dark:text-gray-300 w-full">
+                  We couldn&apos;t find any workflows matching{" "}
+                  {`"${searchParams.search}"`}
+                </div>
+              ) : null}
+
+              <EmptyState
+                label="workflow"
+                show={workflows.length === 0}
+                createLink="/console/workflows/new"
+              />
             </div>
           ) : null}
 
