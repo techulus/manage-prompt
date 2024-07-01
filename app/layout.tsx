@@ -12,6 +12,8 @@ export const metadata = {
   description: SITE_METADATA.DESCRIPTION,
 };
 
+export const fetchCache = "force-no-store"; // disable cache for console pages
+
 export default async function RootLayout({
   children,
 }: {
