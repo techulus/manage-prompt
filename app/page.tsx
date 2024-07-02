@@ -159,7 +159,7 @@ export default async function Home() {
                 <h2 className="text-base font-semibold leading-7 text-primary">
                   Build faster
                 </h2>
-                <p className="mt-2 text-3xl font-bold tracking-tighter text-accent-foreground sm:text-4xl font-semibold">
+                <p className="mt-2 text-3xl tracking-tighter text-accent-foreground sm:text-4xl font-bold">
                   Building blocks for your next AI project
                 </p>
                 <p className="mt-6 text-lg leading-8 text-foreground">
