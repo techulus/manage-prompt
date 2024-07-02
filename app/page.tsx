@@ -96,7 +96,7 @@ export default async function Home() {
         </div>
         <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
           <div className="text-center">
-            <h1 className="text-4xl py-4 text-heading text-gray-900 sm:text-6xl hero text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-700">
+            <h1 className="text-4xl py-4 tracking-tighter text-gray-900 sm:text-6xl hero text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-700">
               {SITE_METADATA.TAGLINE}
             </h1>
             <StreamingText
@@ -159,7 +159,7 @@ export default async function Home() {
                 <h2 className="text-base font-semibold leading-7 text-primary">
                   Build faster
                 </h2>
-                <p className="mt-2 text-3xl font-bold text-heading text-accent-foreground sm:text-4xl">
+                <p className="mt-2 text-3xl font-bold tracking-tighter text-accent-foreground sm:text-4xl font-semibold">
                   Building blocks for your next AI project
                 </p>
                 <p className="mt-6 text-lg leading-8 text-foreground">
@@ -195,7 +195,7 @@ export default async function Home() {
       <div className="py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl sm:text-center">
-            <h2 className="text-3xl font-bold text-heading text-primary sm:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tighter text-primary sm:text-4xl">
               Pay as you go
             </h2>
             <p className="mt-6 text-lg leading-8 text-foreground-accent">
@@ -204,7 +204,7 @@ export default async function Home() {
           </div>
           <div className="mx-auto mt-16 max-w-2xl rounded-3xl ring-1 sm:mt-20 lg:mx-0 lg:flex lg:max-w-none">
             <div className="p-8 sm:p-10 lg:flex-auto">
-              <h3 className="text-lg font-bold tracking-tight text-primary">
+              <h3 className="text-lg font-bold tracking-tighter text-primary">
                 Prices are per 1,000 tokens. You can think of tokens as pieces
                 of words, where 1,000 tokens is about 750 words.
               </h3>
@@ -236,7 +236,7 @@ export default async function Home() {
                     Billed Monthly
                   </p>
                   <p className="mt-6 flex items-baseline justify-center gap-x-2">
-                    <span className="text-5xl font-bold tracking-tight text-foreground">
+                    <span className="text-5xl font-bold tracking-tighter text-foreground">
                       $0.01
                     </span>
                     <span className="text-sm font-semibold leading-6 tracking-wide text-primary">
