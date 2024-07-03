@@ -74,7 +74,9 @@ export default async function ImageUpscale() {
               className="mr-3 h-5 w-5 text-primary"
               aria-hidden="true"
             />
-            <Link href="/ai-tools">View all tools</Link>
+            <Link href="/ai-tools" prefetch={false}>
+              View all tools
+            </Link>
           </Button>
         </div>
       </PageTitle>
@@ -102,6 +104,7 @@ export default async function ImageUpscale() {
                       <p className="text-sm leading-5 text-gray-600 dark:text-gray-400">
                         By using this service, you agree to our{" "}
                         <Link
+                          prefetch={false}
                           href="/terms"
                           className="text-primary hover:underline"
                         >
@@ -109,6 +112,7 @@ export default async function ImageUpscale() {
                         </Link>{" "}
                         and{" "}
                         <Link
+                          prefetch={false}
                           href="/privacy"
                           className="text-primary hover:underline"
                         >

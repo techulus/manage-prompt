@@ -61,7 +61,9 @@ export default async function FreeAiTools() {
               className="mr-3 h-5 w-5 text-primary"
               aria-hidden="true"
             />
-            <Link href="/">Build Your Own AI Tools Using ManagePrompt</Link>
+            <Link href="/" prefetch={false}>
+              Build Your Own AI Tools Using ManagePrompt
+            </Link>
           </Button>
         </div>
       </PageTitle>
@@ -87,7 +89,11 @@ export default async function FreeAiTools() {
             >
               <div className="mt-8">
                 <h3 className="text-xl font-semibold leading-6">
-                  <Link href={action.href} className="focus:outline-none">
+                  <Link
+                    prefetch={false}
+                    href={action.href}
+                    className="focus:outline-none"
+                  >
                     <span className="absolute inset-0" aria-hidden="true" />
                     {action.title}
                   </Link>

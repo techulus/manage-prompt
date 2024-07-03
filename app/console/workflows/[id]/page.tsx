@@ -125,6 +125,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                   <Link
                     href={`/console/workflows/${workflow.id}/export`}
                     className={buttonVariants({ variant: "ghost" })}
+                    prefetch={false}
                   >
                     <DownloadIcon className="mr-2 h-4 w-4" aria-hidden="true" />
                     Export

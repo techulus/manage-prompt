@@ -30,7 +30,7 @@ export function Header() {
             className="-mt-2 mr-2"
           />
 
-          <Link href="/" className="-m-1.5 p-1.5">
+          <Link href="/" className="-m-1.5 p-1.5" prefetch={false}>
             <span className="sr-only">ManagePrompt</span>
             <p className="hero relative">
               Manage<span className="font-semibold">Prompt</span>
@@ -55,12 +55,14 @@ export function Header() {
             <Link
               href="/console/workflows"
               className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-200"
+              prefetch={false}
             >
               Console <span aria-hidden="true">&rarr;</span>
             </Link>
           </SignedIn>
           <SignedOut>
             <Link
+              prefetch={false}
               href="/console/workflows"
               className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-200"
             >

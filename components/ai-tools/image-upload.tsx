@@ -102,11 +102,19 @@ export function FileUploader({
 
       <p className="text-sm text-center leading-5 text-gray-600 dark:text-gray-400 p-2">
         By uploading an image, you agree to our{" "}
-        <Link href="/terms" className="text-primary hover:underline">
+        <Link
+          prefetch={false}
+          href="/terms"
+          className="text-primary hover:underline"
+        >
           Terms of Service
         </Link>{" "}
         and{" "}
-        <Link href="/privacy" className="text-primary hover:underline">
+        <Link
+          prefetch={false}
+          href="/privacy"
+          className="text-primary hover:underline"
+        >
           {" "}
           Privacy Policy
         </Link>

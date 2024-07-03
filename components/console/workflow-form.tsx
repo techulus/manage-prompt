@@ -289,6 +289,7 @@ export function WorkflowForm({ workflow, action }: Props) {
           <Link
             href="/console/workflows"
             className={buttonVariants({ variant: "link" })}
+            prefetch={false}
           >
             Cancel
           </Link>

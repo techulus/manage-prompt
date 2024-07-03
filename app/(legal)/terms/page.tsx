@@ -19,7 +19,7 @@ export default function TermsAndConditions() {
             }}
           />
         </div>
-        <div className="mx-auto max-w-5xl py-32">
+        <div className="mx-auto max-w-7xl py-32">
           <h1 className="text-4xl font-bold mb-4">Terms and Conditions</h1>
 
           <div className="mb-8">

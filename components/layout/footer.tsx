@@ -117,6 +117,7 @@ export function Footer({ isHome = false }: { isHome?: boolean }) {
                       <Link
                         href={item.href}
                         className="text-sm leading-6 text-gray-700 dark:text-gray-300 hover:text-black hover:dark:text-white"
+                        prefetch={false}
                       >
                         {item.name}
                       </Link>
@@ -134,6 +135,7 @@ export function Footer({ isHome = false }: { isHome?: boolean }) {
                       <Link
                         href={item.href}
                         className="text-sm leading-6 text-gray-700 dark:text-gray-300 hover:text-black hover:dark:text-white"
+                        prefetch={false}
                       >
                         {item.name}
                       </Link>
@@ -153,6 +155,7 @@ export function Footer({ isHome = false }: { isHome?: boolean }) {
                         rel="noopener noreferrer"
                         href={item.href}
                         className="text-sm leading-6 text-gray-700 dark:text-gray-300 hover:text-black hover:dark:text-white"
+                        prefetch={false}
                       >
                         {item.name}
                       </Link>
@@ -168,6 +171,7 @@ export function Footer({ isHome = false }: { isHome?: boolean }) {
                       <Link
                         href={item.href}
                         className="text-sm leading-6 text-gray-700 dark:text-gray-300 hover:text-black hover:dark:text-white"
+                        prefetch={false}
                       >
                         {item.name}
                       </Link>
