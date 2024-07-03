@@ -24,7 +24,9 @@ export function AIStreamTextLayout({
               className="mr-3 h-5 w-5 text-primary"
               aria-hidden="true"
             />
-            <Link href="/ai-tools">View all tools</Link>
+            <Link href="/ai-tools" prefetch={false}>
+              View all tools
+            </Link>
           </Button>
         </div>
       </PageTitle>

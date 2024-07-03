@@ -63,7 +63,7 @@ export default function NavBar({ isPublicPage = false }: Props) {
         <div className="mx-auto px-4 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
             <div className="flex">
-              <Link href="/" className="ml-1">
+              <Link href="/" className="ml-1" prefetch={false}>
                 <div className="flex items-center lg:px-0">
                   <Image
                     src={logo}
@@ -131,7 +131,7 @@ export default function NavBar({ isPublicPage = false }: Props) {
           leaveFrom="transform  translate-y-0 opacity-100"
           leaveTo="transform  translate-y-[-100%] opacity-0"
         >
-          <Link href="/">
+          <Link href="/" prefetch={false}>
             <Image src={logo} alt="ManagePrompt" width={24} height={24} />
           </Link>
         </Transition>
@@ -145,6 +145,7 @@ export default function NavBar({ isPublicPage = false }: Props) {
         >
           {tabs.map((tab) => (
             <Link
+              prefetch={false}
               key={tab.name}
               href={tab.href}
               className={classNames(

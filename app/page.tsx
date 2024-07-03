@@ -108,6 +108,7 @@ export default async function Home() {
               <Link
                 href="/console/workflows"
                 className={buttonVariants({ variant: "default" })}
+                prefetch={false}
               >
                 Get started
               </Link>
@@ -116,6 +117,7 @@ export default async function Home() {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex"
+                prefetch={false}
               >
                 <div className="flex h-10 w-10 items-center justify-center space-x-2 rounded-md border border-muted bg-muted">
                   <svg
@@ -249,6 +251,7 @@ export default async function Home() {
                       variant: "default",
                       className: "mt-8",
                     })}
+                    prefetch={false}
                   >
                     Get Started
                   </Link>

@@ -110,6 +110,7 @@ export default async function AIToolsResult({
                       href={`/api/ai-tools/order/download?id=${order.id}`}
                       target="_blank"
                       rel="noopener noreferrer"
+                      prefetch={false}
                       className={buttonVariants({
                         variant: "default",
                         size: "lg",
@@ -121,7 +122,7 @@ export default async function AIToolsResult({
                 </div>
               </div>
 
-              <Link href={`/ai-tools/${order.type}`}>
+              <Link href={`/ai-tools/${order.type}`} prefetch={false}>
                 <Button variant="link" className="mt-4">
                   Try again
                 </Button>

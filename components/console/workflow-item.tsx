@@ -1,4 +1,3 @@
-import { DateTime } from "@/lib/utils/datetime";
 import { getWorkflowRunStats } from "@/lib/utils/tinybird";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { Workflow } from "@prisma/client";
@@ -36,6 +35,7 @@ export async function WorkflowItem({ workflow }: Props) {
         <Link
           href={`/console/workflows/${workflow.id}`}
           className="min-w-0 space-y-3"
+          prefetch={false}
         >
           <div className="flex items-center space-x-3">
             <span
@@ -70,13 +70,6 @@ export async function WorkflowItem({ workflow }: Props) {
             </span>
             <span className="hidden sm:block text-sm">
               {workflow.user?.first_name}
-            </span>
-            <span aria-hidden="true" className="hidden sm:block">
-              &middot;
-            </span>
-            <span className="hidden sm:block text-sm">
-              Last updated{" "}
-              {DateTime.fromJSDate(workflow.updatedAt).toNiceFormat()}
             </span>
           </div>
         </Link>
