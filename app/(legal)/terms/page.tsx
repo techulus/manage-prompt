@@ -187,7 +187,7 @@ export default function TermsAndConditions() {
             </h2>
             <p className="mb-4 font-semibold whitespace-pre">
               {
-                "Techulus\nUnit 5/402B Liverpool Road,\nCroydon, NSW - 2132\nAustralia\nABN: 40806162063"
+                "Techulus (techulus.com.au)\nUnit 5/402B Liverpool Road,\nCroydon, NSW - 2132\nAustralia\nABN: 40806162063"
               }
             </p>
           </div>
