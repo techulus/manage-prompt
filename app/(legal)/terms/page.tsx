@@ -180,6 +180,17 @@ export default function TermsAndConditions() {
             By using ManagePrompt, you agree to be bound by these terms and
             conditions.
           </p>
+
+          <div className="mb-8">
+            <h2 className="text-xl font-bold mb-2 underline">
+              Contact - Owner and Data Controller
+            </h2>
+            <p className="mb-4 font-semibold whitespace-pre">
+              {
+                "Techulus\nUnit 5/402B Liverpool Road,\nCroydon, NSW - 2132\nAustralia\nABN: 40806162063"
+              }
+            </p>
+          </div>
         </div>
       </div>
 
