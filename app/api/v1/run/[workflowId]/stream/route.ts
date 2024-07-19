@@ -4,7 +4,7 @@ import { prisma } from "@/lib/utils/db";
 import { redis } from "@/lib/utils/redis";
 import { reportUsage } from "@/lib/utils/stripe";
 import { EventName, logEvent } from "@/lib/utils/tinybird";
-import { Workflow } from "@prisma/client";
+import { Workflow, Stripe as DbStripe, Organization } from "@prisma/client";
 import { StreamingTextResponse } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
@@ -76,7 +76,11 @@ export async function POST(
       await redis.del(token);
     }
 
-    const workflow: Workflow | null = await prisma.workflow.findUnique({
+    const workflow: Workflow & {
+      organization: Organization & {
+        stripe: DbStripe | null;
+      }
+    } | null = await prisma.workflow.findUnique({
       include: {
         organization: {
           include: {
