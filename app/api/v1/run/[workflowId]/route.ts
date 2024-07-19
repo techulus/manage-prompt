@@ -9,6 +9,7 @@ import {
   reportUsage,
 } from "@/lib/utils/stripe";
 import { EventName, logEvent } from "@/lib/utils/tinybird";
+import { cacheWorkflowResult, getWorkflowCachedResult } from "@/lib/utils/useWorkflow";
 import { Workflow } from "@prisma/client";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
@@ -136,9 +137,7 @@ export async function POST(
     }
 
     const body = (await req.json().catch(() => { })) ?? {};
-    const hashedBody = await crypto.subtle.digest('SHA-256', Buffer.from(JSON.stringify(body)));
-    const resultCacheKey = `run-cache:${params.workflowId}${hashedBody}`;
-    const cachedResult: string | null = await redis.get(resultCacheKey);
+    const cachedResult = await getWorkflowCachedResult(params.workflowId, JSON.stringify(body));
 
     if (cachedResult) {
       const chunks = cachedResult.split(' ');
@@ -203,13 +202,8 @@ export async function POST(
         },
       }),
       workflow.cacheControlTtl ?
-        redis.set(
-          resultCacheKey,
-          result,
-          {
-            ex: workflow.cacheControlTtl,
-          }
-        ) : null,
+        cacheWorkflowResult(params.workflowId, JSON.stringify(body), result, workflow.cacheControlTtl)
+        : null,
     ]);
 
     return NextResponse.json(

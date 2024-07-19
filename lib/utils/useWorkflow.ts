@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/utils/db";
 import { Prisma, User, Workflow } from "@prisma/client";
 import { owner } from "../hooks/useOwner";
+import { redis } from "./redis";
 
 export const LIMIT = 15;
 
@@ -26,9 +27,9 @@ export async function getWorkflowsForOwner({
   page?: number;
 }): Promise<{
   workflows: Workflow &
-    {
-      user: User;
-    }[];
+  {
+    user: User;
+  }[];
   count: number;
 }> {
   const dbQuery: Prisma.WorkflowFindManyArgs = {
@@ -125,4 +126,32 @@ export async function getWorkflowAndRuns(
     workflowRuns,
     count,
   };
+}
+
+export async function getWorkflowCachedResult(workflowId: string, body: string): Promise<string | null> {
+  try {
+    const inputHash = await crypto.subtle.digest('SHA-256', Buffer.from(body));
+    const resultCacheKey = `run-cache:${workflowId}${inputHash}`;
+    const cachedResult: string | null = await redis.get(resultCacheKey);
+    return cachedResult;
+  } catch (e) {
+    console.error(e);
+    return null;
+  }
+}
+
+export async function cacheWorkflowResult(workflowId: string, body: string, result: string, ttl: number) {
+  try {
+    const inputHash = await crypto.subtle.digest('SHA-256', Buffer.from(body));
+    const resultCacheKey = `run-cache:${workflowId}${inputHash}`;
+    await redis.set(
+      resultCacheKey,
+      result,
+      {
+        ex: ttl,
+      }
+    );
+  } catch (e) {
+    console.error(e);
+  }
 }

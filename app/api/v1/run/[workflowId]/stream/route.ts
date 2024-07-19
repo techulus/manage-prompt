@@ -4,6 +4,7 @@ import { prisma } from "@/lib/utils/db";
 import { redis } from "@/lib/utils/redis";
 import { reportUsage } from "@/lib/utils/stripe";
 import { EventName, logEvent } from "@/lib/utils/tinybird";
+import { cacheWorkflowResult, getWorkflowCachedResult } from "@/lib/utils/useWorkflow";
 import { Workflow, Stripe as DbStripe, Organization } from "@prisma/client";
 import { StreamingTextResponse } from "ai";
 import { NextRequest, NextResponse } from "next/server";
@@ -100,9 +101,7 @@ export async function POST(
     }
 
     const body = (await req.json().catch(() => { })) ?? {};
-    const hashedBody = await crypto.subtle.digest('SHA-256', Buffer.from(JSON.stringify(body)));
-    const resultCacheKey = `run-cache:${params.workflowId}${hashedBody}`;
-    const cachedResult: string | null = await redis.get(resultCacheKey);
+    const cachedResult = await getWorkflowCachedResult(params.workflowId, JSON.stringify(body));
 
     if (cachedResult) {
       const chunks = cachedResult.split(' ');
@@ -169,13 +168,9 @@ export async function POST(
           model,
           total_tokens: totalTokens,
         }),
-        workflow.cacheControlTtl ? redis.set(
-          resultCacheKey,
-          output,
-          {
-            ex: workflow.cacheControlTtl,
-          }
-        ) : null,
+        workflow.cacheControlTtl ?
+          cacheWorkflowResult(params.workflowId, JSON.stringify(body), output, workflow.cacheControlTtl)
+          : null,
       ]);
     };
 
