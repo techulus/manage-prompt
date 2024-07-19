@@ -169,7 +169,7 @@ export async function POST(
     const response = await getCompletion(
       model,
       content,
-      workflow.modelSettings
+      JSON.parse(JSON.stringify(workflow.modelSettings))
     );
 
     const { result, totalTokenCount } = response;
