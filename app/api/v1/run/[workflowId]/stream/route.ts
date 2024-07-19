@@ -4,8 +4,11 @@ import { prisma } from "@/lib/utils/db";
 import { redis } from "@/lib/utils/redis";
 import { reportUsage } from "@/lib/utils/stripe";
 import { EventName, logEvent } from "@/lib/utils/tinybird";
-import { cacheWorkflowResult, getWorkflowCachedResult } from "@/lib/utils/useWorkflow";
-import { Workflow, Stripe as DbStripe, Organization } from "@prisma/client";
+import {
+  cacheWorkflowResult,
+  getWorkflowCachedResult,
+} from "@/lib/utils/useWorkflow";
+import { Stripe as DbStripe, Organization, Workflow } from "@prisma/client";
 import { StreamingTextResponse } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
@@ -77,11 +80,13 @@ export async function POST(
       await redis.del(token);
     }
 
-    const workflow: Workflow & {
-      organization: Organization & {
-        stripe: DbStripe | null;
-      }
-    } | null = await prisma.workflow.findUnique({
+    const workflow:
+      | (Workflow & {
+          organization: Organization & {
+            stripe: DbStripe | null;
+          };
+        })
+      | null = await prisma.workflow.findUnique({
       include: {
         organization: {
           include: {
@@ -100,22 +105,22 @@ export async function POST(
       return UnauthorizedResponse();
     }
 
-    const body = (await req.json().catch(() => { })) ?? {};
-    const cachedResult = await getWorkflowCachedResult(params.workflowId, JSON.stringify(body));
+    const body = (await req.json().catch(() => {})) ?? {};
+    const cachedResult = await getWorkflowCachedResult(
+      params.workflowId,
+      JSON.stringify(body)
+    );
 
     if (cachedResult) {
-      const chunks = cachedResult.split(' ');
+      const chunks = cachedResult.split(" ");
 
       const stream = new ReadableStream({
         async start(controller) {
           for (const chunk of chunks) {
-            const bytes = new TextEncoder().encode(chunk + ' ');
+            const bytes = new TextEncoder().encode(chunk + " ");
             controller.enqueue(bytes);
             await new Promise((r) =>
-              setTimeout(
-                r,
-                Math.floor(Math.random() * 40) + 10
-              )
+              setTimeout(r, Math.floor(Math.random() * 40) + 10)
             );
           }
           controller.close();
@@ -168,8 +173,13 @@ export async function POST(
           model,
           total_tokens: totalTokens,
         }),
-        workflow.cacheControlTtl ?
-          cacheWorkflowResult(params.workflowId, JSON.stringify(body), output, workflow.cacheControlTtl)
+        workflow.cacheControlTtl
+          ? cacheWorkflowResult(
+              params.workflowId,
+              JSON.stringify(body),
+              output,
+              workflow.cacheControlTtl
+            )
           : null,
       ]);
     };
