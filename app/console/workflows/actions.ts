@@ -25,6 +25,7 @@ export async function createWorkflow(formData: FormData) {
   const template = formData.get("template") as string;
   const instruction = (formData.get("instruction") as string) ?? "";
   const modelSettings = (formData.get("modelSettings") as string) ?? null;
+  const cacheControlTtl = Number(formData.get("cacheControlTtl")) ?? 0;
 
   let inputs: WorkflowInput[] = [];
   try {
@@ -40,6 +41,7 @@ export async function createWorkflow(formData: FormData) {
     template,
     instruction,
     inputs,
+    cacheControlTtl,
   });
 
   if (!validationResult.success) {
@@ -65,6 +67,7 @@ export async function createWorkflow(formData: FormData) {
       name,
       model,
       modelSettings: modelSettings ? JSON.parse(modelSettings) : null,
+      cacheControlTtl,
       template,
       instruction,
       inputs,
@@ -82,6 +85,7 @@ export async function updateWorkflow(formData: FormData) {
   const template = formData.get("template") as string;
   const instruction = (formData.get("instruction") as string) ?? "";
   const modelSettings = (formData.get("modelSettings") as string) ?? null;
+  const cacheControlTtl = Number(formData.get("cacheControlTtl")) ?? 0;
 
   let inputs: WorkflowInput[] = [];
   try {
@@ -97,6 +101,7 @@ export async function updateWorkflow(formData: FormData) {
     template,
     instruction,
     inputs,
+    cacheControlTtl,
   });
 
   if (!validationResult.success) {
@@ -117,6 +122,7 @@ export async function updateWorkflow(formData: FormData) {
       template,
       instruction,
       inputs,
+      cacheControlTtl,
     },
   });
 
