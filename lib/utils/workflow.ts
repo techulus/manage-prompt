@@ -13,6 +13,7 @@ export const WorkflowSchema = z.object({
   instruction: z.string().optional().default(""),
   model: z.enum(zodEnum<AIModel>(AIModels)),
   modelSettings: z.string().optional().nullable(),
+  cacheControlTtl: z.number().int().optional().default(0),
   inputs: z.array(
     z.object({
       name: z.string(),

@@ -68,8 +68,6 @@ async function getGitHubStars(): Promise<string> {
   }
 }
 
-export const runtime = "edge";
-
 export default async function Home() {
   const [token, stars] = await Promise.all([
     getManagePromptToken(),

@@ -2,12 +2,15 @@ import { WorkflowInput } from "@/data/workflow";
 import { getCompletion } from "@/lib/utils/ai";
 import { prisma } from "@/lib/utils/db";
 import { validateRateLimit } from "@/lib/utils/ratelimit";
+import { redis } from "@/lib/utils/redis";
 import {
   hasExceededSpendLimit,
   isSubscriptionActive,
   reportUsage,
 } from "@/lib/utils/stripe";
 import { EventName, logEvent } from "@/lib/utils/tinybird";
+import { cacheWorkflowResult, getWorkflowCachedResult } from "@/lib/utils/useWorkflow";
+import { Workflow } from "@prisma/client";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -120,7 +123,7 @@ export async function POST(
       );
     }
 
-    const workflow = await prisma.workflow.findUnique({
+    const workflow: Workflow | null = await prisma.workflow.findUnique({
       where: {
         shortId: params.workflowId,
         ownerId: key.ownerId,
@@ -133,7 +136,16 @@ export async function POST(
       return ErrorResponse("Workflow not found", 404);
     }
 
-    const body = (await req.json().catch(() => {})) ?? {};
+    const body = (await req.json().catch(() => { })) ?? {};
+    const cachedResult = await getWorkflowCachedResult(params.workflowId, JSON.stringify(body));
+
+    if (cachedResult) {
+      const chunks = cachedResult.split(' ');
+      return NextResponse.json({
+        success: true,
+        result: chunks[0],
+      });
+    }
 
     let content = workflow.template;
     const model = workflow.model;
@@ -156,7 +168,7 @@ export async function POST(
     const response = await getCompletion(
       model,
       content,
-      workflow.modelSettings
+      JSON.parse(JSON.stringify(workflow.modelSettings))
     );
 
     const { result, totalTokenCount } = response;
@@ -189,10 +201,13 @@ export async function POST(
           lastUsed: new Date(),
         },
       }),
+      workflow.cacheControlTtl ?
+        cacheWorkflowResult(params.workflowId, JSON.stringify(body), result, workflow.cacheControlTtl)
+        : null,
     ]);
 
     return NextResponse.json(
-      { success: true, result: result },
+      { success: true, result },
       {
         headers: {
           "x-ratelimit-limit": limit.toString(),

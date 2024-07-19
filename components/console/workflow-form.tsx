@@ -283,6 +283,25 @@ export function WorkflowForm({ workflow, action }: Props) {
               </div>
             </div>
           ) : null}
+
+          <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
+            <label
+              htmlFor="cacheControlTtl"
+              className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200 sm:pt-1.5"
+            >
+              Cached Response TTL
+            </label>
+            <div className="mt-2 sm:col-span-2 sm:mt-0 space-y-2">
+              <p className="text-sm leading-6 text-secondary-foreground">
+                Time to live for the cached response in seconds.
+              </p>
+              <Input
+                type="text"
+                name="cacheControlTtl"
+                defaultValue={workflow?.cacheControlTtl ?? 0}
+              />
+            </div>
+          </div>
         </div>
 
         <div className="flex items-center justify-end gap-x-6 mt-6">

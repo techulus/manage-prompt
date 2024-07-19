@@ -4,6 +4,9 @@ import { prisma } from "@/lib/utils/db";
 import { redis } from "@/lib/utils/redis";
 import { reportUsage } from "@/lib/utils/stripe";
 import { EventName, logEvent } from "@/lib/utils/tinybird";
+import { cacheWorkflowResult, getWorkflowCachedResult } from "@/lib/utils/useWorkflow";
+import { Workflow, Stripe as DbStripe, Organization } from "@prisma/client";
+import { StreamingTextResponse } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -74,7 +77,11 @@ export async function POST(
       await redis.del(token);
     }
 
-    const workflow = await prisma.workflow.findUnique({
+    const workflow: Workflow & {
+      organization: Organization & {
+        stripe: DbStripe | null;
+      }
+    } | null = await prisma.workflow.findUnique({
       include: {
         organization: {
           include: {
@@ -89,16 +96,37 @@ export async function POST(
     if (!workflow || !workflow?.published) {
       return ErrorResponse("Workflow not found", 404);
     }
-
     if (workflow.ownerId !== validateToken.ownerId) {
       return UnauthorizedResponse();
     }
 
-    const body = (await req.json().catch(() => {})) ?? {};
+    const body = (await req.json().catch(() => { })) ?? {};
+    const cachedResult = await getWorkflowCachedResult(params.workflowId, JSON.stringify(body));
+
+    if (cachedResult) {
+      const chunks = cachedResult.split(' ');
+
+      const stream = new ReadableStream({
+        async start(controller) {
+          for (const chunk of chunks) {
+            const bytes = new TextEncoder().encode(chunk + ' ');
+            controller.enqueue(bytes);
+            await new Promise((r) =>
+              setTimeout(
+                r,
+                Math.floor(Math.random() * 40) + 10
+              )
+            );
+          }
+          controller.close();
+        },
+      });
+
+      return new StreamingTextResponse(stream);
+    }
 
     let content = workflow.template;
     const model = workflow.model;
-    // const instruction = workflow.instruction ?? "";
     const inputs = workflow.inputs as unknown as WorkflowInput[];
 
     // Handle inputs
@@ -117,8 +145,10 @@ export async function POST(
     }
 
     const onFinish = async (evt: any) => {
+      const output = evt.text ?? "";
+
       const inputWordCount = content.split(" ").length;
-      const outWordCount = (evt.text ?? "").split(" ").length;
+      const outWordCount = output.split(" ").length;
       const totalTokens = Math.floor(
         !isNaN(evt?.usage?.totalTokens)
           ? evt?.usage?.totalTokens
@@ -138,13 +168,16 @@ export async function POST(
           model,
           total_tokens: totalTokens,
         }),
+        workflow.cacheControlTtl ?
+          cacheWorkflowResult(params.workflowId, JSON.stringify(body), output, workflow.cacheControlTtl)
+          : null,
       ]);
     };
 
     const response = await getStreamingCompletion(
       model,
       content,
-      workflow.modelSettings,
+      JSON.parse(JSON.stringify(workflow.modelSettings)),
       onFinish
     );
 
