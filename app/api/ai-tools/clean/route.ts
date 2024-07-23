@@ -1,8 +1,6 @@
 import { del, list } from "@vercel/blob";
 import { NextResponse } from "next/server";
 
-export const runtime = "edge";
-
 export async function GET(_: Request) {
   let hasMore = true;
   let cursor;

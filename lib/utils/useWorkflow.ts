@@ -1,12 +1,12 @@
 import { prisma } from "@/lib/utils/db";
-import { Prisma, User, Workflow } from "@prisma/client";
+import { Prisma, Workflow } from "@prisma/client";
 import { owner } from "../hooks/useOwner";
 import { redisStore } from "./redis";
 
 export const LIMIT = 15;
 
 export async function getWorkflowById(id: number): Promise<Workflow | null> {
-  const workflow: Workflow | null = await prisma.workflow.findUnique({
+  const workflow = await prisma.workflow.findUnique({
     where: {
       id,
     },
@@ -25,13 +25,7 @@ export async function getWorkflowsForOwner({
   userId: string;
   search?: string;
   page?: number;
-}): Promise<{
-  workflows: Workflow &
-    {
-      user: User;
-    }[];
-  count: number;
-}> {
+}) {
   const dbQuery: Prisma.WorkflowFindManyArgs = {
     include: {
       user: true,
@@ -72,16 +66,7 @@ export async function getWorkflowsForOwner({
   return { workflows, count };
 }
 
-export async function getWorkflowAndRuns(
-  id: number,
-  page: number = 1
-): Promise<{
-  workflow: Workflow;
-  workflowRuns: (Workflow & {
-    user: User;
-  })[];
-  count: number;
-}> {
+export async function getWorkflowAndRuns(id: number, page: number = 1) {
   const { ownerId } = owner();
   const workflow: Workflow | null = await prisma.workflow.findFirst({
     where: {

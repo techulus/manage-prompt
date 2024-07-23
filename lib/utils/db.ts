@@ -1,13 +1,13 @@
-import { PrismaClient } from "@prisma/client/edge";
-import { withAccelerate } from "@prisma/extension-accelerate";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "@prisma/client";
+import { Pool } from "pg";
 
-// types
 declare global {
   var prisma: any;
 }
 
-export const prisma =
-  global.prisma || new PrismaClient().$extends(withAccelerate());
+const connectionString = `${process.env.DATABASE_URL}`;
 
-// cache on global for HOT RELOAD in dev
-if (process.env.NODE_ENV === "development") global.prisma = prisma;
+const pool = new Pool({ connectionString });
+const adapter = new PrismaPg(pool);
+export const prisma = new PrismaClient({ adapter });

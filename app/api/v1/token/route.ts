@@ -38,7 +38,6 @@ enum ErrorCodes {
 }
 
 export const dynamic = "force-dynamic";
-export const runtime = "edge";
 
 export async function GET(req: NextRequest) {
   try {
@@ -62,9 +61,6 @@ export async function GET(req: NextRequest) {
             stripe: true,
           },
         },
-      },
-      cacheStrategy: {
-        ttl: 60,
       },
     });
     if (!key) {

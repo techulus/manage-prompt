@@ -8,13 +8,11 @@ import {
   cacheWorkflowResult,
   getWorkflowCachedResult,
 } from "@/lib/utils/useWorkflow";
-import { Stripe as DbStripe, Organization, Workflow } from "@prisma/client";
 import { StreamingTextResponse } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
 export const maxDuration = 120;
-export const runtime = "edge";
 
 const UnauthorizedResponse = () =>
   NextResponse.json(
@@ -80,13 +78,7 @@ export async function POST(
       await redis.del(token);
     }
 
-    const workflow:
-      | (Workflow & {
-          organization: Organization & {
-            stripe: DbStripe | null;
-          };
-        })
-      | null = await prisma.workflow.findUnique({
+    const workflow = await prisma.workflow.findUnique({
       include: {
         organization: {
           include: {
@@ -96,9 +88,6 @@ export async function POST(
       },
       where: {
         shortId: params.workflowId,
-      },
-      cacheStrategy: {
-        ttl: 60,
       },
     });
     if (!workflow || !workflow?.published) {
