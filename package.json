@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "generate": "npx prisma generate --no-engine",
+    "generate": "npx prisma generate",
     "prebuild": "npx prisma db push && npm run generate",
     "build": "next build",
     "start": "next start",

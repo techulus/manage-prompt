@@ -12,7 +12,6 @@ import {
   cacheWorkflowResult,
   getWorkflowCachedResult,
 } from "@/lib/utils/useWorkflow";
-import { Workflow } from "@prisma/client";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -121,7 +120,7 @@ export async function POST(
       );
     }
 
-    const workflow: Workflow | null = await prisma.workflow.findUnique({
+    const workflow = await prisma.workflow.findUnique({
       where: {
         shortId: params.workflowId,
         ownerId: key.ownerId,
