@@ -1,6 +1,5 @@
 import { ImportWorkflowDialog } from "@/components/console/workflow-import";
 import { WorkflowItem } from "@/components/console/workflow-item";
-import { ContentBlock } from "@/components/core/content-block";
 import EmptyState from "@/components/core/empty-state";
 import PageTitle from "@/components/layout/page-title";
 import { Input } from "@/components/ui/input";
@@ -60,66 +59,68 @@ export default async function Workflows({ searchParams }: Props) {
         <ImportWorkflowDialog />
       </div>
 
-      <ContentBlock>
-        <ul role="list" className="divide-y border-b">
-          {workflows.length === 0 ? (
-            <div className="p-6">
-              {searchParams.search ? (
-                <div className="text-center p-8 block text-sm font-semibold text-gray-900 dark:text-gray-300 w-full">
-                  We couldn&apos;t find any workflows matching{" "}
-                  {`"${searchParams.search}"`}
-                </div>
-              ) : null}
+      <div className="mx-auto mt-8 flex max-w-7xl flex-col">
+        {workflows.length === 0 ? (
+          <div>
+            {searchParams.search ? (
+              <div className="text-center p-8 block text-sm font-semibold text-gray-900 dark:text-gray-300 w-full">
+                We couldn&apos;t find any workflows matching{" "}
+                {`"${searchParams.search}"`}
+              </div>
+            ) : null}
 
-              <EmptyState
-                label="workflow"
-                show={workflows.length === 0}
-                createLink="/console/workflows/new"
-              />
-            </div>
-          ) : null}
+            <EmptyState
+              label="workflow"
+              show={workflows.length === 0}
+              createLink="/console/workflows/new"
+            />
+          </div>
+        ) : null}
 
-          {workflows.map((workflow) => (
-            // @ts-ignore React server component
-            <WorkflowItem key={workflow.id} workflow={workflow} />
-          ))}
-        </ul>
-      </ContentBlock>
+        {workflows?.length ? (
+          <div className="grid grid-cols-1 gap-4 px-4 sm:grid-cols-2 lg:px-0">
+            {workflows.map((workflow) => (
+              // @ts-ignore React server component
+              <WorkflowItem key={workflow.id} workflow={workflow} />
+            ))}
+          </div>
+        ) : null}
 
-      {workflows?.length > 0 && totalPages > 1 ? (
-        <div className="py-4">
-          <Pagination>
-            <PaginationContent>
-              {currentPage > 1 ? (
-                <PaginationItem>
-                  <PaginationPrevious
-                    href={`/console/workflows?page=${currentPage - 1}`}
-                  />
-                </PaginationItem>
-              ) : null}
-              {new Array(Math.min(totalPages, 5)).fill(0).map((_, idx) => (
-                <PaginationItem key={idx}>
-                  <PaginationLink
-                    href={`/console/workflows?page=${idx + 1}`}
-                    className={cn(
-                      idx + 1 === currentPage && "text-primary font-semibold"
-                    )}
-                  >
-                    {idx + 1}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              {(currentPage - 1) * LIMIT + workflows.length < count ? (
-                <PaginationItem>
-                  <PaginationNext
-                    href={`/console/workflows?page=${currentPage + 1}`}
-                  />
-                </PaginationItem>
-              ) : null}
-            </PaginationContent>
-          </Pagination>
-        </div>
-      ) : null}
+        {workflows?.length > 0 && totalPages > 1 ? (
+          <div className="py-4">
+            <Pagination>
+              <PaginationContent>
+                {currentPage > 1 ? (
+                  <PaginationItem>
+                    <PaginationPrevious
+                      href={`/console/workflows?page=${currentPage - 1}`}
+                    />
+                  </PaginationItem>
+                ) : null}
+                {new Array(Math.min(totalPages, 5)).fill(0).map((_, idx) => (
+                  <PaginationItem key={idx}>
+                    <PaginationLink
+                      href={`/console/workflows?page=${idx + 1}`}
+                      className={cn(
+                        idx + 1 === currentPage && "text-primary font-semibold"
+                      )}
+                    >
+                      {idx + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                {(currentPage - 1) * LIMIT + workflows.length < count ? (
+                  <PaginationItem>
+                    <PaginationNext
+                      href={`/console/workflows?page=${currentPage + 1}`}
+                    />
+                  </PaginationItem>
+                ) : null}
+              </PaginationContent>
+            </Pagination>
+          </div>
+        ) : null}
+      </div>
     </>
   );
 }

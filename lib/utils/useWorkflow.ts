@@ -3,7 +3,7 @@ import { Prisma, Workflow } from "@prisma/client";
 import { owner } from "../hooks/useOwner";
 import { redisStore } from "./redis";
 
-export const LIMIT = 15;
+export const LIMIT = 25;
 
 export async function getWorkflowById(id: number): Promise<Workflow | null> {
   const workflow = await prisma.workflow.findUnique({
