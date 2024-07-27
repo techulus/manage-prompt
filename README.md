@@ -23,7 +23,7 @@ If you want to learn more about this project or have any questions, send us an e
 
 - [Next.js](https://nextjs.org/)
 - [Tailwind CSS](https://tailwindcss.com/)
-- [Neon](https://neon.tech)
+- [Fly](https://fly.io/docs/postgres/)
 - [Clerk](https://clerk.com)
 - [Upstash](https://upstash.com)
 - [tinybird](https://www.tinybird.co)
