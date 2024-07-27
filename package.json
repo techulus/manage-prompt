@@ -22,7 +22,7 @@
     "@prisma/adapter-pg": "^5.17.0",
     "@prisma/client": "^5.17.0",
     "@radix-ui/react-avatar": "^1.0.3",
-    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-select": "^1.2.2",
