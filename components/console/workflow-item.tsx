@@ -1,9 +1,9 @@
 import { getWorkflowRunStats } from "@/lib/utils/tinybird";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { Workflow } from "@prisma/client";
-import { SparkAreaChart } from "@tremor/react";
 import classNames from "classnames";
 import Link from "next/link";
+import { WorkflowStatsAreaChart } from "../core/area-chart";
 import { Badge } from "../ui/badge";
 
 interface Props {
@@ -29,7 +29,7 @@ export async function WorkflowItem({ workflow }: Props) {
   return (
     <li
       key={workflow.id}
-      className="relative py-5 pl-4 pr-6 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-slate-900"
+      className="relative py-5 pl-4 pr-6 dark:text-gray-100 hover:bg-gray-50 dark:hover:bg-slate-900 rounded-md"
     >
       <div className="flex items-center justify-between space-x-4">
         <Link
@@ -81,17 +81,7 @@ export async function WorkflowItem({ workflow }: Props) {
           />
         </div>
 
-        <SparkAreaChart
-          data={usageData}
-          index="hour"
-          curveType="monotone"
-          categories={["total"]}
-          colors={["blue"]}
-          minValue={0}
-          className="hidden lg:block max-w-[400px] w-full border rounded-md border-gray-200 dark:border-gray-800"
-          // @ts-ignore
-          showAnimation
-        />
+        <WorkflowStatsAreaChart chartData={usageData} />
       </div>
     </li>
   );

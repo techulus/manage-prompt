@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { Pool } from "pg";
 
 declare global {
-  var prisma: any;
+  var prisma: PrismaClient | undefined;
 }
 
 const connectionString = `${process.env.DATABASE_URL}`;
