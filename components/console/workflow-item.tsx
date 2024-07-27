@@ -82,17 +82,6 @@ export async function WorkflowItem({ workflow }: Props) {
         </div>
 
         <WorkflowStatsAreaChart chartData={usageData} />
-        {/* <SparkAreaChart
-          data={usageData}
-          index="hour"
-          curveType="monotone"
-          categories={["total"]}
-          colors={["blue"]}
-          minValue={0}
-          className="hidden lg:block max-w-[400px] w-full border rounded-md border-gray-200 dark:border-gray-800"
-          // @ts-ignore
-          showAnimation
-        /> */}
       </div>
     </li>
   );
