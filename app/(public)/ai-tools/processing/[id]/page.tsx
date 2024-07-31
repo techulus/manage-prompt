@@ -42,21 +42,18 @@ export default function AIToolsResult({
   }, [id, getStatus]);
 
   return (
-    <>
-      <div className="hidden md:block h-8"></div>
-      <PageSection topInset>
-        <CardContent className="p-32">
-          <Spinner />
+    <PageSection>
+      <CardContent className="p-32">
+        <Spinner />
 
-          <p className="text-center font-bold mt-4">Processing your image</p>
-          <p className="text-center text-gray-500 dark:text-gray-400 text-sm">
-            This may take a few seconds.
-          </p>
-          <p className="mt-4 text-center text-gray-500 dark:text-gray-400 text-sm capitalize">
-            {status}
-          </p>
-        </CardContent>
-      </PageSection>
-    </>
+        <p className="text-center font-bold mt-4">Processing your image</p>
+        <p className="text-center text-gray-500 dark:text-gray-400 text-sm">
+          This may take a few seconds.
+        </p>
+        <p className="mt-4 text-center text-gray-500 dark:text-gray-400 text-sm capitalize">
+          {status}
+        </p>
+      </CardContent>
+    </PageSection>
   );
 }

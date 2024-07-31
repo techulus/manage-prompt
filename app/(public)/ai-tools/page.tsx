@@ -82,7 +82,7 @@ export default async function FreeAiTools() {
                 actionIdx === actions.length - 1
                   ? "rounded-bl-lg rounded-br-lg sm:rounded-bl-none"
                   : "",
-                "group relative bg-white dark:bg-slate-950 p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-500"
+                "group relative bg-white dark:bg-slate-950 p-6 focus-within:ring-2 focus-within:ring-inset  focus-within:ring-primary"
               )}
             >
               <div className="mt-8">
