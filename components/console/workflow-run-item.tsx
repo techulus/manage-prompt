@@ -28,7 +28,7 @@ export async function WorkflowRunItem({ workflowRun }: Props) {
   return (
     <li
       key={workflowRun.id}
-      className="relative overflow-x-scroll px-6 py-5 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-600"
+      className="relative overflow-x-scroll px-6 py-5 focus-within:ring-2 focus-within:ring-inset focus-within:ring-primary"
     >
       <div className="flex justify-between space-x-3">
         <div className="min-w-0 flex-1">
@@ -53,7 +53,7 @@ export async function WorkflowRunItem({ workflowRun }: Props) {
         </time>
       </div>
       <div className="mt-1 text-gray-600 dark:text-gray-200">
-        <ReactMarkdown className="prose dark:prose-invert max-w-none prose-a:text-blue-600 dark:prose-a:text-blue-500">
+        <ReactMarkdown className="prose dark:prose-invert max-w-none prose-a:text-primary">
           {result}
         </ReactMarkdown>
       </div>

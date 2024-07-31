@@ -37,8 +37,6 @@ export function AIImageProcessingPage({
         </div>
       </PageTitle>
 
-      <div className="hidden md:block h-8"></div>
-
       <PageSection topInset>
         <CardContent>
           <div className="flex flex-col">

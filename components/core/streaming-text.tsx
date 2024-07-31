@@ -68,7 +68,7 @@ export default function StreamingText({
   return loading ? (
     <Spinner className={className} />
   ) : renderMarkdown ? (
-    <ReactMarkdown className="prose dark:prose-invert prose-a:text-blue-600 dark:prose-a:text-blue-500">
+    <ReactMarkdown className="prose dark:prose-invert prose-a:text-primary">
       {result}
     </ReactMarkdown>
   ) : (
