@@ -167,3 +167,33 @@ export async function updateKeyName(data: FormData) {
 
   redirect(`/console/settings`);
 }
+
+export async function updateUserName(data: FormData) {
+  const id = data.get("id") as string;
+  const name = data.get("userName") as string;
+
+  const result = z
+    .object({
+      name: z.string().min(3).max(50),
+    })
+    .safeParse({
+      name,
+    });
+
+  if (!result.success) {
+    return {
+      error: fromZodError(result.error).toString(),
+    };
+  }
+
+  await prisma.user.update({
+    where: {
+      id,
+    },
+    data: {
+      name,
+    },
+  });
+
+  redirect("/console/settings");
+}

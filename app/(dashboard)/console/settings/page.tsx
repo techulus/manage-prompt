@@ -29,6 +29,7 @@ import {
   updateKeyName,
   updateRateLimit,
   updateSpendLimit,
+  updateUserName,
 } from "./actions";
 
 export default async function Settings() {
@@ -170,11 +171,17 @@ export default async function Settings() {
 
                 <div className="pt-2 sm:flex">
                   <dt className="font-medium text-gray-900 dark:text-gray-200 sm:w-64 sm:flex-none sm:pr-6">
-                    Full name
+                    Name
                   </dt>
                   <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
                     <div className="text-gray-900 dark:text-gray-200">
-                      {user?.name}
+                      <EditableValue
+                        id={userId}
+                        name="userName"
+                        type="text"
+                        value={user?.name ?? ""}
+                        action={updateUserName}
+                      />
                     </div>
                   </dd>
                 </div>
