@@ -1,17 +1,16 @@
 "use client";
 
 import { useDetectSticky } from "@/lib/hooks/useDetectSticky";
-import { useTheme } from "@/lib/hooks/useTheme";
 import { cn } from "@/lib/utils";
-import { SignedIn, useUser } from "@clerk/nextjs";
 import { Transition } from "@headlessui/react";
 import classNames from "classnames";
+import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import logo from "../../public/images/logo.png";
-import { ThemedOrgSwitcher, ThemedUserButton } from "../core/auth";
+import { UserButton } from "../core/auth";
 import { createToastWrapper } from "../core/toast";
 
 type Props = {
@@ -19,8 +18,7 @@ type Props = {
 };
 
 export default function NavBar({ isPublicPage = false }: Props) {
-  const appearance = useTheme();
-  const { isLoaded, user } = useUser();
+  const { theme } = useTheme();
   const path = usePathname();
 
   const [isSticky, ref] = useDetectSticky();
@@ -41,19 +39,9 @@ export default function NavBar({ isPublicPage = false }: Props) {
     [path]
   );
 
-  useEffect(() => {
-    if (isPublicPage) {
-      return;
-    }
-
-    if (isLoaded && !user) {
-      window.location.href = "/";
-    }
-  }, [user, isLoaded, isPublicPage]);
-
   return (
     <>
-      {createToastWrapper(appearance)}
+      {createToastWrapper(theme)}
       <nav
         className={cn(
           "flex-shrink-0 text-black dark:text-white",
@@ -72,42 +60,22 @@ export default function NavBar({ isPublicPage = false }: Props) {
                     height={32}
                     className="mr-2"
                   />
-                  {isPublicPage && !user ? (
-                    <div className="-m-1.5 p-1.5">
-                      <span className="sr-only">ManagePrompt</span>
-                      <p className="hero relative">
-                        Manage<span className="font-semibold">Prompt</span>
-                      </p>
-                    </div>
-                  ) : null}
+
+                  <div className="-m-1.5 p-1.5">
+                    <span className="sr-only">ManagePrompt</span>
+                    <p className="hero relative">
+                      Manage<span className="font-semibold">Prompt</span>
+                    </p>
+                  </div>
                 </div>
               </Link>
-
-              <SignedIn>
-                <svg
-                  fill="none"
-                  height="32"
-                  shapeRendering="geometricPrecision"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="1"
-                  viewBox="0 0 24 24"
-                  width="32"
-                  className="text-gray-300 dark:text-gray-700 xl:block mr-2"
-                >
-                  <path d="M16.88 3.549L7.12 20.451"></path>
-                </svg>
-
-                <ThemedOrgSwitcher appearance={appearance} />
-              </SignedIn>
             </div>
 
-            <SignedIn>
+            {!isPublicPage ? (
               <div className="flex ml-2 justify-center">
-                <ThemedUserButton appearance={appearance} />
+                <UserButton />
               </div>
-            </SignedIn>
+            ) : null}
           </div>
         </div>
       </nav>

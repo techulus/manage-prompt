@@ -6,7 +6,7 @@ import { owner } from "./useOwner";
 export type UserSetting = {};
 
 export const updateSettings = async (settings: UserSetting) => {
-  const { userId } = owner();
+  const { userId } = await owner();
   if (!userId) return;
 
   const currentSettings = await getSettings();
@@ -25,7 +25,7 @@ export const updateSettings = async (settings: UserSetting) => {
 };
 
 export const getSettings = async (): Promise<UserSetting> => {
-  const { userId } = owner();
+  const { userId } = await owner();
   if (!userId) return {};
 
   const user = await prisma.user.findUnique({

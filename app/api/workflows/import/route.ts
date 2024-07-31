@@ -12,7 +12,7 @@ type UploadResult = {
 };
 
 export async function PUT(request: Request) {
-  const { userId, ownerId } = owner();
+  const { userId, ownerId } = await owner();
 
   const body = await request.blob();
   const bodyString = await body.text();

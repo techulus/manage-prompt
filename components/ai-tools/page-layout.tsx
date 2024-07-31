@@ -1,7 +1,7 @@
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
-import { ContentBlock } from "../core/content-block";
+import PageSection from "../core/page-section";
 import PageTitle from "../layout/page-title";
 import { Button } from "../ui/button";
 import { CardContent } from "../ui/card";
@@ -39,7 +39,7 @@ export function AIImageProcessingPage({
 
       <div className="hidden md:block h-8"></div>
 
-      <ContentBlock>
+      <PageSection topInset>
         <CardContent>
           <div className="flex flex-col">
             <ContentDeleteWarningAlert />
@@ -58,7 +58,7 @@ export function AIImageProcessingPage({
             </div>
           </div>
         </CardContent>
-      </ContentBlock>
+      </PageSection>
     </>
   );
 }

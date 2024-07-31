@@ -67,7 +67,9 @@ export async function getWorkflowsForOwner({
 }
 
 export async function getWorkflowAndRuns(id: number, page: number = 1) {
-  const { ownerId } = owner();
+  const { ownerId } = await owner();
+  if (!ownerId) throw new Error("Owner ID not found");
+
   const workflow: Workflow | null = await prisma.workflow.findFirst({
     where: {
       id: {

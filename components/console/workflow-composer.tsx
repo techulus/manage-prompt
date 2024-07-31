@@ -1,12 +1,11 @@
 "use client";
 
-import { runWorkflow } from "@/app/console/workflows/actions";
+import { runWorkflow } from "@/app/(dashboard)/console/workflows/actions";
 import {
   WorkflowInput,
   WorkflowInputType,
   modelHasInstruction,
 } from "@/data/workflow";
-import { SignedIn } from "@clerk/nextjs";
 import { Workflow } from "@prisma/client";
 import { useMemo, useReducer } from "react";
 import { ApiCodeSnippet } from "../code/snippet";
@@ -143,19 +142,17 @@ export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
                 )}
               </div>
 
-              <SignedIn>
-                <div className="mt-2 flex justify-end">
-                  <SaveButton
-                    label="Run"
-                    loadingLabel="Running"
-                    disabled={
-                      !workflow.published ||
-                      Object.keys(inputValues).length !==
-                        (inputs as WorkflowInput[])?.length
-                    }
-                  />
-                </div>
-              </SignedIn>
+              <div className="mt-2 flex justify-end">
+                <SaveButton
+                  label="Run"
+                  loadingLabel="Running"
+                  disabled={
+                    !workflow.published ||
+                    Object.keys(inputValues).length !==
+                      (inputs as WorkflowInput[])?.length
+                  }
+                />
+              </div>
             </TabsContent>
           ) : null}
 
@@ -172,19 +169,17 @@ export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
               </div>
             </div>
 
-            <SignedIn>
-              <div className="mt-2 flex justify-end">
-                <SaveButton
-                  label="Run"
-                  loadingLabel="Running"
-                  disabled={
-                    !workflow.published ||
-                    Object.keys(inputValues).length !==
-                      (inputs as WorkflowInput[])?.length
-                  }
-                />
-              </div>
-            </SignedIn>
+            <div className="mt-2 flex justify-end">
+              <SaveButton
+                label="Run"
+                loadingLabel="Running"
+                disabled={
+                  !workflow.published ||
+                  Object.keys(inputValues).length !==
+                    (inputs as WorkflowInput[])?.length
+                }
+              />
+            </div>
           </TabsContent>
 
           <TabsContent value="deploy">
