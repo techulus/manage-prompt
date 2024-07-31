@@ -31,7 +31,16 @@ export const UserButton = () => {
             Settings
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem>Support</DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link
+            href="https://techulus.atlassian.net/servicedesk/customer/portal/5"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full"
+          >
+            Support
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
           <form action={logout}>

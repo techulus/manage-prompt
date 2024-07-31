@@ -27,7 +27,7 @@ export async function WorkflowItem({ workflow }: Props) {
     <div
       key={workflow.id}
       className={cn(
-        "relative flex justify-between space-x-3 rounded-lg border border-gray-200 px-3 py-2 shadow-sm hover:border-gray-400 dark:border-gray-800 dark:hover:border-gray-700"
+        "relative flex justify-between space-x-3 rounded-lg border border-gray-200 px-3 py-2 shadow-sm hover:border-gray-400 dark:border-gray-800 dark:hover:border-gray-700 bg-white dark:bg-gray-950"
       )}
     >
       <Link

@@ -19,6 +19,11 @@ import { fromZodError } from "zod-validation-error";
 
 export async function createWorkflow(formData: FormData) {
   const { userId, ownerId } = await owner();
+  if (!userId || !ownerId) {
+    return {
+      error: "User is missing",
+    };
+  }
 
   const name = formData.get("name") as string;
   const model = formData.get("model") as string;
@@ -168,7 +173,7 @@ export async function runWorkflow(formData: FormData) {
 
   try {
     if (!id) throw "ID is missing";
-    if (!userId && !ownerId) throw "User/Owner ID is missing";
+    if (!userId || !ownerId) throw "User/Owner ID is missing";
 
     const organization = await prisma.organization.findUnique({
       include: {

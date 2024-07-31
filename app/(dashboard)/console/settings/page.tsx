@@ -1,4 +1,4 @@
-import { ContentBlock } from "@/components/core/content-block";
+import PageSection from "@/components/core/page-section";
 import { ActionButton, DeleteButton } from "@/components/form/button";
 import { EditableValue } from "@/components/form/editable-text";
 import PageTitle from "@/components/layout/page-title";
@@ -76,7 +76,7 @@ export default async function Settings() {
     <>
       <PageTitle title="Settings" />
 
-      <ContentBlock>
+      <PageSection topInset>
         <main className="px-4 py-8 sm:px-6 lg:flex-auto">
           <div className="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
             <div>
@@ -292,7 +292,7 @@ export default async function Settings() {
             </div>
           </div>
         </main>
-      </ContentBlock>
+      </PageSection>
     </>
   );
 }

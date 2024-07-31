@@ -1,7 +1,7 @@
 import classnames from "classnames";
-import { CardContent } from "../ui/card";
+import PageTitle from "../layout/page-title";
 import { Skeleton } from "../ui/skeleton";
-import { ContentBlock } from "./content-block";
+import PageSection from "./page-section";
 
 export function Spinner({
   message = null,
@@ -51,34 +51,28 @@ export function SpinnerWithSpacing() {
 export function PageLoading() {
   return (
     <>
-      <div className="flex justify-center border-b pb-4 pl-4 pr-6 pt-4 sm:pl-6 lg:pl-8 xl:border-t-0 xl:px-8 xl:py-10 dark:text-white bg-gray-50 dark:bg-card">
-        <div className="flex flex-col w-full max-w-7xl space-y-2">
-          <Skeleton className="w-[300px] h-[20px] rounded-md" />
-          <Skeleton className="w-[300px] h-[20px] rounded-md" />
+      <PageTitle title="">
+        <div className="-mt-6 flex w-full max-w-6xl flex-col justify-center space-y-2">
+          <Skeleton className="h-[20px] w-[300px] rounded-md" />
+          <Skeleton className="h-[20px] w-[300px] rounded-md" />
         </div>
-      </div>
+      </PageTitle>
 
-      <div className="h-8"></div>
+      <PageSection topInset bottomMargin>
+        <div className="flex flex-col space-y-2 p-4">
+          <Skeleton className="h-[20px] w-full rounded-md" />
+          <Skeleton className="h-[20px] w-full rounded-md" />
+          <Skeleton className="h-[20px] w-[124px] rounded-md" />
+        </div>
+      </PageSection>
 
-      <ContentBlock>
-        <CardContent>
-          <div className="flex flex-col pt-6 space-y-2">
-            <Skeleton className="w-full h-[28px] rounded-md" />
-            <Skeleton className="w-full h-[28px] rounded-md" />
-            <Skeleton className="w-[124px] h-[28px] rounded-md" />
-          </div>
-        </CardContent>
-      </ContentBlock>
-
-      <ContentBlock>
-        <CardContent>
-          <div className="flex flex-col pt-6 space-y-2">
-            <Skeleton className="w-full h-[28px] rounded-md" />
-            <Skeleton className="w-full h-[28px] rounded-md" />
-            <Skeleton className="w-[124px] h-[28px] rounded-md" />
-          </div>
-        </CardContent>
-      </ContentBlock>
+      <PageSection>
+        <div className="flex flex-col space-y-2 p-4">
+          <Skeleton className="h-[20px] w-full rounded-md" />
+          <Skeleton className="h-[20px] w-full rounded-md" />
+          <Skeleton className="h-[20px] w-[124px] rounded-md" />
+        </div>
+      </PageSection>
     </>
   );
 }

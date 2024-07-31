@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { ContentDeleteWarningAlert } from "@/components/ai-tools/content-deletion-warning-alert";
-import { ContentBlock } from "@/components/core/content-block";
+import PageSection from "@/components/core/page-section";
 import PageTitle from "@/components/layout/page-title";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -42,7 +42,7 @@ export default async function AIToolsResult({
     <>
       <PageTitle title="It's ready!" subTitle={order.type} />
 
-      <ContentBlock>
+      <PageSection topInset>
         <CardContent>
           <ContentDeleteWarningAlert />
 
@@ -130,7 +130,7 @@ export default async function AIToolsResult({
             </div>
           </div>
         </CardContent>
-      </ContentBlock>
+      </PageSection>
     </>
   );
 }

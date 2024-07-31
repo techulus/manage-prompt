@@ -1,5 +1,5 @@
 import { WorkflowForm } from "@/components/console/workflow-form";
-import { ContentBlock } from "@/components/core/content-block";
+import PageSection from "@/components/core/page-section";
 import PageTitle from "@/components/layout/page-title";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CardContent, CardHeader } from "@/components/ui/card";
@@ -27,7 +27,7 @@ export default async function EditWorkflow({ params }: Props) {
         backUrl="/console/workflows"
       />
 
-      <ContentBlock>
+      <PageSection topInset>
         <CardHeader>
           <Alert>
             <Terminal className="h-4 w-4" />
@@ -41,7 +41,7 @@ export default async function EditWorkflow({ params }: Props) {
         <CardContent>
           <WorkflowForm workflow={workflow} action={updateWorkflow} />
         </CardContent>
-      </ContentBlock>
+      </PageSection>
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { ContentBlock } from "@/components/core/content-block";
+import PageSection from "@/components/core/page-section";
 import PageTitle from "@/components/layout/page-title";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -68,9 +68,7 @@ export default async function FreeAiTools() {
         </div>
       </PageTitle>
 
-      <div className="hidden md:block h-8"></div>
-
-      <ContentBlock>
+      <PageSection topInset>
         <div className="divide-y overflow-hidden rounded-lg bg-slate-200 dark:bg-slate-900 shadow sm:grid sm:grid-cols-2 sm:gap-px sm:divide-y-0">
           {actions.map((action, actionIdx) => (
             <div
@@ -117,7 +115,7 @@ export default async function FreeAiTools() {
             </div>
           ))}
         </div>
-      </ContentBlock>
+      </PageSection>
     </>
   );
 }

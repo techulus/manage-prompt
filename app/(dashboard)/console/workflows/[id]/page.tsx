@@ -1,7 +1,7 @@
 import { WorkflowComposer } from "@/components/console/workflow-composer";
 import { WorkflowRunItem } from "@/components/console/workflow-run-item";
 import { WorkflowUsageCharts } from "@/components/console/workflow-usage-charts";
-import { ContentBlock } from "@/components/core/content-block";
+import PageSection from "@/components/core/page-section";
 import { ActionButton, DeleteButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -24,6 +24,7 @@ import { PauseCircleIcon, PlayCircleIcon } from "@heroicons/react/20/solid";
 import { DownloadIcon } from "@radix-ui/react-icons";
 import { Terminal } from "lucide-react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { deleteWorkflow, toggleWorkflowState } from "../actions";
 
 interface Props {
@@ -39,6 +40,10 @@ export const maxDuration = 120;
 
 export default async function WorkflowDetails({ params, searchParams }: Props) {
   const { ownerId } = await owner();
+  if (!ownerId) {
+    redirect("/sign-in");
+  }
+
   const currentPage = searchParams.page ? parseInt(searchParams.page) : 1;
   const { workflow, workflowRuns, count } = await getWorkflowAndRuns(
     Number(params.id),
@@ -79,8 +84,8 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
       ) : null}
 
       {/* Toolbar*/}
-      <ContentBlock>
-        <div className="hidden md:flex h-12 flex-col justify-center border-b">
+      <PageSection topInset bottomMargin>
+        <div className="flex h-12 flex-col justify-center">
           <div className="px-4 sm:px-6 lg:px-8 lg:-mx-4">
             <div className="flex justify-between py-3">
               {/* Left buttons */}
@@ -150,31 +155,31 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
             </div>
           </div>
         </div>
-      </ContentBlock>
+      </PageSection>
 
-      <ContentBlock>
+      <PageSection>
         <CardHeader>
           <h3 className="text-lg font-semibold">Usage (Last 24 hours)</h3>
           <WorkflowUsageCharts usageData={usageData} />
         </CardHeader>
-      </ContentBlock>
+      </PageSection>
 
-      <ContentBlock>
+      <PageSection>
         <WorkflowComposer
           workflow={workflow}
           apiSecretKey={apiSecretKey?.key}
         />
-      </ContentBlock>
+      </PageSection>
 
       {workflowRuns.length ? (
-        <ContentBlock>
-          <ul role="list" className="border-t divide-y border-b">
+        <PageSection>
+          <ul role="list" className="divide-y">
             {workflowRuns.map((run) => (
               // @ts-ignore React server component
               <WorkflowRunItem key={run.id} workflowRun={run} />
             ))}
           </ul>
-        </ContentBlock>
+        </PageSection>
       ) : null}
 
       {workflowRuns?.length > 0 && totalPages > 1 ? (

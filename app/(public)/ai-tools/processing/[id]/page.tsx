@@ -1,7 +1,7 @@
 "use client";
 
-import { ContentBlock } from "@/components/core/content-block";
 import { Spinner } from "@/components/core/loaders";
+import PageSection from "@/components/core/page-section";
 import { notifyError } from "@/components/core/toast";
 import { CardContent } from "@/components/ui/card";
 import { useCallback, useEffect, useState } from "react";
@@ -44,7 +44,7 @@ export default function AIToolsResult({
   return (
     <>
       <div className="hidden md:block h-8"></div>
-      <ContentBlock>
+      <PageSection topInset>
         <CardContent className="p-32">
           <Spinner />
 
@@ -56,7 +56,7 @@ export default function AIToolsResult({
             {status}
           </p>
         </CardContent>
-      </ContentBlock>
+      </PageSection>
     </>
   );
 }
