@@ -23,7 +23,7 @@ interface Props {
 }
 
 export default async function Workflows({ searchParams }: Props) {
-  const { userId, orgId } = owner();
+  const { userId, orgId } = await owner();
 
   const currentPage = searchParams.page ? parseInt(searchParams.page) : 1;
   const { workflows, count } = await getWorkflowsForOwner({

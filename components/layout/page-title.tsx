@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import { SignedIn } from "@clerk/nextjs";
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 import { PropsWithChildren } from "react";
@@ -26,21 +25,19 @@ export default function PageTitle({
       <div className="flex w-full max-w-7xl items-center justify-between">
         <div className="flex items-center">
           {backUrl && (
-            <SignedIn>
-              <Link
-                href={backUrl}
-                className="text-md mr-2 flex items-center font-medium text-gray-600 hover:text-gray-900"
-                prefetch={false}
-              >
-                <ArrowLeftIcon
-                  className={cn(
-                    "h-6 w-6 flex-shrink-0 text-gray-600 hover:text-gray-900",
-                    "dark:text-gray-400 dark:hover:text-gray-300"
-                  )}
-                  aria-hidden="true"
-                />
-              </Link>
-            </SignedIn>
+            <Link
+              href={backUrl}
+              className="text-md mr-2 flex items-center font-medium text-gray-600 hover:text-gray-900"
+              prefetch={false}
+            >
+              <ArrowLeftIcon
+                className={cn(
+                  "h-6 w-6 flex-shrink-0 text-gray-600 hover:text-gray-900",
+                  "dark:text-gray-400 dark:hover:text-gray-300"
+                )}
+                aria-hidden="true"
+              />
+            </Link>
           )}
 
           <div className="flex flex-col">

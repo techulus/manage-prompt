@@ -1,9 +1,5 @@
 import { ContentBlock } from "@/components/core/content-block";
-import {
-  ActionButton,
-  DeleteButton,
-  UpdateProfileButton,
-} from "@/components/form/button";
+import { ActionButton, DeleteButton } from "@/components/form/button";
 import { EditableValue } from "@/components/form/editable-text";
 import PageTitle from "@/components/layout/page-title";
 import { Badge } from "@/components/ui/badge";
@@ -16,14 +12,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { owner } from "@/lib/hooks/useOwner";
+import { getUser, owner } from "@/lib/hooks/useOwner";
 import { DateTime } from "@/lib/utils/datetime";
 import { prisma } from "@/lib/utils/db";
 import {
   getUpcomingInvoice,
   isSubscriptionCancelled,
 } from "@/lib/utils/stripe";
-import { currentUser } from "@clerk/nextjs/server";
+import { notFound } from "next/navigation";
 import Stripe from "stripe";
 import {
   createSecretKey,
@@ -36,14 +32,13 @@ import {
 } from "./actions";
 
 export default async function Settings() {
-  const { userId, ownerId } = owner();
-  const user = await currentUser();
-
+  const { userId, ownerId } = await owner();
   if (!ownerId || !userId) {
     throw new Error("User not found");
   }
 
-  const [organization, secretKeys] = await Promise.all([
+  const [user, organization, secretKeys] = await Promise.all([
+    getUser(),
     prisma.organization.findUnique({
       include: {
         stripe: true,
@@ -65,6 +60,10 @@ export default async function Settings() {
       },
     }),
   ]);
+
+  if (!user) {
+    return notFound();
+  }
 
   const subscription = organization?.stripe
     ?.subscription as unknown as Stripe.Subscription;
@@ -171,35 +170,23 @@ export default async function Settings() {
 
                 <div className="pt-2 sm:flex">
                   <dt className="font-medium text-gray-900 dark:text-gray-200 sm:w-64 sm:flex-none sm:pr-6">
-                    User name
-                  </dt>
-                  <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                    <div className="text-gray-900 dark:text-gray-200">
-                      {user?.username || "Not set"}
-                    </div>
-                    <UpdateProfileButton />
-                  </dd>
-                </div>
-
-                <div className="pt-2 sm:flex">
-                  <dt className="font-medium text-gray-900 dark:text-gray-200 sm:w-64 sm:flex-none sm:pr-6">
                     Full name
                   </dt>
                   <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
                     <div className="text-gray-900 dark:text-gray-200">
-                      {user?.firstName} {user?.lastName}
+                      {user?.name}
                     </div>
                   </dd>
                 </div>
 
-                {user?.emailAddresses?.length ? (
+                {user?.email ? (
                   <div className="pt-2 sm:flex">
                     <dt className="font-medium text-gray-900 dark:text-gray-200 sm:w-64 sm:flex-none sm:pr-6">
                       Email address
                     </dt>
                     <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
                       <div className="text-gray-900 dark:text-gray-200">
-                        {user?.emailAddresses[0].emailAddress}
+                        {user?.email}
                       </div>
                     </dd>
                   </div>

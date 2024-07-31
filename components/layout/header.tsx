@@ -1,4 +1,3 @@
-import { SignedIn, SignedOut } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import logo from "../../public/images/logo.png";
@@ -51,24 +50,13 @@ export function Header() {
           ))}
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <SignedIn>
-            <Link
-              href="/console/workflows"
-              className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-200"
-              prefetch={false}
-            >
-              Console <span aria-hidden="true">&rarr;</span>
-            </Link>
-          </SignedIn>
-          <SignedOut>
-            <Link
-              prefetch={false}
-              href="/console/workflows"
-              className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-200"
-            >
-              Log in <span aria-hidden="true">&rarr;</span>
-            </Link>
-          </SignedOut>
+          <Link
+            href="/console/workflows"
+            className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-200"
+            prefetch={false}
+          >
+            Console <span aria-hidden="true">&rarr;</span>
+          </Link>
         </div>
       </nav>
     </header>

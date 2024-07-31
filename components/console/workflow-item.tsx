@@ -17,7 +17,7 @@ interface Props {
     | "ownerId"
   > & {
     user: {
-      first_name: string;
+      name: string;
     };
   };
 }
@@ -65,7 +65,7 @@ export async function WorkflowItem({ workflow }: Props) {
                 &middot;
               </span>
               <span className="hidden sm:block text-sm">
-                {workflow.user?.first_name}
+                {workflow.user?.name}
               </span>
             </div>
           </h2>

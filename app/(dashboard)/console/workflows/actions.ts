@@ -18,7 +18,7 @@ import Stripe from "stripe";
 import { fromZodError } from "zod-validation-error";
 
 export async function createWorkflow(formData: FormData) {
-  const { userId, ownerId } = owner();
+  const { userId, ownerId } = await owner();
 
   const name = formData.get("name") as string;
   const model = formData.get("model") as string;
@@ -160,7 +160,7 @@ export async function toggleWorkflowState(formData: FormData) {
 }
 
 export async function runWorkflow(formData: FormData) {
-  const { userId, ownerId } = owner();
+  const { userId, ownerId } = await owner();
 
   const id = Number(formData.get("id"));
   const model = formData.get("model") as string;

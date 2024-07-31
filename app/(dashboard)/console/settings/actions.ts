@@ -18,7 +18,7 @@ const createId = init({
 });
 
 export async function redirectToBilling() {
-  const { ownerId } = owner();
+  const { ownerId } = await owner();
 
   if (!ownerId) {
     throw new Error("User and org ID not found");
@@ -30,7 +30,7 @@ export async function redirectToBilling() {
 }
 
 export async function createSecretKey() {
-  const { userId, ownerId } = owner();
+  const { userId, ownerId } = await owner();
 
   if (!ownerId || !userId) {
     throw new Error("User and org ID not found");

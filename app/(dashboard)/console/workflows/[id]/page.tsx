@@ -38,7 +38,7 @@ interface Props {
 export const maxDuration = 120;
 
 export default async function WorkflowDetails({ params, searchParams }: Props) {
-  const { ownerId } = owner();
+  const { ownerId } = await owner();
   const currentPage = searchParams.page ? parseInt(searchParams.page) : 1;
   const { workflow, workflowRuns, count } = await getWorkflowAndRuns(
     Number(params.id),
