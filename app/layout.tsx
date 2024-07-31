@@ -1,10 +1,17 @@
 import { Analytics } from "@vercel/analytics/react";
 import { GeistSans } from "geist/font/sans";
 
+import { ThemeProvider } from "@/components/core/theme-provider";
 import { SITE_METADATA } from "@/data/marketing";
 import classNames from "classnames";
-import { cookies } from "next/headers";
+import { Bricolage_Grotesque } from "next/font/google";
+
 import "./globals.css";
+
+const bricolageGrotesque = Bricolage_Grotesque({
+  subsets: ["latin"],
+  variable: "--font-bricolage-grotesque",
+});
 
 export const metadata = {
   title: SITE_METADATA.TITLE,
@@ -18,15 +25,13 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const theme = cookies().get("theme")?.value ?? "light";
-
   return (
     <html
       lang="en"
       className={classNames(
         "flex min-w-full min-h-full",
-        theme,
-        GeistSans.className
+        GeistSans.className,
+        bricolageGrotesque.variable
       )}
     >
       <head>
@@ -94,7 +99,7 @@ export default async function RootLayout({
           "rounded-tl-xl rounded-tr-xl md:rounded-none"
         )}
       >
-        {children}
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
       <Analytics />
     </html>

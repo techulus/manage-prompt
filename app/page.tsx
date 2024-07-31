@@ -94,7 +94,7 @@ export default async function Home() {
         </div>
         <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
           <div className="text-center">
-            <h1 className="text-4xl py-4 tracking-tighter text-gray-900 sm:text-6xl hero text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-700">
+            <h1 className="text-4xl text-hero py-4 tracking-tighter text-gray-900 sm:text-6xl hero text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-700">
               {SITE_METADATA.TAGLINE}
             </h1>
             <StreamingText
@@ -159,7 +159,7 @@ export default async function Home() {
                 <h2 className="text-base font-semibold leading-7 text-primary">
                   Build faster
                 </h2>
-                <p className="mt-2 text-3xl tracking-tighter text-accent-foreground sm:text-4xl font-bold">
+                <p className="mt-2 text-3xl tracking-tighter text-accent-foreground sm:text-4xl font-bold text-hero">
                   Building blocks for your next AI project
                 </p>
                 <p className="mt-6 text-lg leading-8 text-foreground">
@@ -195,7 +195,7 @@ export default async function Home() {
       <div className="py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl sm:text-center">
-            <h2 className="text-3xl font-bold tracking-tighter text-primary sm:text-4xl">
+            <h2 className="text-3xl font-bold tracking-tighter text-primary sm:text-4xl text-hero">
               Pay as you go
             </h2>
             <p className="mt-6 text-lg leading-8 text-foreground-accent">

@@ -90,3 +90,8 @@ textarea {
 .prose hr {
   margin: 16px 0;
 }
+
+.text-hero {
+  font-family: var(--font-bricolage-grotesque);
+  font-weight: 600;
+}

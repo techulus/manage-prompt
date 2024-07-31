@@ -1,10 +1,10 @@
 "use client";
 
 import { useDetectSticky } from "@/lib/hooks/useDetectSticky";
-import { useTheme } from "@/lib/hooks/useTheme";
 import { cn } from "@/lib/utils";
 import { Transition } from "@headlessui/react";
 import classNames from "classnames";
+import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -18,7 +18,7 @@ type Props = {
 };
 
 export default function NavBar({ isPublicPage = false }: Props) {
-  const appearance = useTheme();
+  const { theme } = useTheme();
   const path = usePathname();
 
   const [isSticky, ref] = useDetectSticky();
@@ -41,7 +41,7 @@ export default function NavBar({ isPublicPage = false }: Props) {
 
   return (
     <>
-      {createToastWrapper(appearance)}
+      {createToastWrapper(theme)}
       <nav
         className={cn(
           "flex-shrink-0 text-black dark:text-white",
