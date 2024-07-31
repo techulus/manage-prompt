@@ -40,7 +40,7 @@ export function EditableValue({
       <input type="hidden" name="id" value={id} />
       <input type="hidden" name="name" value={name} />
       {isEditing ? (
-        <div className="flex">
+        <div className="flex space-x-2">
           <Input
             name={name}
             type={type}
