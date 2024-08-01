@@ -201,102 +201,99 @@ export default async function Settings() {
         </div>
       </PageSection>
 
-      <PageSection>
-        <div className="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none p-6">
-          <div>
-            <h2 className="text-base font-semibold leading-7 text-gray-900 dark:text-gray-200">
-              API Credentials
-            </h2>
-            <p className="mt-1 text-sm leading-6 text-gray-500 dark:text-gray-400">
-              Manage your API credentials. These keys should be kept secret and
-              not shared publicly. You can read more about our API and rate
-              limting{" "}
-              <a
-                href="https://manageprompt.readme.io"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary font-semibold"
-              >
-                here.
-              </a>
-              <br />
-              You can revoke a key at any time if you believe it has been
-              compromised.
-            </p>
+      <PageSection className="overflow-y-scroll">
+        <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none p-6">
+          <h2 className="text-base font-semibold leading-7 text-gray-900 dark:text-gray-200">
+            API Credentials
+          </h2>
+          <p className="mt-1 text-sm leading-6 text-gray-500 dark:text-gray-400">
+            These keys should be kept secret and not shared publicly. You can
+            read more about our API and rate limting{" "}
+            <a
+              href="https://manageprompt.readme.io"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary font-semibold"
+            >
+              here.
+            </a>
+            <br />
+            You can revoke a key at any time if you believe it has been
+            compromised.
+          </p>
 
-            <Table className="mt-6">
-              {!secretKeys.length ? (
-                <TableCaption>
-                  You have not created any secret keys yet.
-                  <form action={createSecretKey}>
-                    <ActionButton
-                      variant="link"
-                      label="Generate Key"
-                      loadingLabel="Creating..."
+          <Table className="mt-6">
+            {!secretKeys.length ? (
+              <TableCaption>
+                You have not created any secret keys yet.
+                <form action={createSecretKey}>
+                  <ActionButton
+                    variant="link"
+                    label="Generate Key"
+                    loadingLabel="Creating..."
+                  />
+                </form>
+              </TableCaption>
+            ) : (
+              <TableCaption>
+                You can create multiple secret keys to use with the API.
+                <form action={createSecretKey}>
+                  <ActionButton
+                    variant="link"
+                    label="Create Key"
+                    loadingLabel="Creating..."
+                  />
+                </form>
+              </TableCaption>
+            )}
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Key</TableHead>
+                <TableHead>Rate Limit (Req/sec)</TableHead>
+                <TableHead>Last used</TableHead>
+                <TableHead></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {secretKeys.map((key) => (
+                <TableRow key={key.id}>
+                  <TableCell>
+                    <EditableValue
+                      id={key.id}
+                      name="keyName"
+                      type="text"
+                      value={key.name ?? "-"}
+                      action={updateKeyName}
                     />
-                  </form>
-                </TableCaption>
-              ) : (
-                <TableCaption>
-                  You can create multiple secret keys to use with the API.
-                  <form action={createSecretKey}>
-                    <ActionButton
-                      variant="link"
-                      label="Create Key"
-                      loadingLabel="Creating..."
+                  </TableCell>
+                  <TableCell>
+                    <pre>{key.key}</pre>
+                  </TableCell>
+                  <TableCell>
+                    <EditableValue
+                      id={key.id}
+                      name="rateLimitPerSecond"
+                      type="number"
+                      value={key.rateLimitPerSecond}
+                      action={updateRateLimit}
                     />
-                  </form>
-                </TableCaption>
-              )}
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Key</TableHead>
-                  <TableHead>Rate Limit (Req/sec)</TableHead>
-                  <TableHead>Last used</TableHead>
-                  <TableHead></TableHead>
+                  </TableCell>
+                  <TableCell>
+                    {key.lastUsed
+                      ? DateTime.fromJSDate(key.lastUsed).toNiceFormat()
+                      : "Never"}
+                  </TableCell>
+                  <TableCell>
+                    <form action={revokeSecretKey}>
+                      <input type="hidden" name="id" value={key.id} />
+                      <DeleteButton label="Revoke" />
+                    </form>
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {secretKeys.map((key) => (
-                  <TableRow key={key.id}>
-                    <TableCell>
-                      <EditableValue
-                        id={key.id}
-                        name="keyName"
-                        type="text"
-                        value={key.name ?? "-"}
-                        action={updateKeyName}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <pre>{key.key}</pre>
-                    </TableCell>
-                    <TableCell>
-                      <EditableValue
-                        id={key.id}
-                        name="rateLimitPerSecond"
-                        type="number"
-                        value={key.rateLimitPerSecond}
-                        action={updateRateLimit}
-                      />
-                    </TableCell>
-                    <TableCell>
-                      {key.lastUsed
-                        ? DateTime.fromJSDate(key.lastUsed).toNiceFormat()
-                        : "Never"}
-                    </TableCell>
-                    <TableCell>
-                      <form action={revokeSecretKey}>
-                        <input type="hidden" name="id" value={key.id} />
-                        <DeleteButton label="Revoke" />
-                      </form>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+              ))}
+            </TableBody>
+          </Table>
         </div>
       </PageSection>
     </>
