@@ -94,7 +94,7 @@ export default async function Settings() {
                 </dt>
                 <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
                   <div className="text-gray-900 dark:text-gray-200">
-                    {organization?.credits ?? 0} credits left
+                    {organization?.credits.toLocaleString() ?? 0} credits left
                   </div>
                   {!subscription ? (
                     <div className="text-gray-900 dark:text-gray-200">
