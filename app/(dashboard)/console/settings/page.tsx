@@ -90,6 +90,28 @@ export default async function Settings() {
             <dl className="mt-6 space-y-4 divide-y border-t text-sm leading-6">
               <div className="pt-2 sm:flex">
                 <dt className="font-medium text-gray-900 dark:text-gray-200 sm:w-64 sm:flex-none sm:pr-6">
+                  Credits
+                </dt>
+                <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                  <div className="text-gray-900 dark:text-gray-200">
+                    {organization?.credits ?? 0} credits left
+                  </div>
+                  {!subscription ? (
+                    <div className="text-gray-900 dark:text-gray-200">
+                      <form action={redirectToBilling}>
+                        <ActionButton
+                          variant="link"
+                          label="Upgrade"
+                          loadingLabel="Redirecting to checkout..."
+                        />
+                      </form>
+                    </div>
+                  ) : null}
+                </dd>
+              </div>
+
+              <div className="pt-2 sm:flex">
+                <dt className="font-medium text-gray-900 dark:text-gray-200 sm:w-64 sm:flex-none sm:pr-6">
                   Billing
                 </dt>
                 {subscription ? (
@@ -149,22 +171,7 @@ export default async function Settings() {
                       </form>
                     </div>
                   </dd>
-                ) : (
-                  <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                    <div className="text-gray-900 dark:text-gray-200">
-                      {organization?.credits ?? 0} credits left
-                    </div>
-                    <div className="text-gray-900 dark:text-gray-200">
-                      <form action={redirectToBilling}>
-                        <ActionButton
-                          variant="link"
-                          label="Upgrade"
-                          loadingLabel="Redirecting to checkout..."
-                        />
-                      </form>
-                    </div>
-                  </dd>
-                )}
+                ) : null}
               </div>
 
               <div className="pt-2 sm:flex">

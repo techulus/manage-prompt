@@ -191,10 +191,11 @@ export async function runWorkflow(formData: FormData) {
       throw "No credits remaining";
 
     if (
-      await hasExceededSpendLimit(
+      organization?.credits !== 0 &&
+      (await hasExceededSpendLimit(
         organization?.spendLimit,
         organization?.stripe?.customerId
-      )
+      ))
     ) {
       throw "Spend limit exceeded";
     }

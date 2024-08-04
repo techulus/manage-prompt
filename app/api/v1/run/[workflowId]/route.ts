@@ -108,10 +108,11 @@ export async function POST(
 
     // Spend limit
     if (
-      await hasExceededSpendLimit(
+      organization?.credits === 0 &&
+      (await hasExceededSpendLimit(
         organization?.spendLimit,
         organization?.stripe?.customerId
-      )
+      ))
     ) {
       return ErrorResponse(
         "Spend limit exceeded. Please increase your spend limit to continue using the service.",
