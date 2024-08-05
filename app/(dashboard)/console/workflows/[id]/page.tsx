@@ -15,6 +15,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { AIModel, AIModelToLabel } from "@/data/workflow";
 import { owner } from "@/lib/hooks/useOwner";
 import { cn } from "@/lib/utils";
 import { prisma } from "@/lib/utils/db";
@@ -70,7 +71,9 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
         actionLabel="Edit"
         actionLink={`/console/workflows/${workflow.id}/edit`}
       >
-        <p className="mt-2 text-primary">{workflow.model}</p>
+        <p className="mt-1 text-primary">
+          {AIModelToLabel[workflow.model as AIModel]}
+        </p>
       </PageTitle>
 
       {!workflow.published ? (
