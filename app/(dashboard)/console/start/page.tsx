@@ -18,6 +18,7 @@ export default async function Start() {
       id: user.id,
       name: "Personal",
       rawData: {},
+      credits: 250,
       createdBy: {
         connect: {
           id: user.id,

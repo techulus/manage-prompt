@@ -1,10 +1,12 @@
 import { ModelSettings } from "@/components/console/workflow-model-settings";
 import { modelToProviderId } from "@/data/workflow";
 import { anthropic } from "@ai-sdk/anthropic";
+import { createAzure } from "@ai-sdk/azure";
 import { createOpenAI } from "@ai-sdk/openai";
-import { generateText, streamText } from "ai";
+import { generateText, LanguageModel, streamText } from "ai";
 
-const openai = createOpenAI({
+const azure = createAzure({
+  resourceName: process.env.OPENAI_RESOURCE_NAME,
   apiKey: process.env.OPENAI_API_KEY,
 });
 
@@ -49,7 +51,7 @@ export const getCompletion = async (
       break;
     default:
       completion = await generateText({
-        model: openai(modelToProviderId[model] ?? model),
+        model: azure(modelToProviderId[model] ?? model) as LanguageModel,
         ...modelParams,
       });
   }
@@ -99,7 +101,7 @@ export const getStreamingCompletion = async (
       break;
     default:
       completion = await streamText({
-        model: openai(modelToProviderId[model] ?? model),
+        model: azure(modelToProviderId[model] ?? model) as LanguageModel,
         ...modelParams,
         onFinish,
       });

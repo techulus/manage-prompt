@@ -18,7 +18,7 @@ type Props = {
 };
 
 export default function NavBar({ isPublicPage = false }: Props) {
-  const { theme } = useTheme();
+  const { systemTheme: theme } = useTheme();
   const path = usePathname();
 
   const [isSticky, ref] = useDetectSticky();
