@@ -209,7 +209,7 @@ export default async function Home() {
                 of words, where 1,000 tokens is about 750 words. Additionally,
                 you get 70% discount when using your own key.
               </h3>
-              <div className="mt-10 flex items-center gap-x-4">
+              <div className="mt-6 flex items-center gap-x-4">
                 <h4 className="flex-none text-sm font-semibold leading-6 text-primary">
                   What&apos;s included
                 </h4>
@@ -217,7 +217,7 @@ export default async function Home() {
               </div>
               <ul
                 role="list"
-                className="mt-8 grid grid-cols-1 gap-4 text-sm leading-6 text-foreground sm:grid-cols-2 sm:gap-6"
+                className="mt-8 grid grid-cols-1 gap-4 text-sm leading-6 text-foreground sm:grid-cols-2 sm:gap-4"
               >
                 {pricingIncludedFeatures.map((feature) => (
                   <li key={feature} className="flex gap-x-3">
@@ -233,14 +233,14 @@ export default async function Home() {
             <div className="-mt-2 p-2 lg:mt-0 lg:w-full lg:max-w-md lg:flex-shrink-0">
               <div className="rounded-2xl bg-secondary py-10 text-center ring-1 ring-inset ring-gray-900/5 lg:flex lg:flex-col lg:justify-center lg:py-16">
                 <div className="mx-auto max-w-xs px-8">
-                  <p className="text-base font-semibold text-primary-muted">
+                  <p className="text-md font-semibold text-primary-muted">
                     Billed Monthly
                   </p>
                   <p className="mt-6 flex items-baseline justify-center gap-x-2">
                     <span className="text-5xl font-bold tracking-tighter text-foreground">
                       $0.01
                     </span>
-                    <span className="text-sm font-semibold leading-6 tracking-wide text-primary">
+                    <span className="text-md font-semibold leading-6 tracking-wide text-primary">
                       /1K tokens
                     </span>
                   </p>

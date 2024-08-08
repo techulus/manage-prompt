@@ -31,7 +31,7 @@ export function Header() {
 
           <Link href="/" className="-m-1.5 p-1.5" prefetch={false}>
             <span className="sr-only">ManagePrompt</span>
-            <p className="hero relative">
+            <p className="text-hero relative">
               Manage<span className="font-semibold">Prompt</span>
             </p>
           </Link>
