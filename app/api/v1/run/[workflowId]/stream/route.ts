@@ -1,6 +1,7 @@
-import { WorkflowInput } from "@/data/workflow";
+import { modelToProvider, WorkflowInput } from "@/data/workflow";
 import { getStreamingCompletion } from "@/lib/utils/ai";
 import { prisma } from "@/lib/utils/db";
+import { getUserKeyFor } from "@/lib/utils/encryption";
 import { redis } from "@/lib/utils/redis";
 import { reportUsage } from "@/lib/utils/stripe";
 import { EventName, logEvent } from "@/lib/utils/tinybird";
@@ -83,6 +84,7 @@ export async function POST(
         organization: {
           include: {
             stripe: true,
+            UserKeys: true,
           },
         },
       },
@@ -144,16 +146,25 @@ export async function POST(
       );
     }
 
+    const isEligibleForByokDiscount = !!getUserKeyFor(
+      modelToProvider[model],
+      workflow.organization.UserKeys
+    );
+
     const onFinish = async (evt: any) => {
       const output = evt.text ?? "";
 
       const inputWordCount = content.split(" ").length;
       const outWordCount = output.split(" ").length;
-      const totalTokens = Math.floor(
+      let totalTokens = Math.floor(
         !isNaN(evt?.usage?.totalTokens)
           ? evt?.usage?.totalTokens
           : (inputWordCount + outWordCount) * 0.6
       );
+
+      if (isEligibleForByokDiscount) {
+        totalTokens = Math.floor(totalTokens * 0.3);
+      }
 
       await Promise.all([
         reportUsage(
@@ -183,6 +194,7 @@ export async function POST(
       model,
       content,
       JSON.parse(JSON.stringify(workflow.modelSettings)),
+      workflow.organization.UserKeys,
       onFinish
     );
 

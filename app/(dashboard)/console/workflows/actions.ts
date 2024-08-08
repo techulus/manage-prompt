@@ -1,9 +1,10 @@
 "use server";
 
-import { WorkflowInput } from "@/data/workflow";
+import { modelToProvider, WorkflowInput } from "@/data/workflow";
 import { owner } from "@/lib/hooks/useOwner";
 import { getCompletion } from "@/lib/utils/ai";
 import { prisma } from "@/lib/utils/db";
+import { getUserKeyFor } from "@/lib/utils/encryption";
 import {
   hasExceededSpendLimit,
   isSubscriptionActive,
@@ -178,6 +179,7 @@ export async function runWorkflow(formData: FormData) {
     const organization = await prisma.organization.findUnique({
       include: {
         stripe: true,
+        UserKeys: true,
       },
       where: {
         id: ownerId,
@@ -214,12 +216,20 @@ export async function runWorkflow(formData: FormData) {
     const response = await getCompletion(
       model,
       content,
-      JSON.parse(JSON.stringify(workflow.modelSettings))
+      JSON.parse(JSON.stringify(workflow.modelSettings)),
+      organization?.UserKeys
     );
 
-    const { result, rawResult, totalTokenCount } = response;
-
+    let { result, rawResult, totalTokenCount } = response;
     if (!result) throw "No result returned from OpenAI";
+
+    const isEligibleForByokDiscount = !!getUserKeyFor(
+      modelToProvider[model],
+      organization?.UserKeys
+    );
+    if (isEligibleForByokDiscount) {
+      totalTokenCount = Math.floor(totalTokenCount * 0.3);
+    }
 
     await Promise.all([
       prisma.workflowRun.create({

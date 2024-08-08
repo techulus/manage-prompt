@@ -206,7 +206,8 @@ export default async function Home() {
             <div className="p-8 sm:p-10 lg:flex-auto">
               <h3 className="text-lg font-bold tracking-tighter text-primary">
                 Prices are per 1,000 tokens. You can think of tokens as pieces
-                of words, where 1,000 tokens is about 750 words.
+                of words, where 1,000 tokens is about 750 words. Additionally,
+                you get 70% discount when using your own key.
               </h3>
               <div className="mt-10 flex items-center gap-x-4">
                 <h4 className="flex-none text-sm font-semibold leading-6 text-primary">

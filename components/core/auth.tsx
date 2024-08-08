@@ -20,7 +20,7 @@ export const UserButton = () => {
           size="icon"
           className="overflow-hidden rounded-full"
         >
-          <User className="h-5 w-5" />
+          <User className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
