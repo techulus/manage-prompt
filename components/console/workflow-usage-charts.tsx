@@ -37,7 +37,7 @@ export function WorkflowUsageCharts({
           color: "hsl(var(--chart-2))",
         },
       }}
-      className="aspect-auto h-[250px] w-full"
+      className="aspect-auto h-[280px] w-full"
     >
       <AreaChart data={localisedData}>
         <defs>

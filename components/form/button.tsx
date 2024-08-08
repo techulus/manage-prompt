@@ -7,7 +7,13 @@ import { useFormStatus } from "react-dom";
 import { Spinner } from "../core/loaders";
 import { Button } from "../ui/button";
 
-export const DeleteButton = ({ label = "Delete" }: { label?: string }) => {
+export const DeleteButton = ({
+  label = "Delete",
+  size = "default",
+}: {
+  label?: string;
+  size?: "default" | "sm";
+}) => {
   const { pending } = useFormStatus();
 
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
@@ -15,7 +21,7 @@ export const DeleteButton = ({ label = "Delete" }: { label?: string }) => {
   if (showConfirmDelete) {
     return (
       <>
-        <Button type="submit" variant="destructive">
+        <Button type="submit" variant="destructive" size={size}>
           {pending ? (
             <Spinner message="Processing..." />
           ) : (
@@ -25,7 +31,11 @@ export const DeleteButton = ({ label = "Delete" }: { label?: string }) => {
             </>
           )}
         </Button>
-        <Button variant="ghost" onClick={() => setShowConfirmDelete(false)}>
+        <Button
+          variant="ghost"
+          size={size}
+          onClick={() => setShowConfirmDelete(false)}
+        >
           <XIcon className="h-4 w-4" aria-hidden="true" />
         </Button>
       </>

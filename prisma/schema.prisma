@@ -84,6 +84,7 @@ model Organization {
   workflows          Workflow[]
   OrganizationToUser OrganizationToUser[]
   SecretKey          SecretKey[]
+  UserKeys           UserKey[]
 }
 
 model OrganizationToUser {
@@ -108,6 +109,17 @@ model SecretKey {
   updatedAt          DateTime  @updatedAt
 
   user         User         @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+}
+
+model UserKey {
+  id        String   @id
+  provider  String
+  data      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ownerId   String
+
   organization Organization @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 }
 

@@ -19,6 +19,7 @@ import {
   getUpcomingInvoice,
   isSubscriptionCancelled,
 } from "@/lib/utils/stripe";
+import { CheckBadgeIcon } from "@heroicons/react/20/solid";
 import { notFound } from "next/navigation";
 import Stripe from "stripe";
 import {
@@ -26,9 +27,11 @@ import {
   redirectToBilling,
   removeSpendLimit,
   revokeSecretKey,
+  revokeUserKey,
   updateKeyName,
   updateRateLimit,
   updateSpendLimit,
+  updateUserKey,
   updateUserName,
 } from "./actions";
 
@@ -38,7 +41,7 @@ export default async function Settings() {
     throw new Error("User not found");
   }
 
-  const [user, organization, secretKeys] = await Promise.all([
+  const [user, organization, secretKeys, userKeys] = await Promise.all([
     getUser(),
     prisma.organization.findUnique({
       include: {
@@ -60,6 +63,15 @@ export default async function Settings() {
         createdAt: "desc",
       },
     }),
+    prisma.userKey.findMany({
+      where: {
+        organization: {
+          id: {
+            equals: ownerId,
+          },
+        },
+      },
+    }),
   ]);
 
   if (!user) {
@@ -72,6 +84,8 @@ export default async function Settings() {
   const invoice: Stripe.Invoice | null = organization?.stripe?.customerId
     ? await getUpcomingInvoice(organization?.stripe?.customerId)
     : null;
+
+  const userOpenAIKey = userKeys.find((k) => k.provider === "openai");
 
   return (
     <>
@@ -258,7 +272,6 @@ export default async function Settings() {
                 <TableHead>Name</TableHead>
                 <TableHead>Key</TableHead>
                 <TableHead>Rate Limit (Req/sec)</TableHead>
-                <TableHead>Last used</TableHead>
                 <TableHead></TableHead>
               </TableRow>
             </TableHeader>
@@ -287,11 +300,6 @@ export default async function Settings() {
                     />
                   </TableCell>
                   <TableCell>
-                    {key.lastUsed
-                      ? DateTime.fromJSDate(key.lastUsed).toNiceFormat()
-                      : "Never"}
-                  </TableCell>
-                  <TableCell>
                     <form action={revokeSecretKey}>
                       <input type="hidden" name="id" value={key.id} />
                       <DeleteButton label="Revoke" />
@@ -301,6 +309,49 @@ export default async function Settings() {
               ))}
             </TableBody>
           </Table>
+        </div>
+      </PageSection>
+
+      <PageSection className="overflow-y-scroll">
+        <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none p-6">
+          <h2 className="text-base font-semibold leading-7 text-gray-900 dark:text-gray-200">
+            Bring your own key
+          </h2>
+          <p className="mt-1 text-sm leading-6 text-gray-500 dark:text-gray-400">
+            If you have your own API key, you can use it to authenticate with AI
+            providers. We currently support OpenAI. (GROQ and Anthropic coming
+            soon)
+          </p>
+
+          <dl className="mt-6 space-y-4 divide-y border-t text-sm leading-6">
+            <div className="pt-2 sm:flex">
+              <dt className="font-medium text-gray-900 dark:text-gray-200 sm:w-64 sm:flex-none sm:pr-6">
+                OpenAI
+              </dt>
+              <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                <div className="text-gray-900 dark:text-gray-200">
+                  {userOpenAIKey ? (
+                    <CheckBadgeIcon className="h-6 w-6 text-green-500" />
+                  ) : (
+                    <EditableValue
+                      id="openai"
+                      name="apiKey"
+                      type="text"
+                      value={userOpenAIKey ? "*******" : "-"}
+                      action={updateUserKey}
+                    />
+                  )}
+                </div>
+
+                {userOpenAIKey ? (
+                  <form className="inline-block" action={revokeUserKey}>
+                    <input type="hidden" name="provider" value="openai" />
+                    <DeleteButton label="Remove" size="sm" />
+                  </form>
+                ) : null}
+              </dd>
+            </div>
+          </dl>
         </div>
       </PageSection>
     </>

@@ -1,6 +1,7 @@
-import { WorkflowInput } from "@/data/workflow";
+import { modelToProvider, WorkflowInput } from "@/data/workflow";
 import { getCompletion } from "@/lib/utils/ai";
 import { prisma } from "@/lib/utils/db";
+import { getUserKeyFor } from "@/lib/utils/encryption";
 import { validateRateLimit } from "@/lib/utils/ratelimit";
 import {
   hasExceededSpendLimit,
@@ -73,6 +74,7 @@ export async function POST(
         organization: {
           include: {
             stripe: true,
+            UserKeys: true,
           },
         },
       },
@@ -165,17 +167,25 @@ export async function POST(
     const response = await getCompletion(
       model,
       content,
-      JSON.parse(JSON.stringify(workflow.modelSettings))
+      JSON.parse(JSON.stringify(workflow.modelSettings)),
+      organization.UserKeys
     );
 
-    const { result, totalTokenCount } = response;
-
+    let { result, totalTokenCount } = response;
     if (!result) {
       return ErrorResponse(
         "Failed to run workflow",
         500,
         ErrorCodes.InternalServerError
       );
+    }
+
+    const isEligibleForByokDiscount = !!getUserKeyFor(
+      modelToProvider[model],
+      organization.UserKeys
+    );
+    if (isEligibleForByokDiscount) {
+      totalTokenCount = Math.floor(totalTokenCount * 0.3);
     }
 
     await Promise.all([
@@ -189,14 +199,6 @@ export async function POST(
         owner_id: key.ownerId,
         model,
         total_tokens: totalTokenCount,
-      }),
-      prisma.secretKey.update({
-        where: {
-          key: token,
-        },
-        data: {
-          lastUsed: new Date(),
-        },
       }),
       workflow.cacheControlTtl
         ? cacheWorkflowResult(

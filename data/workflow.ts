@@ -22,6 +22,23 @@ export const modelToProviderId: Record<string | AIModel, string> = {
   "gpt-4-0125-preview": "gpt-4",
 };
 
+export const modelToProvider: Record<
+  string | AIModel,
+  "openai" | "groq" | "anthropic"
+> = {
+  "gpt-3.5-turbo": "openai",
+  "gpt-3.5-turbo-0125": "openai",
+  "gpt-4-1106-preview": "openai",
+  "gpt-4-0125-preview": "openai",
+  "gpt-4": "openai",
+  "gpt-4o": "openai",
+  "gpt-4o-mini": "openai",
+  "meta-llama/Llama-2-70b-chat-hf": "groq",
+  "mistralai/Mixtral-8x7B-Instruct-v0.1": "groq",
+  "google/gemma-7b-it": "groq",
+  "claude-3-5-sonnet-20240620": "anthropic",
+};
+
 export type AIModel = keyof typeof AIModelToLabel;
 export const AIModels = Object.keys(AIModelToLabel) as Array<AIModel>;
 

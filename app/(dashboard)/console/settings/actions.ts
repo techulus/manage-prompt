@@ -2,6 +2,7 @@
 
 import { owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
+import { encrypt } from "@/lib/utils/encryption";
 import {
   createOrRetrieveCustomer,
   getCheckoutSession,
@@ -192,6 +193,66 @@ export async function updateUserName(data: FormData) {
     },
     data: {
       name,
+    },
+  });
+
+  redirect("/console/settings");
+}
+
+export async function updateUserKey(data: FormData) {
+  const { ownerId } = await owner();
+
+  const provider = data.get("id") as string;
+  const apiKey = data.get("apiKey") as string;
+
+  const result = z
+    .object({
+      provider: z.string().min(3).max(10),
+      apiKey: z.string().min(3).max(128),
+    })
+    .safeParse({
+      provider,
+      apiKey,
+    });
+
+  if (!result.success) {
+    return {
+      error: fromZodError(result.error).toString(),
+    };
+  }
+
+  const encryptedData = encrypt(apiKey);
+
+  await prisma.userKey.upsert({
+    where: {
+      id: `${provider}_${ownerId}`,
+    },
+    update: {
+      data: encryptedData,
+    },
+    create: {
+      id: `${provider}_${ownerId}`,
+      provider,
+      data: encryptedData,
+      organization: {
+        connect: {
+          id: ownerId,
+        },
+      },
+    },
+  });
+
+  redirect("/console/settings");
+}
+
+export async function revokeUserKey(data: FormData) {
+  const { ownerId } = await owner();
+
+  const provider = data.get("provider") as string;
+
+  await prisma.userKey.delete({
+    where: {
+      id: `${provider}_${ownerId}`,
     },
   });
 
