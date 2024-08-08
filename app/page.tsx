@@ -16,8 +16,8 @@ import Link from "next/link";
 
 const pricingIncludedFeatures = [
   "Unlimited workflows",
-  "Team collaboration",
-  "Up to 5 members per organization",
+  "Models by OpenAI, Meta, Google, Mixtral and Anthropic",
+  "Bring your own key",
   "Email support",
 ];
 
