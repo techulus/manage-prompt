@@ -19,6 +19,7 @@ import {
   getUpcomingInvoice,
   isSubscriptionCancelled,
 } from "@/lib/utils/stripe";
+import { CheckBadgeIcon } from "@heroicons/react/20/solid";
 import { notFound } from "next/navigation";
 import Stripe from "stripe";
 import {
@@ -26,6 +27,7 @@ import {
   redirectToBilling,
   removeSpendLimit,
   revokeSecretKey,
+  revokeUserKey,
   updateKeyName,
   updateRateLimit,
   updateSpendLimit,
@@ -82,6 +84,8 @@ export default async function Settings() {
   const invoice: Stripe.Invoice | null = organization?.stripe?.customerId
     ? await getUpcomingInvoice(organization?.stripe?.customerId)
     : null;
+
+  const userOpenAIKey = userKeys.find((k) => k.provider === "openai");
 
   return (
     <>
@@ -326,18 +330,25 @@ export default async function Settings() {
               </dt>
               <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
                 <div className="text-gray-900 dark:text-gray-200">
-                  <EditableValue
-                    id="openai"
-                    name="apiKey"
-                    type="text"
-                    value={
-                      userKeys.find((k) => k.provider === "openai")
-                        ? "*******"
-                        : "-"
-                    }
-                    action={updateUserKey}
-                  />
+                  {userOpenAIKey ? (
+                    <CheckBadgeIcon className="h-6 w-6 text-green-500" />
+                  ) : (
+                    <EditableValue
+                      id="openai"
+                      name="apiKey"
+                      type="text"
+                      value={userOpenAIKey ? "*******" : "-"}
+                      action={updateUserKey}
+                    />
+                  )}
                 </div>
+
+                {userOpenAIKey ? (
+                  <form className="inline-block" action={revokeUserKey}>
+                    <input type="hidden" name="provider" value="openai" />
+                    <DeleteButton label="Remove" size="sm" />
+                  </form>
+                ) : null}
               </dd>
             </div>
           </dl>

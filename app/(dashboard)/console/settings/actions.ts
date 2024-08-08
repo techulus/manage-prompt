@@ -244,3 +244,17 @@ export async function updateUserKey(data: FormData) {
 
   redirect("/console/settings");
 }
+
+export async function revokeUserKey(data: FormData) {
+  const { ownerId } = await owner();
+
+  const provider = data.get("provider") as string;
+
+  await prisma.userKey.delete({
+    where: {
+      id: `${provider}_${ownerId}`,
+    },
+  });
+
+  redirect("/console/settings");
+}
