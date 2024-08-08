@@ -268,7 +268,6 @@ export default async function Settings() {
                 <TableHead>Name</TableHead>
                 <TableHead>Key</TableHead>
                 <TableHead>Rate Limit (Req/sec)</TableHead>
-                <TableHead>Last used</TableHead>
                 <TableHead></TableHead>
               </TableRow>
             </TableHeader>
@@ -295,11 +294,6 @@ export default async function Settings() {
                       value={key.rateLimitPerSecond}
                       action={updateRateLimit}
                     />
-                  </TableCell>
-                  <TableCell>
-                    {key.lastUsed
-                      ? DateTime.fromJSDate(key.lastUsed).toNiceFormat()
-                      : "Never"}
                   </TableCell>
                   <TableCell>
                     <form action={revokeSecretKey}>

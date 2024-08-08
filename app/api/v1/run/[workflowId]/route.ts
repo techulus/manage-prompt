@@ -200,14 +200,6 @@ export async function POST(
         model,
         total_tokens: totalTokenCount,
       }),
-      prisma.secretKey.update({
-        where: {
-          key: token,
-        },
-        data: {
-          lastUsed: new Date(),
-        },
-      }),
       workflow.cacheControlTtl
         ? cacheWorkflowResult(
             params.workflowId,
