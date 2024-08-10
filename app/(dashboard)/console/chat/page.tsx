@@ -23,7 +23,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useChat } from "ai/react";
-import { CornerDownLeft, Globe, LightbulbOff, Trash2Icon } from "lucide-react";
+import {
+  CornerDownLeft,
+  LightbulbOff,
+  PlusCircle,
+  Trash2Icon,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
@@ -136,12 +141,14 @@ function ChatDashboard() {
                     className={buttonVariants({ variant: "ghost" })}
                     onClick={() => setOpen(true)}
                   >
-                    <Globe className="size-4" />
-                    <p className="hidden md:block md:ml-2">Chat with Website</p>
+                    <PlusCircle className="size-4" />
+                    <p className="hidden md:block md:ml-2">
+                      Train using Website
+                    </p>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Chat with Website</DialogTitle>
+                      <DialogTitle>Train using Website</DialogTitle>
                     </DialogHeader>
                     <form
                       action={async (formData) => {
@@ -166,7 +173,17 @@ function ChatDashboard() {
                           className="w-full"
                         />
                       </div>
-                      <ActionButton variant="default" label="Save" />
+
+                      <div className="flex space-x-2">
+                        <ActionButton variant="default" label="Save" />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          onClick={() => setOpen(false)}
+                        >
+                          Close
+                        </Button>
+                      </div>
                     </form>
                   </DialogContent>
                 </Dialog>
