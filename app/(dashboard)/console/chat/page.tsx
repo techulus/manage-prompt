@@ -134,6 +134,7 @@ function ChatDashboard() {
                 <Dialog open={open}>
                   <DialogTrigger
                     className={buttonVariants({ variant: "ghost" })}
+                    onClick={() => setOpen(true)}
                   >
                     <Globe className="size-4" />
                     <p className="hidden md:block md:ml-2">Chat with Website</p>
