@@ -1,6 +1,9 @@
 import { del, list } from "@vercel/blob";
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET(_: Request) {
   let hasMore = true;
   let cursor;
