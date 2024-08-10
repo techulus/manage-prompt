@@ -1,5 +1,6 @@
 import { owner } from "@/lib/hooks/useOwner";
 import { ragChat } from "@/lib/utils/rag-chat";
+// @ts-ignore
 import { aiUseChatAdapter } from "@upstash/rag-chat/nextjs";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";

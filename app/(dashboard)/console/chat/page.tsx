@@ -36,7 +36,7 @@ import {
   reportChatUsage,
 } from "./actions";
 
-export function ChatDashboard() {
+function ChatDashboard() {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
