@@ -58,8 +58,8 @@ export const getCompletion = async (
         });
       } else {
         const azure = createAzure({
-          resourceName: process.env.OPENAI_RESOURCE_NAME,
-          apiKey: process.env.OPENAI_API_KEY,
+          resourceName: process.env.AZURE_RESOURCE_NAME,
+          apiKey: process.env.AZURE_API_KEY,
         });
         completion = await generateText({
           model: azure(modelToProviderId[model] ?? model) as LanguageModel,
@@ -129,8 +129,8 @@ export const getStreamingCompletion = async (
         });
       } else {
         const azure = createAzure({
-          resourceName: process.env.OPENAI_RESOURCE_NAME,
-          apiKey: process.env.OPENAI_API_KEY,
+          resourceName: process.env.AZURE_RESOURCE_NAME,
+          apiKey: process.env.AZURE_API_KEY,
         });
         completion = await streamText({
           model: azure(modelToProviderId[model] ?? model) as LanguageModel,

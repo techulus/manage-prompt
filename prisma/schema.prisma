@@ -97,6 +97,17 @@ model OrganizationToUser {
   updatedAt      DateTime     @updatedAt
 }
 
+model Stripe {
+  id             Int          @id @default(autoincrement())
+  customerId     String       @unique
+  subscriptionId String?      @unique
+  subscription   Json?
+  ownerId        String       @unique
+  organization   Organization @relation(fields: [ownerId], references: [id])
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
 model SecretKey {
   id                 Int       @id @default(autoincrement())
   name               String?
@@ -160,17 +171,6 @@ model WorkflowRun {
   user            User?    @relation(fields: [createdBy], references: [id], onDelete: Cascade)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-}
-
-model Stripe {
-  id             Int          @id @default(autoincrement())
-  customerId     String       @unique
-  subscriptionId String?      @unique
-  subscription   Json?
-  ownerId        String       @unique
-  organization   Organization @relation(fields: [ownerId], references: [id])
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
 }
 
 // Free tools
