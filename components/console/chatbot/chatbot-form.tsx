@@ -30,7 +30,9 @@ interface Props {
 export function ChatbotForm({ chatbot, action }: Props) {
   const [model, setModel] = useState("gpt-4o");
   const [contextItems, setContextItems] = useState<string[]>(
-    JSON.parse(JSON.stringify(chatbot?.contextItems)) ?? [],
+    chatbot?.contextItems
+      ? JSON.parse(JSON.stringify(chatbot?.contextItems))
+      : [],
   );
 
   return (

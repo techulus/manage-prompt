@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "generate": "npx prisma generate -- --no-engine",
-    "prebuild": "npx prisma db push && npm run generate",
+    "generate": "prisma generate --no-engine",
+    "prebuild": "prisma db push && prisma generate --no-engine",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
