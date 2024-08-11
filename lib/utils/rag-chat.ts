@@ -1,11 +1,9 @@
+import { decrypt } from "@/lib/utils/encryption";
 import { openai, RAGChat } from "@upstash/rag-chat";
 import { Index } from "@upstash/vector";
-import { decrypt } from "@/lib/utils/encryption";
 
 export const ragChat = new RAGChat({
-  model: openai("gpt-4o", {
-    apiKey: process.env.OPENAI_API_KEY!,
-  }),
+  model: openai("gpt-4o"),
 });
 
 export const index = new Index({

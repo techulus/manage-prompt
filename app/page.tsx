@@ -16,8 +16,8 @@ export const revalidate = 86400;
 
 const pricingIncludedFeatures = [
   "Unlimited workflows",
+  "Unlimited chatbots",
   "Models by OpenAI, Meta, Google, Mixtral and Anthropic",
-  "Bring your own key (beta)",
   "Email support",
 ];
 
