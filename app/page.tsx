@@ -1,9 +1,7 @@
-import StreamingText from "@/components/core/streaming-text";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { buttonVariants } from "@/components/ui/button";
 import { SITE_METADATA } from "@/data/marketing";
-import { getManagePromptToken } from "@/lib/utils/manageprompt";
 import promoImage from "@/public/images/promo.png";
 import {
   CheckIcon,
@@ -14,10 +12,12 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
+export const revalidate = 86400;
+
 const pricingIncludedFeatures = [
   "Unlimited workflows",
   "Models by OpenAI, Meta, Google, Mixtral and Anthropic",
-  "Bring your own key",
+  "Bring your own key (beta)",
   "Email support",
 ];
 
@@ -50,10 +50,7 @@ async function getGitHubStars(): Promise<string> {
         headers: {
           Accept: "application/vnd.github+json",
         },
-        next: {
-          revalidate: 86400,
-        },
-      }
+      },
     );
 
     if (!response?.ok) {
@@ -69,11 +66,7 @@ async function getGitHubStars(): Promise<string> {
 }
 
 export default async function Home() {
-  const [token, stars] = await Promise.all([
-    getManagePromptToken(),
-    getGitHubStars(),
-  ]);
-  const streamUrl = `${process.env.APP_BASE_URL}/api/v1/run/${process.env.MANAGEPROMPT_DEMO_WORKFLOW_ID}/stream?token=${token}`;
+  const stars = await getGitHubStars();
 
   return (
     <div className="h-full">
@@ -97,11 +90,9 @@ export default async function Home() {
             <h1 className="text-4xl text-hero py-4 tracking-tighter text-gray-900 sm:text-6xl hero text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-700">
               {SITE_METADATA.TAGLINE}
             </h1>
-            <StreamingText
-              url={streamUrl}
-              fallbackText={SITE_METADATA.DESCRIPTION}
-              className="pt-4 text-lg leading-8 text-gray-600 dark:text-gray-300"
-            />
+            <p className="pt-4 text-lg leading-8 text-gray-600 dark:text-gray-300">
+              {SITE_METADATA.DESCRIPTION}
+            </p>
             <div className="mt-10 flex flex-col space-y-4 md:space-y-0 md:flex-row items-center justify-center gap-x-6">
               <Link
                 href="/console/workflows"
@@ -207,7 +198,7 @@ export default async function Home() {
               <h3 className="text-lg font-bold tracking-tighter text-primary">
                 Prices are per 1,000 tokens. You can think of tokens as pieces
                 of words, where 1,000 tokens is about 750 words. Additionally,
-                you get 70% discount when using your own key.
+                you get 70% discount when using your own key (beta).
               </h3>
               <div className="mt-6 flex items-center gap-x-4">
                 <h4 className="flex-none text-sm font-semibold leading-6 text-primary">
