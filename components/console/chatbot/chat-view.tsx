@@ -94,7 +94,7 @@ function ChatView({ id }: { id: string }) {
             </div>
           ))}
         </div>
-        <div className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring ">
+        <div className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring mt-6">
           <Label htmlFor="message" className="sr-only">
             Message
           </Label>

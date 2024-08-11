@@ -8,7 +8,6 @@ import Stripe from "stripe";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "@/node_modules/zod";
-import { WorkflowSchema } from "@/lib/utils/workflow";
 import { fromZodError } from "@/node_modules/zod-validation-error";
 
 const ChatbotSchema = z.object({
@@ -33,7 +32,7 @@ export async function createChatBot(payload: FormData) {
     }
   }
 
-  const validationResult = WorkflowSchema.safeParse({
+  const validationResult = ChatbotSchema.safeParse({
     name,
     model,
     contextItems,
@@ -88,7 +87,7 @@ export async function updateChatBot(payload: FormData) {
     }
   }
 
-  const validationResult = WorkflowSchema.safeParse({
+  const validationResult = ChatbotSchema.safeParse({
     name,
     model,
     contextItems,
