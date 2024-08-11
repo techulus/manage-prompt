@@ -7,35 +7,11 @@ import {
 } from "@/lib/utils/stripe";
 import { createId } from "@paralleldrive/cuid2";
 import { NextRequest, NextResponse } from "next/server";
-
-const UnauthorizedResponse = () =>
-  NextResponse.json(
-    {
-      error: "Unauthorized. Please provide a valid secret key.",
-      success: false,
-    },
-    {
-      status: 401,
-    }
-  );
-
-const ErrorResponse = (message: string, status = 400, code?: string) =>
-  NextResponse.json(
-    {
-      error: message,
-      success: false,
-      code,
-    },
-    {
-      status,
-    }
-  );
-
-enum ErrorCodes {
-  InvalidBilling = "invalid_billing",
-  SpendLimitReached = "spend_limit_reached",
-  InternalServerError = "internal_server_error",
-}
+import {
+  ErrorCodes,
+  ErrorResponse,
+  UnauthorizedResponse,
+} from "@/lib/utils/api";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -92,7 +68,7 @@ export async function GET(req: NextRequest) {
       return ErrorResponse(
         "Invalid billing. Please contact support.",
         402,
-        ErrorCodes.InvalidBilling
+        ErrorCodes.InvalidBilling,
       );
     }
 
@@ -101,13 +77,13 @@ export async function GET(req: NextRequest) {
       organization?.credits === 0 &&
       (await hasExceededSpendLimit(
         organization?.spendLimit,
-        organization?.stripe?.customerId
+        organization?.stripe?.customerId,
       ))
     ) {
       return ErrorResponse(
         "Spend limit exceeded. Please increase your spend limit to continue using the service.",
         402,
-        ErrorCodes.SpendLimitReached
+        ErrorCodes.SpendLimitReached,
       );
     }
 
@@ -127,7 +103,7 @@ export async function GET(req: NextRequest) {
       },
       {
         ex: ttl,
-      }
+      },
     );
 
     return NextResponse.json(
@@ -137,14 +113,14 @@ export async function GET(req: NextRequest) {
           "x-ratelimit-limit": limit.toString(),
           "x-ratelimit-remaining": remaining.toString(),
         },
-      }
+      },
     );
   } catch (error) {
     console.error(error);
     return ErrorResponse(
       "Failed to create token, please try again or contact support.",
       500,
-      ErrorCodes.InternalServerError
+      ErrorCodes.InternalServerError,
     );
   }
 }

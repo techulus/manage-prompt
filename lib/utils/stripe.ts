@@ -1,10 +1,11 @@
 import { prisma } from "@/lib/utils/db";
 import { createId } from "@paralleldrive/cuid2";
 import Stripe from "stripe";
+
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export async function createOrRetrieveCustomer(
-  ownerId: string
+  ownerId: string,
 ): Promise<string> {
   const organization = await prisma.organization.findUnique({
     include: {
@@ -81,13 +82,12 @@ export async function getCheckoutSession(customerId: string): Promise<string> {
 
 export async function reportUsage(
   ownerId: string,
-  subscription: Stripe.Subscription,
-  quantity: number
+  subscription: Stripe.Subscription | null,
+  quantity: number,
 ) {
   if (!ownerId) {
     throw new Error("[reportUsage]: Owner ID not found");
   }
-
   if (!isSubscriptionActive(subscription)) {
     await prisma.organization.update({
       where: {
@@ -102,11 +102,15 @@ export async function reportUsage(
     return;
   }
 
+  if (!subscription) {
+    throw new Error("[reportUsage]: Subscription not found");
+  }
+
   console.log(
-    `Report usage for subscription ${subscription.id}, quantity ${quantity}`
+    `Report usage for subscription ${subscription.id}, quantity ${quantity}`,
   );
   const item = subscription.items?.data.find(
-    (item) => item.price.id === process.env.STRIPE_WORKFLOW_RUN_PRICE_ID
+    (item) => item.price.id === process.env.STRIPE_WORKFLOW_RUN_PRICE_ID,
   );
 
   if (!item) {
@@ -124,7 +128,7 @@ export async function reportUsage(
     },
     {
       idempotencyKey: `${subscription.id}-${createId()}`,
-    }
+    },
   );
 }
 
@@ -137,7 +141,7 @@ export function isSubscriptionCancelled(subscription: any) {
 }
 
 export async function getUpcomingInvoice(
-  customer: string
+  customer: string,
 ): Promise<Stripe.Invoice | null> {
   try {
     const invoice = await stripe.invoices.retrieveUpcoming({
@@ -154,7 +158,7 @@ export async function getUpcomingInvoice(
 
 export async function hasExceededSpendLimit(
   spendLimit: number | null | undefined,
-  stripeCustomerId: string | null | undefined
+  stripeCustomerId: string | null | undefined,
 ): Promise<boolean> {
   if (spendLimit && stripeCustomerId) {
     const invoice = await getUpcomingInvoice(stripeCustomerId);

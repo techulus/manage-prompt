@@ -1,12 +1,15 @@
+import ChatView from "@/components/console/chatbot/chat-view";
 import PageSection from "@/components/core/page-section";
+import { DeleteButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
 import { buttonVariants } from "@/components/ui/button";
-import { deleteChatBot } from "../actions";
-import { DeleteButton } from "@/components/form/button";
-import ChatView from "@/components/console/chatbot/chat-view";
+import { owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
-import { notFound } from "next/navigation";
+import { getAppBaseUrl } from "@/lib/utils/url";
+import { Pencil } from "lucide-react";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import { deleteChatBot } from "../actions";
 
 type Props = {
   params: {
@@ -15,6 +18,7 @@ type Props = {
 };
 
 async function ChatDashboard({ params }: Props) {
+  const { userId } = await owner();
   const { id } = params;
 
   const chatBot = await prisma.chatBot.findUnique({
@@ -26,6 +30,17 @@ async function ChatDashboard({ params }: Props) {
   if (!chatBot) {
     return notFound();
   }
+
+  const { token } = await fetch(getAppBaseUrl() + "/api/v1/chat/token", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${process.env.MANAGEPROMPT_SECRET_TOKEN!}`,
+    },
+    body: JSON.stringify({
+      chatbotId: id,
+      sessionId: userId,
+    }),
+  }).then((res) => res.json());
 
   return (
     <>
@@ -41,7 +56,8 @@ async function ChatDashboard({ params }: Props) {
                     href={`/console/chatbots/${id}/edit`}
                     className={buttonVariants({ variant: "ghost" })}
                   >
-                    Edit
+                    <Pencil className="w-4 h-4" />
+                    <span className="ml-2">Edit</span>
                   </Link>
                 </span>
               </div>
@@ -63,7 +79,7 @@ async function ChatDashboard({ params }: Props) {
       </PageSection>
 
       <PageSection>
-        <ChatView id={id} />
+        <ChatView id={id} token={token} />
       </PageSection>
     </>
   );
