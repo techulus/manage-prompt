@@ -134,32 +134,36 @@ export async function deleteChatBot(formData: FormData) {
   const id = formData.get("id") as string;
   const { ownerId } = await owner();
 
+  const namespace = `${ownerId}-${id}`;
+  await index.deleteNamespace(namespace);
+  await ragChat.history.deleteMessages({
+    sessionId: namespace,
+  });
+
   await prisma.chatBot.delete({
     where: {
       id,
     },
   });
 
-  await index.deleteNamespace(`${ownerId}-${id}`);
-
   revalidatePath("/console/chatbots");
   redirect("/console/chatbots");
 }
 
-export async function getChatHistory(chatBotId: string) {
+export async function getChatHistory(id: string) {
   const { ownerId } = await owner();
 
   return ragChat.history.getMessages({
     amount: 10,
-    sessionId: `${ownerId}-${chatBotId}`,
+    sessionId: `${ownerId}-${id}`,
   });
 }
 
-export async function clearChatHistory(chatBotId: string) {
+export async function clearChatHistory(id: string) {
   const { ownerId } = await owner();
 
   await ragChat.history.deleteMessages({
-    sessionId: `${ownerId}-${chatBotId}`,
+    sessionId: `${ownerId}-${id}`,
   });
 }
 
