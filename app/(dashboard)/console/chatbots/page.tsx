@@ -73,7 +73,7 @@ export default async function Chatbots() {
       </div>
 
       {!chatBots?.length ? (
-        <PageSection>
+        <PageSection className="p-4">
           <EmptyState
             show
             label="chatbot"

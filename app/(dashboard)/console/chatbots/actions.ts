@@ -56,6 +56,7 @@ export async function createChatBot(payload: FormData) {
 
   if (contextItems) {
     for (const item of contextItems) {
+      if (!item?.trim()) continue;
       await ragChat.context.add({
         type: "html",
         source: item,
@@ -111,11 +112,16 @@ export async function updateChatBot(payload: FormData) {
   });
 
   const namespace = `${ownerId}-${id}`;
-  await ragChat.context.deleteEntireContext({
-    namespace,
-  });
+  await ragChat.context
+    .deleteEntireContext({
+      namespace,
+    })
+    .catch((error) => {
+      console.error("Failed to delete context", error);
+    });
 
   for (const item of contextItems) {
+    if (!item?.trim()) continue;
     void ragChat.context.add({
       type: "html",
       source: item,
@@ -134,7 +140,9 @@ export async function deleteChatBot(formData: FormData) {
   const { ownerId } = await owner();
 
   const namespace = `${ownerId}-${id}`;
-  await index.deleteNamespace(namespace);
+  await index.deleteNamespace(namespace).catch((error) => {
+    console.error("Failed to delete context", error);
+  });
   await ragChat.history.deleteMessages({
     sessionId: namespace,
   });
