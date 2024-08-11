@@ -111,8 +111,9 @@ export async function updateChatBot(payload: FormData) {
     },
   });
 
+  const namespace = `${ownerId}-${id}`;
   await ragChat.context.deleteEntireContext({
-    namespace: `${ownerId}-${id}`,
+    namespace,
   });
 
   for (const item of contextItems) {
@@ -120,7 +121,7 @@ export async function updateChatBot(payload: FormData) {
       type: "html",
       source: item,
       options: {
-        namespace: `${ownerId}-${id}`,
+        namespace,
       },
     });
   }
@@ -138,15 +139,6 @@ export async function deleteChatBot(formData: FormData) {
       id,
     },
   });
-
-  await ragChat.context.deleteEntireContext({
-    namespace: `${ownerId}-${id}`,
-  });
-
-  const namespaces = await index.listNamespaces();
-  for (const namespace of namespaces) {
-    await index.deleteNamespace(namespace);
-  }
 
   await index.deleteNamespace(`${ownerId}-${id}`);
 
