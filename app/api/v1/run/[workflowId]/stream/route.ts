@@ -12,40 +12,13 @@ import {
 import { StreamingTextResponse } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import {
+  ErrorCodes,
+  ErrorResponse,
+  UnauthorizedResponse,
+} from "@/lib/utils/api";
 
 export const maxDuration = 120;
-
-const UnauthorizedResponse = () =>
-  NextResponse.json(
-    {
-      error: "Unauthorized. Please provide a valid secret key.",
-      success: false,
-    },
-    {
-      status: 401,
-    }
-  );
-
-const ErrorResponse = (message: string, status = 400, code?: string) =>
-  NextResponse.json(
-    {
-      error: message,
-      success: false,
-      code,
-    },
-    {
-      status,
-    }
-  );
-
-enum ErrorCodes {
-  MissingInput = "missing_input",
-  WorkflowNotFound = "workflow_not_found",
-  WorkflowRunFailed = "workflow_run_failed",
-  InvalidBilling = "invalid_billing",
-  InternalServerError = "internal_server_error",
-  RequestBlocked = "request_blocked",
-}
 
 export async function OPTIONS() {
   return NextResponse.json(
@@ -56,13 +29,13 @@ export async function OPTIONS() {
         "Access-Control-Allow-Methods": "POST, OPTIONS",
         "Access-Control-Allow-Headers": "*",
       },
-    }
+    },
   );
 }
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { workflowId: string } }
+  { params }: { params: { workflowId: string } },
 ) {
   const searchParams = req.nextUrl.searchParams;
   const token = searchParams.get("token");
@@ -105,7 +78,7 @@ export async function POST(
     const body = (await req.json().catch(() => {})) ?? {};
     const cachedResult = await getWorkflowCachedResult(
       params.workflowId,
-      JSON.stringify(body)
+      JSON.stringify(body),
     );
 
     if (cachedResult) {
@@ -117,7 +90,7 @@ export async function POST(
             const bytes = new TextEncoder().encode(chunk + " ");
             controller.enqueue(bytes);
             await new Promise((r) =>
-              setTimeout(r, Math.floor(Math.random() * 40) + 10)
+              setTimeout(r, Math.floor(Math.random() * 40) + 10),
             );
           }
           controller.close();
@@ -137,18 +110,18 @@ export async function POST(
         return ErrorResponse(
           `Missing input: ${input.name}`,
           400,
-          ErrorCodes.MissingInput
+          ErrorCodes.MissingInput,
         );
       }
       content = workflow.template.replace(
         `{{${input.name}}}`,
-        body[input.name]
+        body[input.name],
       );
     }
 
     const isEligibleForByokDiscount = !!getUserKeyFor(
       modelToProvider[model],
-      workflow.organization.UserKeys
+      workflow.organization.UserKeys,
     );
 
     const onFinish = async (evt: any) => {
@@ -159,7 +132,7 @@ export async function POST(
       let totalTokens = Math.floor(
         !isNaN(evt?.usage?.totalTokens)
           ? evt?.usage?.totalTokens
-          : (inputWordCount + outWordCount) * 0.6
+          : (inputWordCount + outWordCount) * 0.6,
       );
 
       if (isEligibleForByokDiscount) {
@@ -171,7 +144,7 @@ export async function POST(
           workflow?.organization?.id,
           workflow?.organization?.stripe
             ?.subscription as unknown as Stripe.Subscription,
-          totalTokens
+          totalTokens,
         ),
         logEvent(EventName.RunWorkflow, {
           workflow_id: workflow.id,
@@ -184,7 +157,7 @@ export async function POST(
               params.workflowId,
               JSON.stringify(body),
               output,
-              workflow.cacheControlTtl
+              workflow.cacheControlTtl,
             )
           : null,
       ]);
@@ -195,7 +168,7 @@ export async function POST(
       content,
       JSON.parse(JSON.stringify(workflow.modelSettings)),
       workflow.organization.UserKeys,
-      onFinish
+      onFinish,
     );
 
     return response;
@@ -204,7 +177,7 @@ export async function POST(
     return ErrorResponse(
       "Failed to run workflow",
       500,
-      ErrorCodes.InternalServerError
+      ErrorCodes.InternalServerError,
     );
   }
 }

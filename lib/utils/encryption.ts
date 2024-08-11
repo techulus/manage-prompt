@@ -6,12 +6,12 @@ if (!process.env.BYOK_ENCRYPTION_KEY) {
 }
 
 const key = process.env.BYOK_ENCRYPTION_KEY;
-const iv = crypto.randomBytes(16);
 
 export function encrypt(text: string): {
   iv: string;
   data: string;
 } {
+  const iv = crypto.randomBytes(16);
   let cipher = crypto.createCipheriv("aes-256-cbc", Buffer.from(key), iv);
   let encrypted = cipher.update(text);
   encrypted = Buffer.concat([encrypted, cipher.final()]);
@@ -29,12 +29,12 @@ export function decrypt(payload: { iv: string; data: string }): string {
 
 export function getUserKeyFor(
   provider: "openai" | "groq" | "anthropic",
-  userKeys: UserKey[] = []
+  userKeys: UserKey[] = [],
 ): string | null {
   const userOpenApiKey = userKeys.find((key) => key.provider === provider);
   if (userOpenApiKey) {
     const apiKey = decrypt(
-      userOpenApiKey.data as unknown as { iv: string; data: string }
+      userOpenApiKey.data as unknown as { iv: string; data: string },
     );
     return apiKey;
   }

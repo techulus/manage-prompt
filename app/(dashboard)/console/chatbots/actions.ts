@@ -3,8 +3,6 @@
 import { owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
 import { index, ragChat } from "@/lib/utils/rag-chat";
-import { reportUsage } from "@/lib/utils/stripe";
-import Stripe from "stripe";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "@/node_modules/zod";
@@ -155,40 +153,4 @@ export async function deleteChatBot(formData: FormData) {
 
   revalidatePath("/console/chatbots");
   redirect("/console/chatbots");
-}
-
-export async function getChatHistory(id: string) {
-  const { ownerId } = await owner();
-
-  return ragChat.history.getMessages({
-    amount: 10,
-    sessionId: `${ownerId}-${id}`,
-  });
-}
-
-export async function clearChatHistory(id: string) {
-  const { ownerId } = await owner();
-
-  await ragChat.history.deleteMessages({
-    sessionId: `${ownerId}-${id}`,
-  });
-}
-
-export async function reportChatUsage(totalTokens: number) {
-  const { ownerId } = await owner();
-
-  const organization = await prisma.organization.findUnique({
-    where: {
-      id: ownerId,
-    },
-    include: {
-      stripe: true,
-    },
-  });
-
-  await reportUsage(
-    ownerId,
-    organization?.stripe?.subscription as unknown as Stripe.Subscription,
-    totalTokens,
-  );
 }

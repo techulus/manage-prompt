@@ -7,6 +7,8 @@ import ChatView from "@/components/console/chatbot/chat-view";
 import { prisma } from "@/lib/utils/db";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { owner } from "@/lib/hooks/useOwner";
+import { getAppBaseUrl } from "@/lib/utils/url";
 
 type Props = {
   params: {
@@ -15,6 +17,7 @@ type Props = {
 };
 
 async function ChatDashboard({ params }: Props) {
+  const { userId } = await owner();
   const { id } = params;
 
   const chatBot = await prisma.chatBot.findUnique({
@@ -26,6 +29,18 @@ async function ChatDashboard({ params }: Props) {
   if (!chatBot) {
     return notFound();
   }
+
+  const { token } = await fetch(getAppBaseUrl() + "/api/v1/chat/token", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.MANAGEPROMPT_SECRET_TOKEN!}`,
+    },
+    body: JSON.stringify({
+      chatbotId: id,
+      sessionId: userId,
+    }),
+  }).then((res) => res.json());
 
   return (
     <>
@@ -63,7 +78,7 @@ async function ChatDashboard({ params }: Props) {
       </PageSection>
 
       <PageSection>
-        <ChatView id={id} />
+        <ChatView id={id} token={token} />
       </PageSection>
     </>
   );

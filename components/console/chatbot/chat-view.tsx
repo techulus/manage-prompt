@@ -13,17 +13,12 @@ import {
 } from "@/components/ui/tooltip";
 import { useChat } from "ai/react";
 import { CornerDownLeft, Trash2Icon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { SpinnerWithSpacing } from "@/components/core/loaders";
-import {
-  clearChatHistory,
-  getChatHistory,
-  reportChatUsage,
-} from "@/app/(dashboard)/console/chatbots/actions";
 
-function ChatView({ id }: { id: string }) {
+function ChatView({ id, token }: { id: string; token: string }) {
   const [loading, setLoading] = useState(true);
 
   const {
@@ -34,16 +29,9 @@ function ChatView({ id }: { id: string }) {
     handleInputChange,
     handleSubmit,
   } = useChat({
-    api: `/api/chat/${id}`,
+    api: `/api/v1/chat/${token}/stream`,
     initialInput: "",
     onFinish: (response) => {
-      if (response?.content) {
-        const totalTokens = response?.content.split(" ").length * 0.7;
-        reportChatUsage(totalTokens).then(() => {
-          console.log("Chat usage reported");
-        });
-      }
-
       if (window?.scrollTo)
         window.scrollTo({
           top: document.body.scrollHeight,
@@ -54,12 +42,27 @@ function ChatView({ id }: { id: string }) {
 
   useEffect(() => {
     setLoading(true);
-    getChatHistory(id)
+    fetch(`/api/v1/chat/${token}/history`)
+      .then((res) => res.json())
       .then((history) => {
         setMessages(history);
       })
       .finally(() => setLoading(false));
-  }, [id, setMessages]);
+  }, [token, setMessages]);
+
+  const clearChatHistory = useCallback(async () => {
+    setMessages([]);
+    await toast.promise(
+      fetch(`/api/v1/chat/${token}/history`, {
+        method: "DELETE",
+      }),
+      {
+        loading: "Deleting chat history...",
+        success: "Chat history deleted",
+        error: "Failed to delete chat history",
+      },
+    );
+  }, [id, token, setMessages]);
 
   if (loading) {
     return <SpinnerWithSpacing />;
@@ -71,9 +74,9 @@ function ChatView({ id }: { id: string }) {
         <Badge variant="outline" className="absolute right-3 top-3">
           Output
         </Badge>
-        <div className="flex-1">
+        <div className="flex-1 divide-y-2">
           {messages.map((message) => (
-            <div key={message.id} className="flex flex-col gap-">
+            <div key={message.id} className="flex flex-col pt-4">
               <div className="flex items-start gap-4">
                 <Avatar className="hidden md:block w-8 h-8 border">
                   <AvatarFallback>
@@ -114,21 +117,10 @@ function ChatView({ id }: { id: string }) {
           <div className="flex items-center p-3 pt-0">
             <Tooltip>
               <TooltipTrigger asChild>
-                <form
-                  action={async () => {
-                    setMessages([]);
-                    await toast.promise(clearChatHistory(id), {
-                      loading: "Deleting chat history...",
-                      success: "Chat history deleted",
-                      error: "Failed to delete chat history",
-                    });
-                  }}
-                >
-                  <Button variant="ghost" size="icon">
-                    <Trash2Icon className="size-4" />
-                    <span className="sr-only">Clear history</span>
-                  </Button>
-                </form>
+                <Button variant="ghost" size="icon" onClick={clearChatHistory}>
+                  <Trash2Icon className="size-4" />
+                  <span className="sr-only">Clear history</span>
+                </Button>
               </TooltipTrigger>
               <TooltipContent side="top">Clear history</TooltipContent>
             </Tooltip>
