@@ -1,4 +1,4 @@
-import { ModelSettings } from "@/components/console/workflow-model-settings";
+import { ModelSettings } from "@/components/console/workflow/workflow-model-settings";
 import { modelToProviderId } from "@/data/workflow";
 import { anthropic } from "@ai-sdk/anthropic";
 import { createAzure } from "@ai-sdk/azure";
@@ -11,7 +11,7 @@ export const getCompletion = async (
   model: string,
   content: string,
   settings?: ModelSettings,
-  userKeys: UserKey[] = []
+  userKeys: UserKey[] = [],
 ): Promise<{
   result: string | undefined;
   rawResult: any;
@@ -82,7 +82,7 @@ export const getStreamingCompletion = async (
   content: string,
   settings?: ModelSettings,
   userKeys: UserKey[] = [],
-  onFinish?: (evt: any) => Promise<void>
+  onFinish?: (evt: any) => Promise<void>,
 ) => {
   const modelParams = {
     prompt: content,

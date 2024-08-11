@@ -24,6 +24,7 @@ model User {
   SecretKey          SecretKey[]
   accounts           Account[]
   sessions           Session[]
+  ChatBot            ChatBot[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -85,6 +86,7 @@ model Organization {
   OrganizationToUser OrganizationToUser[]
   SecretKey          SecretKey[]
   UserKeys           UserKey[]
+  ChatBot            ChatBot[]
 }
 
 model OrganizationToUser {
@@ -171,6 +173,20 @@ model WorkflowRun {
   user            User?    @relation(fields: [createdBy], references: [id], onDelete: Cascade)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+}
+
+model ChatBot {
+  id            String       @id @default(cuid())
+  name          String
+  createdBy     String
+  ownerId       String
+  model         String
+  modelSettings Json?
+  contextItems  Json
+  organization  Organization @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  user          User         @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 }
 
 // Free tools

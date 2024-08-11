@@ -1,5 +1,5 @@
-import { ImportWorkflowDialog } from "@/components/console/workflow-import";
-import { WorkflowItem } from "@/components/console/workflow-item";
+import { ImportWorkflowDialog } from "@/components/console/workflow/workflow-import";
+import { WorkflowItem } from "@/components/console/workflow/workflow-item";
 import EmptyState from "@/components/core/empty-state";
 import PageTitle from "@/components/layout/page-title";
 import { Input } from "@/components/ui/input";
@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/pagination";
 import { owner } from "@/lib/hooks/useOwner";
 import { cn } from "@/lib/utils";
-import { LIMIT, getWorkflowsForOwner } from "@/lib/utils/useWorkflow";
+import { getWorkflowsForOwner, LIMIT } from "@/lib/utils/useWorkflow";
 
 interface Props {
   searchParams: {
@@ -102,7 +102,7 @@ export default async function Workflows({ searchParams }: Props) {
                     <PaginationLink
                       href={`/console/workflows?page=${idx + 1}`}
                       className={cn(
-                        idx + 1 === currentPage && "text-primary font-semibold"
+                        idx + 1 === currentPage && "text-primary font-semibold",
                       )}
                     >
                       {idx + 1}

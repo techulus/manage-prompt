@@ -3,7 +3,7 @@ import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { Workflow } from "@prisma/client";
 import classNames from "classnames";
 import Link from "next/link";
-import { Badge } from "../ui/badge";
+import { Badge } from "../../ui/badge";
 
 interface Props {
   workflow: Pick<
@@ -27,7 +27,7 @@ export async function WorkflowItem({ workflow }: Props) {
     <div
       key={workflow.id}
       className={cn(
-        "relative flex justify-between space-x-3 rounded-lg border border-gray-200 px-3 py-2 shadow-sm hover:border-gray-400 dark:border-gray-800 dark:hover:border-gray-700 bg-white dark:bg-gray-950"
+        "relative flex justify-between space-x-3 rounded-lg border border-gray-200 px-3 py-2 shadow-sm hover:border-gray-400 dark:border-gray-800 dark:hover:border-gray-700 bg-white dark:bg-gray-950",
       )}
     >
       <Link
@@ -41,14 +41,14 @@ export async function WorkflowItem({ workflow }: Props) {
               workflow.published
                 ? "bg-green-100 dark:bg-green-900"
                 : "bg-gray-100 dark:bg-card",
-              "h-4 w-4 flex items-center justify-center rounded-full"
+              "h-4 w-4 flex items-center justify-center rounded-full",
             )}
             aria-hidden="true"
           >
             <span
               className={classNames(
                 workflow.published ? "bg-green-400" : "bg-red-500",
-                "h-2 w-2 rounded-full"
+                "h-2 w-2 rounded-full",
               )}
             />
           </span>

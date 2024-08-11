@@ -4,9 +4,9 @@ import { FileIcon } from "@radix-ui/react-icons";
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import toast from "react-hot-toast";
-import { Spinner } from "../core/loaders";
-import { notifyError } from "../core/toast";
-import { buttonVariants } from "../ui/button";
+import { Spinner } from "../../core/loaders";
+import { notifyError } from "../../core/toast";
+import { buttonVariants } from "../../ui/button";
 import {
   Dialog,
   DialogContent,
@@ -14,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "../ui/dialog";
+} from "../../ui/dialog";
 
 export const ImportWorkflowDialog = () => {
   const [loading, setLoading] = useState(false);
@@ -35,7 +35,7 @@ export const ImportWorkflowDialog = () => {
             } else {
               notifyError(
                 res?.message ||
-                  "Failed to upload file, please try again or contact support."
+                  "Failed to upload file, please try again or contact support.",
               );
             }
           });

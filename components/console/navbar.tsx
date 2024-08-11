@@ -31,9 +31,9 @@ export default function NavBar({ isPublicPage = false }: Props) {
         current: path.startsWith("/console/workflows"),
       },
       {
-        name: "Chat",
-        href: "/console/chat",
-        current: path.startsWith("/console/chat"),
+        name: "Chatbots",
+        href: "/console/chatbots",
+        current: path.startsWith("/console/chatbots"),
       },
       {
         name: "Settings",
@@ -41,7 +41,7 @@ export default function NavBar({ isPublicPage = false }: Props) {
         current: path === "/console/settings",
       },
     ],
-    [path]
+    [path],
   );
 
   return (
@@ -50,7 +50,7 @@ export default function NavBar({ isPublicPage = false }: Props) {
       <nav
         className={cn(
           "flex-shrink-0 text-black dark:text-white",
-          isPublicPage && "border-b"
+          isPublicPage && "border-b",
         )}
       >
         <div className="mx-auto px-4 lg:px-8">
@@ -89,7 +89,7 @@ export default function NavBar({ isPublicPage = false }: Props) {
         className={classNames(
           "flex px-4 lg:px-8 min-w-full bg-background border-b -mb-px self-start sticky -top-[1px] z-10",
           isSticky ? "pt-[1px] bg-red shadow-md" : "",
-          isPublicPage ? "hidden" : ""
+          isPublicPage ? "hidden" : "",
         )}
         ref={ref}
         aria-label="Tabs"
@@ -113,7 +113,7 @@ export default function NavBar({ isPublicPage = false }: Props) {
           className={classNames(
             "flex space-x-1 overflow-y-scroll",
             "transition ease-in-out duration-300",
-            isSticky ? "translate-x-[40px]" : "translate-x-0"
+            isSticky ? "translate-x-[40px]" : "translate-x-0",
           )}
         >
           {tabs.map((tab) => (
@@ -125,7 +125,7 @@ export default function NavBar({ isPublicPage = false }: Props) {
                 tab.current
                   ? "border-primary text-primary"
                   : "border-transparent text-gray-500 dark:text-gray-400",
-                "whitespace-nowrap border-b-2 py-3 text-sm font-medium"
+                "whitespace-nowrap border-b-2 py-3 text-sm font-medium",
               )}
               aria-current={tab.current ? "page" : undefined}
             >
