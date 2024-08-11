@@ -18,7 +18,7 @@ import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
-function ChatView({ id, token }: { id: string; token: string }) {
+function ChatView({ token }: { token: string }) {
   const [loading, setLoading] = useState(true);
 
   const {
@@ -63,7 +63,7 @@ function ChatView({ id, token }: { id: string; token: string }) {
         error: "Failed to delete chat history",
       },
     );
-  }, [id, token, setMessages]);
+  }, [token, setMessages]);
 
   if (loading) {
     return <SpinnerWithSpacing />;

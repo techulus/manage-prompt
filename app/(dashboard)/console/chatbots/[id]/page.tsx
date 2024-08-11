@@ -31,7 +31,7 @@ async function ChatDashboard({ params }: Props) {
     return notFound();
   }
 
-  const { token } = await fetch(getAppBaseUrl() + "/api/v1/chat/token", {
+  const { token } = await fetch(`${getAppBaseUrl()}/api/v1/chat/token`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${process.env.MANAGEPROMPT_SECRET_TOKEN!}`,
@@ -79,7 +79,7 @@ async function ChatDashboard({ params }: Props) {
       </PageSection>
 
       <PageSection>
-        <ChatView id={id} token={token} />
+        <ChatView token={token} />
       </PageSection>
     </>
   );
