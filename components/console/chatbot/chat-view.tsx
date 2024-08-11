@@ -1,5 +1,6 @@
 "use client";
 
+import { Spinner, SpinnerWithSpacing } from "@/components/core/loaders";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,7 +17,6 @@ import { CornerDownLeft, Trash2Icon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
-import { SpinnerWithSpacing } from "@/components/core/loaders";
 
 function ChatView({ id, token }: { id: string; token: string }) {
   const [loading, setLoading] = useState(true);
@@ -28,10 +28,11 @@ function ChatView({ id, token }: { id: string; token: string }) {
     setInput,
     handleInputChange,
     handleSubmit,
+    isLoading,
   } = useChat({
     api: `/api/v1/chat/${token}/stream`,
     initialInput: "",
-    onFinish: (response) => {
+    onFinish: () => {
       if (window?.scrollTo)
         window.scrollTo({
           top: document.body.scrollHeight,
@@ -76,7 +77,7 @@ function ChatView({ id, token }: { id: string; token: string }) {
         </Badge>
         <div className="flex-1 divide-y-2">
           {messages.map((message) => (
-            <div key={message.id} className="flex flex-col pt-4">
+            <div key={message.id} className="flex flex-col py-4">
               <div className="flex items-start gap-4">
                 <Avatar className="hidden md:block w-8 h-8 border">
                   <AvatarFallback>
@@ -126,9 +127,15 @@ function ChatView({ id, token }: { id: string; token: string }) {
             </Tooltip>
 
             <form onSubmit={handleSubmit} className="ml-auto gap-1.5">
-              <Button type="submit" size="sm">
-                Send
-                <CornerDownLeft className="size-3.5 ml-2" />
+              <Button type="submit" size="sm" disabled={isLoading}>
+                {isLoading ? (
+                  <Spinner />
+                ) : (
+                  <>
+                    Send
+                    <CornerDownLeft className="size-3.5 ml-2" />
+                  </>
+                )}
               </Button>
             </form>
           </div>
