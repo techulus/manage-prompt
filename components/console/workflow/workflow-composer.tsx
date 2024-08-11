@@ -2,19 +2,19 @@
 
 import { runWorkflow } from "@/app/(dashboard)/console/workflows/actions";
 import {
+  modelHasInstruction,
   WorkflowInput,
   WorkflowInputType,
-  modelHasInstruction,
 } from "@/data/workflow";
 import { Workflow } from "@prisma/client";
 import { useMemo, useReducer } from "react";
-import { ApiCodeSnippet } from "../code/snippet";
-import { notifyError } from "../core/toast";
-import { SaveButton } from "../form/button";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { Textarea } from "../ui/textarea";
+import { ApiCodeSnippet } from "../../code/snippet";
+import { notifyError } from "../../core/toast";
+import { SaveButton } from "../../form/button";
+import { Input } from "../../ui/input";
+import { Label } from "../../ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
+import { Textarea } from "../../ui/textarea";
 
 interface Props {
   workflow: Workflow;
@@ -138,7 +138,7 @@ export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
                         />
                       ) : null}
                     </div>
-                  )
+                  ),
                 )}
               </div>
 
@@ -206,8 +206,8 @@ export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
                         ...acc,
                         [input.name]: "value",
                       }),
-                      {}
-                    )
+                      {},
+                    ),
                   ),
                 },
               }}

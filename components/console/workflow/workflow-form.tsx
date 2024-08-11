@@ -1,28 +1,28 @@
 "use client";
 
 import {
-  AIModelToLabel,
   AIModels,
+  AIModelToLabel,
+  modelHasInstruction,
   WorkflowInput,
   WorkflowInputType,
-  modelHasInstruction,
 } from "@/data/workflow";
 import { parseInputs } from "@/lib/utils/workflow";
 import { Workflow } from "@prisma/client";
 import Link from "next/link";
 import { useCallback, useState } from "react";
-import { notifyError, notifySuccess } from "../core/toast";
-import { SaveButton } from "../form/button";
-import { Button, buttonVariants } from "../ui/button";
-import { Input } from "../ui/input";
+import { notifyError, notifySuccess } from "../../core/toast";
+import { SaveButton } from "../../form/button";
+import { Button, buttonVariants } from "../../ui/button";
+import { Input } from "../../ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
-import { Textarea } from "../ui/textarea";
+} from "../../ui/select";
+import { Textarea } from "../../ui/textarea";
 import {
   ModelSettings,
   WorkflowModelSettings,
@@ -38,7 +38,7 @@ export function WorkflowForm({ workflow, action }: Props) {
   const [template, setTemplate] = useState(workflow?.template ?? "");
   const [instruction, setInstruction] = useState(workflow?.instruction ?? "");
   const [inputs, setInputs] = useState<WorkflowInput[]>(
-    (workflow?.inputs as WorkflowInput[]) ?? []
+    (workflow?.inputs as WorkflowInput[]) ?? [],
   );
 
   const [showAdvancedModelParams, setShowAdvancedModelParams] = useState(false);
@@ -50,13 +50,13 @@ export function WorkflowForm({ workflow, action }: Props) {
 
       if (modelHasInstruction[model]) {
         setInputs(
-          parseInputs(`${updatedValue.template} ${updatedValue.instruction}`)
+          parseInputs(`${updatedValue.template} ${updatedValue.instruction}`),
         );
       } else {
         setInputs(parseInputs(updatedValue.template));
       }
     },
-    [template, instruction, model]
+    [template, instruction, model],
   );
 
   return (

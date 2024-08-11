@@ -8,7 +8,7 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-} from "../ui/chart";
+} from "../../ui/chart";
 
 export function WorkflowUsageCharts({
   usageData,

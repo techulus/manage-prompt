@@ -63,6 +63,7 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -89,6 +90,10 @@ textarea {
 
 .prose hr {
   margin: 16px 0;
+}
+
+.prose p {
+  padding: 16px 0;
 }
 
 .text-hero {

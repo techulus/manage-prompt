@@ -38,6 +38,7 @@
     "@sentry/nextjs": "^7.102.0",
     "@upstash/rag-chat": "^1.1.1",
     "@upstash/ratelimit": "^1.0.1",
+    "@upstash/vector": "^1.1.5",
     "@vercel/analytics": "^1.0.1",
     "ai": "^3.3.5",
     "autoprefixer": "10.4.14",
@@ -82,6 +83,7 @@
     "@types/pg": "^8.11.6",
     "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
+    "prettier": "^3.3.3",
     "prisma": "^5.18.0",
     "typescript": "5.0.4"
   }

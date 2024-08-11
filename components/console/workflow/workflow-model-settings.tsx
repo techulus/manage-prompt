@@ -7,10 +7,10 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { Slider } from "../ui/slider";
+} from "../../ui/card";
+import { Input } from "../../ui/input";
+import { Label } from "../../ui/label";
+import { Slider } from "../../ui/slider";
 
 export type ModelSettings = {
   temperature?: number;
@@ -27,15 +27,15 @@ type Props = {
 
 export function WorkflowModelSettings({ defaultValue, onChange }: Props) {
   const [temperature, setTemperature] = useState(
-    defaultValue?.temperature ?? 1
+    defaultValue?.temperature ?? 1,
   );
   const [maxTokens, setMaxTokens] = useState(defaultValue?.maxTokens ?? 1024);
   const [topP, setTopP] = useState(defaultValue?.topP ?? 1);
   const [frequencyPenalty, setFrequencyPenalty] = useState(
-    defaultValue?.frequencyPenalty ?? 0
+    defaultValue?.frequencyPenalty ?? 0,
   );
   const [presencePenalty, setPresencePenalty] = useState(
-    defaultValue?.presencePenalty ?? 0
+    defaultValue?.presencePenalty ?? 0,
   );
 
   const triggerChange = useCallback(
@@ -49,7 +49,7 @@ export function WorkflowModelSettings({ defaultValue, onChange }: Props) {
         ...val,
       });
     },
-    [temperature, maxTokens, topP, frequencyPenalty, presencePenalty, onChange]
+    [temperature, maxTokens, topP, frequencyPenalty, presencePenalty, onChange],
   );
 
   return (

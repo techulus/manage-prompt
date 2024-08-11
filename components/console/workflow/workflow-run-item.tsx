@@ -1,7 +1,7 @@
 import { DateTime } from "@/lib/utils/datetime";
 import { WorkflowRun } from "@prisma/client";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
-import { Button, buttonVariants } from "../ui/button";
+import { Button, buttonVariants } from "../../ui/button";
 import {
   Drawer,
   DrawerClose,
@@ -9,8 +9,8 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTrigger,
-} from "../ui/drawer";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+} from "../../ui/drawer";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
 
 type WorkflowRunWithUser = WorkflowRun & {
   user: {

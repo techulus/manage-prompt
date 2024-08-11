@@ -1,6 +1,6 @@
-import { WorkflowComposer } from "@/components/console/workflow-composer";
-import { WorkflowRunItem } from "@/components/console/workflow-run-item";
-import { WorkflowUsageCharts } from "@/components/console/workflow-usage-charts";
+import { WorkflowComposer } from "@/components/console/workflow/workflow-composer";
+import { WorkflowRunItem } from "@/components/console/workflow/workflow-run-item";
+import { WorkflowUsageCharts } from "@/components/console/workflow/workflow-usage-charts";
 import PageSection from "@/components/core/page-section";
 import { ActionButton, DeleteButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
@@ -20,7 +20,7 @@ import { owner } from "@/lib/hooks/useOwner";
 import { cn } from "@/lib/utils";
 import { prisma } from "@/lib/utils/db";
 import { getWorkflowRunStats } from "@/lib/utils/tinybird";
-import { LIMIT, getWorkflowAndRuns } from "@/lib/utils/useWorkflow";
+import { getWorkflowAndRuns, LIMIT } from "@/lib/utils/useWorkflow";
 import { PauseCircleIcon, PlayCircleIcon } from "@heroicons/react/20/solid";
 import { DownloadIcon } from "@radix-ui/react-icons";
 import { Terminal } from "lucide-react";
@@ -48,7 +48,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
   const currentPage = searchParams.page ? parseInt(searchParams.page) : 1;
   const { workflow, workflowRuns, count } = await getWorkflowAndRuns(
     Number(params.id),
-    currentPage
+    currentPage,
   );
   const totalPages = Math.ceil(count / LIMIT);
   const usageData = await getWorkflowRunStats(workflow.id);
@@ -203,7 +203,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                   <PaginationLink
                     href={`/console/workflows/${params.id}?page=${idx + 1}`}
                     className={cn(
-                      idx + 1 === currentPage && "text-primary font-semibold"
+                      idx + 1 === currentPage && "text-primary font-semibold",
                     )}
                   >
                     {idx + 1}
