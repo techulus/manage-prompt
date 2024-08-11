@@ -84,11 +84,9 @@ function ChatView({ id }: { id: string }) {
                   <div className="font-bold font-xs capitalize">
                     {message.role}
                   </div>
-                  <div className="prose text-muted-foreground">
-                    <ReactMarkdown className="prose dark:prose-invert max-w-none prose-a:text-primary">
-                      {message.content}
-                    </ReactMarkdown>
-                  </div>
+                  <ReactMarkdown className="prose dark:prose-invert max-w-none prose-a:text-primary overflow-hidden">
+                    {message.content}
+                  </ReactMarkdown>
                 </div>
               </div>
             </div>

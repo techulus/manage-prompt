@@ -96,6 +96,10 @@ textarea {
   padding: 16px 0;
 }
 
+.prose pre {
+  white-space: pre-line;
+}
+
 .text-hero {
   font-family: var(--font-bricolage-grotesque);
   font-weight: 600;
