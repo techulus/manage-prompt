@@ -1,6 +1,6 @@
+import MarkdownView from "@/components/markdown/markdown-view";
 import { DateTime } from "@/lib/utils/datetime";
 import { WorkflowRun } from "@prisma/client";
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import { Button, buttonVariants } from "../../ui/button";
 import {
   Drawer,
@@ -53,9 +53,7 @@ export async function WorkflowRunItem({ workflowRun }: Props) {
         </time>
       </div>
       <div className="mt-1 text-gray-600 dark:text-gray-200">
-        <ReactMarkdown className="prose dark:prose-invert max-w-none prose-a:text-primary">
-          {result}
-        </ReactMarkdown>
+        <MarkdownView content={result} />
       </div>
 
       <Drawer>
