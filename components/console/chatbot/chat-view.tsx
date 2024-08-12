@@ -1,6 +1,7 @@
 "use client";
 
 import { Spinner, SpinnerWithSpacing } from "@/components/core/loaders";
+import MarkdownView from "@/components/markdown/markdown-view";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -22,7 +23,6 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useHotkeys } from "react-hotkeys-hook";
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
 function ChatView({ token }: { token: string }) {
   const [loading, setLoading] = useState(true);
@@ -109,9 +109,7 @@ function ChatView({ token }: { token: string }) {
                     />
                   )}
                 </div>
-                <ReactMarkdown className="prose dark:prose-invert max-w-none prose-a:text-primary overflow-hidden -mt-[16px]">
-                  {message.content}
-                </ReactMarkdown>
+                <MarkdownView content={message.content} />
               </div>
             </div>
           ))}

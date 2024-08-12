@@ -17,6 +17,9 @@ type Props = {
   };
 };
 
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
+
 async function ChatDashboard({ params }: Props) {
   const { userId } = await owner();
   const { id } = params;

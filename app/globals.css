@@ -96,6 +96,10 @@ textarea {
   padding: 16px 0;
 }
 
+.prose strong {
+  font-weight: 600;
+}
+
 .prose pre {
   white-space: pre-line;
 }
