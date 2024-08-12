@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/utils/db";
 import { Prisma, Workflow } from "@prisma/client";
+import { createHash } from "node:crypto";
 import { owner } from "../hooks/useOwner";
 import { redisStore } from "./redis";
 
@@ -117,11 +118,11 @@ export async function getWorkflowAndRuns(id: number, page: number = 1) {
 
 export async function getWorkflowCachedResult(
   workflowId: string,
-  body: string
+  body: string,
 ): Promise<string | null> {
   try {
-    const inputHash = await crypto.subtle.digest("SHA-256", Buffer.from(body));
-    const resultCacheKey = `run-cache:${workflowId}${inputHash}`;
+    const inputHash = createHash("md5").update(body).digest("hex");
+    const resultCacheKey = `run-cache:${workflowId}:${inputHash}`;
     const cachedResult: string | null = await redisStore.get(resultCacheKey);
     return cachedResult;
   } catch (e) {
@@ -134,11 +135,11 @@ export async function cacheWorkflowResult(
   workflowId: string,
   body: string,
   result: string,
-  ttl: number
+  ttl: number,
 ) {
   try {
-    const inputHash = await crypto.subtle.digest("SHA-256", Buffer.from(body));
-    const resultCacheKey = `run-cache:${workflowId}${inputHash}`;
+    const inputHash = createHash("md5").update(body).digest("hex");
+    const resultCacheKey = `run-cache:${workflowId}:${inputHash}`;
     await redisStore.set(resultCacheKey, result, {
       ex: ttl,
     });

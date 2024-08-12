@@ -2,9 +2,6 @@ const { withSentryConfig } = require("@sentry/nextjs");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: {
-    domains: ["images.clerk.dev"],
-  },
   reactStrictMode: false,
 };
 
@@ -40,5 +37,5 @@ module.exports = withSentryConfig(
     // https://docs.sentry.io/product/crons/
     // https://vercel.com/docs/cron-jobs
     automaticVercelMonitors: false,
-  }
+  },
 );

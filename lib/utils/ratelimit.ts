@@ -3,7 +3,7 @@ import { redis } from "./redis";
 
 export async function validateRateLimit(
   key: string,
-  rateLimit: number
+  rateLimit: number,
 ): Promise<{
   success: boolean;
   limit: number;
@@ -12,7 +12,6 @@ export async function validateRateLimit(
   const rateLimiter = new Ratelimit({
     redis,
     limiter: Ratelimit.slidingWindow(rateLimit, "1 s"),
-    analytics: true,
     prefix: "mp_ratelimit",
   });
 

@@ -1,5 +1,10 @@
 import { modelToProvider, WorkflowInput } from "@/data/workflow";
 import { getCompletion } from "@/lib/utils/ai";
+import {
+  ErrorCodes,
+  ErrorResponse,
+  UnauthorizedResponse,
+} from "@/lib/utils/api";
 import { prisma } from "@/lib/utils/db";
 import { getUserKeyFor } from "@/lib/utils/encryption";
 import { validateRateLimit } from "@/lib/utils/ratelimit";
@@ -13,13 +18,9 @@ import {
   cacheWorkflowResult,
   getWorkflowCachedResult,
 } from "@/lib/utils/useWorkflow";
+import { waitUntil } from "@vercel/functions";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import {
-  ErrorCodes,
-  ErrorResponse,
-  UnauthorizedResponse,
-} from "@/lib/utils/api";
 
 export const maxDuration = 120;
 
@@ -160,27 +161,29 @@ export async function POST(
       totalTokenCount = Math.floor(totalTokenCount * 0.3);
     }
 
-    await Promise.all([
-      reportUsage(
-        organization?.id,
-        organization?.stripe?.subscription as unknown as Stripe.Subscription,
-        totalTokenCount,
-      ),
-      logEvent(EventName.RunWorkflow, {
-        workflow_id: workflow.id,
-        owner_id: key.ownerId,
-        model,
-        total_tokens: totalTokenCount,
-      }),
-      workflow.cacheControlTtl
-        ? cacheWorkflowResult(
-            params.workflowId,
-            JSON.stringify(body),
-            result,
-            workflow.cacheControlTtl,
-          )
-        : null,
-    ]);
+    waitUntil(
+      Promise.all([
+        reportUsage(
+          organization?.id,
+          organization?.stripe?.subscription as unknown as Stripe.Subscription,
+          totalTokenCount,
+        ),
+        logEvent(EventName.RunWorkflow, {
+          workflow_id: workflow.id,
+          owner_id: key.ownerId,
+          model,
+          total_tokens: totalTokenCount,
+        }),
+        workflow.cacheControlTtl
+          ? cacheWorkflowResult(
+              params.workflowId,
+              JSON.stringify(body),
+              result,
+              workflow.cacheControlTtl,
+            )
+          : null,
+      ]),
+    );
 
     return NextResponse.json(
       { success: true, result },

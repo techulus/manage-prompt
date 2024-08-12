@@ -1,5 +1,10 @@
 import { modelToProvider, WorkflowInput } from "@/data/workflow";
 import { getStreamingCompletion } from "@/lib/utils/ai";
+import {
+  ErrorCodes,
+  ErrorResponse,
+  UnauthorizedResponse,
+} from "@/lib/utils/api";
 import { prisma } from "@/lib/utils/db";
 import { getUserKeyFor } from "@/lib/utils/encryption";
 import { redis } from "@/lib/utils/redis";
@@ -9,14 +14,10 @@ import {
   cacheWorkflowResult,
   getWorkflowCachedResult,
 } from "@/lib/utils/useWorkflow";
+import { waitUntil } from "@vercel/functions";
 import { StreamingTextResponse } from "ai";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
-import {
-  ErrorCodes,
-  ErrorResponse,
-  UnauthorizedResponse,
-} from "@/lib/utils/api";
 
 export const maxDuration = 120;
 
@@ -139,28 +140,30 @@ export async function POST(
         totalTokens = Math.floor(totalTokens * 0.3);
       }
 
-      await Promise.all([
-        reportUsage(
-          workflow?.organization?.id,
-          workflow?.organization?.stripe
-            ?.subscription as unknown as Stripe.Subscription,
-          totalTokens,
-        ),
-        logEvent(EventName.RunWorkflow, {
-          workflow_id: workflow.id,
-          owner_id: workflow.ownerId,
-          model,
-          total_tokens: totalTokens,
-        }),
-        workflow.cacheControlTtl
-          ? cacheWorkflowResult(
-              params.workflowId,
-              JSON.stringify(body),
-              output,
-              workflow.cacheControlTtl,
-            )
-          : null,
-      ]);
+      waitUntil(
+        Promise.all([
+          reportUsage(
+            workflow?.organization?.id,
+            workflow?.organization?.stripe
+              ?.subscription as unknown as Stripe.Subscription,
+            totalTokens,
+          ),
+          logEvent(EventName.RunWorkflow, {
+            workflow_id: workflow.id,
+            owner_id: workflow.ownerId,
+            model,
+            total_tokens: totalTokens,
+          }),
+          workflow.cacheControlTtl
+            ? cacheWorkflowResult(
+                params.workflowId,
+                JSON.stringify(body),
+                output,
+                workflow.cacheControlTtl,
+              )
+            : null,
+        ]),
+      );
     };
 
     const response = await getStreamingCompletion(
