@@ -40,6 +40,12 @@ export default function NavBar({ isPublicPage = false }: Props) {
         href: "/console/settings",
         current: path === "/console/settings",
       },
+      {
+        name: "Documentation",
+        href: "https://manageprompt.readme.io/reference/run-workflow",
+        current: false,
+        external: true,
+      },
     ],
     [path],
   );
@@ -127,6 +133,8 @@ export default function NavBar({ isPublicPage = false }: Props) {
                   : "border-transparent text-gray-500 dark:text-gray-400",
                 "whitespace-nowrap border-b-2 py-3 text-sm font-medium",
               )}
+              target={tab.external ? "_blank" : undefined}
+              rel={tab.external ? "noopener noreferrer" : undefined}
               aria-current={tab.current ? "page" : undefined}
             >
               <span className="transition ease-in-out duration-300 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white hover:text-black py-2 px-4 rounded-md">
