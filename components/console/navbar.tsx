@@ -40,12 +40,6 @@ export default function NavBar({ isPublicPage = false }: Props) {
         href: "/console/settings",
         current: path === "/console/settings",
       },
-      {
-        name: "Documentation",
-        href: "https://manageprompt.readme.io/reference/run-workflow",
-        current: false,
-        external: true,
-      },
     ],
     [path],
   );
