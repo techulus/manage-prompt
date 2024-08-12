@@ -1,7 +1,6 @@
 "use client";
 
 import { Spinner, SpinnerWithSpacing } from "@/components/core/loaders";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -12,10 +11,17 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { LightningBoltIcon } from "@radix-ui/react-icons";
 import { useChat } from "ai/react";
-import { CornerDownLeft, Trash2Icon } from "lucide-react";
+import {
+  CommandIcon,
+  CornerDownLeft,
+  Trash2Icon,
+  UserIcon,
+} from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useHotkeys } from "react-hotkeys-hook";
 import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 
 function ChatView({ token }: { token: string }) {
@@ -65,6 +71,20 @@ function ChatView({ token }: { token: string }) {
     );
   }, [token, setMessages]);
 
+  useHotkeys(
+    "ctrl+enter,meta+enter",
+    () => {
+      handleSubmit();
+      setTimeout(() => {
+        setInput("");
+      }, 50);
+    },
+    [handleSubmit, setInput],
+    {
+      enableOnFormTags: ["textarea"],
+    },
+  );
+
   if (loading) {
     return <SpinnerWithSpacing />;
   }
@@ -79,19 +99,19 @@ function ChatView({ token }: { token: string }) {
           {messages.map((message) => (
             <div key={message.id} className="flex flex-col py-4">
               <div className="flex items-start gap-4">
-                <Avatar className="hidden md:block w-8 h-8 border">
-                  <AvatarFallback>
-                    {message.role.slice(0, 2).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <div className="font-bold font-xs capitalize">
-                    {message.role}
-                  </div>
-                  <ReactMarkdown className="prose dark:prose-invert max-w-none prose-a:text-primary overflow-hidden">
-                    {message.content}
-                  </ReactMarkdown>
+                <div className="hidden md:block size-6">
+                  {message.role === "user" ? (
+                    <UserIcon className="size-6" />
+                  ) : (
+                    <LightningBoltIcon
+                      className="size-6 text-primary"
+                      color="currentColor"
+                    />
+                  )}
                 </div>
+                <ReactMarkdown className="prose dark:prose-invert max-w-none prose-a:text-primary overflow-hidden -mt-[16px]">
+                  {message.content}
+                </ReactMarkdown>
               </div>
             </div>
           ))}
@@ -106,14 +126,6 @@ function ChatView({ token }: { token: string }) {
             className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0"
             value={input}
             onChange={handleInputChange}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleSubmit();
-                setTimeout(() => {
-                  setInput("");
-                }, 50);
-              }
-            }}
           />
           <div className="flex items-center p-3 pt-0">
             <Tooltip>
@@ -133,7 +145,8 @@ function ChatView({ token }: { token: string }) {
                 ) : (
                   <>
                     Send
-                    <CornerDownLeft className="size-3.5 ml-2" />
+                    <CommandIcon className="size-3.5 ml-2" />
+                    <CornerDownLeft className="size-3.5 ml-1" />
                   </>
                 )}
               </Button>
