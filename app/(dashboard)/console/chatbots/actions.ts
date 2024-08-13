@@ -3,15 +3,21 @@
 import { owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
 import { index, ragChat } from "@/lib/utils/rag-chat";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { z } from "@/node_modules/zod";
 import { fromZodError } from "@/node_modules/zod-validation-error";
+import { waitUntil } from "@vercel/functions";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 const ChatbotSchema = z.object({
   name: z.string().min(2).max(150),
   model: z.string(),
-  contextItems: z.array(z.string()),
+  contextItems: z.array(
+    z.object({
+      type: z.string(),
+      source: z.string(),
+    }),
+  ),
 });
 
 export async function createChatBot(payload: FormData) {
@@ -52,16 +58,18 @@ export async function createChatBot(payload: FormData) {
     },
   });
 
-  if (contextItems) {
-    for (const item of contextItems) {
-      if (!item?.trim()) continue;
-      await ragChat.context.add({
-        type: "html",
-        source: item,
-        options: {
-          namespace: `${ownerId}-${chatbot.id}`,
-        },
-      });
+  if (validationResult.data.contextItems.length > 0) {
+    for (const item of validationResult.data.contextItems) {
+      if (!item?.source) continue;
+      waitUntil(
+        ragChat.context.add({
+          type: item.type as any,
+          source: item.source,
+          options: {
+            namespace: `${ownerId}-${chatbot.id}`,
+          },
+        }),
+      );
     }
   }
 
@@ -118,15 +126,19 @@ export async function updateChatBot(payload: FormData) {
       console.error("Failed to delete context", error);
     });
 
-  for (const item of contextItems) {
-    if (!item?.trim()) continue;
-    void ragChat.context.add({
-      type: "html",
-      source: item,
-      options: {
-        namespace,
-      },
-    });
+  if (validationResult.data.contextItems.length > 0) {
+    for (const item of validationResult.data.contextItems) {
+      if (!item?.source) continue;
+      waitUntil(
+        ragChat.context.add({
+          type: item.type as any,
+          source: item.source,
+          options: {
+            namespace,
+          },
+        }),
+      );
+    }
   }
 
   revalidatePath(`/console/chatbots/${id}`);

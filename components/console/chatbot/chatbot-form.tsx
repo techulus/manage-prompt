@@ -1,5 +1,12 @@
 "use client";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { PlusCircleIcon } from "@/node_modules/lucide-react";
 import { ChatBot } from "@prisma/client";
 import Link from "next/link";
 import { useState } from "react";
@@ -14,13 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../ui/select";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { PlusCircleIcon } from "@/node_modules/lucide-react";
 
 interface Props {
   chatbot?: ChatBot;
@@ -29,7 +29,9 @@ interface Props {
 
 export function ChatbotForm({ chatbot, action }: Props) {
   const [model, setModel] = useState("gpt-4o");
-  const [contextItems, setContextItems] = useState<string[]>(
+  const [contextItems, setContextItems] = useState<
+    { type: string; source: string }[]
+  >(
     chatbot?.contextItems
       ? JSON.parse(JSON.stringify(chatbot?.contextItems))
       : [],
@@ -116,11 +118,16 @@ export function ChatbotForm({ chatbot, action }: Props) {
                 <div key={index} className="flex items-center gap-x-4 pb-6">
                   <Input
                     type="text"
-                    value={item}
+                    value={item.source}
                     onChange={(e) => {
                       setContextItems((prev) =>
                         prev.map((prevItem, i) =>
-                          i === index ? e.target.value : prevItem,
+                          i === index
+                            ? {
+                                ...contextItems[i],
+                                source: e.target.value,
+                              }
+                            : prevItem,
                         ),
                       );
                     }}
@@ -153,7 +160,13 @@ export function ChatbotForm({ chatbot, action }: Props) {
                       variant="ghost"
                       className="m-0 p-0 w-full"
                       onClick={() => {
-                        setContextItems((prev) => [...prev, ""]);
+                        setContextItems((prev) => [
+                          ...prev,
+                          {
+                            type: "html",
+                            source: "",
+                          },
+                        ]);
                       }}
                     >
                       Webpage
