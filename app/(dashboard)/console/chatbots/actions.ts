@@ -25,16 +25,15 @@ export async function createChatBot(payload: FormData) {
 
   const model = payload.get("model") as string;
   const name = payload.get("name") as string;
-  let contextItems: string[] = [];
+  const contextItemsTypes = payload.getAll("contextItemsTypes[]") as string[];
+  const contextItemsSources = payload.getAll(
+    "contextItemsSources[]",
+  ) as string[];
 
-  if (contextItems) {
-    try {
-      contextItems = JSON.parse(payload.get("context") as string);
-    } catch (error) {
-      console.error("Failed to parse context items", error);
-      contextItems = [];
-    }
-  }
+  const contextItems = contextItemsTypes.map((type, index) => ({
+    type,
+    source: contextItemsSources[index],
+  }));
 
   const validationResult = ChatbotSchema.safeParse({
     name,
@@ -83,16 +82,15 @@ export async function updateChatBot(payload: FormData) {
   const id = payload.get("id") as string;
   const model = payload.get("model") as string;
   const name = payload.get("name") as string;
-  let contextItems: string[] = [];
+  const contextItemsTypes = payload.getAll("contextItemsTypes[]") as string[];
+  const contextItemsSources = payload.getAll(
+    "contextItemsSources[]",
+  ) as string[];
 
-  if (contextItems) {
-    try {
-      contextItems = JSON.parse(payload.get("context") as string);
-    } catch (error) {
-      console.error("Failed to parse context items", error);
-      contextItems = [];
-    }
-  }
+  const contextItems = contextItemsTypes.map((type, index) => ({
+    type,
+    source: contextItemsSources[index],
+  }));
 
   const validationResult = ChatbotSchema.safeParse({
     name,
@@ -121,6 +119,9 @@ export async function updateChatBot(payload: FormData) {
   await ragChat.context
     .deleteEntireContext({
       namespace,
+    })
+    .then(() => {
+      console.log("Deleted context successfully", namespace);
     })
     .catch((error) => {
       console.error("Failed to delete context", error);

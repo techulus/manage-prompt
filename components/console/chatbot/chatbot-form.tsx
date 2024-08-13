@@ -109,28 +109,17 @@ export function ChatbotForm({ chatbot, action }: Props) {
               Context
             </label>
             <div className="mt-2 sm:col-span-2 sm:mt-0">
-              <input
-                type="hidden"
-                name="context"
-                value={JSON.stringify(contextItems)}
-              />
               {contextItems.map((item, index) => (
                 <div key={index} className="flex items-center gap-x-4 pb-6">
                   <Input
+                    type="hidden"
+                    name={`contextItemsTypes[]`}
+                    defaultValue={item.type}
+                  />
+                  <Input
                     type="text"
-                    value={item.source}
-                    onChange={(e) => {
-                      setContextItems((prev) =>
-                        prev.map((prevItem, i) =>
-                          i === index
-                            ? {
-                                ...contextItems[i],
-                                source: e.target.value,
-                              }
-                            : prevItem,
-                        ),
-                      );
-                    }}
+                    name={`contextItemsSources[]`}
+                    defaultValue={item.source}
                   />
                   <Button
                     type="button"
