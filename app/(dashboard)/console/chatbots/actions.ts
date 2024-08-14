@@ -52,23 +52,36 @@ export async function createChatBot(payload: FormData) {
       name,
       model,
       ownerId,
-      contextItems: contextItems ?? [],
+      contextItems: contextItems.filter((item) => item.type !== "pdf"),
       createdBy: userId,
     },
   });
 
+  const namespace = `${ownerId}-${chatbot.id}`;
   if (validationResult.data.contextItems.length > 0) {
     for (const item of validationResult.data.contextItems) {
       if (!item?.source) continue;
-      waitUntil(
-        ragChat.context.add({
-          type: item.type as any,
-          source: item.source,
-          options: {
-            namespace: `${ownerId}-${chatbot.id}`,
-          },
-        }),
-      );
+      if (item.type === "html") {
+        waitUntil(
+          ragChat.context.add({
+            type: item.type as any,
+            source: item.source,
+            options: {
+              namespace,
+            },
+          }),
+        );
+      } else {
+        waitUntil(
+          ragChat.context.add({
+            type: item.type as any,
+            fileSource: item.source as any,
+            options: {
+              namespace,
+            },
+          }),
+        );
+      }
     }
   }
 
@@ -130,12 +143,11 @@ export async function updateChatBot(payload: FormData) {
   if (validationResult.data.contextItems.length > 0) {
     for (const item of validationResult.data.contextItems) {
       if (!item?.source) continue;
-
-      if (item.type === "pdf") {
+      if (item.type === "html") {
         waitUntil(
           ragChat.context.add({
             type: item.type as any,
-            fileSource: item.source as any,
+            source: item.source,
             options: {
               namespace,
             },
@@ -145,7 +157,7 @@ export async function updateChatBot(payload: FormData) {
         waitUntil(
           ragChat.context.add({
             type: item.type as any,
-            source: item.source,
+            fileSource: item.source as any,
             options: {
               namespace,
             },
