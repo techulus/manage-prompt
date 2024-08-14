@@ -15,7 +15,7 @@ const ChatbotSchema = z.object({
   contextItems: z.array(
     z.object({
       type: z.string(),
-      source: z.string(),
+      source: z.any(),
     }),
   ),
 });
@@ -25,16 +25,15 @@ export async function createChatBot(payload: FormData) {
 
   const model = payload.get("model") as string;
   const name = payload.get("name") as string;
-  let contextItems: string[] = [];
+  const contextItemsTypes = payload.getAll("contextItemsTypes[]") as string[];
+  const contextItemsSources = payload.getAll(
+    "contextItemsSources[]",
+  ) as string[];
 
-  if (contextItems) {
-    try {
-      contextItems = JSON.parse(payload.get("context") as string);
-    } catch (error) {
-      console.error("Failed to parse context items", error);
-      contextItems = [];
-    }
-  }
+  const contextItems = contextItemsTypes.map((type, index) => ({
+    type,
+    source: contextItemsSources[index],
+  }));
 
   const validationResult = ChatbotSchema.safeParse({
     name,
@@ -83,16 +82,15 @@ export async function updateChatBot(payload: FormData) {
   const id = payload.get("id") as string;
   const model = payload.get("model") as string;
   const name = payload.get("name") as string;
-  let contextItems: string[] = [];
+  const contextItemsTypes = payload.getAll("contextItemsTypes[]") as string[];
+  const contextItemsSources = payload.getAll(
+    "contextItemsSources[]",
+  ) as string[];
 
-  if (contextItems) {
-    try {
-      contextItems = JSON.parse(payload.get("context") as string);
-    } catch (error) {
-      console.error("Failed to parse context items", error);
-      contextItems = [];
-    }
-  }
+  const contextItems = contextItemsTypes.map((type, index) => ({
+    type,
+    source: contextItemsSources[index],
+  }));
 
   const validationResult = ChatbotSchema.safeParse({
     name,
@@ -113,7 +111,7 @@ export async function updateChatBot(payload: FormData) {
     data: {
       name,
       model,
-      contextItems,
+      contextItems: contextItems.filter((item) => item.type !== "pdf"),
     },
   });
 
@@ -122,6 +120,9 @@ export async function updateChatBot(payload: FormData) {
     .deleteEntireContext({
       namespace,
     })
+    .then(() => {
+      console.log("Deleted context successfully", namespace);
+    })
     .catch((error) => {
       console.error("Failed to delete context", error);
     });
@@ -129,15 +130,28 @@ export async function updateChatBot(payload: FormData) {
   if (validationResult.data.contextItems.length > 0) {
     for (const item of validationResult.data.contextItems) {
       if (!item?.source) continue;
-      waitUntil(
-        ragChat.context.add({
-          type: item.type as any,
-          source: item.source,
-          options: {
-            namespace,
-          },
-        }),
-      );
+
+      if (item.type === "pdf") {
+        waitUntil(
+          ragChat.context.add({
+            type: item.type as any,
+            fileSource: item.source as any,
+            options: {
+              namespace,
+            },
+          }),
+        );
+      } else {
+        waitUntil(
+          ragChat.context.add({
+            type: item.type as any,
+            source: item.source,
+            options: {
+              namespace,
+            },
+          }),
+        );
+      }
     }
   }
 
