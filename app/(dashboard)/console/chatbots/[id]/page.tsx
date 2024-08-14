@@ -51,7 +51,7 @@ async function ChatDashboard({ params }: Props) {
 
       <PageSection topInset bottomMargin>
         <div className="flex h-12 flex-col justify-center">
-          <div className="px-4 sm:px-6 lg:px-8 lg:-mx-4">
+          <div className="px-4 sm:px-6 lg:-mx-4">
             <div className="flex justify-between py-3">
               <div className="isolate inline-flex sm:space-x-3">
                 <span className="inline-flex space-x-1">

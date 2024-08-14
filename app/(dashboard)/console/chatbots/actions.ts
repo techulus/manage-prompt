@@ -15,7 +15,7 @@ const ChatbotSchema = z.object({
   contextItems: z.array(
     z.object({
       type: z.string(),
-      source: z.string(),
+      source: z.any(),
     }),
   ),
 });
@@ -111,7 +111,7 @@ export async function updateChatBot(payload: FormData) {
     data: {
       name,
       model,
-      contextItems,
+      contextItems: contextItems.filter((item) => item.type !== "pdf"),
     },
   });
 
@@ -130,15 +130,28 @@ export async function updateChatBot(payload: FormData) {
   if (validationResult.data.contextItems.length > 0) {
     for (const item of validationResult.data.contextItems) {
       if (!item?.source) continue;
-      waitUntil(
-        ragChat.context.add({
-          type: item.type as any,
-          source: item.source,
-          options: {
-            namespace,
-          },
-        }),
-      );
+
+      if (item.type === "pdf") {
+        waitUntil(
+          ragChat.context.add({
+            type: item.type as any,
+            fileSource: item.source as any,
+            options: {
+              namespace,
+            },
+          }),
+        );
+      } else {
+        waitUntil(
+          ragChat.context.add({
+            type: item.type as any,
+            source: item.source,
+            options: {
+              namespace,
+            },
+          }),
+        );
+      }
     }
   }
 
