@@ -108,7 +108,7 @@ async function ChatDashboard({ params }: Props) {
         </TabsContent>
         <TabsContent value="deploy">
           <PageSection>
-            <ChatDeploy id={id} apiSecretKey={apiSecretKey?.key ?? ""} />
+            <ChatDeploy />
           </PageSection>
         </TabsContent>
       </Tabs>

@@ -1,24 +1,24 @@
-"use client";
-
-import { ApiCodeSnippet } from "@/components/code/snippet";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { buttonVariants } from "@/components/ui/button";
 import { Terminal } from "lucide-react";
+import Link from "next/link";
 
-export default function ChatDeploy({
-  id,
-  apiSecretKey,
-}: {
-  apiSecretKey: string;
-  id: string;
-}) {
+export default function ChatDeploy() {
   return (
     <div className="px-6 py-4">
       <p className="py-1">
-        To deploy your chatbot, you need to generate a token for your chatbot.
-        This token has to be generated for each user and will be identified
-        using a unique session ID. The token will be used to authenticate the
-        user with the chatbot and the chat history will be stored based on the
-        session ID.
+        Deploying your chatbot mostly invloves generating a token for your user
+        to interact with the chatbot and then using the token to authenticate
+        and interact with the chatbot. Currently we offer a streaming API that
+        is compatible with{" "}
+        <Link
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://sdk.vercel.ai/"
+          className="text-primary underline"
+        >
+          Vercel AI SDK.
+        </Link>
       </p>
 
       <Alert className="my-6">
@@ -30,33 +30,14 @@ export default function ChatDeploy({
         </AlertDescription>
       </Alert>
 
-      <p className="py-1">
-        You can see the API request below to generate a token for your chatbot.
-      </p>
-      <ApiCodeSnippet
-        har={{
-          method: "POST",
-          url: `${process.env.NEXT_PUBLIC_APP_BASE_URL}/api/v1/chat/token`,
-          queryString: [],
-          headers: [
-            {
-              name: "Authorization",
-              value: `Bearer ${apiSecretKey ?? "api-secret-key"}`,
-            },
-            {
-              name: "Content-Type",
-              value: "application/json",
-            },
-          ],
-          postData: {
-            mimeType: "application/json",
-            text: JSON.stringify({
-              chatbotId: id,
-              sessionId: "unique-session-id-for-your-user",
-            }),
-          },
-        }}
-      />
+      <Link
+        className={buttonVariants({ variant: "default" })}
+        target="_blank"
+        rel="noopener noreferrer"
+        href="https://manageprompt.readme.io/reference/chatbot-get-token"
+      >
+        View Deployment Instructions
+      </Link>
     </div>
   );
 }
