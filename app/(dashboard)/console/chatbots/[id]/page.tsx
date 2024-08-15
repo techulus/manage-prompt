@@ -23,7 +23,7 @@ export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
 async function ChatDashboard({ params }: Props) {
-  const { userId, ownerId } = await owner();
+  const { userId } = await owner();
   const { id } = params;
 
   const chatBot = await prisma.chatBot.findUnique({
@@ -46,12 +46,6 @@ async function ChatDashboard({ params }: Props) {
       sessionId: userId,
     }),
   }).then((res) => res.json());
-
-  const apiSecretKey = await prisma.secretKey.findFirst({
-    where: {
-      ownerId,
-    },
-  });
 
   return (
     <>
