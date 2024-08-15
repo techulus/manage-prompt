@@ -1,8 +1,10 @@
+import ChatDeploy from "@/components/console/chatbot/chat-deploy";
 import ChatView from "@/components/console/chatbot/chat-view";
 import PageSection from "@/components/core/page-section";
 import { DeleteButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
 import { buttonVariants } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
 import { getAppBaseUrl } from "@/lib/utils/url";
@@ -21,7 +23,7 @@ export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
 async function ChatDashboard({ params }: Props) {
-  const { userId } = await owner();
+  const { userId, ownerId } = await owner();
   const { id } = params;
 
   const chatBot = await prisma.chatBot.findUnique({
@@ -45,9 +47,22 @@ async function ChatDashboard({ params }: Props) {
     }),
   }).then((res) => res.json());
 
+  const apiSecretKey = await prisma.secretKey.findFirst({
+    where: {
+      ownerId,
+    },
+  });
+
   return (
     <>
-      <PageTitle title={chatBot.name} backUrl="/console/chatbots" />
+      <PageTitle title={chatBot.name} backUrl="/console/chatbots">
+        <div className="text-sm">
+          ID:{" "}
+          <span className="p-1 border border-secondary rounded-lg font-mono text-primary bg-secondary">
+            {chatBot.id}
+          </span>
+        </div>
+      </PageTitle>
 
       <PageSection topInset bottomMargin>
         <div className="flex h-12 flex-col justify-center">
@@ -81,9 +96,22 @@ async function ChatDashboard({ params }: Props) {
         </div>
       </PageSection>
 
-      <PageSection>
-        <ChatView token={token} />
-      </PageSection>
+      <Tabs defaultValue={"review"} className="max-w-7xl mx-auto">
+        <TabsList className="max-w-5xl mx-4 lg:mx-auto mb-2">
+          <TabsTrigger value="review">Review</TabsTrigger>
+          <TabsTrigger value="deploy">Deploy</TabsTrigger>
+        </TabsList>
+        <TabsContent value="review">
+          <PageSection>
+            <ChatView token={token} />
+          </PageSection>
+        </TabsContent>
+        <TabsContent value="deploy">
+          <PageSection>
+            <ChatDeploy id={id} apiSecretKey={apiSecretKey?.key ?? ""} />
+          </PageSection>
+        </TabsContent>
+      </Tabs>
     </>
   );
 }

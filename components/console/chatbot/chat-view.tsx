@@ -137,7 +137,12 @@ function ChatView({ token }: { token: string }) {
             </Tooltip>
 
             <form onSubmit={handleSubmit} className="ml-auto gap-1.5">
-              <Button type="submit" size="sm" disabled={isLoading}>
+              <Button
+                type="submit"
+                size="sm"
+                disabled={isLoading}
+                className={isLoading ? "animate-pulse" : ""}
+              >
                 {isLoading ? (
                   <Spinner />
                 ) : (
