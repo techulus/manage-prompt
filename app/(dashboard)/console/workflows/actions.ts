@@ -3,8 +3,8 @@
 import { modelToProvider, WorkflowInput } from "@/data/workflow";
 import { owner } from "@/lib/hooks/useOwner";
 import { getCompletion } from "@/lib/utils/ai";
+import { ByokService } from "@/lib/utils/byok-service";
 import { prisma } from "@/lib/utils/db";
-import { getUserKeyFor } from "@/lib/utils/encryption";
 import {
   hasExceededSpendLimit,
   isSubscriptionActive,
@@ -196,7 +196,7 @@ export async function runWorkflow(formData: FormData) {
       organization?.credits !== 0 &&
       (await hasExceededSpendLimit(
         organization?.spendLimit,
-        organization?.stripe?.customerId
+        organization?.stripe?.customerId,
       ))
     ) {
       throw "Spend limit exceeded";
@@ -217,15 +217,16 @@ export async function runWorkflow(formData: FormData) {
       model,
       content,
       JSON.parse(JSON.stringify(workflow.modelSettings)),
-      organization?.UserKeys
+      organization?.UserKeys,
     );
 
     let { result, rawResult, totalTokenCount } = response;
     if (!result) throw "No result returned from OpenAI";
 
-    const isEligibleForByokDiscount = !!getUserKeyFor(
+    const byokService = new ByokService();
+    const isEligibleForByokDiscount = !!byokService.get(
       modelToProvider[model],
-      organization?.UserKeys
+      organization?.UserKeys,
     );
     if (isEligibleForByokDiscount) {
       totalTokenCount = Math.floor(totalTokenCount * 0.3);
@@ -253,7 +254,7 @@ export async function runWorkflow(formData: FormData) {
       reportUsage(
         ownerId,
         organization?.stripe?.subscription as unknown as Stripe.Subscription,
-        totalTokenCount
+        totalTokenCount,
       ),
       logEvent(EventName.RunWorkflow, {
         workflow_id: id,

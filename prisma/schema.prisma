@@ -176,17 +176,31 @@ model WorkflowRun {
 }
 
 model ChatBot {
-  id            String       @id @default(cuid())
-  name          String
-  createdBy     String
-  ownerId       String
-  model         String
-  modelSettings Json?
-  contextItems  Json
-  organization  Organization @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  user          User         @relation(fields: [createdBy], references: [id], onDelete: Cascade)
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
+  id                 String               @id @default(cuid())
+  name               String
+  createdBy          String
+  ownerId            String
+  model              String
+  modelSettings      Json?
+  contextItems       Json
+  organization       Organization         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  user               User                 @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  ChatBotUserSession ChatBotUserSession[]
+}
+
+model ChatBotUserSession {
+  id        String   @id @default(cuid())
+  chatbotId String
+  chatbot   ChatBot  @relation(fields: [chatbotId], references: [id], onDelete: Cascade)
+  sessionId String
+  ownerId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([chatbotId, sessionId])
+  @@index([chatbotId, sessionId])
 }
 
 // Free tools

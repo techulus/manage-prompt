@@ -1,8 +1,8 @@
 "use server";
 
 import { owner } from "@/lib/hooks/useOwner";
+import { ByokService } from "@/lib/utils/byok-service";
 import { prisma } from "@/lib/utils/db";
-import { encrypt } from "@/lib/utils/encryption";
 import {
   createOrRetrieveCustomer,
   getCheckoutSession,
@@ -221,7 +221,8 @@ export async function updateUserKey(data: FormData) {
     };
   }
 
-  const encryptedData = encrypt(apiKey);
+  const byokService = new ByokService();
+  const encryptedData = byokService.create(apiKey);
 
   await prisma.userKey.upsert({
     where: {

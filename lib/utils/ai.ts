@@ -5,7 +5,7 @@ import { createAzure } from "@ai-sdk/azure";
 import { createOpenAI } from "@ai-sdk/openai";
 import { UserKey } from "@prisma/client";
 import { generateText, LanguageModel, streamText } from "ai";
-import { getUserKeyFor } from "./encryption";
+import { ByokService } from "./byok-service";
 
 export const getCompletion = async (
   model: string,
@@ -47,7 +47,7 @@ export const getCompletion = async (
       });
       break;
     default:
-      const userOpenApiKey = getUserKeyFor("openai", userKeys);
+      const userOpenApiKey = new ByokService().get("openai", userKeys);
       if (userOpenApiKey) {
         const openai = createOpenAI({
           apiKey: userOpenApiKey,
@@ -117,7 +117,7 @@ export const getStreamingCompletion = async (
       });
       break;
     default:
-      const userOpenApiKey = getUserKeyFor("openai", userKeys);
+      const userOpenApiKey = new ByokService().get("openai", userKeys);
       if (userOpenApiKey) {
         const openai = createOpenAI({
           apiKey: userOpenApiKey,

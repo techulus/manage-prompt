@@ -5,8 +5,8 @@ import {
   ErrorResponse,
   UnauthorizedResponse,
 } from "@/lib/utils/api";
+import { ByokService } from "@/lib/utils/byok-service";
 import { prisma } from "@/lib/utils/db";
-import { getUserKeyFor } from "@/lib/utils/encryption";
 import { validateRateLimit } from "@/lib/utils/ratelimit";
 import {
   hasExceededSpendLimit,
@@ -153,7 +153,8 @@ export async function POST(
       );
     }
 
-    const isEligibleForByokDiscount = !!getUserKeyFor(
+    const byokService = new ByokService();
+    const isEligibleForByokDiscount = !!byokService.get(
       modelToProvider[model],
       organization.UserKeys,
     );

@@ -5,6 +5,7 @@ import { prisma } from "@/lib/utils/db";
 import { index, ragChat } from "@/lib/utils/rag-chat";
 import { z } from "@/node_modules/zod";
 import { fromZodError } from "@/node_modules/zod-validation-error";
+import { createId } from "@paralleldrive/cuid2";
 import { waitUntil } from "@vercel/functions";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -49,6 +50,7 @@ export async function createChatBot(payload: FormData) {
 
   const chatbot = await prisma.chatBot.create({
     data: {
+      id: `cb_${createId()}`,
       name,
       model,
       ownerId,

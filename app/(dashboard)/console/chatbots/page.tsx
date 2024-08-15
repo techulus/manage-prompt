@@ -1,15 +1,15 @@
-import PageTitle from "@/components/layout/page-title";
-import { owner } from "@/lib/hooks/useOwner";
-import { prisma } from "@/lib/utils/db";
 import EmptyState from "@/components/core/empty-state";
-import { cn } from "@/lib/utils";
-import Link from "@/node_modules/next/link";
-import { Badge } from "@/components/ui/badge";
-import { ChevronRightIcon } from "@/node_modules/@heroicons/react/20/solid";
 import PageSection from "@/components/core/page-section";
+import PageTitle from "@/components/layout/page-title";
+import { Badge } from "@/components/ui/badge";
+import { owner } from "@/lib/hooks/useOwner";
+import { cn } from "@/lib/utils";
+import { prisma } from "@/lib/utils/db";
+import { ChevronRightIcon } from "@/node_modules/@heroicons/react/20/solid";
+import Link from "@/node_modules/next/link";
 
 export default async function Chatbots() {
-  const { userId, orgId } = await owner();
+  const { userId } = await owner();
 
   const chatBots = await prisma.chatBot.findMany({
     include: {

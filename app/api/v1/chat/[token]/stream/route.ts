@@ -1,6 +1,6 @@
 import { UnauthorizedResponse } from "@/lib/utils/api";
 import { prisma } from "@/lib/utils/db";
-import { decryptChatbotToken, ragChat } from "@/lib/utils/rag-chat";
+import { ragChat } from "@/lib/utils/rag-chat";
 import { reportUsage } from "@/lib/utils/stripe";
 // @ts-ignore
 import { aiUseChatAdapter } from "@upstash/rag-chat/nextjs";
@@ -13,7 +13,14 @@ export async function POST(
   req: NextRequest,
   { params }: { params: { token: string } },
 ) {
-  const tokenData = decryptChatbotToken(params.token);
+  const tokenData = await prisma.chatBotUserSession.findUnique({
+    where: {
+      id: params.token,
+    },
+    cacheStrategy: {
+      ttl: 3600,
+    },
+  });
   if (!tokenData) {
     return UnauthorizedResponse();
   }
