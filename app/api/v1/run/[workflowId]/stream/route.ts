@@ -5,8 +5,8 @@ import {
   ErrorResponse,
   UnauthorizedResponse,
 } from "@/lib/utils/api";
+import { ByokService } from "@/lib/utils/byok-service";
 import { prisma } from "@/lib/utils/db";
-import { getUserKeyFor } from "@/lib/utils/encryption";
 import { redis } from "@/lib/utils/redis";
 import { reportUsage } from "@/lib/utils/stripe";
 import { EventName, logEvent } from "@/lib/utils/tinybird";
@@ -120,7 +120,8 @@ export async function POST(
       );
     }
 
-    const isEligibleForByokDiscount = !!getUserKeyFor(
+    const byokService = new ByokService();
+    const isEligibleForByokDiscount = !!byokService.get(
       modelToProvider[model],
       workflow.organization.UserKeys,
     );

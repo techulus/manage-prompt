@@ -39,7 +39,7 @@ export function ChatbotForm({ chatbot, action }: Props) {
 
   return (
     <form
-      className="space-y-12 sm:space-y-16 mt-2"
+      className="space-y-12 sm:space-y-16"
       action={async (data: FormData) => {
         const result = await action(data);
         if (result?.error) {

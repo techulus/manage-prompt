@@ -1,12 +1,20 @@
-import { decryptChatbotToken, ragChat } from "@/lib/utils/rag-chat";
-import { NextRequest, NextResponse } from "next/server";
 import { UnauthorizedResponse } from "@/lib/utils/api";
+import { prisma } from "@/lib/utils/db";
+import { ragChat } from "@/lib/utils/rag-chat";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
-  req: NextRequest,
+  _: NextRequest,
   { params }: { params: { token: string } },
 ) {
-  const tokenData = decryptChatbotToken(params.token);
+  const tokenData = await prisma.chatBotUserSession.findUnique({
+    where: {
+      id: params.token,
+    },
+    cacheStrategy: {
+      ttl: 3600,
+    },
+  });
   if (!tokenData) {
     return UnauthorizedResponse();
   }
@@ -22,10 +30,17 @@ export async function GET(
 }
 
 export async function DELETE(
-  req: NextRequest,
+  _: NextRequest,
   { params }: { params: { token: string } },
 ) {
-  const tokenData = decryptChatbotToken(params.token);
+  const tokenData = await prisma.chatBotUserSession.findUnique({
+    where: {
+      id: params.token,
+    },
+    cacheStrategy: {
+      ttl: 3600,
+    },
+  });
   if (!tokenData) {
     return UnauthorizedResponse();
   }
