@@ -41,11 +41,23 @@ export async function createChatBot(payload: FormData) {
     model,
     contextItems,
   });
-
   if (!validationResult.success) {
     return {
       error: fromZodError(validationResult.error).toString(),
     };
+  }
+
+  if (contextItems.length) {
+    for (const item of contextItems) {
+      if (
+        item.type !== "html" &&
+        (item.source as unknown as File).size > 1024 * 1024 * 5
+      ) {
+        return {
+          error: "File size should be less than 5MB",
+        };
+      }
+    }
   }
 
   const chatbot = await prisma.chatBot.create({
