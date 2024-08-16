@@ -53,6 +53,16 @@ export async function POST(req: NextRequest) {
     );
   }
 
+  const chatbot = await prisma.chatBot.findUnique({
+    where: {
+      id: chatbotId,
+      ownerId: key.ownerId,
+    },
+  });
+  if (!chatbot) {
+    return ErrorResponse("Chatbot not found", 404, ErrorCodes.ChatbotNotFound);
+  }
+
   const sessionToken = await prisma.chatBotUserSession.findUnique({
     where: {
       chatbotId_sessionId: {
