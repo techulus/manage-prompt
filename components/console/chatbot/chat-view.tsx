@@ -24,6 +24,11 @@ import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useHotkeys } from "react-hotkeys-hook";
 
+/**
+ * ChatView component used by ChatbotEmbed
+ * @param {string} token - token
+ * @returns {JSX.Element} - ChatView component
+ **/
 function ChatView({ token }: { token: string }) {
   const [loading, setLoading] = useState(true);
 

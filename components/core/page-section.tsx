@@ -14,10 +14,10 @@ export default function PageSection({
   return (
     <div
       className={cn(
-        "mx-4 flex max-w-7xl flex-col divide-y rounded-lg border bg-white dark:bg-gray-950 lg:mx-auto",
+        "mx-4 flex max-w-7xl flex-col rounded-lg border bg-white dark:bg-gray-950 lg:mx-auto",
         topInset ? "-mt-6" : "",
         bottomMargin ? "mb-6" : "",
-        className
+        className,
       )}
     >
       {children}

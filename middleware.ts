@@ -11,6 +11,7 @@ const publicAppPaths = [
   "/api/ai-tools",
   "/api/v1",
   "/api/auth",
+  "/embed/chatbot",
 ];
 
 export default auth(async (req) => {
@@ -18,12 +19,12 @@ export default auth(async (req) => {
 
   if (req.auth && pathname === "/sign-in") {
     return NextResponse.redirect(
-      new URL("/console/workflows", req.nextUrl.href)
+      new URL("/console/workflows", req.nextUrl.href),
     );
   }
 
   const isPublicAppPath = publicAppPaths.some((path) =>
-    pathname.startsWith(path)
+    pathname.startsWith(path),
   );
   if (isPublicAppPath || pathname == "/") {
     return NextResponse.next();
@@ -33,8 +34,8 @@ export default auth(async (req) => {
     return NextResponse.redirect(
       new URL(
         `/sign-in?redirectTo=${encodeURIComponent(req.nextUrl.href)}`,
-        req.url
-      )
+        req.url,
+      ),
     );
   }
 
