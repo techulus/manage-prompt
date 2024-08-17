@@ -2,7 +2,6 @@
 
 import { Spinner, SpinnerWithSpacing } from "@/components/core/loaders";
 import MarkdownView from "@/components/markdown/markdown-view";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -24,11 +23,6 @@ import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useHotkeys } from "react-hotkeys-hook";
 
-/**
- * ChatView component used by ChatbotEmbed
- * @param {string} token - token
- * @returns {JSX.Element} - ChatView component
- **/
 function ChatView({ token }: { token: string }) {
   const [loading, setLoading] = useState(true);
 
@@ -97,9 +91,6 @@ function ChatView({ token }: { token: string }) {
   return (
     <TooltipProvider>
       <div className="relative flex h-full min-h-[60vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2">
-        <Badge variant="outline" className="absolute right-3 top-3">
-          Output
-        </Badge>
         <div className="flex-1 divide-y-2">
           {messages.map((message) => (
             <div key={message.id} className="flex flex-col py-4">
@@ -125,7 +116,7 @@ function ChatView({ token }: { token: string }) {
           </Label>
           <Textarea
             id="message"
-            placeholder="Type your message here..."
+            placeholder="Ask me anything..."
             className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0"
             value={input}
             onChange={handleInputChange}
