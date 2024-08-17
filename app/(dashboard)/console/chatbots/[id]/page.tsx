@@ -94,6 +94,7 @@ async function ChatDashboard({ params }: Props) {
         <TabsList className="max-w-5xl mx-4 lg:mx-auto mb-2">
           <TabsTrigger value="review">Review</TabsTrigger>
           <TabsTrigger value="deploy">Deploy</TabsTrigger>
+          <TabsTrigger value="embed">Embed</TabsTrigger>
         </TabsList>
         <TabsContent value="review">
           <PageSection>
@@ -103,6 +104,36 @@ async function ChatDashboard({ params }: Props) {
         <TabsContent value="deploy">
           <PageSection>
             <ChatDeploy />
+          </PageSection>
+        </TabsContent>
+        <TabsContent value="embed">
+          <PageSection className="p-6 space-y-4">
+            <p className="py-1">
+              You can embed the chatbot in your website by using the following
+              iframe code and a user specific token. You can read more about
+              creating a token{" "}
+              <Link
+                target="_blank"
+                rel="noopener noreferrer"
+                href="https://manageprompt.readme.io/reference/chatbot-get-token"
+                className="text-primary underline"
+              >
+                here.
+              </Link>
+            </p>
+
+            <code className="block p-4 bg-secondary rounded-lg text-primary">
+              {`<iframe src="${getAppBaseUrl()}/embed/chatbot/{token}"></iframe>`}
+            </code>
+
+            <p className="py-1">
+              You can see the chatbot in action here using your token.
+            </p>
+
+            <iframe
+              src={getAppBaseUrl() + `/embed/chatbot/${token}`}
+              className="w-full h-96"
+            />
           </PageSection>
         </TabsContent>
       </Tabs>
