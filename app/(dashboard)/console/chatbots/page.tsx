@@ -67,7 +67,7 @@ export default async function Chatbots() {
                   </div>
                 </Link>
 
-                <div className="sm:hidden">
+                <div className="sm:hidden mt-1.5">
                   <ChevronRightIcon
                     className="h-4 w-4 text-gray-400"
                     aria-hidden="true"

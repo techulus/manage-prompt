@@ -57,11 +57,9 @@ export async function WorkflowItem({ workflow }: Props) {
           </span>
 
           <h2 className="flex flex-col text-lg font-semibold space-y-1">
-            <span className="absolute inset-0" aria-hidden="true" />
-            <span className="text-primary text-hero">{workflow.name}</span>
-            <span className="sr-only">
-              {workflow.published ? "Published" : "Draft"}
-            </span>
+            <p className="text-primary text-hero truncate max-w-xs lg:max-w-xl">
+              {workflow.name}
+            </p>
             <span className="space-x-2">
               <Badge variant="secondary">
                 {Number(usage?.tokens ?? 0).toLocaleString()} tokens
@@ -73,11 +71,12 @@ export async function WorkflowItem({ workflow }: Props) {
             <span>
               <Badge variant="outline">{workflow.model}</Badge>
             </span>
+            <span className="absolute inset-0" aria-hidden="true" />
           </h2>
         </div>
       </Link>
 
-      <div className="sm:hidden">
+      <div className="sm:hidden mt-1.5">
         <ChevronRightIcon
           className="h-4 w-4 text-gray-400"
           aria-hidden="true"
