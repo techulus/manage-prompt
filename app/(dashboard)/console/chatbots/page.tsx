@@ -11,9 +11,13 @@ import Link from "@/node_modules/next/link";
 export default async function Chatbots() {
   const { userId } = await owner();
 
-  const chatBots = await prisma.chatBot.findMany({
+  const chatbots = await prisma.chatBot.findMany({
     include: {
-      user: true,
+      _count: {
+        select: {
+          ChatBotUserSession: true,
+        },
+      },
     },
     where: {
       ownerId: userId,
@@ -29,9 +33,9 @@ export default async function Chatbots() {
       />
 
       <div className="-mt-6 max-w-7xl mx-auto">
-        {chatBots?.length ? (
+        {chatbots?.length ? (
           <div className="grid grid-cols-1 gap-4 px-4 sm:grid-cols-2 lg:px-0">
-            {chatBots.map((chatbot) => (
+            {chatbots.map((chatbot) => (
               <div
                 key={chatbot.id}
                 className={cn(
@@ -46,14 +50,17 @@ export default async function Chatbots() {
                   <div className="flex items-center space-x-3">
                     <h2 className="text-lg font-semibold">
                       <span className="absolute inset-0" aria-hidden="true" />
-                      {chatbot.name} <span className="sr-only"></span>
+                      <span className="text-primary text-hero">
+                        {chatbot.name}
+                      </span>
                       <div className="flex items-center space-x-2">
                         <Badge variant="outline">{chatbot.model}</Badge>
-                        <span className="hidden sm:block" aria-hidden="true">
+                        <span className="block" aria-hidden="true">
                           &middot;
                         </span>
-                        <span className="hidden sm:block text-sm">
-                          {chatbot.user?.name}
+                        <span className="block text-sm">
+                          {chatbot._count?.ChatBotUserSession ?? 0} user
+                          {chatbot._count?.ChatBotUserSession === 1 ? "" : "s"}
                         </span>
                       </div>
                     </h2>
@@ -72,7 +79,7 @@ export default async function Chatbots() {
         ) : null}
       </div>
 
-      {!chatBots?.length ? (
+      {!chatbots?.length ? (
         <PageSection className="p-4">
           <EmptyState
             show
