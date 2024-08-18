@@ -36,6 +36,7 @@
     "@radix-ui/react-tooltip": "^1.1.2",
     "@remixicon/react": "^4.1.1",
     "@sentry/nextjs": "^7.102.0",
+    "@uidotdev/usehooks": "^2.4.1",
     "@upstash/rag-chat": "^1.1.1",
     "@upstash/ratelimit": "^1.0.1",
     "@upstash/vector": "^1.1.5",
