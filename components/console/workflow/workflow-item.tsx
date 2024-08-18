@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { getWorkflowUsage } from "@/lib/utils/tinybird";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { Workflow } from "@prisma/client";
 import classNames from "classnames";
@@ -23,6 +24,8 @@ interface Props {
 }
 
 export async function WorkflowItem({ workflow }: Props) {
+  const usage = await getWorkflowUsage(workflow.id);
+
   return (
     <div
       key={workflow.id}
@@ -53,21 +56,23 @@ export async function WorkflowItem({ workflow }: Props) {
             />
           </span>
 
-          <h2 className="text-lg font-semibold">
+          <h2 className="flex flex-col text-lg font-semibold space-y-1">
             <span className="absolute inset-0" aria-hidden="true" />
-            {workflow.name}{" "}
+            <span className="text-primary text-hero">{workflow.name}</span>
             <span className="sr-only">
               {workflow.published ? "Published" : "Draft"}
             </span>
-            <div className="flex items-center space-x-2">
+            <span className="space-x-2">
+              <Badge variant="secondary">
+                {Number(usage?.tokens ?? 0).toLocaleString()} tokens
+              </Badge>
+              <Badge variant="secondary">
+                {Number(usage?.runs ?? 0).toLocaleString()} runs
+              </Badge>
+            </span>
+            <span>
               <Badge variant="outline">{workflow.model}</Badge>
-              <span className="hidden sm:block" aria-hidden="true">
-                &middot;
-              </span>
-              <span className="hidden sm:block text-sm">
-                {workflow.user?.name}
-              </span>
-            </div>
+            </span>
           </h2>
         </div>
       </Link>
