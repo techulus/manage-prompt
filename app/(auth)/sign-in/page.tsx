@@ -49,6 +49,7 @@ export default function SignInForm() {
               />
 
               <ActionButton
+                variant="default"
                 className="mt-2 w-full"
                 label="Sign in"
                 loadingLabel="Logging in..."
