@@ -12,6 +12,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { LightningBoltIcon } from "@radix-ui/react-icons";
+import { useDebounce } from "@uidotdev/usehooks";
 import { useChat } from "ai/react";
 import {
   CommandIcon,
@@ -37,14 +38,9 @@ function ChatView({ token }: { token: string }) {
   } = useChat({
     api: `/api/v1/chat/${token}/stream`,
     initialInput: "",
-    onFinish: () => {
-      if (window?.scrollTo)
-        window.scrollTo({
-          top: document.body.scrollHeight,
-          behavior: "smooth",
-        });
-    },
   });
+
+  const debouncedMessages = useDebounce(messages, 250);
 
   useEffect(() => {
     setLoading(true);
@@ -84,6 +80,14 @@ function ChatView({ token }: { token: string }) {
     },
   );
 
+  useEffect(() => {
+    if (debouncedMessages.length && window?.scrollTo)
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: "smooth",
+      });
+  }, [debouncedMessages]);
+
   if (loading) {
     return <SpinnerWithSpacing />;
   }
@@ -110,7 +114,7 @@ function ChatView({ token }: { token: string }) {
             </div>
           ))}
         </div>
-        <div className="relative overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring mt-6">
+        <div className="sticky bottom-4 overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring mt-6">
           <Label htmlFor="message" className="sr-only">
             Message
           </Label>
