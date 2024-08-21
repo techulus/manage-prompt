@@ -5,5 +5,5 @@ export default function ChatbotEmbed({
 }: {
   params: { token: string };
 }) {
-  return <ChatView token={token} />;
+  return <ChatView token={token} isEmbed />;
 }
