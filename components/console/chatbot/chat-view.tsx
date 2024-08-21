@@ -24,7 +24,7 @@ import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useHotkeys } from "react-hotkeys-hook";
 
-function ChatView({ token }: { token: string }) {
+function ChatView({ token, isEmbed }: { token: string; isEmbed?: boolean }) {
   const [loading, setLoading] = useState(true);
 
   const {
@@ -148,13 +148,24 @@ function ChatView({ token }: { token: string }) {
                 ) : (
                   <>
                     Send
-                    <CommandIcon className="size-3.5 ml-2" />
-                    <CornerDownLeft className="size-3.5 ml-1" />
+                    <CommandIcon className="hidden lg:block size-3.5 ml-2" />
+                    <CornerDownLeft className="hidden lg:block size-3.5 ml-1" />
                   </>
                 )}
               </Button>
             </form>
           </div>
+
+          {isEmbed ? (
+            <a
+              className="text-xs text-hero absolute bottom-2 text-primary left-[50%] transform -translate-x-1/2"
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://manageprompt.com"
+            >
+              ⚡ by ManagePrompt
+            </a>
+          ) : null}
         </div>
       </div>
     </TooltipProvider>
