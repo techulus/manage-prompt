@@ -5,7 +5,6 @@ import {
   modelHasInstruction,
   WorkflowInput,
   WorkflowInputType,
-  WorkflowInputTypeToLabel,
 } from "@/data/workflow";
 import { Workflow } from "@prisma/client";
 import { useMemo, useReducer } from "react";
@@ -140,7 +139,7 @@ export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
                         />
                       ) : null}
                     </div>
-                  )
+                  ),
                 )}
               </div>
 
@@ -208,8 +207,8 @@ export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
                         ...acc,
                         [input.name]: "value",
                       }),
-                      {}
-                    )
+                      {},
+                    ),
                   ),
                 },
               }}

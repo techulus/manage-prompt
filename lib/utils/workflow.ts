@@ -25,7 +25,7 @@ export const WorkflowSchema = z.object({
       name: z.string(),
       label: z.string().optional(),
       type: z.enum(["text", "textarea", "number", "url"]).optional(),
-    })
+    }),
   ),
 });
 
@@ -38,7 +38,7 @@ export const parseInputs = (inputs: string): WorkflowInput[] =>
       }
       return acc;
     }, [])
-    .map((input) => ({ name: slugify(input, { lower: true }) }));
+    .map((input) => ({ name: slugify(input, { lower: false }) }));
 
 export const translateInputs = async ({
   inputs,
@@ -54,7 +54,7 @@ export const translateInputs = async ({
   for (const input of inputs) {
     if (input.type == WorkflowInputType.url) {
       const pageContent = await webpageParser.getContent(
-        inputValues[input.name]
+        inputValues[input.name],
       );
       content = content.replace(`{{${input.name}}}`, pageContent);
     } else {
