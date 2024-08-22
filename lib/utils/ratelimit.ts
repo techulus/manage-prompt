@@ -15,7 +15,11 @@ export async function validateRateLimit(
     prefix: "mp_ratelimit",
   });
 
-  const { success, limit, remaining } = await rateLimiter.limit(key);
-
-  return { success, limit, remaining };
+  try {
+    const { success, limit, remaining } = await rateLimiter.limit(key);
+    return { success, limit, remaining };
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : error);
+    return { success: true, limit: 0, remaining: 0 };
+  }
 }
