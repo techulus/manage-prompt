@@ -55,7 +55,15 @@ export enum WorkflowInputType {
   "text" = "text",
   "textarea" = "textarea",
   "number" = "number",
-  // "select" = "select",
-  // "checkbox" = "checkbox",
-  // "radio" = "radio",
+  "url" = "url",
 }
+
+export const WorkflowInputTypeToLabel: Record<
+  WorkflowInputType | string,
+  string
+> = {
+  text: "Text",
+  textarea: "Text Area",
+  number: "Number",
+  url: "Webpage content",
+} as const;
