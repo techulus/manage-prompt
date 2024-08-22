@@ -11,7 +11,7 @@ import {
   reportUsage,
 } from "@/lib/utils/stripe";
 import { EventName, logEvent } from "@/lib/utils/tinybird";
-import { WorkflowSchema } from "@/lib/utils/workflow";
+import { translateInputs, WorkflowSchema } from "@/lib/utils/workflow";
 import { createId } from "@paralleldrive/cuid2";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -169,8 +169,13 @@ export async function runWorkflow(formData: FormData) {
   const { userId, ownerId } = await owner();
 
   const id = Number(formData.get("id"));
-  const model = formData.get("model") as string;
-  const content = formData.get("content") as string;
+  let inputValues: Record<string, string> = {};
+
+  try {
+    inputValues = JSON.parse(formData.get("inputs") as string);
+  } catch (e) {
+    throw "Invalid input values";
+  }
 
   try {
     if (!id) throw "ID is missing";
@@ -208,10 +213,21 @@ export async function runWorkflow(formData: FormData) {
       },
       select: {
         modelSettings: true,
+        template: true,
+        model: true,
+        inputs: true,
       },
     });
 
     if (!workflow) throw "Workflow not found";
+
+    const inputs = workflow.inputs as unknown as WorkflowInput[];
+    const model = workflow.model;
+    const content = await translateInputs({
+      inputs,
+      inputValues,
+      template: workflow.template,
+    });
 
     const response = await getCompletion(
       model,

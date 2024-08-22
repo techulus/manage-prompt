@@ -79,10 +79,10 @@ export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
         />
         <input
           type="text"
-          name="content"
-          id="content"
+          name="inputs"
+          id="inputs"
           className="hidden"
-          value={generatedTemplate}
+          value={JSON.stringify(inputValues)}
           onChange={() => null}
         />
         <input
@@ -127,10 +127,11 @@ export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
                       {[
                         WorkflowInputType.text,
                         WorkflowInputType.number,
+                        WorkflowInputType.url,
                       ].includes(type) ? (
                         <Input
                           type={type}
-                          placeholder={`Enter value for ${name}`}
+                          placeholder={`Enter ${type}`}
                           value={inputValues[name] ?? ""}
                           onChange={(e) =>
                             updateInput({ [name]: e.target.value })

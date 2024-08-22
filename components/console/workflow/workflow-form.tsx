@@ -6,6 +6,7 @@ import {
   modelHasInstruction,
   WorkflowInput,
   WorkflowInputType,
+  WorkflowInputTypeToLabel,
 } from "@/data/workflow";
 import { parseInputs } from "@/lib/utils/workflow";
 import { Workflow } from "@prisma/client";
@@ -38,7 +39,7 @@ export function WorkflowForm({ workflow, action }: Props) {
   const [template, setTemplate] = useState(workflow?.template ?? "");
   const [instruction, setInstruction] = useState(workflow?.instruction ?? "");
   const [inputs, setInputs] = useState<WorkflowInput[]>(
-    (workflow?.inputs as WorkflowInput[]) ?? [],
+    (workflow?.inputs as WorkflowInput[]) ?? []
   );
 
   const [showAdvancedModelParams, setShowAdvancedModelParams] = useState(false);
@@ -50,13 +51,13 @@ export function WorkflowForm({ workflow, action }: Props) {
 
       if (modelHasInstruction[model]) {
         setInputs(
-          parseInputs(`${updatedValue.template} ${updatedValue.instruction}`),
+          parseInputs(`${updatedValue.template} ${updatedValue.instruction}`)
         );
       } else {
         setInputs(parseInputs(updatedValue.template));
       }
     },
-    [template, instruction, model],
+    [template, instruction, model]
   );
 
   return (
@@ -270,7 +271,7 @@ export function WorkflowForm({ workflow, action }: Props) {
                                   value={type}
                                   className="capitalize"
                                 >
-                                  {type}
+                                  {WorkflowInputTypeToLabel[type]}
                                 </SelectItem>
                               ))}
                             </SelectContent>

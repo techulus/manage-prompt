@@ -14,6 +14,7 @@ import {
   cacheWorkflowResult,
   getWorkflowCachedResult,
 } from "@/lib/utils/useWorkflow";
+import { translateInputs } from "@/lib/utils/workflow";
 import { waitUntil } from "@vercel/functions";
 import { StreamingTextResponse } from "ai";
 import { NextRequest, NextResponse } from "next/server";
@@ -30,13 +31,13 @@ export async function OPTIONS() {
         "Access-Control-Allow-Methods": "POST, OPTIONS",
         "Access-Control-Allow-Headers": "*",
       },
-    },
+    }
   );
 }
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { workflowId: string } },
+  { params }: { params: { workflowId: string } }
 ) {
   const searchParams = req.nextUrl.searchParams;
   const token = searchParams.get("token");
@@ -79,7 +80,7 @@ export async function POST(
     const body = (await req.json().catch(() => {})) ?? {};
     const cachedResult = await getWorkflowCachedResult(
       params.workflowId,
-      JSON.stringify(body),
+      JSON.stringify(body)
     );
 
     if (cachedResult) {
@@ -91,7 +92,7 @@ export async function POST(
             const bytes = new TextEncoder().encode(chunk + " ");
             controller.enqueue(bytes);
             await new Promise((r) =>
-              setTimeout(r, Math.floor(Math.random() * 40) + 10),
+              setTimeout(r, Math.floor(Math.random() * 40) + 10)
             );
           }
           controller.close();
@@ -101,29 +102,18 @@ export async function POST(
       return new StreamingTextResponse(stream);
     }
 
-    let content = workflow.template;
     const model = workflow.model;
     const inputs = workflow.inputs as unknown as WorkflowInput[];
-
-    // Handle inputs
-    for (const input of inputs) {
-      if (!body[input.name] || !body[input.name].trim()) {
-        return ErrorResponse(
-          `Missing input: ${input.name}`,
-          400,
-          ErrorCodes.MissingInput,
-        );
-      }
-      content = workflow.template.replace(
-        `{{${input.name}}}`,
-        body[input.name],
-      );
-    }
+    const content = await translateInputs({
+      inputs,
+      inputValues: body,
+      template: workflow.template,
+    });
 
     const byokService = new ByokService();
     const isEligibleForByokDiscount = !!byokService.get(
       modelToProvider[model],
-      workflow.organization.UserKeys,
+      workflow.organization.UserKeys
     );
 
     const onFinish = async (evt: any) => {
@@ -134,7 +124,7 @@ export async function POST(
       let totalTokens = Math.floor(
         !isNaN(evt?.usage?.totalTokens)
           ? evt?.usage?.totalTokens
-          : (inputWordCount + outWordCount) * 0.6,
+          : (inputWordCount + outWordCount) * 0.6
       );
 
       if (isEligibleForByokDiscount) {
@@ -147,7 +137,7 @@ export async function POST(
             workflow?.organization?.id,
             workflow?.organization?.stripe
               ?.subscription as unknown as Stripe.Subscription,
-            totalTokens,
+            totalTokens
           ),
           logEvent(EventName.RunWorkflow, {
             workflow_id: workflow.id,
@@ -160,10 +150,10 @@ export async function POST(
                 params.workflowId,
                 JSON.stringify(body),
                 output,
-                workflow.cacheControlTtl,
+                workflow.cacheControlTtl
               )
             : null,
-        ]),
+        ])
       );
     };
 
@@ -172,7 +162,7 @@ export async function POST(
       content,
       JSON.parse(JSON.stringify(workflow.modelSettings)),
       workflow.organization.UserKeys,
-      onFinish,
+      onFinish
     );
 
     return response;
@@ -181,7 +171,7 @@ export async function POST(
     return ErrorResponse(
       "Failed to run workflow",
       500,
-      ErrorCodes.InternalServerError,
+      ErrorCodes.InternalServerError
     );
   }
 }

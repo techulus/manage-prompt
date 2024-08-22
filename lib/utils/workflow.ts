@@ -1,6 +1,12 @@
-import { AIModel, AIModels, WorkflowInput } from "@/data/workflow";
+import {
+  AIModel,
+  AIModels,
+  WorkflowInput,
+  WorkflowInputType,
+} from "@/data/workflow";
 import slugify from "slugify";
 import { z } from "zod";
+import { WebpageParser } from "./webpage-parser";
 
 export const MAX_GLOBAL_RATE_LIMIT_RPS = 100;
 export const MAX_RATE_LIMIT_RPS = 50;
@@ -18,8 +24,8 @@ export const WorkflowSchema = z.object({
     z.object({
       name: z.string(),
       label: z.string().optional(),
-      type: z.enum(["text", "textarea", "number"]).optional(),
-    })
+      type: z.enum(["text", "textarea", "number", "url"]).optional(),
+    }),
   ),
 });
 
@@ -32,4 +38,28 @@ export const parseInputs = (inputs: string): WorkflowInput[] =>
       }
       return acc;
     }, [])
-    .map((input) => ({ name: slugify(input, { lower: true }) }));
+    .map((input) => ({ name: slugify(input, { lower: false }) }));
+
+export const translateInputs = async ({
+  inputs,
+  inputValues,
+  template,
+}: {
+  inputs: WorkflowInput[];
+  inputValues: Record<string, string>;
+  template: string;
+}) => {
+  let content = template;
+  const webpageParser = new WebpageParser();
+  for (const input of inputs) {
+    if (input.type == WorkflowInputType.url) {
+      const pageContent = await webpageParser.getContent(
+        inputValues[input.name],
+      );
+      content = content.replace(`{{${input.name}}}`, pageContent);
+    } else {
+      content = content.replace(`{{${input.name}}}`, inputValues[input.name]);
+    }
+  }
+  return content;
+};
