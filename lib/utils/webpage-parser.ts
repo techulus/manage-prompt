@@ -1,13 +1,13 @@
 import { Capture } from "capture-node";
+import { parse } from "node-html-parser";
 import { z } from "zod";
-const cheerio = require("cheerio");
 
 const UrlValidationSchema = z.string().url();
 
 export class WebpageParser {
   #captureClient = new Capture(
     process.env.CAPTURE_KEY!,
-    process.env.CAPTURE_SECRET!
+    process.env.CAPTURE_SECRET!,
   );
 
   async getContent(url: string) {
@@ -25,14 +25,12 @@ export class WebpageParser {
         .then((res) => res.json())
         .then((res) => (res as { html: string }).html);
 
-      const $ = cheerio.load(htmlContent);
-      $("script, style").remove();
+      const root = parse(htmlContent);
+      root.querySelectorAll("script").forEach((script) => script.remove());
+      root.querySelectorAll("style").forEach((style) => style.remove());
+      const textContent = root.textContent;
 
-      return $("body")
-        .text()
-        .trim()
-        .replace(/\s+/g, " ") // Replace multiple spaces with a single space
-        .replace(/\n/g, " "); // Replace newlines with spaces
+      return textContent.trim().replace(/\s+/g, " ").replace(/\n/g, " ");
     } catch (e) {
       return "Failed to fetch content";
     }

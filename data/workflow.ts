@@ -1,8 +1,8 @@
 export const AIModelToLabel = {
   "gpt-3.5-turbo": "GPT-3.5 Turbo",
   "gpt-3.5-turbo-0125": "GPT-3.5 Turbo 0125 (Deprecated)",
-  "gpt-4-1106-preview": "GPT-4 1106 Preview (Deprecated)",
-  "gpt-4-0125-preview": "GPT-4 0125 Preview (Deprecated)",
+  "gpt-4-1106-preview": "GPT-4 1106 (Deprecated)",
+  "gpt-4-0125-preview": "GPT-4 0125 (Deprecated)",
   "gpt-4": "GPT-4",
   "gpt-4o": "GPT-4o",
   "gpt-4o-mini": "GPT-4o mini",
