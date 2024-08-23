@@ -50,9 +50,7 @@ export default async function Chatbots() {
                   <div className="flex items-center space-x-3">
                     <h2 className="text-lg font-semibold">
                       <span className="absolute inset-0" aria-hidden="true" />
-                      <span className="text-primary text-hero">
-                        {chatbot.name}
-                      </span>
+                      <span className="text-hero">{chatbot.name}</span>
                       <div className="flex items-center space-x-2">
                         <Badge variant="outline">{chatbot.model}</Badge>
                         <span className="block" aria-hidden="true">

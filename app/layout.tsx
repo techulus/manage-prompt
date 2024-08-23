@@ -1,16 +1,13 @@
-import { Analytics } from "@vercel/analytics/react";
-import { GeistSans } from "geist/font/sans";
-
 import { ThemeProvider } from "@/components/core/theme-provider";
 import { SITE_METADATA } from "@/data/marketing";
+import { Analytics } from "@vercel/analytics/react";
 import classNames from "classnames";
-import { Bricolage_Grotesque } from "next/font/google";
+import { Inter } from "next/font/google";
 
 import "./globals.css";
 
-const bricolageGrotesque = Bricolage_Grotesque({
+const mainFont = Inter({
   subsets: ["latin"],
-  variable: "--font-bricolage-grotesque",
 });
 
 export const metadata = {
@@ -18,7 +15,7 @@ export const metadata = {
   description: SITE_METADATA.DESCRIPTION,
 };
 
-export const fetchCache = "force-no-store"; // disable cache for console pages
+export const fetchCache = "force-no-store";
 
 export default async function RootLayout({
   children,
@@ -28,11 +25,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={classNames(
-        "flex min-w-full min-h-full",
-        GeistSans.className,
-        bricolageGrotesque.variable
-      )}
+      className={classNames("flex min-w-full min-h-full", mainFont.className)}
     >
       <head>
         <meta
@@ -96,7 +89,7 @@ export default async function RootLayout({
       <body
         className={classNames(
           "flex-1 min-h-full min-w-full",
-          "rounded-tl-xl rounded-tr-xl md:rounded-none"
+          "rounded-tl-xl rounded-tr-xl md:rounded-none",
         )}
       >
         <ThemeProvider>{children}</ThemeProvider>

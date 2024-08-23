@@ -1,10 +1,9 @@
-import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { AIModel, AIModelToLabel } from "@/data/workflow";
 import { getWorkflowUsage } from "@/lib/utils/tinybird";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { Workflow } from "@prisma/client";
 import classNames from "classnames";
-import Link from "next/link";
-import { Badge } from "../../ui/badge";
 
 interface Props {
   workflow: Pick<
@@ -27,18 +26,9 @@ export async function WorkflowItem({ workflow }: Props) {
   const usage = await getWorkflowUsage(workflow.id);
 
   return (
-    <div
-      key={workflow.id}
-      className={cn(
-        "relative flex justify-between space-x-3 rounded-lg border border-gray-200 px-3 py-2 shadow-sm hover:border-gray-400 dark:border-gray-800 dark:hover:border-gray-700 bg-white dark:bg-gray-950",
-      )}
-    >
-      <Link
-        href={`/console/workflows/${workflow.id}`}
-        className="min-w-0 space-y-3"
-        prefetch={false}
-      >
-        <div className="flex items-center space-x-3">
+    <div className="relative flex items-center space-x-4 p-4 bg-seconday rounded-lg border border-gray-200 hover:border-gray-400 dark:border-gray-800 dark:hover:border-gray-700 bg-white dark:bg-gray-950">
+      <div className="min-w-0 flex-auto">
+        <div className="flex items-center gap-x-3 -mt-1">
           <span
             className={classNames(
               workflow.published
@@ -55,33 +45,45 @@ export async function WorkflowItem({ workflow }: Props) {
               )}
             />
           </span>
-
-          <h2 className="flex flex-col text-lg font-semibold space-y-1">
-            <p className="text-primary text-hero truncate max-w-xs lg:max-w-xl">
-              {workflow.name}
-            </p>
-            <span className="space-x-2">
-              <Badge variant="secondary">
-                {Number(usage?.tokens ?? 0).toLocaleString()} tokens
-              </Badge>
-              <Badge variant="secondary">
-                {Number(usage?.runs ?? 0).toLocaleString()} runs
-              </Badge>
-            </span>
-            <span>
-              <Badge variant="outline">{workflow.model}</Badge>
-            </span>
-            <span className="absolute inset-0" aria-hidden="true" />
+          <h2 className="min-w-0 text-sm font-semibold leading-6">
+            <a
+              href={`/console/workflows/${workflow.id}`}
+              className="flex gap-x-2"
+            >
+              <span className="truncate text-lg text-hero">
+                {workflow.name}
+              </span>
+              <span className="absolute inset-0" />
+            </a>
           </h2>
         </div>
-      </Link>
-
-      <div className="sm:hidden mt-1.5">
-        <ChevronRightIcon
-          className="h-4 w-4 text-gray-400"
-          aria-hidden="true"
-        />
+        <div className="mt-3 flex items-center gap-x-2.5 text-xs leading-5">
+          <p className="truncate">
+            {Number(usage?.tokens ?? 0).toLocaleString()} tokens
+          </p>
+          <svg
+            viewBox="0 0 2 2"
+            className="h-0.5 w-0.5 flex-none fill-gray-300"
+          >
+            <circle r={1} cx={1} cy={1} />
+          </svg>
+          <p className="whitespace-nowrap">
+            {Number(usage?.runs ?? 0).toLocaleString()} runs
+          </p>
+        </div>
       </div>
+      <Badge
+        variant={
+          AIModelToLabel[workflow.model as AIModel]
+            .toLowerCase()
+            .includes("deprecated")
+            ? "destructive"
+            : "outline"
+        }
+      >
+        {AIModelToLabel[workflow.model as AIModel]}
+      </Badge>
+      <ChevronRightIcon aria-hidden="true" className="h-5 w-5 flex-none" />
     </div>
   );
 }
