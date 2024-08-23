@@ -14,15 +14,9 @@ import {
 import { LightningBoltIcon } from "@radix-ui/react-icons";
 import { useDebounce } from "@uidotdev/usehooks";
 import { useChat } from "ai/react";
-import {
-  CommandIcon,
-  CornerDownLeft,
-  Trash2Icon,
-  UserIcon,
-} from "lucide-react";
+import { CornerDownLeft, Trash2Icon, UserIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useHotkeys } from "react-hotkeys-hook";
 
 function ChatView({ token, isEmbed }: { token: string; isEmbed?: boolean }) {
   const [loading, setLoading] = useState(true);
@@ -66,20 +60,6 @@ function ChatView({ token, isEmbed }: { token: string; isEmbed?: boolean }) {
     );
   }, [token, setMessages]);
 
-  useHotkeys(
-    "ctrl+enter,meta+enter",
-    () => {
-      handleSubmit();
-      setTimeout(() => {
-        setInput("");
-      }, 50);
-    },
-    [handleSubmit, setInput],
-    {
-      enableOnFormTags: ["textarea"],
-    },
-  );
-
   useEffect(() => {
     if (debouncedMessages.length && window?.scrollTo)
       window.scrollTo({
@@ -114,16 +94,25 @@ function ChatView({ token, isEmbed }: { token: string; isEmbed?: boolean }) {
             </div>
           ))}
         </div>
-        <div className="sticky bottom-4 overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring mt-6">
+        <div className="sticky bottom-8 overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring mt-6">
           <Label htmlFor="message" className="sr-only">
             Message
           </Label>
           <Textarea
             id="message"
-            placeholder="Ask me anything..."
+            placeholder="Ask me anything, but please use discretion—I might make mistakes."
             className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0"
             value={input}
             onChange={handleInputChange}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSubmit();
+                setTimeout(() => {
+                  setInput("");
+                }, 50);
+              }
+            }}
           />
           <div className="flex items-center p-3 pt-0">
             <Tooltip>
@@ -148,7 +137,6 @@ function ChatView({ token, isEmbed }: { token: string; isEmbed?: boolean }) {
                 ) : (
                   <>
                     Send
-                    <CommandIcon className="hidden lg:block size-3.5 ml-2" />
                     <CornerDownLeft className="hidden lg:block size-3.5 ml-1" />
                   </>
                 )}
