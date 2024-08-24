@@ -105,5 +105,6 @@ textarea {
 }
 
 .text-hero {
-  font-weight: 600;
+  font-family: --hero-font;
+  font-weight: 500;
 }
