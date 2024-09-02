@@ -18,6 +18,7 @@ import {
   cacheWorkflowResult,
   getWorkflowCachedResult,
 } from "@/lib/utils/useWorkflow";
+import { translateInputs } from "@/lib/utils/workflow";
 import { waitUntil } from "@vercel/functions";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
@@ -26,7 +27,7 @@ export const maxDuration = 120;
 
 export async function POST(
   req: Request,
-  { params }: { params: { workflowId: string } }
+  { params }: { params: { workflowId: string } },
 ) {
   try {
     const authorization = req.headers.get("authorization");
@@ -77,7 +78,7 @@ export async function POST(
       return ErrorResponse(
         "Invalid billing. Please contact support.",
         402,
-        ErrorCodes.InvalidBilling
+        ErrorCodes.InvalidBilling,
       );
     }
 
@@ -86,13 +87,13 @@ export async function POST(
       organization?.credits === 0 &&
       (await hasExceededSpendLimit(
         organization?.spendLimit,
-        organization?.stripe?.customerId
+        organization?.stripe?.customerId,
       ))
     ) {
       return ErrorResponse(
         "Spend limit exceeded. Please increase your spend limit to continue using the service.",
         402,
-        ErrorCodes.SpendLimitReached
+        ErrorCodes.SpendLimitReached,
       );
     }
 
@@ -109,7 +110,7 @@ export async function POST(
     const body = (await req.json().catch(() => {})) ?? {};
     const cachedResult = await getWorkflowCachedResult(
       params.workflowId,
-      JSON.stringify(body)
+      JSON.stringify(body),
     );
 
     if (cachedResult) {
@@ -119,25 +120,19 @@ export async function POST(
       });
     }
 
-    let content = workflow.template;
-    const model = workflow.model;
     const inputs = workflow.inputs as unknown as WorkflowInput[];
-    for (const input of inputs) {
-      if (!body[input.name] || !body[input.name].trim()) {
-        return ErrorResponse(
-          `Missing input: ${input.name}`,
-          400,
-          ErrorCodes.MissingInput
-        );
-      }
-      content = content.replace(`{{${input.name}}}`, body[input.name]);
-    }
+    const model = workflow.model;
+    const content = await translateInputs({
+      inputs,
+      inputValues: body,
+      template: workflow.template,
+    });
 
     const response = await getCompletion(
       model,
       content,
       JSON.parse(JSON.stringify(workflow.modelSettings)),
-      organization.UserKeys
+      organization.UserKeys,
     );
 
     let { result, totalTokenCount } = response;
@@ -145,14 +140,14 @@ export async function POST(
       return ErrorResponse(
         "Failed to run workflow",
         500,
-        ErrorCodes.InternalServerError
+        ErrorCodes.InternalServerError,
       );
     }
 
     const byokService = new ByokService();
     const isEligibleForByokDiscount = !!byokService.get(
       modelToProvider[model],
-      organization.UserKeys
+      organization.UserKeys,
     );
     if (isEligibleForByokDiscount) {
       totalTokenCount = Math.floor(totalTokenCount * 0.3);
@@ -163,7 +158,7 @@ export async function POST(
         reportUsage(
           organization?.id,
           organization?.stripe?.subscription as unknown as Stripe.Subscription,
-          totalTokenCount
+          totalTokenCount,
         ),
         logEvent(EventName.RunWorkflow, {
           workflow_id: workflow.id,
@@ -176,10 +171,10 @@ export async function POST(
               params.workflowId,
               JSON.stringify(body),
               result,
-              workflow.cacheControlTtl
+              workflow.cacheControlTtl,
             )
           : null,
-      ])
+      ]),
     );
 
     return NextResponse.json(
@@ -189,14 +184,14 @@ export async function POST(
           "x-ratelimit-limit": limit.toString(),
           "x-ratelimit-remaining": remaining.toString(),
         },
-      }
+      },
     );
   } catch (error) {
     console.error(error);
     return ErrorResponse(
       "Failed to run workflow",
       500,
-      ErrorCodes.InternalServerError
+      ErrorCodes.InternalServerError,
     );
   }
 }
