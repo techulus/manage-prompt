@@ -2,13 +2,8 @@ import { ThemeProvider } from "@/components/core/theme-provider";
 import { SITE_METADATA } from "@/data/marketing";
 import { Analytics } from "@vercel/analytics/react";
 import classNames from "classnames";
-import { Inter } from "next/font/google";
 
 import "./globals.css";
-
-const mainFont = Inter({
-  subsets: ["latin"],
-});
 
 export const metadata = {
   title: SITE_METADATA.TITLE,
@@ -23,10 +18,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={classNames("flex min-w-full min-h-full", mainFont.className)}
-    >
+    <html lang="en" className={classNames("flex min-w-full min-h-full")}>
       <head>
         <meta
           name="viewport"
@@ -89,7 +81,7 @@ export default async function RootLayout({
       <body
         className={classNames(
           "flex-1 min-h-full min-w-full",
-          "rounded-tl-xl rounded-tr-xl md:rounded-none",
+          "rounded-tl-xl rounded-tr-xl md:rounded-none"
         )}
       >
         <ThemeProvider>{children}</ThemeProvider>
