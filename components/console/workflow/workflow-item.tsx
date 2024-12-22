@@ -28,7 +28,7 @@ export async function WorkflowItem({ workflow }: Props) {
   return (
     <div className="relative flex items-center space-x-4 p-4 bg-seconday rounded-lg border border-gray-200 hover:border-gray-400 dark:border-gray-800 dark:hover:border-gray-700 bg-white dark:bg-gray-950">
       <div className="min-w-0 flex-auto">
-        <div className="flex items-center gap-x-3 -mt-1">
+        <div className="flex items-center gap-x-2">
           <span
             className={classNames(
               workflow.published
@@ -45,17 +45,17 @@ export async function WorkflowItem({ workflow }: Props) {
               )}
             />
           </span>
-          <h2 className="min-w-0 text-sm font-semibold leading-6">
+          <h2 className="min-w-0 font-medium">
             <a
               href={`/console/workflows/${workflow.id}`}
               className="flex gap-x-2"
             >
-              <span className="truncate text-lg">{workflow.name}</span>
+              <span className="truncate">{workflow.name}</span>
               <span className="absolute inset-0" />
             </a>
           </h2>
         </div>
-        <div className="mt-3 flex items-center gap-x-2.5 text-xs leading-5">
+        <div className="mt-1 ml-6 flex items-center gap-x-2.5">
           <p className="truncate">
             {Number(usage?.tokens ?? 0).toLocaleString()} tokens
           </p>

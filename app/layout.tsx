@@ -2,6 +2,8 @@ import { ThemeProvider } from "@/components/core/theme-provider";
 import { SITE_METADATA } from "@/data/marketing";
 import { Analytics } from "@vercel/analytics/react";
 import classNames from "classnames";
+import { GeistMono } from "geist/font/mono";
+import { GeistSans } from "geist/font/sans";
 
 import "./globals.css";
 
@@ -18,7 +20,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={classNames("flex min-w-full min-h-full")}>
+    <html
+      lang="en"
+      className={classNames(
+        "flex min-w-full min-h-full",
+        GeistSans.className,
+        GeistMono.className,
+      )}
+    >
       <head>
         <meta
           name="viewport"
@@ -81,7 +90,7 @@ export default async function RootLayout({
       <body
         className={classNames(
           "flex-1 min-h-full min-w-full",
-          "rounded-tl-xl rounded-tr-xl md:rounded-none"
+          "rounded-tl-xl rounded-tr-xl md:rounded-none",
         )}
       >
         <ThemeProvider>{children}</ThemeProvider>
