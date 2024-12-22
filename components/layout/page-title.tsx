@@ -37,13 +37,13 @@ export default function PageTitle({
             </Link>
           ) : null}
 
-          <h1 className="text-hero flex-1 text-3xl font-semibold tracking-tighter lg:text-4xl">
+          <h1 className="text-hero flex-1 text-2xl font-semibold tracking-tighter lg:text-3xl">
             {title}
           </h1>
           {subTitle ? (
             <p className="text-gray-500 dark:text-gray-400">{subTitle}</p>
           ) : null}
-          <div className="block w-full pt-2">{children}</div>
+          <div className="block w-full pt-1">{children}</div>
         </div>
       </div>
 

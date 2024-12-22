@@ -135,7 +135,7 @@ export async function POST(
       organization.UserKeys,
     );
 
-    let { result, totalTokenCount } = response;
+    let { result, rawResult, totalTokenCount } = response;
     if (!result) {
       return ErrorResponse(
         "Failed to run workflow",
@@ -160,6 +160,24 @@ export async function POST(
           organization?.stripe?.subscription as unknown as Stripe.Subscription,
           totalTokenCount,
         ),
+        prisma.workflowRun.create({
+          data: {
+            result,
+            rawRequest: JSON.parse(JSON.stringify({ model, content })),
+            rawResult: JSON.parse(JSON.stringify(rawResult)),
+            totalTokenCount,
+            user: {
+              connect: {
+                id: key.ownerId,
+              },
+            },
+            workflow: {
+              connect: {
+                id: workflow.id,
+              },
+            },
+          },
+        }),
         logEvent(EventName.RunWorkflow, {
           workflow_id: workflow.id,
           owner_id: key.ownerId,

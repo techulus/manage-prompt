@@ -92,7 +92,7 @@ export default async function Settings() {
       <PageTitle title="Settings" />
 
       <PageSection topInset>
-        <div className="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none p-6">
+        <div className="mx-auto max-w-2xl space-y-16 lg:mx-0 lg:max-w-none p-6">
           <div>
             <h2 className="text-base font-semibold leading-7 text-gray-900 dark:text-gray-200">
               Account
@@ -146,7 +146,7 @@ export default async function Settings() {
                         </p>
                       ) : null}
                       <div className="mt-2 flex items-center">
-                        <span className="font-bold">
+                        <span className="font-semibold">
                           Monthly Spend Limit (USD):
                         </span>
                         <span className="ml-2">

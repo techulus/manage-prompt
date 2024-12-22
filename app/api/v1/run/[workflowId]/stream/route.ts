@@ -31,13 +31,13 @@ export async function OPTIONS() {
         "Access-Control-Allow-Methods": "POST, OPTIONS",
         "Access-Control-Allow-Headers": "*",
       },
-    }
+    },
   );
 }
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { workflowId: string } }
+  { params }: { params: { workflowId: string } },
 ) {
   const searchParams = req.nextUrl.searchParams;
   const token = searchParams.get("token");
@@ -80,7 +80,7 @@ export async function POST(
     const body = (await req.json().catch(() => {})) ?? {};
     const cachedResult = await getWorkflowCachedResult(
       params.workflowId,
-      JSON.stringify(body)
+      JSON.stringify(body),
     );
 
     if (cachedResult) {
@@ -92,7 +92,7 @@ export async function POST(
             const bytes = new TextEncoder().encode(chunk + " ");
             controller.enqueue(bytes);
             await new Promise((r) =>
-              setTimeout(r, Math.floor(Math.random() * 40) + 10)
+              setTimeout(r, Math.floor(Math.random() * 40) + 10),
             );
           }
           controller.close();
@@ -113,7 +113,7 @@ export async function POST(
     const byokService = new ByokService();
     const isEligibleForByokDiscount = !!byokService.get(
       modelToProvider[model],
-      workflow.organization.UserKeys
+      workflow.organization.UserKeys,
     );
 
     const onFinish = async (evt: any) => {
@@ -124,7 +124,7 @@ export async function POST(
       let totalTokens = Math.floor(
         !isNaN(evt?.usage?.totalTokens)
           ? evt?.usage?.totalTokens
-          : (inputWordCount + outWordCount) * 0.6
+          : (inputWordCount + outWordCount) * 0.6,
       );
 
       if (isEligibleForByokDiscount) {
@@ -137,8 +137,26 @@ export async function POST(
             workflow?.organization?.id,
             workflow?.organization?.stripe
               ?.subscription as unknown as Stripe.Subscription,
-            totalTokens
+            totalTokens,
           ),
+          prisma.workflowRun.create({
+            data: {
+              result: output,
+              rawRequest: JSON.parse(JSON.stringify({ model, content })),
+              rawResult: JSON.parse(JSON.stringify({ result: output })),
+              totalTokenCount: totalTokens ?? 0,
+              user: {
+                connect: {
+                  id: validateToken.ownerId,
+                },
+              },
+              workflow: {
+                connect: {
+                  id: workflow.id,
+                },
+              },
+            },
+          }),
           logEvent(EventName.RunWorkflow, {
             workflow_id: workflow.id,
             owner_id: workflow.ownerId,
@@ -150,10 +168,10 @@ export async function POST(
                 params.workflowId,
                 JSON.stringify(body),
                 output,
-                workflow.cacheControlTtl
+                workflow.cacheControlTtl,
               )
             : null,
-        ])
+        ]),
       );
     };
 
@@ -162,7 +180,7 @@ export async function POST(
       content,
       JSON.parse(JSON.stringify(workflow.modelSettings)),
       workflow.organization.UserKeys,
-      onFinish
+      onFinish,
     );
 
     return response;
@@ -171,7 +189,7 @@ export async function POST(
     return ErrorResponse(
       "Failed to run workflow",
       500,
-      ErrorCodes.InternalServerError
+      ErrorCodes.InternalServerError,
     );
   }
 }
