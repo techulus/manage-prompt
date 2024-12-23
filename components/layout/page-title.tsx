@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils";
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 import { PropsWithChildren } from "react";
@@ -36,8 +37,12 @@ export default function PageTitle({
               <span className="ml-1">Back</span>
             </Link>
           ) : null}
-
-          <h1 className="text-hero flex-1 text-2xl font-semibold tracking-tighter lg:text-3xl">
+          <h1
+            className={cn(
+              "text-hero flex-1 text-2xl font-semibold tracking-tighter lg:text-3xl",
+              backUrl ? "mt-2" : "mt-0",
+            )}
+          >
             {title}
           </h1>
           {subTitle ? (

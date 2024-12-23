@@ -67,14 +67,11 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
     <div className="relative">
       <PageTitle
         title={workflow.name}
+        subTitle={AIModelToLabel[workflow.model as AIModel]}
         backUrl="/console/workflows"
         actionLabel="Edit"
         actionLink={`/console/workflows/${workflow.id}/edit`}
-      >
-        <p className="mt-1 text-primary">
-          {AIModelToLabel[workflow.model as AIModel]}
-        </p>
-      </PageTitle>
+      />
 
       {!workflow.published ? (
         <Alert variant="destructive" className="mx-auto max-w-7xl mt-4">
