@@ -4,7 +4,7 @@ import { Analytics } from "@vercel/analytics/react";
 import classNames from "classnames";
 import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
-
+import Script from "next/script";
 import "./globals.css";
 
 export const metadata = {
@@ -19,6 +19,8 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const googleTagId = "AW-11500375049";
+
   return (
     <html
       lang="en"
@@ -94,6 +96,22 @@ export default async function RootLayout({
         )}
       >
         <ThemeProvider>{children}</ThemeProvider>
+        <Script
+          strategy="afterInteractive"
+          src={`https://www.googletagmanager.com/gtag/js?id=${googleTagId}`}
+        />
+        <Script
+          id="google-ads-init"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${googleTagId}');
+          `,
+          }}
+        />
       </body>
       <Analytics />
     </html>
