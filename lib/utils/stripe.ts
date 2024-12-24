@@ -73,6 +73,7 @@ export async function getCheckoutSession(customerId: string): Promise<string> {
       },
     ],
     mode: "subscription",
+    allow_promotion_codes: true,
     success_url: `${process.env.APP_BASE_URL}/console/settings?payment_success=true`,
     cancel_url: `${process.env.APP_BASE_URL}/console/settings?payment_canceled=true`,
   });
