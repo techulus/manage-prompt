@@ -4,6 +4,9 @@ const { withSentryConfig } = require("@sentry/nextjs");
 const nextConfig = {
   reactStrictMode: false,
   transpilePackages: ["geist"],
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 module.exports = withSentryConfig(

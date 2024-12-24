@@ -52,10 +52,10 @@ export type WorkflowInput = {
 };
 
 export enum WorkflowInputType {
-  "text" = "text",
-  "textarea" = "textarea",
-  "number" = "number",
-  "url" = "url",
+  text = "text",
+  textarea = "textarea",
+  number = "number",
+  url = "url",
 }
 
 export const WorkflowInputTypeToLabel: Record<

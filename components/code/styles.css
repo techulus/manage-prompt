@@ -60,8 +60,8 @@ pre[class*="language-"] {
 }
 
 /*********************************************************
-* Tokens
-*/
+ * Tokens
+ */
 .namespace {
   opacity: 0.7;
 }
@@ -241,8 +241,8 @@ pre[class*="language-"] {
   color: #4ec9b0;
 }
 /*********************************************************
-* Language Specific
-*/
+ * Language Specific
+ */
 
 pre[class*="language-javascript"],
 code[class*="language-javascript"],
@@ -273,8 +273,8 @@ code[class*="language-html"] {
   color: #808080;
 }
 /*********************************************************
-* Line highlighting
-*/
+ * Line highlighting
+ */
 pre[class*="language-"] > code[class*="language-"] {
   position: relative;
   z-index: 1;

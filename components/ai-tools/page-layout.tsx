@@ -1,5 +1,5 @@
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
-import Image, { StaticImageData } from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
 import PageSection from "../core/page-section";
 import PageTitle from "../layout/page-title";

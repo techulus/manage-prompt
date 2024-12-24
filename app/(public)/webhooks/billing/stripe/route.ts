@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/utils/db";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
-import Stripe from "stripe";
+import type Stripe from "stripe";
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
     const event = stripe.webhooks.constructEvent(body, signature, secret);
 
     switch (event.type) {
-      case "customer.subscription.created":
+      case "customer.subscription.created": {
         const createdSubscription: Stripe.Subscription = event.data.object;
         await prisma.stripe.update({
           where: {
@@ -39,8 +39,9 @@ export async function POST(req: Request) {
           },
         });
         break;
+      }
       case "customer.subscription.updated":
-      case "customer.subscription.deleted":
+      case "customer.subscription.deleted": {
         const updatedSubscription: Stripe.Subscription = event.data.object;
         await prisma.stripe.update({
           where: {
@@ -52,6 +53,7 @@ export async function POST(req: Request) {
           },
         });
         break;
+      }
       default:
         console.log(`Unhandled event type ${event.type}`, event);
         break;
@@ -65,7 +67,7 @@ export async function POST(req: Request) {
         message: "something went wrong",
         ok: false,
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

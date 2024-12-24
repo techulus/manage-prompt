@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/utils/db";
 import { createId } from "@paralleldrive/cuid2";
-import Stripe from "stripe";
+import type Stripe from "stripe";
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
@@ -117,7 +117,7 @@ export async function reportUsage(
     throw new Error("Subscription item not found");
   }
 
-  const timestamp = parseInt(`${Date.now() / 1000}`);
+  const timestamp = Number.parseInt(`${Date.now() / 1000}`);
 
   await stripe.subscriptionItems.createUsageRecord(
     item.id,

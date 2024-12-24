@@ -62,8 +62,7 @@ export default function StreamingText({
     if (url) {
       getData();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [url, getData]);
 
   return loading ? (
     <Spinner className={className} />

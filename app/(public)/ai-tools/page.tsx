@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { buildMetadata } from "@/lib/utils/metadata";
 import { MagicWandIcon } from "@radix-ui/react-icons";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 
 const title = "Free AI Tools";
@@ -82,7 +82,7 @@ export default async function FreeAiTools() {
                 actionIdx === actions.length - 1
                   ? "rounded-bl-lg rounded-br-lg sm:rounded-bl-none"
                   : "",
-                "group relative bg-white dark:bg-slate-950 p-6 focus-within:ring-2 focus-within:ring-inset  focus-within:ring-primary"
+                "group relative bg-white dark:bg-slate-950 p-6 focus-within:ring-2 focus-within:ring-inset  focus-within:ring-primary",
               )}
             >
               <div className="mt-8">

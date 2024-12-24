@@ -6,7 +6,7 @@ export const revalidate = 0;
 
 export async function GET(_: Request) {
   let hasMore = true;
-  let cursor;
+  let cursor: string | undefined;
 
   console.log("Starting to delete blobs");
   while (hasMore) {

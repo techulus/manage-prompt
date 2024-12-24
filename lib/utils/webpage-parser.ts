@@ -5,10 +5,18 @@ import { z } from "zod";
 const UrlValidationSchema = z.string().url();
 
 export class WebpageParser {
-  #captureClient = new Capture(
-    process.env.CAPTURE_KEY!,
-    process.env.CAPTURE_SECRET!,
-  );
+  #captureClient: Capture;
+
+  constructor() {
+    if (!process.env.CAPTURE_KEY || !process.env.CAPTURE_SECRET) {
+      throw new Error("Capture API key and secret are required");
+    }
+
+    this.#captureClient = new Capture(
+      process.env.CAPTURE_KEY,
+      process.env.CAPTURE_SECRET,
+    );
+  }
 
   async getContent(url: string) {
     const result = UrlValidationSchema.safeParse(url);

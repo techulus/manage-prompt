@@ -1,7 +1,7 @@
 import { AIImageProcessingPage } from "@/components/ai-tools/page-layout";
 import { buildMetadata } from "@/lib/utils/metadata";
 import { createPrediction, createPredictionOrder } from "@/lib/utils/replicate";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import input from "./input.jpg";
 import output from "./output.png";
@@ -21,7 +21,7 @@ export default async function BlackAndWhiteToColor() {
       "9451bfbf652b21a9bccc741e5c7046540faa5586cfa3aa45abc7dbb46151a4f7",
       {
         image,
-      }
+      },
     );
     console.log("prediction created", prediction);
 

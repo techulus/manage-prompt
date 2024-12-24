@@ -18,7 +18,7 @@ export class EncryptionService {
 
   encrypt(text: string): EncryptedPayload {
     const iv = crypto.randomBytes(16);
-    let cipher = crypto.createCipheriv(
+    const cipher = crypto.createCipheriv(
       "aes-256-cbc",
       Buffer.from(this.#key),
       iv,
@@ -29,9 +29,9 @@ export class EncryptionService {
   }
 
   decrypt(payload: { iv: string; data: string }): string {
-    let iv = Buffer.from(payload.iv, "hex");
-    let encryptedText = Buffer.from(payload.data, "hex");
-    let decipher = crypto.createDecipheriv(
+    const iv = Buffer.from(payload.iv, "hex");
+    const encryptedText = Buffer.from(payload.data, "hex");
+    const decipher = crypto.createDecipheriv(
       "aes-256-cbc",
       Buffer.from(this.#key),
       iv,

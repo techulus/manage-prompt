@@ -1,7 +1,7 @@
 import {
-  AIModel,
+  type AIModel,
   AIModels,
-  WorkflowInput,
+  type WorkflowInput,
   WorkflowInputType,
 } from "@/data/workflow";
 import slugify from "slugify";
@@ -52,7 +52,7 @@ export const translateInputs = async ({
   let content = template;
   const webpageParser = new WebpageParser();
   for (const input of inputs) {
-    if (input.type == WorkflowInputType.url) {
+    if (input.type === WorkflowInputType.url) {
       const pageContent = await webpageParser.getContent(
         inputValues[input.name],
       );

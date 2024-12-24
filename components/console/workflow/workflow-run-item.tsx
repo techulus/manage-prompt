@@ -1,6 +1,6 @@
 import MarkdownView from "@/components/markdown/markdown-view";
 import { DateTime } from "@/lib/utils/datetime";
-import { WorkflowRun } from "@prisma/client";
+import type { WorkflowRun } from "@prisma/client";
 import { Button, buttonVariants } from "../../ui/button";
 import {
   Drawer,
@@ -63,7 +63,7 @@ export async function WorkflowRunItem({ workflowRun }: Props) {
           View Raw
         </DrawerTrigger>
         <DrawerContent>
-          <DrawerHeader></DrawerHeader>
+          <DrawerHeader />
 
           <Tabs defaultValue="response">
             <TabsList className="ml-4">

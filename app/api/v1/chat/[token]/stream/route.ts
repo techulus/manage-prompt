@@ -6,8 +6,8 @@ import { reportUsage } from "@/lib/utils/stripe";
 import { aiUseChatAdapter } from "@upstash/rag-chat/nextjs";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
-import { NextRequest } from "next/server";
-import Stripe from "stripe";
+import type { NextRequest } from "next/server";
+import type Stripe from "stripe";
 
 export async function POST(
   req: NextRequest,

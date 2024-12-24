@@ -1,8 +1,8 @@
 import { Badge } from "@/components/ui/badge";
-import { AIModel, AIModelToLabel } from "@/data/workflow";
+import { type AIModel, AIModelToLabel } from "@/data/workflow";
 import { getWorkflowUsage } from "@/lib/utils/tinybird";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
-import { Workflow } from "@prisma/client";
+import type { Workflow } from "@prisma/client";
 import classNames from "classnames";
 
 interface Props {

@@ -21,7 +21,7 @@ export function FileUploader({
 
       const uploaders = acceptedFiles.map(async (file) => {
         try {
-          return fetch(`/api/ai-tools/upload`, {
+          return fetch("/api/ai-tools/upload", {
             method: "put",
             body: file,
           })
@@ -54,7 +54,7 @@ export function FileUploader({
         })
         .finally(() => setLoading(false));
     },
-    [onUploadComplete]
+    [onUploadComplete],
   );
 
   const { getRootProps, getInputProps } = useDropzone({

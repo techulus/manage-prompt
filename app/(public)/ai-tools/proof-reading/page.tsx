@@ -1,7 +1,7 @@
 import { AIStreamTextLayout } from "@/components/ai-tools/stream-page-layout";
 import { getManagePromptToken } from "@/lib/utils/manageprompt";
 import { buildMetadata } from "@/lib/utils/metadata";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 const title = "AI Proof Reading";
 const description =

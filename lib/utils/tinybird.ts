@@ -2,7 +2,10 @@ export enum EventName {
   RunWorkflow = "run_workflow",
 }
 
-export async function logEvent(eventName: string, payload: any) {
+export async function logEvent(
+  eventName: string,
+  payload: Record<string, string | number>,
+) {
   await fetch(
     `https://api.us-east.aws.tinybird.co/v0/events?name=${eventName}`,
     {

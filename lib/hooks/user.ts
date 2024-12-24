@@ -3,7 +3,7 @@
 import { prisma } from "../utils/db";
 import { owner } from "./useOwner";
 
-export type UserSetting = {};
+export type UserSetting = Record<string, any>;
 
 export const updateSettings = async (settings: UserSetting) => {
   const { userId } = await owner();

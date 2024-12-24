@@ -1,6 +1,6 @@
 "use client";
 
-import { WorkflowRunStat } from "@/lib/utils/tinybird";
+import type { WorkflowRunStat } from "@/lib/utils/tinybird";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import {
   ChartContainer,

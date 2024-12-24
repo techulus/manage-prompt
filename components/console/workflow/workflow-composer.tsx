@@ -2,11 +2,11 @@
 
 import { runWorkflow } from "@/app/(dashboard)/console/workflows/actions";
 import {
-  modelHasInstruction,
-  WorkflowInput,
+  type WorkflowInput,
   WorkflowInputType,
+  modelHasInstruction,
 } from "@/data/workflow";
-import { Workflow } from "@prisma/client";
+import type { Workflow } from "@prisma/client";
 import { useMemo, useReducer } from "react";
 import { ApiCodeSnippet } from "../../code/snippet";
 import { notifyError } from "../../core/toast";
@@ -203,10 +203,10 @@ export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
                   mimeType: "application/json",
                   text: JSON.stringify(
                     ((inputs ?? []) as WorkflowInput[]).reduce(
-                      (acc, input) => ({
-                        ...acc,
-                        [input.name]: "value",
-                      }),
+                      (acc, input) =>
+                        Object.assign(acc, {
+                          [input.name]: "value",
+                        }),
                       {},
                     ),
                   ),
