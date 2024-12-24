@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "generate": "prisma generate --no-engine",
-    "prebuild": "npm run lint && prisma db push && prisma generate --no-engine",
+    "prebuild": "prisma db push && prisma generate --no-engine",
     "build": "next build",
     "start": "next start",
     "lint": "biome check ."

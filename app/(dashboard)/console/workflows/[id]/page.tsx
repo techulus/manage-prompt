@@ -6,7 +6,7 @@ import { ActionButton, DeleteButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { buttonVariants } from "@/components/ui/button";
-import { CardHeader } from "@/components/ui/card";
+import { CardContent, CardHeader } from "@/components/ui/card";
 import {
   Pagination,
   PaginationContent,
@@ -54,6 +54,10 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
   );
   const totalPages = Math.ceil(count / LIMIT);
   const usageData = await getWorkflowRunStats(workflow.id);
+  const totalTokensConsumed = usageData.reduce(
+    (acc, run) => acc + run.tokens,
+    0,
+  );
 
   const apiSecretKey = await prisma.secretKey.findFirst({
     where: {
@@ -162,8 +166,31 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
       <PageSection>
         <CardHeader>
           <h3 className="text-lg font-semibold">Usage (Last 24 hours)</h3>
-          <WorkflowUsageCharts usageData={usageData} />
         </CardHeader>
+        <CardContent>
+          <div className="flex-row items-center space-x-2">
+            <WorkflowUsageCharts usageData={usageData} />
+
+            <div className="flex flex-col md:flex-row justify-between space-y-2">
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-gray-500">Total Tokens</span>
+                <span className="text-2xl font-semibold">
+                  {totalTokensConsumed.toLocaleString()}
+                </span>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-gray-500">Estimated Cost</span>
+                <span className="text-2xl font-semibold">
+                  $
+                  {(totalTokensConsumed * 0.00001)
+                    .toPrecision(2)
+                    .toLocaleString()}
+                </span>
+              </div>
+            </div>
+          </div>
+        </CardContent>
       </PageSection>
 
       <PageSection>
