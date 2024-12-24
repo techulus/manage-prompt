@@ -1,10 +1,10 @@
-import { ModelSettings } from "@/components/console/workflow/workflow-model-settings";
+import type { ModelSettings } from "@/components/console/workflow/workflow-model-settings";
 import { modelToProviderId } from "@/data/workflow";
 import { anthropic } from "@ai-sdk/anthropic";
 import { createAzure } from "@ai-sdk/azure";
 import { createOpenAI } from "@ai-sdk/openai";
-import { UserKey } from "@prisma/client";
-import { generateText, LanguageModel, streamText } from "ai";
+import type { UserKey } from "@prisma/client";
+import { type LanguageModel, generateText, streamText } from "ai";
 import { ByokService } from "./byok-service";
 
 export const getCompletion = async (
@@ -30,7 +30,7 @@ export const getCompletion = async (
   switch (model) {
     case "mistralai/Mixtral-8x7B-Instruct-v0.1":
     case "meta-llama/Llama-2-70b-chat-hf":
-    case "google/gemma-7b-it":
+    case "google/gemma-7b-it": {
       const groq = createOpenAI({
         baseURL: "https://api.groq.com/openai/v1",
         apiKey: process.env.GROQ_TOKEN,
@@ -40,13 +40,14 @@ export const getCompletion = async (
         ...modelParams,
       });
       break;
+    }
     case "claude-3-5-sonnet-20240620":
       completion = await generateText({
         model: anthropic(modelToProviderId[model] ?? model),
         ...modelParams,
       });
       break;
-    default:
+    default: {
       const userOpenApiKey = new ByokService().get("openai", userKeys);
       if (userOpenApiKey) {
         const openai = createOpenAI({
@@ -66,6 +67,7 @@ export const getCompletion = async (
           ...modelParams,
         });
       }
+    }
   }
 
   if (!completion.text) throw new Error("No result returned from Provider");
@@ -98,7 +100,7 @@ export const getStreamingCompletion = async (
   switch (model) {
     case "mistralai/Mixtral-8x7B-Instruct-v0.1":
     case "meta-llama/Llama-2-70b-chat-hf":
-    case "google/gemma-7b-it":
+    case "google/gemma-7b-it": {
       const groq = createOpenAI({
         baseURL: "https://api.groq.com/openai/v1",
         apiKey: process.env.GROQ_TOKEN,
@@ -109,6 +111,7 @@ export const getStreamingCompletion = async (
         onFinish,
       });
       break;
+    }
     case "claude-3-5-sonnet-20240620":
       completion = await streamText({
         model: anthropic(modelToProviderId[model] ?? model),
@@ -116,7 +119,7 @@ export const getStreamingCompletion = async (
         onFinish,
       });
       break;
-    default:
+    default: {
       const userOpenApiKey = new ByokService().get("openai", userKeys);
       if (userOpenApiKey) {
         const openai = createOpenAI({
@@ -138,6 +141,7 @@ export const getStreamingCompletion = async (
           onFinish,
         });
       }
+    }
   }
 
   return completion.toTextStreamResponse({

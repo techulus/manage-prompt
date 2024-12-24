@@ -11,7 +11,7 @@ import {
   SelectValue,
 } from "../ui/select";
 
-export function ApiCodeSnippet({ har }: { har: any }) {
+export function ApiCodeSnippet({ har }: { har: unknown }) {
   const languages = [
     {
       language: "javascript",
@@ -49,7 +49,8 @@ export function ApiCodeSnippet({ har }: { har: any }) {
         value={selectedLanguage.language}
         onValueChange={(value) =>
           setSelectedLanguage(
-            languages.find(({ language }) => language === value)!
+            languages.find(({ language }) => language === value) ??
+              languages[0],
           )
         }
       >

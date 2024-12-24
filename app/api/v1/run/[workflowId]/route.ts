@@ -1,4 +1,4 @@
-import { modelToProvider, WorkflowInput } from "@/data/workflow";
+import { type WorkflowInput, modelToProvider } from "@/data/workflow";
 import { getCompletion } from "@/lib/utils/ai";
 import {
   ErrorCodes,
@@ -21,7 +21,7 @@ import {
 import { translateInputs } from "@/lib/utils/workflow";
 import { waitUntil } from "@vercel/functions";
 import { NextResponse } from "next/server";
-import Stripe from "stripe";
+import type Stripe from "stripe";
 
 export const maxDuration = 120;
 

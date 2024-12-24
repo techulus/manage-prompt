@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { buildMetadata } from "@/lib/utils/metadata";
 import { createPrediction, createPredictionOrder } from "@/lib/utils/replicate";
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -48,7 +48,7 @@ export default async function ImageUpscale() {
         outpaint_selections: "",
         performance_selection: "Speed",
         aspect_ratios_selection: "1152×896",
-      }
+      },
     );
     console.log("prediction created", prediction);
 

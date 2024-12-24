@@ -1,4 +1,4 @@
-import { openai, RAGChat } from "@upstash/rag-chat";
+import { RAGChat, openai } from "@upstash/rag-chat";
 import { Index } from "@upstash/vector";
 
 export const ragChat = new RAGChat({

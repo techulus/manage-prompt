@@ -24,7 +24,7 @@ export const ImportWorkflowDialog = () => {
 
     const uploaders = acceptedFiles.map(async (file) => {
       try {
-        return fetch(`/api/workflows/import`, {
+        return fetch("/api/workflows/import", {
           method: "put",
           body: file,
         })

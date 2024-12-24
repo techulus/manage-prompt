@@ -1,6 +1,6 @@
 "use client";
 
-import { ChatBot } from "@prisma/client";
+import type { ChatBot } from "@prisma/client";
 import { PlusCircleIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -18,7 +18,7 @@ import {
 
 interface Props {
   chatbot?: ChatBot;
-  action: (data: FormData) => Promise<any>;
+  action: (data: FormData) => Promise<{ error?: string }>;
 }
 
 const itemTypeToFileExtension = {
@@ -119,15 +119,18 @@ export function ChatbotForm({ chatbot, action }: Props) {
               {contextItems.map((item, index) => {
                 if (item.type === "html") {
                   return (
-                    <div key={index} className="flex items-center gap-x-4 pb-6">
+                    <div
+                      key={`item-${item.source}-${index}`}
+                      className="flex items-center gap-x-4 pb-6"
+                    >
                       <Input
                         type="hidden"
-                        name={`contextItemsTypes[]`}
+                        name={"contextItemsTypes[]"}
                         defaultValue={item.type}
                       />
                       <Input
                         type="text"
-                        name={`contextItemsSources[]`}
+                        name={"contextItemsSources[]"}
                         defaultValue={item.source}
                       />
                       <Button
@@ -147,15 +150,18 @@ export function ChatbotForm({ chatbot, action }: Props) {
 
                 if (item.type === "pdf" || item.type === "csv") {
                   return (
-                    <div key={index} className="flex items-center gap-x-4 pb-6">
+                    <div
+                      key={`item-${item.source}-${index}`}
+                      className="flex items-center gap-x-4 pb-6"
+                    >
                       <Input
                         type="hidden"
-                        name={`contextItemsTypes[]`}
+                        name={"contextItemsTypes[]"}
                         defaultValue={item.type}
                       />
                       <Input
                         type="file"
-                        name={`contextItemsSources[]`}
+                        name={"contextItemsSources[]"}
                         accept={itemTypeToFileExtension[item.type]}
                       />
                       <Button

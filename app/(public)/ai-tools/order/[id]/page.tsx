@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import { ContentDeleteWarningAlert } from "@/components/ai-tools/content-deletion-warning-alert";
 import PageSection from "@/components/core/page-section";
 import PageTitle from "@/components/layout/page-title";
@@ -50,7 +49,7 @@ export default async function AIToolsResult({
             <div className="lg:col-span-4 lg:row-end-1">
               <div
                 className={cn(
-                  "aspect-h-3 aspect-w-4 overflow-hidden rounded-lg border bg-gray-100 dark:bg-card"
+                  "aspect-h-3 aspect-w-4 overflow-hidden rounded-lg border bg-gray-100 dark:bg-card",
                 )}
               >
                 <img
@@ -60,7 +59,7 @@ export default async function AIToolsResult({
                 />
               </div>
               {/* transparent overlay */}
-              <div className="absolute inset-0 pointer-events-none"></div>
+              <div className="absolute inset-0 pointer-events-none" />
             </div>
 
             <div className="mx-auto mt-14 max-w-2xl sm:mt-16 lg:col-span-3 lg:row-span-2 lg:row-end-2 lg:mt-0 lg:max-w-none">

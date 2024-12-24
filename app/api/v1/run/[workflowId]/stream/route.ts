@@ -1,4 +1,4 @@
-import { modelToProvider, WorkflowInput } from "@/data/workflow";
+import { type WorkflowInput, modelToProvider } from "@/data/workflow";
 import { getStreamingCompletion } from "@/lib/utils/ai";
 import {
   ErrorCodes,
@@ -17,8 +17,8 @@ import {
 import { translateInputs } from "@/lib/utils/workflow";
 import { waitUntil } from "@vercel/functions";
 import { StreamingTextResponse } from "ai";
-import { NextRequest, NextResponse } from "next/server";
-import Stripe from "stripe";
+import { type NextRequest, NextResponse } from "next/server";
+import type Stripe from "stripe";
 
 export const maxDuration = 120;
 
@@ -50,9 +50,8 @@ export async function POST(
     const validateToken: { ownerId: string } | null = await redis.get(token);
     if (!validateToken) {
       return UnauthorizedResponse();
-    } else {
-      await redis.del(token);
     }
+    await redis.del(token);
 
     const workflow = await prisma.workflow.findUnique({
       include: {
@@ -89,7 +88,7 @@ export async function POST(
       const stream = new ReadableStream({
         async start(controller) {
           for (const chunk of chunks) {
-            const bytes = new TextEncoder().encode(chunk + " ");
+            const bytes = new TextEncoder().encode(`${chunk} `);
             controller.enqueue(bytes);
             await new Promise((r) =>
               setTimeout(r, Math.floor(Math.random() * 40) + 10),
@@ -122,7 +121,7 @@ export async function POST(
       const inputWordCount = content.split(" ").length;
       const outWordCount = output.split(" ").length;
       let totalTokens = Math.floor(
-        !isNaN(evt?.usage?.totalTokens)
+        !Number.isNaN(evt?.usage?.totalTokens)
           ? evt?.usage?.totalTokens
           : (inputWordCount + outWordCount) * 0.6,
       );

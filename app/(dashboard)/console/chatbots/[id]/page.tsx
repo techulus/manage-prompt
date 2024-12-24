@@ -131,7 +131,8 @@ async function ChatDashboard({ params }: Props) {
             </p>
 
             <iframe
-              src={getAppBaseUrl() + `/embed/chatbot/${token}`}
+              title="Chatbot"
+              src={`${getAppBaseUrl()}/embed/chatbot/${token}`}
               className="w-full h-[600px]"
             />
           </PageSection>

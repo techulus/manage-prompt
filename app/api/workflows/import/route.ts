@@ -21,7 +21,7 @@ export async function PUT(request: Request) {
     ...JSON.parse(bodyString),
     name: `Imported ${DateTime.fromJSDate(new Date()).toNiceFormat()}`,
   };
-  delete workflow.id;
+  workflow.id = undefined;
 
   const validationResult = WorkflowSchema.safeParse(workflow);
 
@@ -41,7 +41,7 @@ export async function PUT(request: Request) {
     data: {
       user: {
         connect: {
-          id: userId!,
+          id: userId,
         },
       },
       organization: {

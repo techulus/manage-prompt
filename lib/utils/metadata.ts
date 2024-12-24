@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { getAppBaseUrl } from "./url";
 
 export function buildMetadata(title: string, description: string): Metadata {

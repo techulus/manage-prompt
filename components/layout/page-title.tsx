@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
-import { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 import { buttonVariants } from "../ui/button";
 
 interface Props {

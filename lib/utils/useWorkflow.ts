@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/utils/db";
-import { Prisma, Workflow } from "@prisma/client";
 import { createHash } from "node:crypto";
+import { prisma } from "@/lib/utils/db";
+import type { Prisma, Workflow } from "@prisma/client";
 import { owner } from "../hooks/useOwner";
 import { redisStore } from "./redis";
 
@@ -22,7 +22,7 @@ export async function getWorkflowsForOwner({
   search,
   page = 1,
 }: {
-  orgId: string;
+  orgId: string | null;
   userId: string;
   search?: string;
   page?: number;
@@ -46,7 +46,7 @@ export async function getWorkflowsForOwner({
   };
 
   if (search) {
-    dbQuery.where!["name"] = {
+    dbQuery.where!.name = {
       search,
     };
   }
@@ -67,7 +67,7 @@ export async function getWorkflowsForOwner({
   return { workflows, count };
 }
 
-export async function getWorkflowAndRuns(id: number, page: number = 1) {
+export async function getWorkflowAndRuns(id: number, page = 1) {
   const { ownerId } = await owner();
   if (!ownerId) throw new Error("Owner ID not found");
 

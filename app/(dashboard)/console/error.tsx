@@ -24,6 +24,7 @@ export default function Error({
       </h1>
       <div className="mt-10">
         <button
+          type="button"
           onClick={reset}
           className="text-sm font-semibold leading-7 text-primary"
         >

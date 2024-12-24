@@ -26,7 +26,7 @@ export default auth(async (req) => {
   const isPublicAppPath = publicAppPaths.some((path) =>
     pathname.startsWith(path),
   );
-  if (isPublicAppPath || pathname == "/") {
+  if (isPublicAppPath || pathname === "/") {
     return NextResponse.next();
   }
 

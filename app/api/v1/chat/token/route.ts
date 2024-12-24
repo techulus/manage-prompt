@@ -7,7 +7,7 @@ import { prisma } from "@/lib/utils/db";
 import { NextResponse } from "@/node_modules/next/server";
 import { z } from "@/node_modules/zod";
 import { fromZodError } from "@/node_modules/zod-validation-error";
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 
 const ChatTokenRequestSchema = z.object({
   chatbotId: z.string(),

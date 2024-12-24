@@ -1,7 +1,7 @@
 import { UnauthorizedResponse } from "@/lib/utils/api";
 import { prisma } from "@/lib/utils/db";
 import { ragChat } from "@/lib/utils/rag-chat";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   _: NextRequest,

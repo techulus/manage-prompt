@@ -21,7 +21,7 @@ import {
 } from "@/lib/utils/stripe";
 import { CheckBadgeIcon } from "@heroicons/react/20/solid";
 import { notFound } from "next/navigation";
-import Stripe from "stripe";
+import type Stripe from "stripe";
 import {
   createSecretKey,
   redirectToBilling,
@@ -272,7 +272,7 @@ export default async function Settings() {
                 <TableHead>Name</TableHead>
                 <TableHead>Key</TableHead>
                 <TableHead>Rate Limit (Req/sec)</TableHead>
-                <TableHead></TableHead>
+                <TableHead />
               </TableRow>
             </TableHeader>
             <TableBody>

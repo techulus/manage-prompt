@@ -1,15 +1,15 @@
 "use client";
 
 import {
-  AIModels,
   AIModelToLabel,
-  modelHasInstruction,
-  WorkflowInput,
+  AIModels,
+  type WorkflowInput,
   WorkflowInputType,
   WorkflowInputTypeToLabel,
+  modelHasInstruction,
 } from "@/data/workflow";
 import { parseInputs } from "@/lib/utils/workflow";
-import { Workflow } from "@prisma/client";
+import type { Workflow } from "@prisma/client";
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import { notifyError, notifySuccess } from "../../core/toast";
@@ -25,7 +25,7 @@ import {
 } from "../../ui/select";
 import { Textarea } from "../../ui/textarea";
 import {
-  ModelSettings,
+  type ModelSettings,
   WorkflowModelSettings,
 } from "./workflow-model-settings";
 
@@ -39,7 +39,7 @@ export function WorkflowForm({ workflow, action }: Props) {
   const [template, setTemplate] = useState(workflow?.template ?? "");
   const [instruction, setInstruction] = useState(workflow?.instruction ?? "");
   const [inputs, setInputs] = useState<WorkflowInput[]>(
-    (workflow?.inputs as WorkflowInput[]) ?? []
+    (workflow?.inputs as WorkflowInput[]) ?? [],
   );
 
   const [showAdvancedModelParams, setShowAdvancedModelParams] = useState(false);
@@ -51,13 +51,13 @@ export function WorkflowForm({ workflow, action }: Props) {
 
       if (modelHasInstruction[model]) {
         setInputs(
-          parseInputs(`${updatedValue.template} ${updatedValue.instruction}`)
+          parseInputs(`${updatedValue.template} ${updatedValue.instruction}`),
         );
       } else {
         setInputs(parseInputs(updatedValue.template));
       }
     },
-    [template, instruction, model]
+    [template, instruction, model],
   );
 
   return (
@@ -178,7 +178,7 @@ export function WorkflowForm({ workflow, action }: Props) {
                   />
                   <p className="mt-3 text-sm leading-6 text-primary">
                     Write the edit instruction, you can insert varibles using
-                    this syntax <span>{`{{ variable }}`}</span>.
+                    this syntax <span>{"{{ variable }}"}</span>.
                   </p>
                 </div>
               </div>
@@ -205,7 +205,7 @@ export function WorkflowForm({ workflow, action }: Props) {
                 />
                 <p className="mt-3 text-sm leading-6 text-primary">
                   Write the prompt template, you can insert varibles using this
-                  syntax <span>{`{{ variable }}`}</span>.
+                  syntax <span>{"{{ variable }}"}</span>.
                 </p>
               </div>
             </div>

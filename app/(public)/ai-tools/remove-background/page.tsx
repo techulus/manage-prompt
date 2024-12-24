@@ -1,7 +1,7 @@
 import { AIImageProcessingPage } from "@/components/ai-tools/page-layout";
 import { buildMetadata } from "@/lib/utils/metadata";
 import { createPrediction, createPredictionOrder } from "@/lib/utils/replicate";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import input from "./input.jpeg";
 import output from "./output.png";
@@ -21,7 +21,7 @@ export default async function ImageUpscale() {
       "fb8af171cfa1616ddcf1242c093f9c46bcada5ad4cf6f2fbe8b81b330ec5c003",
       {
         image,
-      }
+      },
     );
     console.log("prediction created", prediction);
 

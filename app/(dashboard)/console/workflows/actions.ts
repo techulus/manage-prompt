@@ -1,6 +1,6 @@
 "use server";
 
-import { modelToProvider, WorkflowInput } from "@/data/workflow";
+import { type WorkflowInput, modelToProvider } from "@/data/workflow";
 import { owner } from "@/lib/hooks/useOwner";
 import { getCompletion } from "@/lib/utils/ai";
 import { ByokService } from "@/lib/utils/byok-service";
@@ -11,11 +11,11 @@ import {
   reportUsage,
 } from "@/lib/utils/stripe";
 import { EventName, logEvent } from "@/lib/utils/tinybird";
-import { translateInputs, WorkflowSchema } from "@/lib/utils/workflow";
+import { WorkflowSchema, translateInputs } from "@/lib/utils/workflow";
 import { createId } from "@paralleldrive/cuid2";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import Stripe from "stripe";
+import type Stripe from "stripe";
 import { fromZodError } from "zod-validation-error";
 
 export async function createWorkflow(formData: FormData) {
@@ -132,7 +132,7 @@ export async function updateWorkflow(formData: FormData) {
     },
   });
 
-  revalidatePath(`/console/workflows`);
+  revalidatePath("/console/workflows");
   revalidatePath(`/console/workflows/${id}/edit`);
   redirect(`/console/workflows/${id}`);
 }

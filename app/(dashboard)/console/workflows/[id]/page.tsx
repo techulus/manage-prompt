@@ -6,7 +6,7 @@ import { ActionButton, DeleteButton } from "@/components/form/button";
 import PageTitle from "@/components/layout/page-title";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { buttonVariants } from "@/components/ui/button";
-import { CardHeader } from "@/components/ui/card";
+import { CardContent, CardHeader } from "@/components/ui/card";
 import {
   Pagination,
   PaginationContent,
@@ -15,12 +15,12 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { AIModel, AIModelToLabel } from "@/data/workflow";
+import { type AIModel, AIModelToLabel } from "@/data/workflow";
 import { owner } from "@/lib/hooks/useOwner";
 import { cn } from "@/lib/utils";
 import { prisma } from "@/lib/utils/db";
 import { getWorkflowRunStats } from "@/lib/utils/tinybird";
-import { getWorkflowAndRuns, LIMIT } from "@/lib/utils/useWorkflow";
+import { LIMIT, getWorkflowAndRuns } from "@/lib/utils/useWorkflow";
 import { PauseCircleIcon, PlayCircleIcon } from "@heroicons/react/20/solid";
 import { DownloadIcon } from "@radix-ui/react-icons";
 import { Terminal } from "lucide-react";
@@ -45,13 +45,19 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
     redirect("/sign-in");
   }
 
-  const currentPage = searchParams.page ? parseInt(searchParams.page) : 1;
+  const currentPage = searchParams.page
+    ? Number.parseInt(searchParams.page)
+    : 1;
   const { workflow, workflowRuns, count } = await getWorkflowAndRuns(
     Number(params.id),
     currentPage,
   );
   const totalPages = Math.ceil(count / LIMIT);
   const usageData = await getWorkflowRunStats(workflow.id);
+  const totalTokensConsumed = usageData.reduce(
+    (acc, run) => acc + run.tokens,
+    0,
+  );
 
   const apiSecretKey = await prisma.secretKey.findFirst({
     where: {
@@ -160,8 +166,31 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
       <PageSection>
         <CardHeader>
           <h3 className="text-lg font-semibold">Usage (Last 24 hours)</h3>
-          <WorkflowUsageCharts usageData={usageData} />
         </CardHeader>
+        <CardContent>
+          <div className="flex-row items-center space-x-2">
+            <WorkflowUsageCharts usageData={usageData} />
+
+            <div className="flex flex-col md:flex-row justify-between space-y-2">
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-gray-500">Total Tokens</span>
+                <span className="text-2xl font-semibold">
+                  {totalTokensConsumed.toLocaleString()}
+                </span>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-gray-500">Estimated Cost</span>
+                <span className="text-2xl font-semibold">
+                  $
+                  {(totalTokensConsumed * 0.00001)
+                    .toPrecision(2)
+                    .toLocaleString()}
+                </span>
+              </div>
+            </div>
+          </div>
+        </CardContent>
       </PageSection>
 
       <PageSection>
@@ -173,7 +202,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
 
       {workflowRuns.length ? (
         <PageSection>
-          <ul role="list" className="divide-y">
+          <ul className="divide-y">
             {workflowRuns.map((run) => (
               // @ts-ignore React server component
               <WorkflowRunItem key={run.id} workflowRun={run} />
@@ -195,18 +224,22 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                   />
                 </PaginationItem>
               ) : null}
-              {new Array(Math.min(totalPages, 5)).fill(0).map((_, idx) => (
-                <PaginationItem key={idx}>
-                  <PaginationLink
-                    href={`/console/workflows/${params.id}?page=${idx + 1}`}
-                    className={cn(
-                      idx + 1 === currentPage && "text-primary font-semibold",
-                    )}
-                  >
-                    {idx + 1}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
+              {Array.from({ length: Math.min(totalPages, 5) }, (_, idx) => {
+                const pageNumber = idx + 1;
+                return (
+                  <PaginationItem key={`page-${pageNumber}`}>
+                    <PaginationLink
+                      href={`/console/workflows?page=${pageNumber}`}
+                      className={cn(
+                        pageNumber === currentPage &&
+                          "text-primary font-semibold",
+                      )}
+                    >
+                      {pageNumber}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              })}
               {(currentPage - 1) * LIMIT + workflowRuns.length < count ? (
                 <PaginationItem>
                   <PaginationNext
