@@ -1,5 +1,6 @@
+import { Readability } from "@mozilla/readability";
 import { Capture } from "capture-node";
-import { parse } from "node-html-parser";
+import { JSDOM } from "jsdom";
 import { z } from "zod";
 
 const UrlValidationSchema = z.string().url();
@@ -33,12 +34,9 @@ export class WebpageParser {
         .then((res) => res.json())
         .then((res) => (res as { html: string }).html);
 
-      const root = parse(htmlContent);
-      root.querySelectorAll("script").forEach((script) => script.remove());
-      root.querySelectorAll("style").forEach((style) => style.remove());
-      const textContent = root.textContent;
-
-      return textContent.trim().replace(/\s+/g, " ").replace(/\n/g, " ");
+      const dom = new JSDOM(htmlContent);
+      const readable = new Readability(dom.window.document).parse();
+      return readable?.textContent || "";
     } catch (e) {
       return "Failed to fetch content";
     }

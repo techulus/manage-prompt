@@ -4,7 +4,6 @@ import {
   type WorkflowInput,
   WorkflowInputType,
 } from "@/data/workflow";
-import slugify from "slugify";
 import { z } from "zod";
 import { WebpageParser } from "./webpage-parser";
 
@@ -28,17 +27,6 @@ export const WorkflowSchema = z.object({
     }),
   ),
 });
-
-export const parseInputs = (inputs: string): WorkflowInput[] =>
-  Array.from(inputs.matchAll(/{{\s*(?<name>\w+)\s*}}/g))
-    .reduce((acc: string[], match) => {
-      const { name } = match.groups as { name: string };
-      if (!acc.includes(name)) {
-        acc.push(name);
-      }
-      return acc;
-    }, [])
-    .map((input) => ({ name: slugify(input, { lower: false }) }));
 
 export const translateInputs = async ({
   inputs,
