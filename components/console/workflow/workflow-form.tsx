@@ -8,10 +8,10 @@ import {
   WorkflowInputTypeToLabel,
   modelHasInstruction,
 } from "@/data/workflow";
-import { parseInputs } from "@/lib/utils/workflow";
 import type { Workflow } from "@prisma/client";
 import Link from "next/link";
 import { useCallback, useState } from "react";
+import slugify from "slugify";
 import { notifyError, notifySuccess } from "../../core/toast";
 import { SaveButton } from "../../form/button";
 import { Button, buttonVariants } from "../../ui/button";
@@ -34,12 +34,23 @@ interface Props {
   action: (data: FormData) => Promise<any>;
 }
 
+const parseInputs = (inputs: string): WorkflowInput[] =>
+  Array.from(inputs.matchAll(/{{\s*(?<name>\w+)\s*}}/g))
+    .reduce((acc: string[], match) => {
+      const { name } = match.groups as { name: string };
+      if (!acc.includes(name)) {
+        acc.push(name);
+      }
+      return acc;
+    }, [])
+    .map((input) => ({ name: slugify(input, { lower: false }) }));
+
 export function WorkflowForm({ workflow, action }: Props) {
   const [model, setModel] = useState(workflow?.model ?? AIModels[0]);
   const [template, setTemplate] = useState(workflow?.template ?? "");
   const [instruction, setInstruction] = useState(workflow?.instruction ?? "");
   const [inputs, setInputs] = useState<WorkflowInput[]>(
-    (workflow?.inputs as WorkflowInput[]) ?? [],
+    (workflow?.inputs as WorkflowInput[]) ?? []
   );
 
   const [showAdvancedModelParams, setShowAdvancedModelParams] = useState(false);
@@ -51,13 +62,13 @@ export function WorkflowForm({ workflow, action }: Props) {
 
       if (modelHasInstruction[model]) {
         setInputs(
-          parseInputs(`${updatedValue.template} ${updatedValue.instruction}`),
+          parseInputs(`${updatedValue.template} ${updatedValue.instruction}`)
         );
       } else {
         setInputs(parseInputs(updatedValue.template));
       }
     },
-    [template, instruction, model],
+    [template, instruction, model]
   );
 
   return (
