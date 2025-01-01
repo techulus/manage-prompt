@@ -19,15 +19,13 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const googleTagId = "AW-11500375049";
-
   return (
     <html
       lang="en"
       className={classNames(
         "flex min-w-full min-h-full",
         GeistSans.className,
-        GeistMono.className,
+        GeistMono.className
       )}
     >
       <head>
@@ -92,25 +90,14 @@ export default async function RootLayout({
       <body
         className={classNames(
           "flex-1 min-h-full min-w-full",
-          "rounded-tl-xl rounded-tr-xl md:rounded-none",
+          "rounded-tl-xl rounded-tr-xl md:rounded-none"
         )}
       >
         <ThemeProvider>{children}</ThemeProvider>
         <Script
           strategy="afterInteractive"
-          src={`https://www.googletagmanager.com/gtag/js?id=${googleTagId}`}
-        />
-        <Script
-          id="google-ads-init"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${googleTagId}');
-          `,
-          }}
+          src="https://analytics.ahrefs.com/analytics.js"
+          data-key="tgAseXOCr25EjtPoO0MNSw"
         />
       </body>
       <Analytics />
