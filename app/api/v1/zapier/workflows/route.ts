@@ -42,7 +42,7 @@ export async function GET(req: Request) {
           return acc;
         }, {}),
         required: true,
-        dynamic: true,
+        altersDynamicFields: true,
       },
     ];
 
