@@ -33,19 +33,19 @@ export async function GET(req: Request) {
       },
     });
 
-    const fields = [
+    const mappedWorkflows = [
       {
         key: "id",
         label: "Workflow",
-        choices: workflows.map((workflow) => [
-          { value: workflow.shortId, label: workflow.name },
-        ]),
+        choices: workflows.reduce((acc: Record<string, string>, workflow) => {
+          acc[workflow.shortId] = workflow.name;
+          return acc;
+        }, {}),
         required: true,
-        dynamic: true,
       },
     ];
 
-    return NextResponse.json({ fields });
+    return NextResponse.json({ workflows: mappedWorkflows });
   } catch (error) {
     console.error(error);
     return ErrorResponse(
