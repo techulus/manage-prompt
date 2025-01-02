@@ -67,3 +67,13 @@ export const WorkflowInputTypeToLabel: Record<
   number: "Number",
   url: "Webpage content",
 } as const;
+
+export const WorkflowInputTypeToZapierFieldType: Record<
+  WorkflowInputType | string,
+  string
+> = {
+  text: "string",
+  textarea: "text",
+  number: "number",
+  url: "string",
+} as const;
