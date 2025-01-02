@@ -6,6 +6,11 @@ import logo from "../../public/images/logo.png";
 const navigation = {
   solutions: [
     { name: "Workflows", href: "/console/workflows" },
+    { name: "Chatbots", href: "/console/chatbots" },
+    {
+      name: "Zapier Integration",
+      href: "https://zapier.com/developer/public-invite/217847/c90f089190b5e742f49cbef29910800f/",
+    },
     { name: "Free AI Tools", href: "/ai-tools" },
   ],
   tools: [
