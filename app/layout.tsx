@@ -97,7 +97,7 @@ export default async function RootLayout({
         <Script
           strategy="afterInteractive"
           src="https://analytics.ahrefs.com/analytics.js"
-          data-key="tgAseXOCr25EjtPoO0MNSw"
+          data-key="ENZwU7AFoU9yXXczsA6Avw"
         />
       </body>
       <Analytics />
