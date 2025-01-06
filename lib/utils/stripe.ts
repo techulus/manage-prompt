@@ -73,7 +73,7 @@ export async function getCheckoutSession(customerId: string): Promise<string> {
       },
     ],
     mode: "subscription",
-    allow_promotion_codes: true,
+    // allow_promotion_codes: true,
     discounts: [
       {
         coupon: process.env.STRIPE_COUPON_ID,
