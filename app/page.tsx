@@ -225,10 +225,18 @@ export default async function Home() {
                   </p>
                   <p className="mt-6 flex items-baseline justify-center gap-x-2">
                     <span className="text-5xl font-bold tracking-tighter text-foreground">
-                      $0.01
+                      $0.005
                     </span>
                     <span className="text-md font-semibold leading-6 tracking-wide text-primary">
                       /1K tokens
+                    </span>
+                  </p>
+                  <p className="mt-2 flex items-baseline justify-center gap-x-2">
+                    <span className="text-3xl font-bold tracking-tighter text-gray-500 line-through">
+                      $0.01
+                    </span>
+                    <span className="text-md leading-6 tracking-tight text-green-500">
+                      50% off first year
                     </span>
                   </p>
                   <Link
