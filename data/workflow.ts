@@ -1,3 +1,5 @@
+export type AIProvider = "openai" | "groq" | "anthropic" | "xai";
+
 export const AIModelToLabel = {
   "gpt-3.5-turbo": "GPT-3.5 Turbo",
   "gpt-3.5-turbo-0125": "GPT-3.5 Turbo 0125 (Deprecated)",
@@ -10,6 +12,8 @@ export const AIModelToLabel = {
   "mistralai/Mixtral-8x7B-Instruct-v0.1": "Mixtral 8x7B",
   "google/gemma-7b-it": "Google Gemma 7B",
   "claude-3-5-sonnet-20240620": "Claude 3.5 Sonnet",
+  "grok-2-latest": "Grok 2",
+  "grok-beta": "Grok Beta",
 } as const;
 
 export const modelToProviderId: Record<string | AIModel, string> = {
@@ -22,10 +26,7 @@ export const modelToProviderId: Record<string | AIModel, string> = {
   "gpt-4-0125-preview": "gpt-4",
 };
 
-export const modelToProvider: Record<
-  string | AIModel,
-  "openai" | "groq" | "anthropic"
-> = {
+export const modelToProvider: Record<string | AIModel, AIProvider> = {
   "gpt-3.5-turbo": "openai",
   "gpt-3.5-turbo-0125": "openai",
   "gpt-4-1106-preview": "openai",
@@ -37,6 +38,8 @@ export const modelToProvider: Record<
   "mistralai/Mixtral-8x7B-Instruct-v0.1": "groq",
   "google/gemma-7b-it": "groq",
   "claude-3-5-sonnet-20240620": "anthropic",
+  "grok-2-latest": "xai",
+  "grok-beta": "xai",
 };
 
 export type AIModel = keyof typeof AIModelToLabel;

@@ -3,6 +3,7 @@ import { modelToProviderId } from "@/data/workflow";
 import { anthropic } from "@ai-sdk/anthropic";
 import { createAzure } from "@ai-sdk/azure";
 import { createOpenAI } from "@ai-sdk/openai";
+import { createXai } from "@ai-sdk/xai";
 import type { UserKey } from "@prisma/client";
 import { type LanguageModel, generateText, streamText } from "ai";
 import { ByokService } from "./byok-service";
@@ -47,6 +48,17 @@ export const getCompletion = async (
         ...modelParams,
       });
       break;
+    case "grok-beta":
+    case "grok-2-latest": {
+      const xai = createXai({
+        apiKey: process.env.XAI_API_KEY,
+      });
+      completion = await generateText({
+        model: xai(model) as LanguageModel,
+        ...modelParams,
+      });
+      break;
+    }
     default: {
       const userOpenApiKey = new ByokService().get("openai", userKeys);
       if (userOpenApiKey) {
@@ -119,6 +131,18 @@ export const getStreamingCompletion = async (
         onFinish,
       });
       break;
+    case "grok-beta":
+    case "grok-2-latest": {
+      const xai = createXai({
+        apiKey: process.env.XAI_API_KEY,
+      });
+      completion = await streamText({
+        model: xai(model) as LanguageModel,
+        ...modelParams,
+        onFinish,
+      });
+      break;
+    }
     default: {
       const userOpenApiKey = new ByokService().get("openai", userKeys);
       if (userOpenApiKey) {

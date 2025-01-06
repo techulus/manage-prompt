@@ -58,11 +58,12 @@ export default function StreamingText({
     onCompleted?.();
   }, [url, fallbackText, body, onCompleted]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (url) {
       getData();
     }
-  }, [url, getData]);
+  }, [url]);
 
   return loading ? (
     <Spinner className={className} />
