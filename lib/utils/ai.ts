@@ -54,7 +54,7 @@ export const getCompletion = async (
         apiKey: process.env.XAI_API_KEY,
       });
       completion = await generateText({
-        model: xai(model),
+        model: xai(model) as LanguageModel,
         ...modelParams,
       });
       break;
@@ -137,7 +137,7 @@ export const getStreamingCompletion = async (
         apiKey: process.env.XAI_API_KEY,
       });
       completion = await streamText({
-        model: xai(model),
+        model: xai(model) as LanguageModel,
         ...modelParams,
         onFinish,
       });
