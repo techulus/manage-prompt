@@ -17,7 +17,7 @@ export const revalidate = 86400;
 const pricingIncludedFeatures = [
   "Unlimited workflows",
   "Unlimited chatbots",
-  "Models by OpenAI, Meta, Google, Mixtral and Anthropic",
+  "Models by OpenAI, Meta, Google, Mixtral, Anthropic and xAI",
   "Email support",
 ];
 
@@ -50,7 +50,7 @@ async function getGitHubStars(): Promise<string> {
         headers: {
           Accept: "application/vnd.github+json",
         },
-      },
+      }
     );
 
     if (!response?.ok) {

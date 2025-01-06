@@ -10,6 +10,8 @@ export const AIModelToLabel = {
   "mistralai/Mixtral-8x7B-Instruct-v0.1": "Mixtral 8x7B",
   "google/gemma-7b-it": "Google Gemma 7B",
   "claude-3-5-sonnet-20240620": "Claude 3.5 Sonnet",
+  "grok-2-latest": "Grok 2",
+  "grok-beta": "Grok Beta",
 } as const;
 
 export const modelToProviderId: Record<string | AIModel, string> = {
@@ -24,7 +26,7 @@ export const modelToProviderId: Record<string | AIModel, string> = {
 
 export const modelToProvider: Record<
   string | AIModel,
-  "openai" | "groq" | "anthropic"
+  "openai" | "groq" | "anthropic" | "xai"
 > = {
   "gpt-3.5-turbo": "openai",
   "gpt-3.5-turbo-0125": "openai",
@@ -37,6 +39,8 @@ export const modelToProvider: Record<
   "mistralai/Mixtral-8x7B-Instruct-v0.1": "groq",
   "google/gemma-7b-it": "groq",
   "claude-3-5-sonnet-20240620": "anthropic",
+  "grok-2-latest": "xai",
+  "grok-beta": "xai",
 };
 
 export type AIModel = keyof typeof AIModelToLabel;
