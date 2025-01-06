@@ -1,3 +1,5 @@
+export type AIProvider = "openai" | "groq" | "anthropic" | "xai";
+
 export const AIModelToLabel = {
   "gpt-3.5-turbo": "GPT-3.5 Turbo",
   "gpt-3.5-turbo-0125": "GPT-3.5 Turbo 0125 (Deprecated)",
@@ -24,10 +26,7 @@ export const modelToProviderId: Record<string | AIModel, string> = {
   "gpt-4-0125-preview": "gpt-4",
 };
 
-export const modelToProvider: Record<
-  string | AIModel,
-  "openai" | "groq" | "anthropic" | "xai"
-> = {
+export const modelToProvider: Record<string | AIModel, AIProvider> = {
   "gpt-3.5-turbo": "openai",
   "gpt-3.5-turbo-0125": "openai",
   "gpt-4-1106-preview": "openai",
