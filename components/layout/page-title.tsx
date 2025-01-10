@@ -39,7 +39,7 @@ export default function PageTitle({
           ) : null}
           <h1
             className={cn(
-              "text-hero flex-1 text-2xl font-semibold tracking-tighter lg:text-3xl",
+              "text-hero flex-1 text-2xl font-semibold tracking-tight lg:text-3xl",
               backUrl ? "mt-2" : "mt-0",
             )}
           >

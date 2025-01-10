@@ -2,8 +2,7 @@ import { ThemeProvider } from "@/components/core/theme-provider";
 import { SITE_METADATA } from "@/data/marketing";
 import { Analytics } from "@vercel/analytics/react";
 import classNames from "classnames";
-import { GeistMono } from "geist/font/mono";
-import { GeistSans } from "geist/font/sans";
+import { Archivo } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
@@ -11,6 +10,10 @@ export const metadata = {
   title: SITE_METADATA.TITLE,
   description: SITE_METADATA.DESCRIPTION,
 };
+
+const archivo = Archivo({
+  subsets: ["latin"],
+});
 
 export const fetchCache = "force-no-store";
 
@@ -22,11 +25,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={classNames(
-        "flex min-w-full min-h-full",
-        GeistSans.className,
-        GeistMono.className
-      )}
+      className={classNames("flex min-w-full min-h-full", archivo.className)}
     >
       <head>
         <meta
@@ -90,7 +89,7 @@ export default async function RootLayout({
       <body
         className={classNames(
           "flex-1 min-h-full min-w-full",
-          "rounded-tl-xl rounded-tr-xl md:rounded-none"
+          "rounded-tl-xl rounded-tr-xl md:rounded-none",
         )}
       >
         <ThemeProvider>{children}</ThemeProvider>
