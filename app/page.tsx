@@ -223,7 +223,7 @@ export default async function Home() {
                   <p className="text-md font-semibold text-primary-muted">
                     Billed Monthly
                   </p>
-                  <p className="mt-6 flex items-baseline justify-center gap-x-2">
+                  <p className="mt-6 flex items-baseline justify-center gap-x-2 font-mono">
                     <span className="text-5xl font-bold tracking-tight text-foreground">
                       $0.01
                     </span>
