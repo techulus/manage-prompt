@@ -1,6 +1,4 @@
-import { Readability } from "@mozilla/readability";
 import { Capture } from "capture-node";
-import { JSDOM } from "jsdom";
 import { z } from "zod";
 
 const UrlValidationSchema = z.string().url();
@@ -25,18 +23,12 @@ export class WebpageParser {
       return "Invalid URL";
     }
 
-    const contentUrl = this.#captureClient.buildContentUrl(url, {
-      delay: 1,
-    });
-
     try {
-      const htmlContent = await fetch(contentUrl)
-        .then((res) => res.json())
-        .then((res) => (res as { html: string }).html);
+      const { textContent } = await this.#captureClient.fetchContent(url, {
+        delay: 1,
+      });
 
-      const dom = new JSDOM(htmlContent);
-      const readable = new Readability(dom.window.document).parse();
-      return readable?.textContent || "";
+      return textContent;
     } catch (e) {
       return "Failed to fetch content";
     }
