@@ -1,6 +1,6 @@
 "use client";
 
-import type { WorkflowRunStat } from "@/lib/utils/tinybird";
+import type { WorkflowRunStat } from "@/lib/utils/analytics";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 import {
   ChartContainer,
@@ -15,17 +15,10 @@ export function WorkflowUsageCharts({
 }: {
   usageData: WorkflowRunStat[];
 }) {
-  const localisedData = usageData.map((data, idx) => {
-    const date = new Date();
-    date.setHours(date.getHours() - (23 - idx));
-    const formattedHourString = date.toLocaleString("en-US", {
-      hour: "numeric",
-      hour12: true,
-    });
-
+  const localisedData = usageData.map((data) => {
     return {
       ...data,
-      hour: formattedHourString,
+      date: new Date(data.date).toLocaleDateString(),
     };
   });
 
@@ -56,7 +49,7 @@ export function WorkflowUsageCharts({
         </defs>
         <CartesianGrid vertical={false} />
         <XAxis
-          dataKey="hour"
+          dataKey="date"
           tickLine={false}
           axisLine={false}
           tickMargin={8}

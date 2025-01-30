@@ -9,7 +9,6 @@ import { ByokService } from "@/lib/utils/byok-service";
 import { prisma } from "@/lib/utils/db";
 import { redis } from "@/lib/utils/redis";
 import { reportUsage } from "@/lib/utils/stripe";
-import { EventName, logEvent } from "@/lib/utils/tinybird";
 import {
   cacheWorkflowResult,
   getWorkflowCachedResult,
@@ -155,12 +154,6 @@ export async function POST(
                 },
               },
             },
-          }),
-          logEvent(EventName.RunWorkflow, {
-            workflow_id: workflow.id,
-            owner_id: workflow.ownerId,
-            model,
-            total_tokens: totalTokens,
           }),
           workflow.cacheControlTtl
             ? cacheWorkflowResult(

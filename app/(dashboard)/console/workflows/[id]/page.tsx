@@ -18,8 +18,8 @@ import {
 import { type AIModel, AIModelToLabel } from "@/data/workflow";
 import { owner } from "@/lib/hooks/useOwner";
 import { cn } from "@/lib/utils";
+import { getWorkflowRunStats } from "@/lib/utils/analytics";
 import { prisma } from "@/lib/utils/db";
-import { getWorkflowRunStats } from "@/lib/utils/tinybird";
 import { LIMIT, getWorkflowAndRuns } from "@/lib/utils/useWorkflow";
 import { PauseCircleIcon, PlayCircleIcon } from "@heroicons/react/20/solid";
 import { DownloadIcon } from "@radix-ui/react-icons";
@@ -165,7 +165,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
 
       <PageSection>
         <CardHeader>
-          <h3 className="text-lg font-semibold">Usage (Last 24 hours)</h3>
+          <h3 className="text-lg font-semibold">Usage (Last 30 days)</h3>
         </CardHeader>
         <CardContent>
           <div className="flex-row items-center space-x-2">

@@ -13,7 +13,6 @@ import {
   isSubscriptionActive,
   reportUsage,
 } from "@/lib/utils/stripe";
-import { EventName, logEvent } from "@/lib/utils/tinybird";
 import {
   cacheWorkflowResult,
   getWorkflowCachedResult,
@@ -177,12 +176,6 @@ export async function POST(
               },
             },
           },
-        }),
-        logEvent(EventName.RunWorkflow, {
-          workflow_id: workflow.id,
-          owner_id: key.ownerId,
-          model,
-          total_tokens: totalTokenCount,
         }),
         workflow.cacheControlTtl
           ? cacheWorkflowResult(

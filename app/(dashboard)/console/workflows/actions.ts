@@ -10,7 +10,6 @@ import {
   isSubscriptionActive,
   reportUsage,
 } from "@/lib/utils/stripe";
-import { EventName, logEvent } from "@/lib/utils/tinybird";
 import { WorkflowSchema, translateInputs } from "@/lib/utils/workflow";
 import { createId } from "@paralleldrive/cuid2";
 import { revalidatePath } from "next/cache";
@@ -272,12 +271,6 @@ export async function runWorkflow(formData: FormData) {
         organization?.stripe?.subscription as unknown as Stripe.Subscription,
         totalTokenCount,
       ),
-      logEvent(EventName.RunWorkflow, {
-        workflow_id: id,
-        owner_id: ownerId,
-        model,
-        total_tokens: totalTokenCount,
-      }),
     ]);
   } catch (error) {
     console.error(error);
