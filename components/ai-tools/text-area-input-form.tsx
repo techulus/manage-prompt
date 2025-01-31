@@ -13,7 +13,7 @@ export default function TextAreaForm({ streamUrl }: { streamUrl: string }) {
 
   return ready ? (
     <div className="mt-6 text-gray-600 dark:text-gray-200">
-      <div className="p-4 border rounded-md">
+      <div className="p-4 border">
         <StreamingText
           url={streamUrl}
           body={{ content }}

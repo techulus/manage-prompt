@@ -49,8 +49,7 @@ export function ApiCodeSnippet({ har }: { har: unknown }) {
         value={selectedLanguage.language}
         onValueChange={(value) =>
           setSelectedLanguage(
-            languages.find(({ language }) => language === value) ??
-              languages[0],
+            languages.find(({ language }) => language === value) ?? languages[0]
           )
         }
       >
@@ -66,7 +65,7 @@ export function ApiCodeSnippet({ har }: { har: unknown }) {
         </SelectContent>
       </Select>
 
-      <div className="mt-2 overflow-scroll rounded-md">
+      <div className="mt-2 overflow-scroll">
         <CodeSnippet
           key={selectedLanguage.language}
           har={har}

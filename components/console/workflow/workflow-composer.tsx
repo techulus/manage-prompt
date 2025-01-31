@@ -139,7 +139,7 @@ export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
                         />
                       ) : null}
                     </div>
-                  ),
+                  )
                 )}
               </div>
 
@@ -207,15 +207,15 @@ export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
                         Object.assign(acc, {
                           [input.name]: "value",
                         }),
-                      {},
-                    ),
+                      {}
+                    )
                   ),
                 },
               }}
             />
             <div className="mt-2 text-sm">
               ID:{" "}
-              <span className="p-1 border border-secondary rounded-lg font-mono text-primary bg-secondary">
+              <span className="p-1 border border-secondary font-mono text-primary bg-secondary">
                 {workflow.shortId}
               </span>
             </div>

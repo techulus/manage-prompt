@@ -8,8 +8,8 @@ export const ContentBlock = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <Card
     className={twMerge(
-      "rounded-none border-l-0 border-r-0 xl:border xl:rounded-md xl:mt-4 xl:mx-auto max-w-7xl",
-      className,
+      "rounded-none border-l-0 border-r-0 xl:border xl:mt-4 xl:mx-auto max-w-7xl",
+      className
     )}
     ref={ref}
     {...props}

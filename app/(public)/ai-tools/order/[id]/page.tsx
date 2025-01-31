@@ -49,7 +49,7 @@ export default async function AIToolsResult({
             <div className="lg:col-span-4 lg:row-end-1">
               <div
                 className={cn(
-                  "aspect-h-3 aspect-w-4 overflow-hidden rounded-lg border bg-gray-100 dark:bg-card",
+                  "aspect-h-3 aspect-w-4 overflow-hidden border bg-gray-100 dark:bg-card"
                 )}
               >
                 <img
@@ -65,7 +65,7 @@ export default async function AIToolsResult({
             <div className="mx-auto mt-14 max-w-2xl sm:mt-16 lg:col-span-3 lg:row-span-2 lg:row-end-2 lg:mt-0 lg:max-w-none">
               <div className="lg:col-start-3 lg:row-end-1">
                 <h2 className="sr-only">Summary</h2>
-                <div className="rounded-lg shadow-sm ring-1 ring-gray-200 dark:ring-slate-800">
+                <div className="shadow-sm ring-1 ring-gray-200 dark:ring-slate-800">
                   <dl className="flex flex-wrap">
                     <div className="flex-auto pl-6 pt-6">
                       <dt className="text-sm font-semibold leading-6">

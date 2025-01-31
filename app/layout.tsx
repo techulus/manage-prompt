@@ -86,12 +86,7 @@ export default async function RootLayout({
         />
       </head>
 
-      <body
-        className={classNames(
-          "flex-1 min-h-full min-w-full",
-          "rounded-tl-xl rounded-tr-xl md:rounded-none",
-        )}
-      >
+      <body className="flex-1 min-h-full min-w-full">
         <ThemeProvider>{children}</ThemeProvider>
         <Script
           strategy="afterInteractive"
