@@ -56,7 +56,7 @@ function ChatView({ token, isEmbed }: { token: string; isEmbed?: boolean }) {
         loading: "Deleting chat history...",
         success: "Chat history deleted",
         error: "Failed to delete chat history",
-      },
+      }
     );
   }, [token, setMessages]);
 
@@ -74,7 +74,7 @@ function ChatView({ token, isEmbed }: { token: string; isEmbed?: boolean }) {
 
   return (
     <TooltipProvider>
-      <div className="relative flex h-full min-h-[60vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2">
+      <div className="relative flex h-full min-h-[60vh] flex-col bg-muted/50 p-4 lg:col-span-2">
         <div className="flex-1 divide-y-2">
           {messages.map((message) => (
             <div key={message.id} className="flex flex-col py-4">
@@ -94,7 +94,7 @@ function ChatView({ token, isEmbed }: { token: string; isEmbed?: boolean }) {
             </div>
           ))}
         </div>
-        <div className="sticky bottom-8 overflow-hidden rounded-lg border bg-background focus-within:ring-1 focus-within:ring-ring mt-6">
+        <div className="sticky bottom-8 overflow-hidden border bg-background focus-within:ring-1 focus-within:ring-ring mt-6">
           <Label htmlFor="message" className="sr-only">
             Message
           </Label>

@@ -26,7 +26,7 @@ export async function WorkflowItem({ workflow }: Props) {
   const usage = await getWorkflowUsage(workflow.id);
 
   return (
-    <div className="relative flex items-center space-x-4 p-4 bg-seconday rounded-lg border border-gray-200 hover:border-gray-400 dark:border-gray-800 dark:hover:border-gray-700 bg-white dark:bg-gray-950">
+    <div className="relative flex items-center space-x-4 p-4 bg-seconday border border-gray-200 hover:border-gray-400 dark:border-gray-800 dark:hover:border-gray-700 bg-white dark:bg-gray-950">
       <div className="min-w-0 flex-auto">
         <div className="flex items-center gap-x-2">
           <span
@@ -34,14 +34,14 @@ export async function WorkflowItem({ workflow }: Props) {
               workflow.published
                 ? "bg-green-100 dark:bg-green-900"
                 : "bg-gray-100 dark:bg-card",
-              "h-4 w-4 flex items-center justify-center rounded-full",
+              "h-4 w-4 flex items-center justify-center"
             )}
             aria-hidden="true"
           >
             <span
               className={classNames(
                 workflow.published ? "bg-green-400" : "bg-red-500",
-                "h-2 w-2 rounded-full",
+                "h-2 w-2"
               )}
             />
           </span>

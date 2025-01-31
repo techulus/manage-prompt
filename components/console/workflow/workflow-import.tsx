@@ -35,7 +35,7 @@ export const ImportWorkflowDialog = () => {
             } else {
               notifyError(
                 res?.message ||
-                  "Failed to upload file, please try again or contact support.",
+                  "Failed to upload file, please try again or contact support."
               );
             }
           });
@@ -81,7 +81,7 @@ export const ImportWorkflowDialog = () => {
             Please provide the JSON file to import the workflow.
             <div
               {...getRootProps()}
-              className="mt-8 flex justify-center rounded-lg border border-dashed border-primary px-6 py-10"
+              className="mt-8 flex justify-center border border-dashed border-primary px-6 py-10"
             >
               {loading ? (
                 <Spinner className="ml-2" message="Importing..." />
@@ -94,7 +94,7 @@ export const ImportWorkflowDialog = () => {
                   <div className="mt-4 flex text-sm leading-6 text-gray-600 dark:text-gray-400">
                     <label
                       htmlFor="file-upload"
-                      className="relative cursor-pointer rounded-md font-semibold text-primary focus-within:outline-none focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 hover:text-primary"
+                      className="relative cursor-pointer font-semibold text-primary focus-within:outline-none focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 hover:text-primary"
                     >
                       <span>Select JSON file</span>
                       <input {...getInputProps()} disabled={loading} />

@@ -52,7 +52,7 @@ async function ChatDashboard({ params }: Props) {
       <PageTitle title={chatBot.name} backUrl="/console/chatbots">
         <div className="text-sm">
           ID:{" "}
-          <span className="p-1 border border-secondary rounded-lg font-mono text-primary bg-secondary">
+          <span className="p-1 border border-secondary font-mono text-primary bg-secondary">
             {chatBot.id}
           </span>
         </div>
@@ -122,7 +122,7 @@ async function ChatDashboard({ params }: Props) {
               </Link>
             </p>
 
-            <code className="block p-4 bg-secondary rounded-lg text-primary">
+            <code className="block p-4 bg-secondary text-primary">
               {`<iframe src="${getAppBaseUrl()}/embed/chatbot/{token}"></iframe>`}
             </code>
 

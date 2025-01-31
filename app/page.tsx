@@ -50,7 +50,7 @@ async function getGitHubStars(): Promise<string> {
         headers: {
           Accept: "application/vnd.github+json",
         },
-      },
+      }
     );
 
     if (!response?.ok) {
@@ -108,7 +108,7 @@ export default async function Home() {
                 className="flex"
                 prefetch={false}
               >
-                <div className="flex h-10 w-10 items-center justify-center space-x-2 rounded-md border border-muted bg-muted">
+                <div className="flex h-10 w-10 items-center justify-center space-x-2 border border-muted bg-muted">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"
@@ -120,7 +120,7 @@ export default async function Home() {
                 </div>
                 <div className="flex items-center">
                   <div className="h-4 w-4 border-y-8 border-l-0 border-r-8 border-solid border-muted border-y-transparent" />
-                  <div className="flex h-10 items-center rounded-md border border-muted bg-muted px-4 font-medium">
+                  <div className="flex h-10 items-center border border-muted bg-muted px-4 font-medium">
                     {stars} stars on GitHub
                   </div>
                 </div>
@@ -177,7 +177,7 @@ export default async function Home() {
             <Image
               src={promoImage}
               alt="Product screenshot"
-              className="w-[48rem] max-w-none rounded-xl shadow-xl ring-1 ring-white/10 sm:w-[57rem] md:-ml-4 lg:-ml-0"
+              className="w-[48rem] max-w-none shadow-xl ring-1 ring-white/10 sm:w-[57rem] md:-ml-4 lg:-ml-0"
             />
           </div>
         </div>
@@ -193,7 +193,7 @@ export default async function Home() {
               Only pay for what you use. No long-term contracts. No hidden fees.
             </p>
           </div>
-          <div className="mx-auto mt-16 max-w-2xl rounded-3xl ring-1 sm:mt-20 lg:mx-0 lg:flex lg:max-w-none">
+          <div className="mx-auto mt-16 max-w-2xl ring-1 sm:mt-20 lg:mx-0 lg:flex lg:max-w-none">
             <div className="p-8 sm:p-10 lg:flex-auto">
               <h3 className="text-lg font-bold tracking-tight text-primary">
                 Prices are per 1,000 tokens. You can think of tokens as pieces
@@ -218,7 +218,7 @@ export default async function Home() {
               </ul>
             </div>
             <div className="-mt-2 p-2 lg:mt-0 lg:w-full lg:max-w-md lg:flex-shrink-0">
-              <div className="rounded-2xl bg-secondary py-10 text-center ring-1 ring-inset ring-gray-900/5 lg:flex lg:flex-col lg:justify-center lg:py-16">
+              <div className="bg-secondary py-10 text-center ring-1 ring-inset ring-gray-900/5 lg:flex lg:flex-col lg:justify-center lg:py-16">
                 <div className="mx-auto max-w-xs px-8">
                   <p className="text-md font-semibold text-primary-muted">
                     Billed Monthly

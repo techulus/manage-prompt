@@ -54,7 +54,7 @@ export function FileUploader({
         })
         .finally(() => setLoading(false));
     },
-    [onUploadComplete],
+    [onUploadComplete]
   );
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -70,7 +70,7 @@ export function FileUploader({
     <>
       <div
         {...getRootProps()}
-        className="mt-2 flex justify-center rounded-lg border border-dashed border-primary px-6 py-10"
+        className="mt-2 flex justify-center border border-dashed border-primary px-6 py-10"
       >
         {loading || processing ? (
           <Spinner
@@ -86,7 +86,7 @@ export function FileUploader({
             <div className="mt-4 flex text-sm leading-6 text-gray-600 dark:text-gray-400">
               <label
                 htmlFor="file-upload"
-                className="relative cursor-pointer rounded-md font-semibold text-primary focus-within:outline-none focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 hover:text-primary"
+                className="relative cursor-pointer font-semibold text-primary focus-within:outline-none focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 hover:text-primary"
               >
                 <span>Upload an image</span>
                 <input {...getInputProps()} disabled={loading} />
