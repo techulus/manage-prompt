@@ -92,7 +92,7 @@ export default async function RootLayout({
         />
         <meta
           name="theme-color"
-          content="#172554"
+          content="#020617"
           media="(prefers-color-scheme: dark)"
         />
       </head>
