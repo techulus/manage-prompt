@@ -111,7 +111,7 @@ export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
                       key={name}
                       className="grid w-full items-center gap-1.5"
                     >
-                      <Label>{label ?? name}</Label>
+                      <Label className="uppercase">{label ?? name}</Label>
 
                       {type === WorkflowInputType.textarea ? (
                         <Textarea

@@ -1,12 +1,10 @@
 "use client";
 
 import type { WorkflowRunStat } from "@/lib/utils/analytics";
-import { Bar, BarChart, XAxis } from "recharts";
+import { Bar, BarChart } from "recharts";
 import {
   type ChartConfig,
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "../../ui/chart";
@@ -36,13 +34,6 @@ export function WorkflowUsageCharts({
       className="aspect-auto h-[180px] w-full"
     >
       <BarChart data={localisedData}>
-        <XAxis
-          dataKey="date"
-          tickLine={false}
-          axisLine={false}
-          tickMargin={8}
-          minTickGap={32}
-        />
         <ChartTooltip
           cursor={false}
           content={<ChartTooltipContent indicator="dot" />}
@@ -54,7 +45,6 @@ export function WorkflowUsageCharts({
           stroke="var(--color-tokens)"
           stackId="a"
         />
-        <ChartLegend content={<ChartLegendContent />} />
       </BarChart>
     </ChartContainer>
   );
