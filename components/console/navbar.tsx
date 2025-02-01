@@ -37,6 +37,11 @@ export default function NavBar({ isPublicPage = false }: Props) {
           href: `/workflows/${params.workflowId}/runs`,
           current: path === `/workflows/${params.workflowId}/runs`,
         },
+        {
+          name: "Usage",
+          href: `/workflows/${params.workflowId}/usage`,
+          current: path === `/workflows/${params.workflowId}/usage`,
+        },
       ];
     }
 

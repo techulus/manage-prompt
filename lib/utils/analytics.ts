@@ -32,7 +32,7 @@ export async function getWorkflowUsage(id: number | string): Promise<{
 }
 
 export async function getWorkflowRunStats(
-  id: number | string,
+  id: number,
 ): Promise<WorkflowRunStat[]> {
   const result: WorkflowRunStat[] = await prisma.$queryRaw`
   WITH date_series AS (

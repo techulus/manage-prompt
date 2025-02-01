@@ -31,7 +31,7 @@ export function WorkflowUsageCharts({
   return (
     <ChartContainer
       config={chartConfig}
-      className="aspect-auto h-[180px] w-full"
+      className="aspect-auto h-[320px] w-full"
     >
       <BarChart data={localisedData}>
         <ChartTooltip

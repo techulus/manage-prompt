@@ -1,9 +1,8 @@
 import {
   WorkflowRunItem,
-  WorkflowRunWithUser,
+  type WorkflowRunWithUser,
 } from "@/components/console/workflow/workflow-run-item";
 import PageSection from "@/components/core/page-section";
-import PageTitle from "@/components/layout/page-title";
 import {
   Pagination,
   PaginationContent,
@@ -12,7 +11,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { type AIModel, AIModelToLabel } from "@/data/workflow";
 import { cn } from "@/lib/utils";
 import { LIMIT, getWorkflowAndRuns } from "@/lib/utils/useWorkflow";
 
@@ -33,25 +31,14 @@ export default async function WorkflowRunDetails(props: Props) {
   const currentPage = searchParams.page
     ? Number.parseInt(searchParams.page)
     : 1;
-  const { workflow, count, workflowRuns } = await getWorkflowAndRuns({
+  const { count, workflowRuns } = await getWorkflowAndRuns({
     id: Number(params.workflowId),
     page: currentPage,
   });
   const totalPages = Math.ceil(count / LIMIT);
 
-  if (!workflow) {
-    throw new Error("Workflow not found");
-  }
-
   return (
-    <div className="relative">
-      <PageTitle
-        title={workflow.name}
-        subTitle={AIModelToLabel[workflow.model as AIModel]}
-        backUrl="/workflows"
-        actionLabel="Edit"
-        actionLink={`/workflows/${workflow.id}/edit`}
-      />
+    <>
       <PageSection topInset>
         <ul className="divide-y">
           {workflowRuns.map((run) => (
@@ -104,6 +91,6 @@ export default async function WorkflowRunDetails(props: Props) {
           </Pagination>
         </div>
       ) : null}
-    </div>
+    </>
   );
 }
