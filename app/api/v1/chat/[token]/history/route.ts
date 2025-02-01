@@ -3,7 +3,13 @@ import { prisma } from "@/lib/utils/db";
 import { ragChat } from "@/lib/utils/rag-chat";
 import { type NextRequest, NextResponse } from "next/server";
 
-export async function GET(_: NextRequest, props: { params: Promise<{ token: string }> }) {
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+export async function GET(
+  _: NextRequest,
+  props: { params: Promise<{ token: string }> },
+) {
   const params = await props.params;
   const tokenData = await prisma.chatBotUserSession.findUnique({
     where: {
@@ -27,7 +33,10 @@ export async function GET(_: NextRequest, props: { params: Promise<{ token: stri
   return NextResponse.json(messages);
 }
 
-export async function DELETE(_: NextRequest, props: { params: Promise<{ token: string }> }) {
+export async function DELETE(
+  _: NextRequest,
+  props: { params: Promise<{ token: string }> },
+) {
   const params = await props.params;
   const tokenData = await prisma.chatBotUserSession.findUnique({
     where: {

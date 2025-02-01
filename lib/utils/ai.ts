@@ -37,14 +37,14 @@ export const getCompletion = async (
         apiKey: process.env.GROQ_TOKEN,
       });
       completion = await generateText({
-        model: groq(modelToProviderId[model] ?? model),
+        model: groq(modelToProviderId[model] ?? model) as LanguageModel,
         ...modelParams,
       });
       break;
     }
     case "claude-3-5-sonnet-20240620":
       completion = await generateText({
-        model: anthropic(modelToProviderId[model] ?? model),
+        model: anthropic(modelToProviderId[model] ?? model) as LanguageModel,
         ...modelParams,
       });
       break;
@@ -66,7 +66,7 @@ export const getCompletion = async (
           apiKey: userOpenApiKey,
         });
         completion = await generateText({
-          model: openai(modelToProviderId[model] ?? model),
+          model: openai(modelToProviderId[model] ?? model) as LanguageModel,
           ...modelParams,
         });
       } else {
@@ -117,16 +117,16 @@ export const getStreamingCompletion = async (
         baseURL: "https://api.groq.com/openai/v1",
         apiKey: process.env.GROQ_TOKEN,
       });
-      completion = await streamText({
-        model: groq(modelToProviderId[model] ?? model),
+      completion = streamText({
+        model: groq(modelToProviderId[model] ?? model) as LanguageModel,
         ...modelParams,
         onFinish,
       });
       break;
     }
     case "claude-3-5-sonnet-20240620":
-      completion = await streamText({
-        model: anthropic(modelToProviderId[model] ?? model),
+      completion = streamText({
+        model: anthropic(modelToProviderId[model] ?? model) as LanguageModel,
         ...modelParams,
         onFinish,
       });
@@ -136,7 +136,7 @@ export const getStreamingCompletion = async (
       const xai = createXai({
         apiKey: process.env.XAI_API_KEY,
       });
-      completion = await streamText({
+      completion = streamText({
         model: xai(model) as LanguageModel,
         ...modelParams,
         onFinish,
@@ -149,8 +149,8 @@ export const getStreamingCompletion = async (
         const openai = createOpenAI({
           apiKey: userOpenApiKey,
         });
-        completion = await streamText({
-          model: openai(modelToProviderId[model] ?? model),
+        completion = streamText({
+          model: openai(modelToProviderId[model] ?? model) as LanguageModel,
           ...modelParams,
           onFinish,
         });
@@ -159,7 +159,7 @@ export const getStreamingCompletion = async (
           resourceName: process.env.AZURE_RESOURCE_NAME,
           apiKey: process.env.AZURE_API_KEY,
         });
-        completion = await streamText({
+        completion = streamText({
           model: azure(modelToProviderId[model] ?? model) as LanguageModel,
           ...modelParams,
           onFinish,

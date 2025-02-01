@@ -2,10 +2,10 @@ import { useEffect, useRef, useState } from "react";
 
 export const useDetectSticky = (
   ref?: any,
-  observerSettings = { threshold: [1] },
+  observerSettings = { threshold: [1] }
 ) => {
   const [isSticky, setIsSticky] = useState(false);
-  const newRef = useRef();
+  const newRef = useRef(null);
   // biome-ignore lint: refactor later
   ref ||= newRef;
 
@@ -13,7 +13,7 @@ export const useDetectSticky = (
     const cachedRef = ref.current;
     const observer = new IntersectionObserver(
       ([e]) => setIsSticky(e.intersectionRatio < 1),
-      observerSettings,
+      observerSettings
     );
 
     observer.observe(cachedRef);

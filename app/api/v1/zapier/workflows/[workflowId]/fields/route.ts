@@ -10,7 +10,13 @@ import {
 import { prisma } from "@/lib/utils/db";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request, props: { params: Promise<{ workflowId: string }> }) {
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+export async function GET(
+  req: Request,
+  props: { params: Promise<{ workflowId: string }> },
+) {
   const params = await props.params;
   try {
     const authorization = req.headers.get("authorization");
