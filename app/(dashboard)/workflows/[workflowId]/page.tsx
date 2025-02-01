@@ -1,18 +1,14 @@
 import { WorkflowComposer } from "@/components/console/workflow/workflow-composer";
 import {
   WorkflowRunItem,
-  WorkflowRunWithUser,
+  type WorkflowRunWithUser,
 } from "@/components/console/workflow/workflow-run-item";
-import { WorkflowUsageCharts } from "@/components/console/workflow/workflow-usage-charts";
 import PageSection from "@/components/core/page-section";
 import { ActionButton, DeleteButton } from "@/components/form/button";
-import PageTitle from "@/components/layout/page-title";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { buttonVariants } from "@/components/ui/button";
-import { CardContent, CardHeader } from "@/components/ui/card";
-import { type AIModel, AIModelToLabel } from "@/data/workflow";
+import { CardHeader } from "@/components/ui/card";
 import { owner } from "@/lib/hooks/useOwner";
-import { getWorkflowRunStats } from "@/lib/utils/analytics";
 import { prisma } from "@/lib/utils/db";
 import { getWorkflowAndRuns } from "@/lib/utils/useWorkflow";
 import { PauseCircleIcon, PlayCircleIcon } from "@heroicons/react/20/solid";
@@ -27,8 +23,6 @@ interface Props {
   }>;
 }
 
-export const maxDuration = 120;
-
 export default async function WorkflowEditor(props: Props) {
   const params = await props.params;
   const { ownerId } = await owner();
@@ -37,32 +31,14 @@ export default async function WorkflowEditor(props: Props) {
     id: Number(params.workflowId),
   });
 
-  const usageData = await getWorkflowRunStats(workflow.id);
-  const totalTokensConsumed = usageData.reduce(
-    (acc, run) => acc + run.tokens,
-    0
-  );
-
   const apiSecretKey = await prisma.secretKey.findFirst({
     where: {
       ownerId,
     },
   });
 
-  if (!workflow) {
-    throw new Error("Workflow not found");
-  }
-
   return (
-    <div className="relative">
-      <PageTitle
-        title={workflow.name}
-        subTitle={AIModelToLabel[workflow.model as AIModel]}
-        backUrl="/workflows"
-        actionLabel="Edit"
-        actionLink={`/workflows/${workflow.id}/edit`}
-      />
-
+    <>
       {!workflow.published ? (
         <Alert variant="destructive" className="mx-auto max-w-7xl mt-4">
           <Terminal className="h-4 w-4" />
@@ -148,36 +124,6 @@ export default async function WorkflowEditor(props: Props) {
       </PageSection>
 
       <PageSection>
-        <CardHeader>
-          <h3 className="text-lg font-semibold">Usage (Last 30 days)</h3>
-        </CardHeader>
-        <CardContent>
-          <div className="flex-row items-center space-x-2">
-            <WorkflowUsageCharts usageData={usageData} />
-
-            <div className="flex flex-col md:flex-row justify-between space-y-2">
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-500">Total Tokens</span>
-                <span className="text-2xl font-semibold">
-                  {totalTokensConsumed.toLocaleString()}
-                </span>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-500">Estimated Cost</span>
-                <span className="text-2xl font-semibold">
-                  $
-                  {(totalTokensConsumed * 0.00001)
-                    .toPrecision(2)
-                    .toLocaleString()}
-                </span>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </PageSection>
-
-      <PageSection>
         <WorkflowComposer
           workflow={workflow}
           apiSecretKey={apiSecretKey?.key}
@@ -196,6 +142,6 @@ export default async function WorkflowEditor(props: Props) {
           </ul>
         </PageSection>
       ) : null}
-    </div>
+    </>
   );
 }
