@@ -223,16 +223,16 @@ export default async function Home() {
                   <p className="text-md font-semibold text-primary-muted">
                     Billed Monthly
                   </p>
-                  <p className="mt-6 flex items-baseline justify-center gap-x-2 font-mono">
+                  <p className="mt-6 flex items-baseline justify-center gap-x-2">
                     <span className="text-5xl font-bold tracking-tight text-foreground">
                       $0.01
                     </span>
-                    <span className="text-md font-semibold leading-6 tracking-wide text-primary">
+                    <span className="text-md leading-6 tracking-wide text-primary">
                       /1K tokens
                     </span>
                   </p>
                   <p className="mt-2 flex items-baseline justify-center gap-x-2">
-                    <span className="text-md leading-6 tracking-tight text-green-500">
+                    <span className="text-md leading-6 tracking-tight text-green-600 dark:text-green-400">
                       Get 50% off first year
                     </span>
                   </p>
