@@ -1,4 +1,4 @@
-import { updateChatBot } from "@/app/(dashboard)/console/chatbots/actions";
+import { updateChatBot } from "@/app/(dashboard)/chatbots/actions";
 import { ChatbotForm } from "@/components/console/chatbot/chatbot-form";
 import PageSection from "@/components/core/page-section";
 import PageTitle from "@/components/layout/page-title";
@@ -26,10 +26,7 @@ export default async function CreateChatbot({
 
   return (
     <>
-      <PageTitle
-        title={`Edit ${chatBot.name}`}
-        backUrl={`/console/chatbots/${id}`}
-      />
+      <PageTitle title={`Edit ${chatBot.name}`} backUrl={`/chatbots/${id}`} />
 
       <PageSection topInset>
         <CardContent>

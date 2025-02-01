@@ -9,12 +9,12 @@ import { updateWorkflow } from "../../actions";
 
 interface Props {
   params: {
-    id: string;
+    workflowId: string;
   };
 }
 
 export default async function EditWorkflow({ params }: Props) {
-  const workflow = await getWorkflowById(Number(params.id));
+  const workflow = await getWorkflowById(Number(params.workflowId));
 
   if (!workflow) {
     return <div>Workflow not found</div>;
@@ -22,10 +22,7 @@ export default async function EditWorkflow({ params }: Props) {
 
   return (
     <>
-      <PageTitle
-        title={`Update ${workflow?.name}`}
-        backUrl="/console/workflows"
-      />
+      <PageTitle title={`Update ${workflow?.name}`} backUrl="/workflows" />
 
       <PageSection topInset>
         <CardHeader>

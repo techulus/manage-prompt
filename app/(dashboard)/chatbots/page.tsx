@@ -29,7 +29,7 @@ export default async function Chatbots() {
       <PageTitle
         title="Chatbots"
         actionLabel="New"
-        actionLink="/console/chatbots/new"
+        actionLink="/chatbots/new"
       />
 
       <div className="-mt-6 max-w-7xl mx-auto">
@@ -43,7 +43,7 @@ export default async function Chatbots() {
                 )}
               >
                 <Link
-                  href={`/console/chatbots/${chatbot.id}`}
+                  href={`/chatbots/${chatbot.id}`}
                   className="min-w-0 space-y-3"
                   prefetch={false}
                 >
@@ -79,11 +79,7 @@ export default async function Chatbots() {
 
       {!chatbots?.length ? (
         <PageSection className="p-4">
-          <EmptyState
-            show
-            label="chatbot"
-            createLink={"/console/chatbots/new"}
-          />
+          <EmptyState show label="chatbot" createLink={"/chatbots/new"} />
         </PageSection>
       ) : null}
     </>

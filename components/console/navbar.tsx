@@ -7,7 +7,7 @@ import classNames from "classnames";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { useMemo } from "react";
 import logo from "../../public/images/logo.png";
 import { UserButton } from "../core/auth";
@@ -20,29 +20,44 @@ type Props = {
 export default function NavBar({ isPublicPage = false }: Props) {
   const { systemTheme: theme } = useTheme();
   const path = usePathname();
+  const params = useParams();
 
   const [isSticky, ref] = useDetectSticky();
 
-  const tabs = useMemo(
-    () => [
+  const tabs = useMemo(() => {
+    if ("workflowId" in params) {
+      return [
+        {
+          name: "Editor",
+          href: `/workflows/${params.workflowId}`,
+          current: path === `/workflows/${params.workflowId}`,
+        },
+        {
+          name: "Executions",
+          href: `/workflows/${params.workflowId}/runs`,
+          current: path === `/workflows/${params.workflowId}/runs`,
+        },
+      ];
+    }
+
+    return [
       {
         name: "Workflows",
-        href: "/console/workflows",
-        current: path.startsWith("/console/workflows"),
+        href: "/workflows",
+        current: path.startsWith("/workflows"),
       },
       {
         name: "Chatbots",
-        href: "/console/chatbots",
-        current: path.startsWith("/console/chatbots"),
+        href: "/chatbots",
+        current: path.startsWith("/chatbots"),
       },
       {
         name: "Settings",
-        href: "/console/settings",
-        current: path === "/console/settings",
+        href: "/settings",
+        current: path === "/settings",
       },
-    ],
-    [path]
-  );
+    ];
+  }, [path, params]);
 
   return (
     <>

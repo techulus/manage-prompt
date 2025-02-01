@@ -51,7 +51,7 @@ export function Header() {
         </div>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <Link
-            href="/console/workflows"
+            href="/workflows"
             className="text-sm font-semibold leading-6 text-gray-900 dark:text-gray-200"
             prefetch={false}
           >

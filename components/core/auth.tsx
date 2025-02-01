@@ -23,7 +23,7 @@ export const UserButton = () => {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <Link href="/console/settings" className="w-full">
+          <Link href="/settings" className="w-full">
             Settings
           </Link>
         </DropdownMenuItem>

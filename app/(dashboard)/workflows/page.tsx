@@ -44,13 +44,13 @@ export default async function Workflows({ searchParams }: Props) {
         title={
           searchParams.search ? `Search '${searchParams.search}'` : "Workflows"
         }
-        backUrl={searchParams.search ? "/console/workflows" : undefined}
+        backUrl={searchParams.search ? "/workflows" : undefined}
         actionLabel="New"
-        actionLink="/console/workflows/new"
+        actionLink="/workflows/new"
       />
 
       <div className="flex max-w-7xl px-4 xl:px-0 sm:mx-auto py-4 space-x-4 items-center -mt-8">
-        <form className="flex-1" action="/console/workflows">
+        <form className="flex-1" action="/workflows">
           <label htmlFor="search" className="sr-only">
             Search workflows
           </label>
@@ -75,7 +75,7 @@ export default async function Workflows({ searchParams }: Props) {
             <EmptyState
               label="workflow"
               show={workflows.length === 0}
-              createLink="/console/workflows/new"
+              createLink="/workflows/new"
             />
           </div>
         ) : null}
@@ -96,7 +96,7 @@ export default async function Workflows({ searchParams }: Props) {
                 {currentPage > 1 ? (
                   <PaginationItem>
                     <PaginationPrevious
-                      href={`/console/workflows?page=${currentPage - 1}`}
+                      href={`/workflows?page=${currentPage - 1}`}
                     />
                   </PaginationItem>
                 ) : null}
@@ -105,10 +105,10 @@ export default async function Workflows({ searchParams }: Props) {
                   return (
                     <PaginationItem key={`page-${pageNumber}`}>
                       <PaginationLink
-                        href={`/console/workflows?page=${pageNumber}`}
+                        href={`/workflows?page=${pageNumber}`}
                         className={cn(
                           pageNumber === currentPage &&
-                            "text-primary font-semibold",
+                            "text-primary font-semibold"
                         )}
                       >
                         {pageNumber}
@@ -119,7 +119,7 @@ export default async function Workflows({ searchParams }: Props) {
                 {(currentPage - 1) * LIMIT + workflows.length < count ? (
                   <PaginationItem>
                     <PaginationNext
-                      href={`/console/workflows?page=${currentPage + 1}`}
+                      href={`/workflows?page=${currentPage + 1}`}
                     />
                   </PaginationItem>
                 ) : null}

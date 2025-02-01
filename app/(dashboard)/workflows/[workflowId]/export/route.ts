@@ -10,11 +10,11 @@ export async function GET(
     params,
   }: {
     params: {
-      id: string;
+      workflowId: string;
     };
   },
 ) {
-  const id = params.id;
+  const id = params.workflowId;
   const workflow = await prisma.workflow.findUnique({
     where: {
       id: +id,

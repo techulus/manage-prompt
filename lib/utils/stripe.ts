@@ -58,7 +58,7 @@ export async function getCheckoutSession(customerId: string): Promise<string> {
   ) {
     const { url } = await stripe.billingPortal.sessions.create({
       customer: customerId,
-      return_url: `${process.env.APP_BASE_URL}/console/settings`,
+      return_url: `${process.env.APP_BASE_URL}/settings`,
     });
 
     return url;
@@ -79,8 +79,8 @@ export async function getCheckoutSession(customerId: string): Promise<string> {
         coupon: process.env.STRIPE_COUPON_ID,
       },
     ],
-    success_url: `${process.env.APP_BASE_URL}/console/settings?payment_success=true`,
-    cancel_url: `${process.env.APP_BASE_URL}/console/settings?payment_canceled=true`,
+    success_url: `${process.env.APP_BASE_URL}/settings?payment_success=true`,
+    cancel_url: `${process.env.APP_BASE_URL}/settings?payment_canceled=true`,
   });
 
   return url;
