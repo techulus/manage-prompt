@@ -1,4 +1,8 @@
 import { WorkflowComposer } from "@/components/console/workflow/workflow-composer";
+import {
+  WorkflowRunItem,
+  WorkflowRunWithUser,
+} from "@/components/console/workflow/workflow-run-item";
 import { WorkflowUsageCharts } from "@/components/console/workflow/workflow-usage-charts";
 import PageSection from "@/components/core/page-section";
 import { ActionButton, DeleteButton } from "@/components/form/button";
@@ -25,13 +29,12 @@ interface Props {
 
 export const maxDuration = 120;
 
-export default async function WorkflowDetails(props: Props) {
+export default async function WorkflowEditor(props: Props) {
   const params = await props.params;
   const { ownerId } = await owner();
 
-  const { workflow } = await getWorkflowAndRuns({
+  const { workflow, workflowRuns } = await getWorkflowAndRuns({
     id: Number(params.workflowId),
-    skipWorkflowRun: false,
   });
 
   const usageData = await getWorkflowRunStats(workflow.id);
@@ -180,6 +183,19 @@ export default async function WorkflowDetails(props: Props) {
           apiSecretKey={apiSecretKey?.key}
         />
       </PageSection>
+
+      {workflowRuns?.length ? (
+        <PageSection>
+          <CardHeader>
+            <h3 className="text-lg font-semibold">Last Run</h3>
+          </CardHeader>
+          <ul className="divide-y">
+            <WorkflowRunItem
+              workflowRun={workflowRuns[0] as WorkflowRunWithUser}
+            />
+          </ul>
+        </PageSection>
+      ) : null}
     </div>
   );
 }

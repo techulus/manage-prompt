@@ -1,4 +1,7 @@
-import { WorkflowRunItem } from "@/components/console/workflow/workflow-run-item";
+import {
+  WorkflowRunItem,
+  WorkflowRunWithUser,
+} from "@/components/console/workflow/workflow-run-item";
 import PageSection from "@/components/core/page-section";
 import PageTitle from "@/components/layout/page-title";
 import {
@@ -24,7 +27,7 @@ interface Props {
 
 export const maxDuration = 120;
 
-export default async function WorkflowDetails(props: Props) {
+export default async function WorkflowRunDetails(props: Props) {
   const searchParams = await props.searchParams;
   const params = await props.params;
   const currentPage = searchParams.page
@@ -41,7 +44,7 @@ export default async function WorkflowDetails(props: Props) {
   }
 
   return (
-    (<div className="relative">
+    <div className="relative">
       <PageTitle
         title={workflow.name}
         subTitle={AIModelToLabel[workflow.model as AIModel]}
@@ -52,8 +55,10 @@ export default async function WorkflowDetails(props: Props) {
       <PageSection topInset>
         <ul className="divide-y">
           {workflowRuns.map((run) => (
-            // @ts-ignore React server component
-            (<WorkflowRunItem key={run.id} workflowRun={run} />)
+            <WorkflowRunItem
+              key={run.id}
+              workflowRun={run as WorkflowRunWithUser}
+            />
           ))}
         </ul>
       </PageSection>
@@ -99,6 +104,6 @@ export default async function WorkflowDetails(props: Props) {
           </Pagination>
         </div>
       ) : null}
-    </div>)
+    </div>
   );
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import MarkdownView from "@/components/markdown/markdown-view";
 import { DateTime } from "@/lib/utils/datetime";
 import type { WorkflowRun } from "@prisma/client";
@@ -12,7 +14,7 @@ import {
 } from "../../ui/drawer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
 
-type WorkflowRunWithUser = WorkflowRun & {
+export type WorkflowRunWithUser = WorkflowRun & {
   user: {
     name: string | null;
   };
@@ -22,7 +24,7 @@ interface Props {
   workflowRun: WorkflowRunWithUser;
 }
 
-export async function WorkflowRunItem({ workflowRun }: Props) {
+export function WorkflowRunItem({ workflowRun }: Props) {
   const { result, user, createdAt, rawRequest, totalTokenCount } = workflowRun;
 
   return (
