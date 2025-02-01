@@ -14,15 +14,16 @@ import { notFound } from "next/navigation";
 import { deleteChatBot } from "../actions";
 
 type Props = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
-async function ChatDashboard({ params }: Props) {
+async function ChatDashboard(props: Props) {
+  const params = await props.params;
   const { userId } = await owner();
   const { id } = params;
 

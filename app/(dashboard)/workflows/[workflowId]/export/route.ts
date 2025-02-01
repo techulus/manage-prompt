@@ -6,14 +6,13 @@ export const revalidate = 0;
 
 export async function GET(
   _: NextRequest,
-  {
-    params,
-  }: {
-    params: {
+  props: {
+    params: Promise<{
       workflowId: string;
-    };
-  },
+    }>;
+  }
 ) {
+  const params = await props.params;
   const id = params.workflowId;
   const workflow = await prisma.workflow.findUnique({
     where: {

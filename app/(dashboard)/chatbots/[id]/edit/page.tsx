@@ -8,11 +8,12 @@ import { prisma } from "@/lib/utils/db";
 import { Terminal } from "lucide-react";
 import { notFound } from "next/navigation";
 
-export default async function CreateChatbot({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function CreateChatbot(
+  props: {
+    params: Promise<{ id: string }>;
+  }
+) {
+  const params = await props.params;
   const { id } = params;
   const chatBot = await prisma.chatBot.findUnique({
     where: {

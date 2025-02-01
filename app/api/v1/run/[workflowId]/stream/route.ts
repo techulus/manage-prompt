@@ -34,10 +34,8 @@ export async function OPTIONS() {
   );
 }
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { workflowId: string } },
-) {
+export async function POST(req: NextRequest, props: { params: Promise<{ workflowId: string }> }) {
+  const params = await props.params;
   const searchParams = req.nextUrl.searchParams;
   const token = searchParams.get("token");
 

@@ -9,10 +9,8 @@ import { Redis } from "@upstash/redis";
 import type { NextRequest } from "next/server";
 import type Stripe from "stripe";
 
-export async function POST(
-  req: NextRequest,
-  { params }: { params: { token: string } },
-) {
+export async function POST(req: NextRequest, props: { params: Promise<{ token: string }> }) {
+  const params = await props.params;
   const tokenData = await prisma.chatBotUserSession.findUnique({
     where: {
       id: params.token,

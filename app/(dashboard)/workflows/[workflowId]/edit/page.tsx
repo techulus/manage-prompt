@@ -8,12 +8,13 @@ import { Terminal } from "lucide-react";
 import { updateWorkflow } from "../../actions";
 
 interface Props {
-  params: {
+  params: Promise<{
     workflowId: string;
-  };
+  }>;
 }
 
-export default async function EditWorkflow({ params }: Props) {
+export default async function EditWorkflow(props: Props) {
+  const params = await props.params;
   const workflow = await getWorkflowById(Number(params.workflowId));
 
   if (!workflow) {

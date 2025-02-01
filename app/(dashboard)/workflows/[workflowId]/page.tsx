@@ -18,14 +18,15 @@ import Link from "next/link";
 import { deleteWorkflow, toggleWorkflowState } from "../actions";
 
 interface Props {
-  params: {
+  params: Promise<{
     workflowId: string;
-  };
+  }>;
 }
 
 export const maxDuration = 120;
 
-export default async function WorkflowDetails({ params }: Props) {
+export default async function WorkflowDetails(props: Props) {
+  const params = await props.params;
   const { ownerId } = await owner();
 
   const { workflow } = await getWorkflowAndRuns({

@@ -14,17 +14,19 @@ import { cn } from "@/lib/utils";
 import { LIMIT, getWorkflowAndRuns } from "@/lib/utils/useWorkflow";
 
 interface Props {
-  params: {
+  params: Promise<{
     workflowId: string;
-  };
-  searchParams: {
+  }>;
+  searchParams: Promise<{
     page: string;
-  };
+  }>;
 }
 
 export const maxDuration = 120;
 
-export default async function WorkflowDetails({ params, searchParams }: Props) {
+export default async function WorkflowDetails(props: Props) {
+  const searchParams = await props.searchParams;
+  const params = await props.params;
   const currentPage = searchParams.page
     ? Number.parseInt(searchParams.page)
     : 1;
@@ -39,7 +41,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
   }
 
   return (
-    <div className="relative">
+    (<div className="relative">
       <PageTitle
         title={workflow.name}
         subTitle={AIModelToLabel[workflow.model as AIModel]}
@@ -47,16 +49,14 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
         actionLabel="Edit"
         actionLink={`/workflows/${workflow.id}/edit`}
       />
-
       <PageSection topInset>
         <ul className="divide-y">
           {workflowRuns.map((run) => (
             // @ts-ignore React server component
-            <WorkflowRunItem key={run.id} workflowRun={run} />
+            (<WorkflowRunItem key={run.id} workflowRun={run} />)
           ))}
         </ul>
       </PageSection>
-
       {totalPages > 1 ? (
         <div className="py-4">
           <Pagination>
@@ -99,6 +99,6 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
           </Pagination>
         </div>
       ) : null}
-    </div>
+    </div>)
   );
 }

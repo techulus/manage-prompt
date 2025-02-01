@@ -10,10 +10,8 @@ import {
 import { prisma } from "@/lib/utils/db";
 import { NextResponse } from "next/server";
 
-export async function GET(
-  req: Request,
-  { params }: { params: { workflowId: string } },
-) {
+export async function GET(req: Request, props: { params: Promise<{ workflowId: string }> }) {
+  const params = await props.params;
   try {
     const authorization = req.headers.get("authorization");
     if (!authorization) {

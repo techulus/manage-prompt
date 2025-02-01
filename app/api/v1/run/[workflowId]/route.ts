@@ -24,10 +24,8 @@ import type Stripe from "stripe";
 
 export const maxDuration = 120;
 
-export async function POST(
-  req: Request,
-  { params }: { params: { workflowId: string } },
-) {
+export async function POST(req: Request, props: { params: Promise<{ workflowId: string }> }) {
+  const params = await props.params;
   try {
     const authorization = req.headers.get("authorization");
     if (!authorization) {

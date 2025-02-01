@@ -4,15 +4,21 @@ import { Spinner } from "@/components/core/loaders";
 import PageSection from "@/components/core/page-section";
 import { notifyError } from "@/components/core/toast";
 import { CardContent } from "@/components/ui/card";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, use } from "react";
 
-export default function AIToolsResult({
-  params: { id },
-}: {
-  params: {
-    id: string;
-  };
-}) {
+export default function AIToolsResult(
+  props: {
+    params: Promise<{
+      id: string;
+    }>;
+  }
+) {
+  const params = use(props.params);
+
+  const {
+    id
+  } = params;
+
   const [status, setStatus] = useState<string>("starting");
 
   const getStatus = useCallback(async (id: string) => {
