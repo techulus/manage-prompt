@@ -1,6 +1,6 @@
 "use client";
 
-import { runWorkflow } from "@/app/(dashboard)/console/workflows/actions";
+import { runWorkflow } from "@/app/(dashboard)/workflows/actions";
 import {
   type WorkflowInput,
   WorkflowInputType,

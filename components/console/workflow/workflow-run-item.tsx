@@ -1,3 +1,5 @@
+"use client";
+
 import MarkdownView from "@/components/markdown/markdown-view";
 import { DateTime } from "@/lib/utils/datetime";
 import type { WorkflowRun } from "@prisma/client";
@@ -12,7 +14,7 @@ import {
 } from "../../ui/drawer";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
 
-type WorkflowRunWithUser = WorkflowRun & {
+export type WorkflowRunWithUser = WorkflowRun & {
   user: {
     name: string | null;
   };
@@ -22,7 +24,7 @@ interface Props {
   workflowRun: WorkflowRunWithUser;
 }
 
-export async function WorkflowRunItem({ workflowRun }: Props) {
+export function WorkflowRunItem({ workflowRun }: Props) {
   const { result, user, createdAt, rawRequest, totalTokenCount } = workflowRun;
 
   return (
@@ -71,12 +73,12 @@ export async function WorkflowRunItem({ workflowRun }: Props) {
               <TabsTrigger value="request">Request</TabsTrigger>
             </TabsList>
             <TabsContent value="response">
-              <pre className="p-4 bg-secondary overflow-scroll whitespace-pre-wrap">
+              <pre className="p-4 bg-secondary overflow-scroll whitespace-pre-wrap max-h-[320px]">
                 {JSON.stringify(result, null, 2)}
               </pre>
             </TabsContent>
             <TabsContent value="request">
-              <pre className="p-4 bg-secondary overflow-scroll whitespace-pre-wrap">
+              <pre className="p-4 bg-secondary overflow-scroll whitespace-pre-wrap max-h-[320px]">
                 {JSON.stringify(rawRequest, null, 2)}
               </pre>
             </TabsContent>

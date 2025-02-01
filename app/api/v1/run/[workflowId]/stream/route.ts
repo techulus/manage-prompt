@@ -15,7 +15,7 @@ import {
 } from "@/lib/utils/useWorkflow";
 import { translateInputs } from "@/lib/utils/workflow";
 import { waitUntil } from "@vercel/functions";
-import { StreamingTextResponse } from "ai";
+import { createDataStreamResponse } from "ai";
 import { type NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
 
@@ -36,8 +36,9 @@ export async function OPTIONS() {
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { workflowId: string } },
+  props: { params: Promise<{ workflowId: string }> },
 ) {
+  const params = await props.params;
   const searchParams = req.nextUrl.searchParams;
   const token = searchParams.get("token");
 
@@ -84,20 +85,15 @@ export async function POST(
     if (cachedResult) {
       const chunks = cachedResult.split(" ");
 
-      const stream = new ReadableStream({
-        async start(controller) {
+      return createDataStreamResponse({
+        status: 200,
+        statusText: "OK",
+        async execute(dataStream) {
           for (const chunk of chunks) {
-            const bytes = new TextEncoder().encode(`${chunk} `);
-            controller.enqueue(bytes);
-            await new Promise((r) =>
-              setTimeout(r, Math.floor(Math.random() * 40) + 10),
-            );
+            dataStream.writeData(chunk);
           }
-          controller.close();
         },
       });
-
-      return new StreamingTextResponse(stream);
     }
 
     const model = workflow.model;

@@ -1,4 +1,4 @@
-import { createChatBot } from "@/app/(dashboard)/console/chatbots/actions";
+import { createChatBot } from "@/app/(dashboard)/chatbots/actions";
 import { ChatbotForm } from "@/components/console/chatbot/chatbot-form";
 import PageSection from "@/components/core/page-section";
 import PageTitle from "@/components/layout/page-title";
@@ -9,7 +9,7 @@ import { Terminal } from "lucide-react";
 export default function CreateChatbot() {
   return (
     <>
-      <PageTitle title="Create Chatbot" backUrl="/console/chatbots" />
+      <PageTitle title="Create Chatbot" backUrl="/chatbots" />
 
       <PageSection topInset>
         <CardContent>

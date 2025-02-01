@@ -1,14 +1,22 @@
 "use client";
 
 import type { WorkflowRunStat } from "@/lib/utils/analytics";
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { Bar, BarChart, XAxis } from "recharts";
 import {
+  type ChartConfig,
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "../../ui/chart";
+
+const chartConfig = {
+  desktop: {
+    label: "Desktop",
+    color: "hsl(var(--chart-4))",
+  },
+} satisfies ChartConfig;
 
 export function WorkflowUsageCharts({
   usageData,
@@ -18,36 +26,16 @@ export function WorkflowUsageCharts({
   const localisedData = usageData.map((data) => {
     return {
       ...data,
-      date: new Date(data.date).toLocaleDateString(),
+      date: new Date(data.date).toDateString(),
     };
   });
 
   return (
     <ChartContainer
-      config={{
-        tokens: {
-          label: "Tokens",
-          color: "hsl(var(--chart-2))",
-        },
-      }}
-      className="aspect-auto h-[280px] w-full"
+      config={chartConfig}
+      className="aspect-auto h-[180px] w-full"
     >
-      <AreaChart data={localisedData}>
-        <defs>
-          <linearGradient id="fillTokens" x1="0" y1="0" x2="0" y2="1">
-            <stop
-              offset="5%"
-              stopColor="var(--color-tokens)"
-              stopOpacity={0.8}
-            />
-            <stop
-              offset="95%"
-              stopColor="var(--color-tokens)"
-              stopOpacity={0.1}
-            />
-          </linearGradient>
-        </defs>
-        <CartesianGrid vertical={false} />
+      <BarChart data={localisedData}>
         <XAxis
           dataKey="date"
           tickLine={false}
@@ -59,15 +47,15 @@ export function WorkflowUsageCharts({
           cursor={false}
           content={<ChartTooltipContent indicator="dot" />}
         />
-        <Area
+        <Bar
           dataKey="tokens"
           type="natural"
-          fill="url(#fillTokens)"
+          fill="var(--color-desktop)"
           stroke="var(--color-tokens)"
           stackId="a"
         />
         <ChartLegend content={<ChartLegendContent />} />
-      </AreaChart>
+      </BarChart>
     </ChartContainer>
   );
 }

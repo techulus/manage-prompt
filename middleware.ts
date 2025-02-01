@@ -18,9 +18,7 @@ export default auth(async (req) => {
   const pathname = req.nextUrl.pathname;
 
   if (req.auth && pathname === "/sign-in") {
-    return NextResponse.redirect(
-      new URL("/console/workflows", req.nextUrl.href),
-    );
+    return NextResponse.redirect(new URL("/start", req.nextUrl.href));
   }
 
   const isPublicAppPath = publicAppPaths.some((path) =>

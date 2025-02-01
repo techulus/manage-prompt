@@ -11,13 +11,19 @@ import { CropIcon } from "lucide-react";
 import Link from "next/link";
 import sharp from "sharp";
 
-export default async function AIToolsResult({
-  params: { id },
-}: {
-  params: {
-    id: string;
-  };
-}) {
+export default async function AIToolsResult(
+  props: {
+    params: Promise<{
+      id: string;
+    }>;
+  }
+) {
+  const params = await props.params;
+
+  const {
+    id
+  } = params;
+
   const order = await prisma.imageOrder.findUnique({
     where: {
       id: Number(id),

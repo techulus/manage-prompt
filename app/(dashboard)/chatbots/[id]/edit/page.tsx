@@ -1,4 +1,4 @@
-import { updateChatBot } from "@/app/(dashboard)/console/chatbots/actions";
+import { updateChatBot } from "@/app/(dashboard)/chatbots/actions";
 import { ChatbotForm } from "@/components/console/chatbot/chatbot-form";
 import PageSection from "@/components/core/page-section";
 import PageTitle from "@/components/layout/page-title";
@@ -8,11 +8,12 @@ import { prisma } from "@/lib/utils/db";
 import { Terminal } from "lucide-react";
 import { notFound } from "next/navigation";
 
-export default async function CreateChatbot({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function CreateChatbot(
+  props: {
+    params: Promise<{ id: string }>;
+  }
+) {
+  const params = await props.params;
   const { id } = params;
   const chatBot = await prisma.chatBot.findUnique({
     where: {
@@ -26,10 +27,7 @@ export default async function CreateChatbot({
 
   return (
     <>
-      <PageTitle
-        title={`Edit ${chatBot.name}`}
-        backUrl={`/console/chatbots/${id}`}
-      />
+      <PageTitle title={`Edit ${chatBot.name}`} backUrl={`/chatbots/${id}`} />
 
       <PageSection topInset>
         <CardContent>

@@ -99,8 +99,8 @@ export async function createChatBot(payload: FormData) {
     }
   }
 
-  revalidatePath("/console/chatbots");
-  redirect(`/console/chatbots/${chatbot.id}`);
+  revalidatePath("/chatbots");
+  redirect(`/chatbots/${chatbot.id}`);
 }
 
 export async function updateChatBot(payload: FormData) {
@@ -181,8 +181,8 @@ export async function updateChatBot(payload: FormData) {
     }
   }
 
-  revalidatePath(`/console/chatbots/${id}`);
-  redirect(`/console/chatbots/${id}`);
+  revalidatePath(`/chatbots/${id}`);
+  redirect(`/chatbots/${id}`);
 }
 
 export async function deleteChatBot(formData: FormData) {
@@ -203,6 +203,6 @@ export async function deleteChatBot(formData: FormData) {
     },
   });
 
-  revalidatePath("/console/chatbots");
-  redirect("/console/chatbots");
+  revalidatePath("/chatbots");
+  redirect("/chatbots");
 }

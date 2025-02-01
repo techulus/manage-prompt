@@ -53,7 +53,7 @@ export async function createSecretKey() {
     },
   });
 
-  redirect("/console/settings");
+  redirect("/settings");
 }
 
 export async function revokeSecretKey(data: FormData) {
@@ -64,7 +64,7 @@ export async function revokeSecretKey(data: FormData) {
       id: +id,
     },
   });
-  redirect("/console/settings");
+  redirect("/settings");
 }
 
 export async function updateRateLimit(data: FormData) {
@@ -93,7 +93,7 @@ export async function updateRateLimit(data: FormData) {
     },
   });
 
-  redirect("/console/settings");
+  redirect("/settings");
 }
 
 export async function updateSpendLimit(data: FormData) {
@@ -122,7 +122,7 @@ export async function updateSpendLimit(data: FormData) {
     },
   });
 
-  redirect("/console/settings");
+  redirect("/settings");
 }
 
 export async function removeSpendLimit(data: FormData) {
@@ -137,7 +137,7 @@ export async function removeSpendLimit(data: FormData) {
     },
   });
 
-  revalidatePath("/console/settings");
+  revalidatePath("/settings");
 }
 
 export async function updateKeyName(data: FormData) {
@@ -166,7 +166,7 @@ export async function updateKeyName(data: FormData) {
     },
   });
 
-  redirect("/console/settings");
+  redirect("/settings");
 }
 
 export async function updateUserName(data: FormData) {
@@ -196,7 +196,7 @@ export async function updateUserName(data: FormData) {
     },
   });
 
-  redirect("/console/settings");
+  redirect("/settings");
 }
 
 export async function updateUserKey(data: FormData) {
@@ -243,7 +243,7 @@ export async function updateUserKey(data: FormData) {
     },
   });
 
-  redirect("/console/settings");
+  redirect("/settings");
 }
 
 export async function revokeUserKey(data: FormData) {
@@ -257,5 +257,5 @@ export async function revokeUserKey(data: FormData) {
     },
   });
 
-  redirect("/console/settings");
+  redirect("/settings");
 }

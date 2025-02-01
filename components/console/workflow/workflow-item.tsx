@@ -46,10 +46,7 @@ export async function WorkflowItem({ workflow }: Props) {
             />
           </span>
           <h2 className="min-w-0 font-medium">
-            <a
-              href={`/console/workflows/${workflow.id}`}
-              className="flex gap-x-2"
-            >
+            <a href={`/workflows/${workflow.id}`} className="flex gap-x-2">
               <span className="truncate">{workflow.name}</span>
               <span className="absolute inset-0" />
             </a>

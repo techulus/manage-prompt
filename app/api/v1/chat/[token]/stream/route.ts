@@ -6,13 +6,29 @@ import { reportUsage } from "@/lib/utils/stripe";
 import { aiUseChatAdapter } from "@upstash/rag-chat/nextjs";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
-import type { NextRequest } from "next/server";
+import { type NextRequest, NextResponse } from "next/server";
 import type Stripe from "stripe";
+
+export const maxDuration = 120;
+
+export async function OPTIONS() {
+  return NextResponse.json(
+    {},
+    {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "*",
+      },
+    },
+  );
+}
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { token: string } },
+  props: { params: Promise<{ token: string }> },
 ) {
+  const params = await props.params;
   const tokenData = await prisma.chatBotUserSession.findUnique({
     where: {
       id: params.token,

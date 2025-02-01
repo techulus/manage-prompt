@@ -4,8 +4,10 @@ import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-
 const secret = process.env.STRIPE_WEBHOOK_SECRET || "";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function GET(_: Request) {
   return new Response("Hello!", {
@@ -22,7 +24,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.text();
 
-    const signature = headers().get("stripe-signature");
+    const signature = (await headers()).get("stripe-signature");
 
     const event = stripe.webhooks.constructEvent(body, signature, secret);
 

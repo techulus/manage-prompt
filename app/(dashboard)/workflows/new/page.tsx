@@ -9,7 +9,7 @@ import { createWorkflow } from "../actions";
 export default function CreateWorkflow() {
   return (
     <>
-      <PageTitle title="Create Workflow" backUrl="/console/workflows" />
+      <PageTitle title="Create Workflow" backUrl="/workflows" />
 
       <PageSection topInset>
         <CardHeader>

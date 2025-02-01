@@ -1,5 +1,8 @@
 import { WorkflowComposer } from "@/components/console/workflow/workflow-composer";
-import { WorkflowRunItem } from "@/components/console/workflow/workflow-run-item";
+import {
+  WorkflowRunItem,
+  WorkflowRunWithUser,
+} from "@/components/console/workflow/workflow-run-item";
 import { WorkflowUsageCharts } from "@/components/console/workflow/workflow-usage-charts";
 import PageSection from "@/components/core/page-section";
 import { ActionButton, DeleteButton } from "@/components/form/button";
@@ -7,56 +10,37 @@ import PageTitle from "@/components/layout/page-title";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { buttonVariants } from "@/components/ui/button";
 import { CardContent, CardHeader } from "@/components/ui/card";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import { type AIModel, AIModelToLabel } from "@/data/workflow";
 import { owner } from "@/lib/hooks/useOwner";
-import { cn } from "@/lib/utils";
 import { getWorkflowRunStats } from "@/lib/utils/analytics";
 import { prisma } from "@/lib/utils/db";
-import { LIMIT, getWorkflowAndRuns } from "@/lib/utils/useWorkflow";
+import { getWorkflowAndRuns } from "@/lib/utils/useWorkflow";
 import { PauseCircleIcon, PlayCircleIcon } from "@heroicons/react/20/solid";
 import { DownloadIcon } from "@radix-ui/react-icons";
 import { Terminal } from "lucide-react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { deleteWorkflow, toggleWorkflowState } from "../actions";
 
 interface Props {
-  params: {
-    id: string;
-  };
-  searchParams: {
-    page: string;
-  };
+  params: Promise<{
+    workflowId: string;
+  }>;
 }
 
 export const maxDuration = 120;
 
-export default async function WorkflowDetails({ params, searchParams }: Props) {
+export default async function WorkflowEditor(props: Props) {
+  const params = await props.params;
   const { ownerId } = await owner();
-  if (!ownerId) {
-    redirect("/sign-in");
-  }
 
-  const currentPage = searchParams.page
-    ? Number.parseInt(searchParams.page)
-    : 1;
-  const { workflow, workflowRuns, count } = await getWorkflowAndRuns(
-    Number(params.id),
-    currentPage,
-  );
-  const totalPages = Math.ceil(count / LIMIT);
+  const { workflow, workflowRuns } = await getWorkflowAndRuns({
+    id: Number(params.workflowId),
+  });
+
   const usageData = await getWorkflowRunStats(workflow.id);
   const totalTokensConsumed = usageData.reduce(
     (acc, run) => acc + run.tokens,
-    0,
+    0
   );
 
   const apiSecretKey = await prisma.secretKey.findFirst({
@@ -74,9 +58,9 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
       <PageTitle
         title={workflow.name}
         subTitle={AIModelToLabel[workflow.model as AIModel]}
-        backUrl="/console/workflows"
+        backUrl="/workflows"
         actionLabel="Edit"
-        actionLink={`/console/workflows/${workflow.id}/edit`}
+        actionLink={`/workflows/${workflow.id}/edit`}
       />
 
       {!workflow.published ? (
@@ -134,7 +118,7 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
                   </form>
 
                   <Link
-                    href={`/console/workflows/${workflow.id}/export`}
+                    href={`/workflows/${workflow.id}/export`}
                     className={buttonVariants({ variant: "ghost" })}
                     prefetch={false}
                   >
@@ -200,58 +184,17 @@ export default async function WorkflowDetails({ params, searchParams }: Props) {
         />
       </PageSection>
 
-      {workflowRuns.length ? (
+      {workflowRuns?.length ? (
         <PageSection>
+          <CardHeader>
+            <h3 className="text-lg font-semibold">Last Run</h3>
+          </CardHeader>
           <ul className="divide-y">
-            {workflowRuns.map((run) => (
-              // @ts-ignore React server component
-              <WorkflowRunItem key={run.id} workflowRun={run} />
-            ))}
+            <WorkflowRunItem
+              workflowRun={workflowRuns[0] as WorkflowRunWithUser}
+            />
           </ul>
         </PageSection>
-      ) : null}
-
-      {workflowRuns?.length > 0 && totalPages > 1 ? (
-        <div className="py-4">
-          <Pagination>
-            <PaginationContent>
-              {currentPage > 1 ? (
-                <PaginationItem>
-                  <PaginationPrevious
-                    href={`/console/workflows/${params.id}?page=${
-                      currentPage - 1
-                    }`}
-                  />
-                </PaginationItem>
-              ) : null}
-              {Array.from({ length: Math.min(totalPages, 5) }, (_, idx) => {
-                const pageNumber = idx + 1;
-                return (
-                  <PaginationItem key={`page-${pageNumber}`}>
-                    <PaginationLink
-                      href={`/console/workflows?page=${pageNumber}`}
-                      className={cn(
-                        pageNumber === currentPage &&
-                          "text-primary font-semibold",
-                      )}
-                    >
-                      {pageNumber}
-                    </PaginationLink>
-                  </PaginationItem>
-                );
-              })}
-              {(currentPage - 1) * LIMIT + workflowRuns.length < count ? (
-                <PaginationItem>
-                  <PaginationNext
-                    href={`/console/workflows/${params.id}?page=${
-                      currentPage + 1
-                    }`}
-                  />
-                </PaginationItem>
-              ) : null}
-            </PaginationContent>
-          </Pagination>
-        </div>
       ) : null}
     </div>
   );

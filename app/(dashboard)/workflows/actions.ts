@@ -79,7 +79,7 @@ export async function createWorkflow(formData: FormData) {
     },
   });
 
-  redirect(`/console/workflows/${created.id}`);
+  redirect(`/workflows/${created.id}`);
 }
 
 export async function updateWorkflow(formData: FormData) {
@@ -131,9 +131,9 @@ export async function updateWorkflow(formData: FormData) {
     },
   });
 
-  revalidatePath("/console/workflows");
-  revalidatePath(`/console/workflows/${id}/edit`);
-  redirect(`/console/workflows/${id}`);
+  revalidatePath("/workflows");
+  revalidatePath(`/workflows/${id}/edit`);
+  redirect(`/workflows/${id}`);
 }
 
 export async function deleteWorkflow(formData: FormData) {
@@ -145,7 +145,7 @@ export async function deleteWorkflow(formData: FormData) {
     },
   });
 
-  redirect("/console/workflows");
+  redirect("/workflows");
 }
 
 export async function toggleWorkflowState(formData: FormData) {
@@ -161,7 +161,7 @@ export async function toggleWorkflowState(formData: FormData) {
     },
   });
 
-  redirect(`/console/workflows/${id}`);
+  redirect(`/workflows/${id}`);
 }
 
 export async function runWorkflow(formData: FormData) {
@@ -280,5 +280,5 @@ export async function runWorkflow(formData: FormData) {
     };
   }
 
-  redirect(`/console/workflows/${id}`);
+  redirect(`/workflows/${id}`);
 }

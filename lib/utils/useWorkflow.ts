@@ -1,6 +1,6 @@
-import { createHash } from "node:crypto";
 import { prisma } from "@/lib/utils/db";
 import type { Prisma, Workflow } from "@prisma/client";
+import { createHash } from "node:crypto";
 import { owner } from "../hooks/useOwner";
 import { redisStore } from "./redis";
 
@@ -67,7 +67,15 @@ export async function getWorkflowsForOwner({
   return { workflows, count };
 }
 
-export async function getWorkflowAndRuns(id: number, page = 1) {
+export async function getWorkflowAndRuns({
+  id,
+  page = 1,
+  skipWorkflowRun = false,
+}: {
+  id: number;
+  page?: number;
+  skipWorkflowRun?: boolean;
+}) {
   const { ownerId } = await owner();
   if (!ownerId) throw new Error("Owner ID not found");
 
@@ -86,28 +94,30 @@ export async function getWorkflowAndRuns(id: number, page = 1) {
 
   if (!workflow) throw new Error("Workflow not found");
 
-  const [workflowRuns, count] = await prisma.$transaction([
-    prisma.workflowRun.findMany({
-      include: {
-        user: true,
-      },
-      where: {
-        workflowId: id,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-      take: LIMIT,
-      skip: (page - 1) * LIMIT,
-    }),
-    prisma.workflowRun.count({
-      where: {
-        workflowId: {
-          equals: id,
-        },
-      },
-    }),
-  ]);
+  const [workflowRuns, count] = skipWorkflowRun
+    ? [[], 0]
+    : await prisma.$transaction([
+        prisma.workflowRun.findMany({
+          include: {
+            user: true,
+          },
+          where: {
+            workflowId: id,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: LIMIT,
+          skip: (page - 1) * LIMIT,
+        }),
+        prisma.workflowRun.count({
+          where: {
+            workflowId: {
+              equals: id,
+            },
+          },
+        }),
+      ]);
 
   return {
     workflow,

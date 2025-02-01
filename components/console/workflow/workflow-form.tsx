@@ -318,7 +318,7 @@ export function WorkflowForm({ workflow, action }: Props) {
 
         <div className="flex items-center justify-end gap-x-6 mt-6">
           <Link
-            href="/console/workflows"
+            href="/workflows"
             className={buttonVariants({ variant: "link" })}
             prefetch={false}
           >

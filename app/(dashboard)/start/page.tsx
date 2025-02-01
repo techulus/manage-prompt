@@ -50,5 +50,5 @@ export default async function Start() {
     });
   }
 
-  redirect("/console/workflows");
+  redirect("/workflows");
 }

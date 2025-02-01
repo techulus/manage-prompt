@@ -95,7 +95,7 @@ export default async function Home() {
             </p>
             <div className="mt-10 flex flex-col space-y-4 md:space-y-0 md:flex-row items-center justify-center gap-x-6">
               <Link
-                href="/console/workflows"
+                href="/workflows"
                 className={buttonVariants({ variant: "default" })}
                 prefetch={false}
               >
@@ -237,7 +237,7 @@ export default async function Home() {
                     </span>
                   </p>
                   <Link
-                    href="/console/workflows"
+                    href="/workflows"
                     className={buttonVariants({
                       variant: "default",
                       className: "mt-8",

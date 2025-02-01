@@ -3,9 +3,8 @@ const { withSentryConfig } = require("@sentry/nextjs");
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
-  transpilePackages: ["geist"],
-  eslint: {
-    ignoreDuringBuilds: true,
+  experimental: {
+    turbo: {},
   },
 };
 
@@ -41,5 +40,5 @@ module.exports = withSentryConfig(
     // https://docs.sentry.io/product/crons/
     // https://vercel.com/docs/cron-jobs
     automaticVercelMonitors: false,
-  },
+  }
 );

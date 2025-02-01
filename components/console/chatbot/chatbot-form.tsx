@@ -34,7 +34,7 @@ export function ChatbotForm({ chatbot, action }: Props) {
   >(
     chatbot?.contextItems
       ? JSON.parse(JSON.stringify(chatbot?.contextItems))
-      : [],
+      : []
   );
 
   return (
@@ -138,7 +138,7 @@ export function ChatbotForm({ chatbot, action }: Props) {
                         variant="outline"
                         onClick={() => {
                           setContextItems((prev) =>
-                            prev.filter((_, i) => i !== index),
+                            prev.filter((_, i) => i !== index)
                           );
                         }}
                       >
@@ -169,7 +169,7 @@ export function ChatbotForm({ chatbot, action }: Props) {
                         variant="outline"
                         onClick={() => {
                           setContextItems((prev) =>
-                            prev.filter((_, i) => i !== index),
+                            prev.filter((_, i) => i !== index)
                           );
                         }}
                       >
@@ -222,7 +222,7 @@ export function ChatbotForm({ chatbot, action }: Props) {
 
         <div className="flex items-center justify-end gap-x-6 mt-6">
           <Link
-            href="/console/chatbots"
+            href="/chatbots"
             className={buttonVariants({ variant: "link" })}
             prefetch={false}
           >

@@ -14,15 +14,16 @@ import { notFound } from "next/navigation";
 import { deleteChatBot } from "../actions";
 
 type Props = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
-async function ChatDashboard({ params }: Props) {
+async function ChatDashboard(props: Props) {
+  const params = await props.params;
   const { userId } = await owner();
   const { id } = params;
 
@@ -49,7 +50,7 @@ async function ChatDashboard({ params }: Props) {
 
   return (
     <>
-      <PageTitle title={chatBot.name} backUrl="/console/chatbots">
+      <PageTitle title={chatBot.name} backUrl="/chatbots">
         <div className="text-sm">
           ID:{" "}
           <span className="p-1 border border-secondary font-mono text-primary bg-secondary">
@@ -65,7 +66,7 @@ async function ChatDashboard({ params }: Props) {
               <div className="isolate inline-flex sm:space-x-3">
                 <span className="inline-flex space-x-1">
                   <Link
-                    href={`/console/chatbots/${id}/edit`}
+                    href={`/chatbots/${id}/edit`}
                     className={buttonVariants({ variant: "ghost" })}
                   >
                     <Pencil className="w-4 h-4" />
