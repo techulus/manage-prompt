@@ -85,6 +85,16 @@ export default async function RootLayout({
           media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)"
           rel="apple-touch-startup-image"
         />
+        <meta
+          name="theme-color"
+          content="#FFFFFF"
+          media="(prefers-color-scheme: light)"
+        />
+        <meta
+          name="theme-color"
+          content="#172554"
+          media="(prefers-color-scheme: dark)"
+        />
       </head>
 
       <body className="flex-1 min-h-full min-w-full">
