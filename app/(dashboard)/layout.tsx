@@ -1,7 +1,8 @@
 import NavBar from "@/components/console/navbar";
 
-export const fetchCache = "force-no-store"; // disable cache for console pages
-export const dynamic = "force-dynamic"; // disable static generation for console pages
+export const fetchCache = "force-no-store";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default function ConsoleLayout({
   children,
