@@ -42,7 +42,7 @@ export function WorkflowRunItem({ workflowRun }: Props) {
             <span aria-hidden="true">&middot;</span>
             <span className="text-gray-600 dark:text-gray-400 font-normal">
               <GitBranchIcon className="w-4 h-4 mr-1 inline" />{" "}
-              {branchId ? branchId.substring(0, 7) : "main"}
+              {branchId ?? "main"}
             </span>
 
             {totalTokenCount ? (

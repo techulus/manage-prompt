@@ -26,7 +26,7 @@ export function WorkflowBranchPicker({
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm" className="font-mono">
           <GitBranchIcon className="w-4 h-4 inline mr-2" />
-          {branch.substring(0, 7)}
+          {branch}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
@@ -43,7 +43,7 @@ export function WorkflowBranchPicker({
               className="font-mono"
             >
               <GitBranchIcon className="w-4 h-4 inline mr-2" />
-              {branch.shortId.substring(0, 7)}
+              {branch.shortId}
             </Link>
           </DropdownMenuItem>
         ))}

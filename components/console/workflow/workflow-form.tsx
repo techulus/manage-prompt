@@ -32,6 +32,8 @@ import {
 interface Props {
   workflow?: Workflow;
   branchMode?: boolean;
+  branchId?: number;
+  branchShortId?: string;
   action: (data: FormData) => Promise<any>;
 }
 
@@ -46,7 +48,13 @@ const parseInputs = (inputs: string): WorkflowInput[] =>
     }, [])
     .map((input) => ({ name: slugify(input, { lower: false }) }));
 
-export function WorkflowForm({ workflow, action, branchMode = false }: Props) {
+export function WorkflowForm({
+  workflow,
+  action,
+  branchMode = false,
+  branchId,
+  branchShortId,
+}: Props) {
   const [model, setModel] = useState(workflow?.model ?? AIModels[0]);
   const [template, setTemplate] = useState(workflow?.template ?? "");
   const [instruction, setInstruction] = useState(workflow?.instruction ?? "");
@@ -89,9 +97,16 @@ export function WorkflowForm({ workflow, action, branchMode = false }: Props) {
           <input
             type="number"
             name="id"
-            id="id"
             className="hidden"
             defaultValue={Number(workflow?.id)}
+          />
+        ) : null}
+        {branchId ? (
+          <input
+            type="number"
+            name="branchId"
+            className="hidden"
+            defaultValue={branchId}
           />
         ) : null}
 
@@ -166,6 +181,24 @@ export function WorkflowForm({ workflow, action, branchMode = false }: Props) {
                   type="text"
                   name="name"
                   defaultValue={workflow?.name ?? ""}
+                />
+              </div>
+            </div>
+          ) : null}
+
+          {branchMode && branchShortId ? (
+            <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200 sm:pt-1.5"
+              >
+                Name
+              </label>
+              <div className="mt-2 sm:col-span-2 sm:mt-0">
+                <Input
+                  type="text"
+                  name="branchShortId"
+                  defaultValue={branchShortId}
                 />
               </div>
             </div>

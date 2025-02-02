@@ -316,12 +316,14 @@ export async function createWorkflowBranch(formData: FormData) {
   }
 
   const id = Number(formData.get("id"));
+  const branchShortId = formData.get("branchShortId") as string;
   const model = formData.get("model") as string;
   const template = formData.get("template") as string;
   const instruction = (formData.get("instruction") as string) ?? "";
   const modelSettings = (formData.get("modelSettings") as string) ?? null;
 
   const validationResult = WorkflowBranchSchema.safeParse({
+    shortId: branchShortId,
     model,
     modelSettings,
     template,
@@ -360,7 +362,7 @@ export async function createWorkflowBranch(formData: FormData) {
           id,
         },
       },
-      shortId: createId(),
+      shortId: branchShortId ?? createId(),
       model,
       modelSettings: modelSettings ? JSON.parse(modelSettings) : null,
       template,
@@ -369,4 +371,56 @@ export async function createWorkflowBranch(formData: FormData) {
   });
 
   redirect(`/workflows/${id}/branches`);
+}
+
+export async function updateWorkflowBranch(formData: FormData) {
+  const id = Number(formData.get("id"));
+  const branchId = Number(formData.get("branchId"));
+  const branchShortId = formData.get("branchShortId") as string;
+  const model = formData.get("model") as string;
+  const template = formData.get("template") as string;
+  const instruction = (formData.get("instruction") as string) ?? "";
+  const modelSettings = (formData.get("modelSettings") as string) ?? null;
+
+  const validationResult = WorkflowBranchSchema.safeParse({
+    shortId: branchShortId,
+    model,
+    modelSettings,
+    template,
+    instruction,
+  });
+
+  if (!validationResult.success) {
+    return {
+      error: fromZodError(validationResult.error).toString(),
+    };
+  }
+
+  await prisma.workflowBranch.update({
+    where: {
+      id: branchId,
+    },
+    data: {
+      shortId: branchShortId,
+      model,
+      modelSettings: modelSettings ? JSON.parse(modelSettings) : null,
+      template,
+      instruction,
+    },
+  });
+
+  redirect(`/workflows/${id}/branches`);
+}
+
+export async function deleteWorkflowBranch(formData: FormData) {
+  const workflowId = Number(formData.get("workflowId"));
+  const id = Number(formData.get("id"));
+
+  await prisma.workflowBranch.delete({
+    where: {
+      id,
+    },
+  });
+
+  redirect(`/workflows/${workflowId}/branches`);
 }

@@ -29,6 +29,13 @@ export const WorkflowSchema = z.object({
 });
 
 export const WorkflowBranchSchema = z.object({
+  shortId: z
+    .string()
+    .min(1)
+    .max(16)
+    .refine((value) => /^[a-zA-Z0-9-_]+$/.test(value ?? ""), {
+      message: "Branch name must be alphanumeric",
+    }),
   model: z.enum(zodEnum<AIModel>(AIModels)),
   template: z.string().min(1).max(9999),
   instruction: z.string().optional().default(""),

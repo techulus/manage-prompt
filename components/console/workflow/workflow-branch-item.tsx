@@ -1,5 +1,7 @@
 "use client";
 
+import { deleteWorkflowBranch } from "@/app/(dashboard)/workflows/actions";
+import { DeleteButton } from "@/components/form/button";
 import { DateTime } from "@/lib/utils/datetime";
 import type { WorkflowBranch } from "@prisma/client";
 import { GitBranchIcon } from "lucide-react";
@@ -30,8 +32,7 @@ export function WorkflowBranchItem({ branch }: Props) {
         <div className="min-w-0 flex-1">
           <p className="truncate font-semibold text-gray-900 dark:text-gray-100 space-x-2">
             <span className="text-gray-600 dark:text-gray-400 font-normal">
-              <GitBranchIcon className="w-4 h-4 mr-1 inline" />{" "}
-              {shortId.substring(0, 7)}
+              <GitBranchIcon className="w-4 h-4 mr-1 inline" /> {shortId}
             </span>
 
             <span aria-hidden="true">&middot;</span>
@@ -86,6 +87,12 @@ export function WorkflowBranchItem({ branch }: Props) {
             </DrawerFooter>
           </DrawerContent>
         </Drawer>
+
+        <form action={deleteWorkflowBranch}>
+          <input type="hidden" name="id" value={branch.id} />
+          <input type="hidden" name="workflowId" value={branch.workflowId} />
+          <DeleteButton label="Delete" />
+        </form>
       </div>
     </li>
   );
