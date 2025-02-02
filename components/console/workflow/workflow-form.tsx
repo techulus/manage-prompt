@@ -31,6 +31,7 @@ import {
 
 interface Props {
   workflow?: Workflow;
+  branchMode?: boolean;
   action: (data: FormData) => Promise<any>;
 }
 
@@ -45,7 +46,7 @@ const parseInputs = (inputs: string): WorkflowInput[] =>
     }, [])
     .map((input) => ({ name: slugify(input, { lower: false }) }));
 
-export function WorkflowForm({ workflow, action }: Props) {
+export function WorkflowForm({ workflow, action, branchMode = false }: Props) {
   const [model, setModel] = useState(workflow?.model ?? AIModels[0]);
   const [template, setTemplate] = useState(workflow?.template ?? "");
   const [instruction, setInstruction] = useState(workflow?.instruction ?? "");
@@ -152,21 +153,23 @@ export function WorkflowForm({ workflow, action }: Props) {
             </div>
           </div>
 
-          <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200 sm:pt-1.5"
-            >
-              Name
-            </label>
-            <div className="mt-2 sm:col-span-2 sm:mt-0">
-              <Input
-                type="text"
-                name="name"
-                defaultValue={workflow?.name ?? ""}
-              />
+          {!branchMode ? (
+            <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200 sm:pt-1.5"
+              >
+                Name
+              </label>
+              <div className="mt-2 sm:col-span-2 sm:mt-0">
+                <Input
+                  type="text"
+                  name="name"
+                  defaultValue={workflow?.name ?? ""}
+                />
+              </div>
             </div>
-          </div>
+          ) : null}
 
           {modelHasInstruction[model] ? (
             <div className="mt-10 space-y-8 border-b pb-12 sm:space-y-0 sm:divide-y sm:border-t sm:pb-0">
@@ -296,29 +299,31 @@ export function WorkflowForm({ workflow, action }: Props) {
             </div>
           ) : null}
 
-          <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
-            <label
-              htmlFor="cacheControlTtl"
-              className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200 sm:pt-1.5"
-            >
-              Cached Response TTL
-            </label>
-            <div className="mt-2 sm:col-span-2 sm:mt-0 space-y-2">
-              <p className="text-sm leading-6 text-secondary-foreground">
-                Time to live for the cached response in seconds.
-              </p>
-              <Input
-                type="text"
-                name="cacheControlTtl"
-                defaultValue={workflow?.cacheControlTtl ?? 0}
-              />
+          {!branchMode ? (
+            <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
+              <label
+                htmlFor="cacheControlTtl"
+                className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200 sm:pt-1.5"
+              >
+                Cached Response TTL
+              </label>
+              <div className="mt-2 sm:col-span-2 sm:mt-0 space-y-2">
+                <p className="text-sm leading-6 text-secondary-foreground">
+                  Time to live for the cached response in seconds.
+                </p>
+                <Input
+                  type="text"
+                  name="cacheControlTtl"
+                  defaultValue={workflow?.cacheControlTtl ?? 0}
+                />
+              </div>
             </div>
-          </div>
+          ) : null}
         </div>
 
         <div className="flex items-center justify-end gap-x-6 mt-6">
           <Link
-            href="/workflows"
+            href={workflow ? `/workflows/${workflow.id}` : "/workflows"}
             className={buttonVariants({ variant: "link" })}
             prefetch={false}
           >

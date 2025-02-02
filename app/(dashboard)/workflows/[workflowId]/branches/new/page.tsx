@@ -4,7 +4,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CardContent, CardHeader } from "@/components/ui/card";
 import { prisma } from "@/lib/utils/db";
 import { Terminal } from "lucide-react";
-import { updateWorkflow } from "../../actions";
+import { createWorkflowBranch } from "../../../actions";
 
 interface Props {
   params: Promise<{
@@ -12,7 +12,7 @@ interface Props {
   }>;
 }
 
-export default async function EditWorkflow(props: Props) {
+export default async function CreateWorkflowBranch(props: Props) {
   const params = await props.params;
 
   const workflow = await prisma.workflow.findUnique({
@@ -24,7 +24,6 @@ export default async function EditWorkflow(props: Props) {
   if (!workflow) {
     return <div>Workflow not found</div>;
   }
-
   return (
     <PageSection topInset>
       <CardHeader>
@@ -32,13 +31,16 @@ export default async function EditWorkflow(props: Props) {
           <Terminal className="h-4 w-4" />
           <AlertTitle>Heads up!</AlertTitle>
           <AlertDescription>
-            Updates to the workflow may take upto a minute to reflect in the
-            API.
+            The inputs must match the inputs of the parent workflow.
           </AlertDescription>
         </Alert>
       </CardHeader>
       <CardContent>
-        <WorkflowForm workflow={workflow} action={updateWorkflow} />
+        <WorkflowForm
+          workflow={workflow}
+          action={createWorkflowBranch}
+          branchMode
+        />
       </CardContent>
     </PageSection>
   );

@@ -1,4 +1,4 @@
-import { ArrowLeftIcon } from "@heroicons/react/20/solid";
+import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 import PageSection from "../core/page-section";
 import PageTitle from "../layout/page-title";

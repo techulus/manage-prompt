@@ -1,9 +1,9 @@
 import { Badge } from "@/components/ui/badge";
 import { type AIModel, AIModelToLabel } from "@/data/workflow";
 import { getWorkflowUsage } from "@/lib/utils/analytics";
-import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import type { Workflow } from "@prisma/client";
 import classNames from "classnames";
+import { ChevronRightIcon } from "lucide-react";
 
 interface Props {
   workflow: Pick<

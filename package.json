@@ -18,11 +18,10 @@
     "@auth/prisma-adapter": "^2.4.2",
     "@headlessui/react": "^1.7.18",
     "@headlessui/tailwindcss": "^0.2.0",
-    "@heroicons/react": "^2.0.17",
     "@mozilla/readability": "^0.5.0",
     "@paralleldrive/cuid2": "^2.2.2",
     "@prisma/adapter-pg": "^5.17.0",
-    "@prisma/client": "^5.18.0",
+    "@prisma/client": "^5",
     "@prisma/extension-accelerate": "^1.1.0",
     "@radix-ui/react-avatar": "^1.0.3",
     "@radix-ui/react-dialog": "^1.1.1",
@@ -93,7 +92,7 @@
     "@types/pg": "^8.11.6",
     "@types/react": "19.0.8",
     "@types/react-dom": "19.0.3",
-    "prisma": "^5.18.0",
+    "prisma": "^5",
     "typescript": "5.0.4"
   },
   "overrides": {

@@ -1,7 +1,6 @@
 "use client";
 
-import { CheckIcon, TrashIcon } from "@heroicons/react/20/solid";
-import { XIcon } from "lucide-react";
+import { CheckIcon, TrashIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
 import { Spinner } from "../core/loaders";

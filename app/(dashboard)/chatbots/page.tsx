@@ -5,8 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { owner } from "@/lib/hooks/useOwner";
 import { cn } from "@/lib/utils";
 import { prisma } from "@/lib/utils/db";
-import { ChevronRightIcon } from "@/node_modules/@heroicons/react/20/solid";
 import Link from "@/node_modules/next/link";
+import { ChevronRightIcon } from "lucide-react";
 
 export default async function Chatbots() {
   const { userId } = await owner();

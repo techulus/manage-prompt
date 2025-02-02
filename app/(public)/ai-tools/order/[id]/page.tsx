@@ -6,23 +6,18 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { prisma } from "@/lib/utils/db";
-import { PhotoIcon } from "@heroicons/react/20/solid";
-import { CropIcon } from "lucide-react";
+import { Aperture, CropIcon } from "lucide-react";
 import Link from "next/link";
 import sharp from "sharp";
 
-export default async function AIToolsResult(
-  props: {
-    params: Promise<{
-      id: string;
-    }>;
-  }
-) {
+export default async function AIToolsResult(props: {
+  params: Promise<{
+    id: string;
+  }>;
+}) {
   const params = await props.params;
 
-  const {
-    id
-  } = params;
+  const { id } = params;
 
   const order = await prisma.imageOrder.findUnique({
     where: {
@@ -88,7 +83,7 @@ export default async function AIToolsResult(
                     <div className="mt-6 flex w-full flex-none gap-x-4 border-t px-6 pt-6">
                       <dt className="flex-none">
                         <span className="sr-only">Format</span>
-                        <PhotoIcon
+                        <Aperture
                           className="h-6 w-5 text-gray-400"
                           aria-hidden="true"
                         />

@@ -137,28 +137,48 @@ model UserKey {
 }
 
 model Workflow {
-  id        Int     @id @default(autoincrement())
-  shortId   String  @unique
-  createdBy String
-  ownerId   String
-  name      String
-  published Boolean @default(false)
-
+  id              Int     @id @default(autoincrement())
+  shortId         String  @unique
+  name            String
+  published       Boolean @default(false)
+  cacheControlTtl Int?
   model           String
   modelSettings   Json?
   template        String
   instruction     String?
   inputs          Json
-  cacheControlTtl Int?
 
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  WorkflowRun WorkflowRun[]
-
+  ownerId      String
   organization Organization @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  user         User         @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+
+  createdBy String
+  user      User   @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+
+  runs     WorkflowRun[]
+  branches WorkflowBranch[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([ownerId])
+}
+
+model WorkflowBranch {
+  id            Int     @id @default(autoincrement())
+  shortId       String
+  model         String
+  modelSettings Json?
+  template      String
+  instruction   String?
+  status        String  @default("open")
+
+  workflowId Int
+  workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([shortId, workflowId])
 }
 
 model WorkflowRun {
@@ -169,6 +189,7 @@ model WorkflowRun {
   rawRequest      Json?
   rawResult       Json?
   totalTokenCount Int      @default(0)
+  branchId        String?
   createdBy       String?
   user            User?    @relation(fields: [createdBy], references: [id], onDelete: Cascade)
   createdAt       DateTime @default(now())

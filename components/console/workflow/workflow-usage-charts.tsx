@@ -1,7 +1,7 @@
 "use client";
 
 import type { WorkflowRunStat } from "@/lib/utils/analytics";
-import { Bar, BarChart } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import {
   type ChartConfig,
   ChartContainer,
@@ -34,6 +34,8 @@ export function WorkflowUsageCharts({
       className="aspect-auto h-[320px] w-full"
     >
       <BarChart data={localisedData}>
+        <CartesianGrid vertical={false} />
+        <XAxis dataKey="date" tickLine tickMargin={10} axisLine />
         <ChartTooltip
           cursor={false}
           content={<ChartTooltipContent indicator="dot" />}

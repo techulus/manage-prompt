@@ -10,7 +10,11 @@ import {
   isSubscriptionActive,
   reportUsage,
 } from "@/lib/utils/stripe";
-import { WorkflowSchema, translateInputs } from "@/lib/utils/workflow";
+import {
+  WorkflowBranchSchema,
+  WorkflowSchema,
+  translateInputs,
+} from "@/lib/utils/workflow";
 import { createId } from "@paralleldrive/cuid2";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -168,7 +172,10 @@ export async function runWorkflow(formData: FormData) {
   const { userId, ownerId } = await owner();
 
   const id = Number(formData.get("id"));
+  const branch = formData.get("branch") as string;
   let inputValues: Record<string, string> = {};
+
+  let redirectUrl = `/workflows/${id}`;
 
   try {
     inputValues = JSON.parse(formData.get("inputs") as string);
@@ -220,6 +227,22 @@ export async function runWorkflow(formData: FormData) {
 
     if (!workflow) throw "Workflow not found";
 
+    const workflowBranch = branch
+      ? await prisma.workflowBranch.findFirst({
+          where: {
+            shortId: branch,
+            workflowId: id,
+          },
+        })
+      : null;
+
+    if (workflowBranch) {
+      workflow.model = workflowBranch.model;
+      workflow.template = workflowBranch.template;
+
+      redirectUrl = `/workflows/${id}?branch=${workflowBranch.shortId}`;
+    }
+
     const inputs = workflow.inputs as unknown as WorkflowInput[];
     const model = workflow.model;
     const content = await translateInputs({
@@ -253,6 +276,7 @@ export async function runWorkflow(formData: FormData) {
           result,
           rawRequest: JSON.parse(JSON.stringify({ model, content })),
           rawResult: JSON.parse(JSON.stringify(rawResult)),
+          branchId: workflowBranch?.shortId,
           totalTokenCount,
           user: {
             connect: {
@@ -280,5 +304,69 @@ export async function runWorkflow(formData: FormData) {
     };
   }
 
-  redirect(`/workflows/${id}`);
+  redirect(redirectUrl);
+}
+
+export async function createWorkflowBranch(formData: FormData) {
+  const { userId, ownerId } = await owner();
+  if (!userId || !ownerId) {
+    return {
+      error: "User is missing",
+    };
+  }
+
+  const id = Number(formData.get("id"));
+  const model = formData.get("model") as string;
+  const template = formData.get("template") as string;
+  const instruction = (formData.get("instruction") as string) ?? "";
+  const modelSettings = (formData.get("modelSettings") as string) ?? null;
+
+  const validationResult = WorkflowBranchSchema.safeParse({
+    model,
+    modelSettings,
+    template,
+    instruction,
+  });
+
+  if (!validationResult.success) {
+    return {
+      error: fromZodError(validationResult.error).toString(),
+    };
+  }
+
+  const inputs = (formData.get("inputs") as string) ?? "";
+
+  const workflow = await prisma.workflow.findUnique({
+    where: {
+      id,
+    },
+  });
+  if (!workflow) {
+    return {
+      error: "Workflow not found",
+    };
+  }
+
+  if (inputs !== JSON.stringify(workflow.inputs)) {
+    return {
+      error: "Inputs mismatch",
+    };
+  }
+
+  await prisma.workflowBranch.create({
+    data: {
+      workflow: {
+        connect: {
+          id,
+        },
+      },
+      shortId: createId(),
+      model,
+      modelSettings: modelSettings ? JSON.parse(modelSettings) : null,
+      template,
+      instruction,
+    },
+  });
+
+  redirect(`/workflows/${id}/branches`);
 }

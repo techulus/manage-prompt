@@ -9,8 +9,6 @@ interface Props {
   }>;
 }
 
-export const maxDuration = 120;
-
 export default async function WorkflowUsage(props: Props) {
   const params = await props.params;
 
@@ -29,7 +27,7 @@ export default async function WorkflowUsage(props: Props) {
         <div className="flex-row items-center space-x-2">
           <WorkflowUsageCharts usageData={usageData} />
 
-          <div className="flex flex-col md:flex-row justify-between space-y-2">
+          <div className="flex flex-col md:flex-row justify-between space-y-2 mt-4">
             <div className="flex items-center space-x-2">
               <span className="text-sm text-gray-500">Total Tokens</span>
               <span className="text-2xl font-semibold">

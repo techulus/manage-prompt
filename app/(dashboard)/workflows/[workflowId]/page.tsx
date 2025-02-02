@@ -11,9 +11,8 @@ import { CardHeader } from "@/components/ui/card";
 import { owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
 import { getWorkflowAndRuns } from "@/lib/utils/useWorkflow";
-import { PauseCircleIcon, PlayCircleIcon } from "@heroicons/react/20/solid";
 import { DownloadIcon } from "@radix-ui/react-icons";
-import { Terminal } from "lucide-react";
+import { PauseCircleIcon, PlayCircleIcon, Terminal } from "lucide-react";
 import Link from "next/link";
 import { deleteWorkflow, toggleWorkflowState } from "../actions";
 
@@ -21,14 +20,20 @@ interface Props {
   params: Promise<{
     workflowId: string;
   }>;
+  searchParams: Promise<{
+    branch: string;
+  }>;
 }
 
 export default async function WorkflowEditor(props: Props) {
   const params = await props.params;
+  const searchParams = await props.searchParams;
+
   const { ownerId } = await owner();
 
   const { workflow, workflowRuns } = await getWorkflowAndRuns({
     id: Number(params.workflowId),
+    branch: searchParams.branch,
   });
 
   const apiSecretKey = await prisma.secretKey.findFirst({
@@ -127,6 +132,7 @@ export default async function WorkflowEditor(props: Props) {
         <WorkflowComposer
           workflow={workflow}
           apiSecretKey={apiSecretKey?.key}
+          branch={searchParams.branch}
         />
       </PageSection>
 

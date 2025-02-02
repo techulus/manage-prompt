@@ -19,9 +19,10 @@ import { Textarea } from "../../ui/textarea";
 interface Props {
   workflow: Workflow;
   apiSecretKey?: string;
+  branch?: string;
 }
 
-export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
+export function WorkflowComposer({ workflow, apiSecretKey, branch }: Props) {
   const { id, template, instruction, model } = workflow;
   const inputs = (workflow.inputs ?? []) as WorkflowInput[];
 
@@ -66,21 +67,26 @@ export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
         <input
           type="number"
           name="id"
-          id="id"
           className="hidden"
           defaultValue={Number(id)}
         />
+        {branch ? (
+          <input
+            type="text"
+            name="branch"
+            className="hidden"
+            defaultValue={branch}
+          />
+        ) : null}
         <input
           type="text"
           name="model"
-          id="model"
           className="hidden"
           defaultValue={model!}
         />
         <input
           type="text"
           name="inputs"
-          id="inputs"
           className="hidden"
           value={JSON.stringify(inputValues)}
           onChange={() => null}
@@ -88,7 +94,6 @@ export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
         <input
           type="text"
           name="instruction"
-          id="instruction"
           className="hidden"
           value={geneatedInstruction}
           onChange={() => null}
@@ -105,6 +110,11 @@ export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
           {inputs?.length ? (
             <TabsContent value="compose">
               <div className="mt-4 space-y-4">
+                <div className="grid w-full items-center gap-1.5">
+                  <Label className="uppercase">MODEL</Label>
+                  <p>{workflow.model}</p>
+                </div>
+
                 {(inputs as WorkflowInput[]).map(
                   ({ name, type = WorkflowInputType.text, label }) => (
                     <div
