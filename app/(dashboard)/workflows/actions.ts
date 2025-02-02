@@ -424,3 +424,33 @@ export async function deleteWorkflowBranch(formData: FormData) {
 
   redirect(`/workflows/${workflowId}/branches`);
 }
+
+export async function mergeWorkflowBranch(formData: FormData) {
+  const workflowId = Number(formData.get("workflowId"));
+  const id = Number(formData.get("id"));
+
+  const workflowBranch = await prisma.workflowBranch.update({
+    where: {
+      id,
+    },
+    data: {
+      status: "merged",
+    },
+  });
+
+  await prisma.workflow.update({
+    where: {
+      id: workflowId,
+    },
+    data: {
+      model: workflowBranch?.model,
+      template: workflowBranch?.template,
+      modelSettings: workflowBranch?.modelSettings as unknown as Record<
+        string,
+        unknown
+      >,
+    },
+  });
+
+  redirect(`/workflows/${workflowId}/branches`);
+}

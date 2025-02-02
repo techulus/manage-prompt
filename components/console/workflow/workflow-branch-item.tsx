@@ -1,7 +1,10 @@
 "use client";
 
-import { deleteWorkflowBranch } from "@/app/(dashboard)/workflows/actions";
-import { DeleteButton } from "@/components/form/button";
+import {
+  deleteWorkflowBranch,
+  mergeWorkflowBranch,
+} from "@/app/(dashboard)/workflows/actions";
+import { ActionButton, DeleteButton } from "@/components/form/button";
 import { DateTime } from "@/lib/utils/datetime";
 import type { WorkflowBranch } from "@prisma/client";
 import { GitBranchIcon } from "lucide-react";
@@ -21,7 +24,9 @@ interface Props {
 }
 
 export function WorkflowBranchItem({ branch }: Props) {
-  const { shortId, model, template, createdAt } = branch;
+  const { shortId, model, template, createdAt, status } = branch;
+
+  const isOpen = status === "open";
 
   return (
     <li
@@ -50,17 +55,29 @@ export function WorkflowBranchItem({ branch }: Props) {
       </div>
 
       <div className="flex space-x-3 mt-3">
-        <Button size="sm">Merge</Button>
+        {isOpen ? (
+          <>
+            <form action={mergeWorkflowBranch}>
+              <input type="hidden" name="id" value={branch.id} />
+              <input
+                type="hidden"
+                name="workflowId"
+                value={branch.workflowId}
+              />
+              <ActionButton variant="default" label="Merge" />
+            </form>
 
-        <Link
-          className={buttonVariants({
-            variant: "outline",
-            size: "sm",
-          })}
-          href={`/workflows/${branch.workflowId}/branches/${shortId}/edit`}
-        >
-          Edit
-        </Link>
+            <Link
+              className={buttonVariants({
+                variant: "outline",
+                size: "sm",
+              })}
+              href={`/workflows/${branch.workflowId}/branches/${shortId}/edit`}
+            >
+              Edit
+            </Link>
+          </>
+        ) : null}
 
         <Drawer>
           <DrawerTrigger
@@ -69,7 +86,7 @@ export function WorkflowBranchItem({ branch }: Props) {
               size: "sm",
             })}
           >
-            View Template
+            Compare
           </DrawerTrigger>
           <DrawerContent>
             <DrawerHeader />

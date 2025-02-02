@@ -36,6 +36,7 @@ export default async function WorkflowLayout(props: Props) {
       },
       where: {
         workflowId: +params.workflowId,
+        status: "open",
       },
     }),
   ]);
