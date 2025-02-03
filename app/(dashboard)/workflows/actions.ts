@@ -13,6 +13,7 @@ import {
 import {
   WorkflowBranchSchema,
   WorkflowSchema,
+  WorkflowTestSchema,
   translateInputs,
 } from "@/lib/utils/workflow";
 import { createId } from "@paralleldrive/cuid2";
@@ -453,4 +454,209 @@ export async function mergeWorkflowBranch(formData: FormData) {
   });
 
   redirect(`/workflows/${workflowId}/branches`);
+}
+
+export async function createTest(formData: FormData) {
+  const id = Number(formData.get("id"));
+  const input = formData.get("input") as string;
+  const condition = formData.get("condition") as string;
+  const output = (formData.get("output") as string) ?? "";
+
+  console.log({ id, input, output, condition });
+
+  const validationResult = WorkflowTestSchema.safeParse({
+    id,
+    input,
+    output,
+    condition,
+  });
+
+  if (!validationResult.success) {
+    return {
+      error: fromZodError(validationResult.error).toString(),
+    };
+  }
+
+  await prisma.workflowTest.create({
+    data: {
+      workflow: {
+        connect: {
+          id,
+        },
+      },
+      input,
+      output,
+      condition,
+    },
+  });
+
+  redirect(`/workflows/${id}/tests`);
+}
+
+export async function deleteTest(formData: FormData) {
+  const workflowId = Number(formData.get("workflowId"));
+  const id = Number(formData.get("id"));
+
+  await prisma.workflowTest.delete({
+    where: {
+      id,
+    },
+  });
+
+  redirect(`/workflows/${workflowId}/tests`);
+}
+
+export async function runTests(formData: FormData) {
+  const { userId, ownerId } = await owner();
+  const id = Number(formData.get("id"));
+  const branch = formData.get("branch") as string;
+
+  const tests = await prisma.workflowTest.findMany({
+    where: {
+      workflowId: id,
+    },
+  });
+
+  const workflow = await prisma.workflow.findUnique({
+    include: {
+      organization: {
+        select: {
+          stripe: true,
+          UserKeys: true,
+        },
+      },
+    },
+    where: {
+      id,
+    },
+  });
+
+  if (!workflow) {
+    throw new Error("Workflow not found");
+  }
+
+  if (branch) {
+    const workflowBranch = await prisma.workflowBranch.findFirst({
+      where: {
+        shortId: branch,
+        workflowId: +id,
+      },
+    });
+
+    if (workflowBranch) {
+      workflow.model = workflowBranch.model;
+      workflow.template = workflowBranch.template;
+    }
+  }
+
+  await prisma.workflowTest.updateMany({
+    where: {
+      workflowId: id,
+    },
+    data: {
+      status: "running",
+    },
+  });
+  revalidatePath(`/workflows/${id}/tests`);
+
+  for (const test of tests) {
+    const inputs = workflow.inputs as unknown as WorkflowInput[];
+    const model = workflow.model;
+
+    const content = await translateInputs({
+      inputs,
+      inputValues: JSON.parse(test.input as unknown as string) as Record<
+        string,
+        string
+      >,
+      template: workflow.template,
+    });
+
+    const response = await getCompletion(
+      model,
+      content,
+      JSON.parse(JSON.stringify(workflow.modelSettings)),
+    );
+
+    let { result, rawResult, totalTokenCount } = response;
+    if (!result) throw "No result returned from OpenAI";
+
+    let testPassed = false;
+    switch (test.condition) {
+      case "equals":
+        testPassed = result === test.output;
+        break;
+      case "notEquals":
+        testPassed = result !== test.output;
+        break;
+      case "contains":
+        testPassed = result.includes(test.output);
+        break;
+      case "doesNotContain":
+        testPassed = !result.includes(test.output);
+        break;
+      case "isGreaterThan":
+        testPassed = Number(result) > Number(test.output);
+        break;
+      case "isLessThan":
+        testPassed = Number(result) < Number(test.output);
+        break;
+      case "isValidJson":
+        try {
+          JSON.parse(result);
+          testPassed = true;
+        } catch (e) {
+          testPassed = false;
+        }
+        break;
+    }
+
+    const isEligibleForByokDiscount = !!new ByokService().get(
+      modelToProvider[model],
+      workflow.organization?.UserKeys,
+    );
+    if (isEligibleForByokDiscount) {
+      totalTokenCount = Math.floor(totalTokenCount * 0.3);
+    }
+
+    const [run] = await Promise.all([
+      prisma.workflowRun.create({
+        data: {
+          result,
+          rawRequest: JSON.parse(JSON.stringify({ model, content })),
+          rawResult: JSON.parse(JSON.stringify(rawResult)),
+          branchId: branch,
+          totalTokenCount,
+          user: {
+            connect: {
+              id: userId,
+            },
+          },
+          workflow: {
+            connect: {
+              id,
+            },
+          },
+        },
+      }),
+      reportUsage(
+        ownerId,
+        workflow.organization?.stripe
+          ?.subscription as unknown as Stripe.Subscription,
+        totalTokenCount,
+      ),
+    ]);
+
+    await prisma.workflowTest.update({
+      where: {
+        id: test.id,
+      },
+      data: {
+        status: testPassed ? "pass" : "fail",
+        workflowRunId: run.id,
+      },
+    });
+
+    revalidatePath(`/workflows/${id}/tests`);
+  }
 }

@@ -70,3 +70,13 @@ export const WorkflowInputTypeToZapierFieldType: Record<
   number: "number",
   url: "string",
 } as const;
+
+export const WorkflowTestCondition: Record<string, string> = {
+  equals: "equals",
+  notEquals: "not equals",
+  contains: "contains",
+  doesNotContain: "does not contain",
+  isGreaterThan: "is greater than",
+  isLessThan: "is less than",
+  isValidJson: "is valid JSON",
+} as const;

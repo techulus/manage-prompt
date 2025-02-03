@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { GitBranchIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 export function WorkflowBranchPicker({
   workflow,
@@ -19,19 +19,20 @@ export function WorkflowBranchPicker({
   branches: { shortId: string }[];
 }) {
   const query = useSearchParams();
+  const path = usePathname();
   const branch = query.get("branch") ?? "main";
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="font-mono">
+        <Button variant="ghost" size="sm" className="font-mono">
           <GitBranchIcon className="w-4 h-4 inline mr-2" />
           {branch}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
         <DropdownMenuItem>
-          <Link href={`/workflows/${workflow.id}`} className="font-mono">
+          <Link href={path} className="font-mono">
             <GitBranchIcon className="w-4 h-4 inline mr-2" />
             main
           </Link>
@@ -39,7 +40,7 @@ export function WorkflowBranchPicker({
         {branches?.map((branch) => (
           <DropdownMenuItem key={branch.shortId}>
             <Link
-              href={`/workflows/${workflow.id}?branch=${branch.shortId}`}
+              href={`${path}?branch=${branch.shortId}`}
               className="font-mono"
             >
               <GitBranchIcon className="w-4 h-4 inline mr-2" />

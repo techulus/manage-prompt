@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { CheckIcon, TrashIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 import { useFormStatus } from "react-dom";
@@ -9,9 +10,11 @@ import { Button } from "../ui/button";
 export const DeleteButton = ({
   label = "Delete",
   size = "default",
+  compact = false,
 }: {
   label?: string;
   size?: "default" | "sm";
+  compact?: boolean;
 }) => {
   const { pending } = useFormStatus();
 
@@ -23,6 +26,8 @@ export const DeleteButton = ({
         <Button type="submit" variant="destructive" size={size}>
           {pending ? (
             <Spinner message="Processing..." />
+          ) : compact ? (
+            <CheckIcon className="h-4 w-4" aria-hidden="true" />
           ) : (
             <>
               <CheckIcon className="mr-2 h-4 w-4" aria-hidden="true" />
@@ -51,8 +56,11 @@ export const DeleteButton = ({
       variant="ghost"
       size={size}
     >
-      <TrashIcon className="mr-2 h-4 w-4" aria-hidden="true" />
-      {label}
+      <TrashIcon
+        className={cn("h-4 w-4", compact ? "" : "mr-2")}
+        aria-hidden="true"
+      />
+      {compact ? "" : label}
     </Button>
   );
 };
@@ -90,9 +98,11 @@ export const ActionButton = ({
   label = "Save",
   loadingLabel = "Saving",
   disabled = false,
+  size = "default",
   className,
 }: {
   variant?: "default" | "ghost" | "link" | "destructive";
+  size?: "default" | "sm";
   className?: string;
   icon?: React.ReactElement | null;
   label?: string;
@@ -107,6 +117,7 @@ export const ActionButton = ({
       variant={variant}
       disabled={pending || disabled}
       className={className}
+      size={size}
     >
       {pending ? (
         <Spinner message={loadingLabel} />

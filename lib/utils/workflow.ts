@@ -3,6 +3,7 @@ import {
   AIModels,
   type WorkflowInput,
   WorkflowInputType,
+  WorkflowTestCondition,
 } from "@/data/workflow";
 import { z } from "zod";
 import { WebpageParser } from "./webpage-parser";
@@ -40,6 +41,13 @@ export const WorkflowBranchSchema = z.object({
   template: z.string().min(1).max(9999),
   instruction: z.string().optional().default(""),
   modelSettings: z.string().optional().nullable(),
+});
+
+export const WorkflowTestSchema = z.object({
+  id: z.number(),
+  input: z.string(),
+  condition: z.enum(zodEnum<string>(Object.keys(WorkflowTestCondition))),
+  output: z.string(),
 });
 
 export const translateInputs = async ({

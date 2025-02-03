@@ -156,6 +156,7 @@ model Workflow {
 
   runs     WorkflowRun[]
   branches WorkflowBranch[]
+  tests    WorkflowTest[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -181,6 +182,22 @@ model WorkflowBranch {
   @@unique([shortId, workflowId])
 }
 
+model WorkflowTest {
+  id        Int      @id @default(autoincrement())
+  input     Json
+  output    String
+  condition String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  status    String   @default("pending")
+
+  workflowId Int
+  workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  workflowRunId Int?
+  workflowRun   WorkflowRun? @relation(fields: [workflowRunId], references: [id], onDelete: SetNull)
+}
+
 model WorkflowRun {
   id              Int      @id @default(autoincrement())
   workflow        Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
@@ -194,6 +211,8 @@ model WorkflowRun {
   user            User?    @relation(fields: [createdBy], references: [id], onDelete: Cascade)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+
+  WorkflowTest WorkflowTest[]
 }
 
 model ChatBot {

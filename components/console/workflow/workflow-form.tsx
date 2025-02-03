@@ -37,7 +37,10 @@ interface Props {
   action: (data: FormData) => Promise<any>;
 }
 
-const parseInputs = (inputs: string): WorkflowInput[] =>
+const parseInputs = (
+  inputs: string,
+  currentInputs: WorkflowInput[] | null
+): WorkflowInput[] =>
   Array.from(inputs.matchAll(/{{\s*(?<name>\w+)\s*}}/g))
     .reduce((acc: string[], match) => {
       const { name } = match.groups as { name: string };
@@ -46,7 +49,11 @@ const parseInputs = (inputs: string): WorkflowInput[] =>
       }
       return acc;
     }, [])
-    .map((input) => ({ name: slugify(input, { lower: false }) }));
+    .map((input) => ({ name: slugify(input, { lower: false }) }))
+    .map((input) => {
+      const existingInput = currentInputs?.find((i) => i.name === input.name);
+      return existingInput ?? input;
+    });
 
 export function WorkflowForm({
   workflow,
@@ -71,13 +78,21 @@ export function WorkflowForm({
 
       if (modelHasInstruction[model]) {
         setInputs(
-          parseInputs(`${updatedValue.template} ${updatedValue.instruction}`)
+          parseInputs(
+            `${updatedValue.template} ${updatedValue.instruction}`,
+            workflow?.inputs as WorkflowInput[] | null
+          )
         );
       } else {
-        setInputs(parseInputs(updatedValue.template));
+        setInputs(
+          parseInputs(
+            updatedValue.template,
+            workflow?.inputs as WorkflowInput[] | null
+          )
+        );
       }
     },
-    [template, instruction, model]
+    [template, instruction, model, workflow?.inputs]
   );
 
   return (
@@ -186,7 +201,7 @@ export function WorkflowForm({
             </div>
           ) : null}
 
-          {branchMode && branchShortId ? (
+          {branchMode ? (
             <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
               <label
                 htmlFor="name"

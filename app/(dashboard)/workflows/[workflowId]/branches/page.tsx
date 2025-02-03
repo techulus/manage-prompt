@@ -16,6 +16,9 @@ export default async function WorkflowBranches(props: Props) {
     where: {
       workflowId: +params.workflowId,
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 
   return (

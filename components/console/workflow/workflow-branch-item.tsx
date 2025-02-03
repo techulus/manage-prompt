@@ -64,7 +64,7 @@ export function WorkflowBranchItem({ branch }: Props) {
                 name="workflowId"
                 value={branch.workflowId}
               />
-              <ActionButton variant="default" label="Merge" />
+              <ActionButton variant="default" label="Merge" size="sm" />
             </form>
 
             <Link
@@ -108,7 +108,7 @@ export function WorkflowBranchItem({ branch }: Props) {
         <form action={deleteWorkflowBranch}>
           <input type="hidden" name="id" value={branch.id} />
           <input type="hidden" name="workflowId" value={branch.workflowId} />
-          <DeleteButton label="Delete" />
+          <DeleteButton label="Delete" compact />
         </form>
       </div>
     </li>
