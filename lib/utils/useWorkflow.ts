@@ -6,16 +6,6 @@ import { redisStore } from "./redis";
 
 export const LIMIT = 25;
 
-export async function getWorkflowById(id: number): Promise<Workflow | null> {
-  const workflow = await prisma.workflow.findUnique({
-    where: {
-      id,
-    },
-  });
-
-  return workflow;
-}
-
 export async function getWorkflowsForOwner({
   orgId,
   userId,
@@ -71,10 +61,12 @@ export async function getWorkflowAndRuns({
   id,
   page = 1,
   skipWorkflowRun = false,
+  branch,
 }: {
   id: number;
   page?: number;
   skipWorkflowRun?: boolean;
+  branch?: string;
 }) {
   const { ownerId } = await owner();
   if (!ownerId) throw new Error("Owner ID not found");
@@ -91,6 +83,26 @@ export async function getWorkflowAndRuns({
       },
     },
   });
+
+  if (!workflow) {
+    throw new Error("Workflow not found");
+  }
+
+  if (branch) {
+    const branchWorkflow = await prisma.workflowBranch.findFirst({
+      where: {
+        shortId: branch,
+        workflowId: id,
+      },
+    });
+
+    if (!branchWorkflow) {
+      throw new Error("Branch workflow not found");
+    }
+
+    workflow.model = branchWorkflow.model;
+    workflow.template = branchWorkflow.template;
+  }
 
   if (!workflow) throw new Error("Workflow not found");
 

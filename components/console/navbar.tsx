@@ -30,7 +30,21 @@ export default function NavBar({ isPublicPage = false }: Props) {
         {
           name: "Editor",
           href: `/workflows/${params.workflowId}`,
-          current: path === `/workflows/${params.workflowId}`,
+          current:
+            path === `/workflows/${params.workflowId}` ||
+            path === `/workflows/${params.workflowId}/edit`,
+        },
+        {
+          name: "Branches",
+          href: `/workflows/${params.workflowId}/branches`,
+          current:
+            path === `/workflows/${params.workflowId}/branches` ||
+            path === `/workflows/${params.workflowId}/branches/new`,
+        },
+        {
+          name: "Tests",
+          href: `/workflows/${params.workflowId}/tests`,
+          current: path === `/workflows/${params.workflowId}/tests`,
         },
         {
           name: "Executions",

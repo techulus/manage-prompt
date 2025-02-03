@@ -31,10 +31,16 @@ import {
 
 interface Props {
   workflow?: Workflow;
+  branchMode?: boolean;
+  branchId?: number;
+  branchShortId?: string;
   action: (data: FormData) => Promise<any>;
 }
 
-const parseInputs = (inputs: string): WorkflowInput[] =>
+const parseInputs = (
+  inputs: string,
+  currentInputs: WorkflowInput[] | null
+): WorkflowInput[] =>
   Array.from(inputs.matchAll(/{{\s*(?<name>\w+)\s*}}/g))
     .reduce((acc: string[], match) => {
       const { name } = match.groups as { name: string };
@@ -43,9 +49,19 @@ const parseInputs = (inputs: string): WorkflowInput[] =>
       }
       return acc;
     }, [])
-    .map((input) => ({ name: slugify(input, { lower: false }) }));
+    .map((input) => ({ name: slugify(input, { lower: false }) }))
+    .map((input) => {
+      const existingInput = currentInputs?.find((i) => i.name === input.name);
+      return existingInput ?? input;
+    });
 
-export function WorkflowForm({ workflow, action }: Props) {
+export function WorkflowForm({
+  workflow,
+  action,
+  branchMode = false,
+  branchId,
+  branchShortId,
+}: Props) {
   const [model, setModel] = useState(workflow?.model ?? AIModels[0]);
   const [template, setTemplate] = useState(workflow?.template ?? "");
   const [instruction, setInstruction] = useState(workflow?.instruction ?? "");
@@ -62,13 +78,21 @@ export function WorkflowForm({ workflow, action }: Props) {
 
       if (modelHasInstruction[model]) {
         setInputs(
-          parseInputs(`${updatedValue.template} ${updatedValue.instruction}`)
+          parseInputs(
+            `${updatedValue.template} ${updatedValue.instruction}`,
+            workflow?.inputs as WorkflowInput[] | null
+          )
         );
       } else {
-        setInputs(parseInputs(updatedValue.template));
+        setInputs(
+          parseInputs(
+            updatedValue.template,
+            workflow?.inputs as WorkflowInput[] | null
+          )
+        );
       }
     },
-    [template, instruction, model]
+    [template, instruction, model, workflow?.inputs]
   );
 
   return (
@@ -88,9 +112,16 @@ export function WorkflowForm({ workflow, action }: Props) {
           <input
             type="number"
             name="id"
-            id="id"
             className="hidden"
             defaultValue={Number(workflow?.id)}
+          />
+        ) : null}
+        {branchId ? (
+          <input
+            type="number"
+            name="branchId"
+            className="hidden"
+            defaultValue={branchId}
           />
         ) : null}
 
@@ -152,21 +183,41 @@ export function WorkflowForm({ workflow, action }: Props) {
             </div>
           </div>
 
-          <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200 sm:pt-1.5"
-            >
-              Name
-            </label>
-            <div className="mt-2 sm:col-span-2 sm:mt-0">
-              <Input
-                type="text"
-                name="name"
-                defaultValue={workflow?.name ?? ""}
-              />
+          {!branchMode ? (
+            <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200 sm:pt-1.5"
+              >
+                Name
+              </label>
+              <div className="mt-2 sm:col-span-2 sm:mt-0">
+                <Input
+                  type="text"
+                  name="name"
+                  defaultValue={workflow?.name ?? ""}
+                />
+              </div>
             </div>
-          </div>
+          ) : null}
+
+          {branchMode ? (
+            <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200 sm:pt-1.5"
+              >
+                Name
+              </label>
+              <div className="mt-2 sm:col-span-2 sm:mt-0">
+                <Input
+                  type="text"
+                  name="branchShortId"
+                  defaultValue={branchShortId}
+                />
+              </div>
+            </div>
+          ) : null}
 
           {modelHasInstruction[model] ? (
             <div className="mt-10 space-y-8 border-b pb-12 sm:space-y-0 sm:divide-y sm:border-t sm:pb-0">
@@ -296,29 +347,31 @@ export function WorkflowForm({ workflow, action }: Props) {
             </div>
           ) : null}
 
-          <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
-            <label
-              htmlFor="cacheControlTtl"
-              className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200 sm:pt-1.5"
-            >
-              Cached Response TTL
-            </label>
-            <div className="mt-2 sm:col-span-2 sm:mt-0 space-y-2">
-              <p className="text-sm leading-6 text-secondary-foreground">
-                Time to live for the cached response in seconds.
-              </p>
-              <Input
-                type="text"
-                name="cacheControlTtl"
-                defaultValue={workflow?.cacheControlTtl ?? 0}
-              />
+          {!branchMode ? (
+            <div className="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
+              <label
+                htmlFor="cacheControlTtl"
+                className="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-200 sm:pt-1.5"
+              >
+                Cached Response TTL
+              </label>
+              <div className="mt-2 sm:col-span-2 sm:mt-0 space-y-2">
+                <p className="text-sm leading-6 text-secondary-foreground">
+                  Time to live for the cached response in seconds.
+                </p>
+                <Input
+                  type="text"
+                  name="cacheControlTtl"
+                  defaultValue={workflow?.cacheControlTtl ?? 0}
+                />
+              </div>
             </div>
-          </div>
+          ) : null}
         </div>
 
         <div className="flex items-center justify-end gap-x-6 mt-6">
           <Link
-            href="/workflows"
+            href={workflow ? `/workflows/${workflow.id}` : "/workflows"}
             className={buttonVariants({ variant: "link" })}
             prefetch={false}
           >

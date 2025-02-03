@@ -3,12 +3,8 @@ import { Header } from "@/components/layout/header";
 import { buttonVariants } from "@/components/ui/button";
 import { SITE_METADATA } from "@/data/marketing";
 import promoImage from "@/public/images/promo.png";
-import {
-  CheckIcon,
-  CloudArrowUpIcon,
-  LockClosedIcon,
-  ServerIcon,
-} from "@heroicons/react/20/solid";
+import { CheckIcon, CloudCog, LockIcon, ServerCog } from "lucide-react";
+
 import Image from "next/image";
 import Link from "next/link";
 
@@ -26,19 +22,19 @@ const features = [
     name: "Deploy instantly.",
     description:
       "Using our workflows, you can tweak prompts, update models, and deliver changes to your users instanty.",
-    icon: CloudArrowUpIcon,
+    icon: CloudCog,
   },
   {
     name: "Security controls.",
     description:
       "Filter and control malicious requests with our security features such as single use tokens and rate limiting.",
-    icon: LockClosedIcon,
+    icon: LockIcon,
   },
   {
     name: "Several models to choose from.",
     description:
       "Use multiple models using the same API, models from OpenAI, Meta, Google, Mixtral and Anthropic.",
-    icon: ServerIcon,
+    icon: ServerCog,
   },
 ];
 

@@ -19,7 +19,7 @@ import {
   getUpcomingInvoice,
   isSubscriptionCancelled,
 } from "@/lib/utils/stripe";
-import { CheckBadgeIcon } from "@heroicons/react/20/solid";
+import { CheckCircle } from "lucide-react";
 import { notFound } from "next/navigation";
 import type Stripe from "stripe";
 import {
@@ -140,7 +140,7 @@ export default async function Settings() {
                           <span className="ml-2">
                             USD {(invoice.amount_remaining / 100).toFixed(2)} on{" "}
                             {DateTime.fromSeconds(
-                              invoice.period_end,
+                              invoice.period_end
                             ).toDateString()}
                           </span>
                         </p>
@@ -331,7 +331,7 @@ export default async function Settings() {
               <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
                 <div className="text-gray-900 dark:text-gray-200">
                   {userOpenAIKey ? (
-                    <CheckBadgeIcon className="h-6 w-6 text-green-500" />
+                    <CheckCircle className="h-6 w-6 text-green-500" />
                   ) : (
                     <EditableValue
                       id="openai"

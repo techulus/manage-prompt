@@ -3,6 +3,7 @@
 import MarkdownView from "@/components/markdown/markdown-view";
 import { DateTime } from "@/lib/utils/datetime";
 import type { WorkflowRun } from "@prisma/client";
+import { GitBranchIcon } from "lucide-react";
 import { Button, buttonVariants } from "../../ui/button";
 import {
   Drawer,
@@ -25,7 +26,8 @@ interface Props {
 }
 
 export function WorkflowRunItem({ workflowRun }: Props) {
-  const { result, user, createdAt, rawRequest, totalTokenCount } = workflowRun;
+  const { result, user, createdAt, rawRequest, totalTokenCount, branchId } =
+    workflowRun;
 
   return (
     <li
@@ -36,6 +38,12 @@ export function WorkflowRunItem({ workflowRun }: Props) {
         <div className="min-w-0 flex-1">
           <p className="truncate font-semibold text-gray-900 dark:text-gray-100 space-x-2">
             <span>{user?.name ?? "API"}</span>
+
+            <span aria-hidden="true">&middot;</span>
+            <span className="text-gray-600 dark:text-gray-400 font-normal">
+              <GitBranchIcon className="w-4 h-4 mr-1 inline" />{" "}
+              {branchId ?? "main"}
+            </span>
 
             {totalTokenCount ? (
               <>
@@ -85,7 +93,7 @@ export function WorkflowRunItem({ workflowRun }: Props) {
           </Tabs>
 
           <DrawerFooter>
-            <DrawerClose>
+            <DrawerClose asChild>
               <Button variant="outline" className="mb-6">
                 Close
               </Button>

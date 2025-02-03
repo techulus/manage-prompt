@@ -3,6 +3,7 @@ import {
   AIModels,
   type WorkflowInput,
   WorkflowInputType,
+  WorkflowTestCondition,
 } from "@/data/workflow";
 import { z } from "zod";
 import { WebpageParser } from "./webpage-parser";
@@ -13,10 +14,10 @@ export const MAX_RATE_LIMIT_RPS = 50;
 const zodEnum = <T>(arr: T[]): [T, ...T[]] => arr as [T, ...T[]];
 
 export const WorkflowSchema = z.object({
+  model: z.enum(zodEnum<AIModel>(AIModels)),
   name: z.string().min(2).max(150),
   template: z.string().min(1).max(9999),
   instruction: z.string().optional().default(""),
-  model: z.enum(zodEnum<AIModel>(AIModels)),
   modelSettings: z.string().optional().nullable(),
   cacheControlTtl: z.number().int().optional().default(0),
   inputs: z.array(
@@ -26,6 +27,27 @@ export const WorkflowSchema = z.object({
       type: z.enum(["text", "textarea", "number", "url"]).optional(),
     }),
   ),
+});
+
+export const WorkflowBranchSchema = z.object({
+  shortId: z
+    .string()
+    .min(1)
+    .max(16)
+    .refine((value) => /^[a-zA-Z0-9-_]+$/.test(value ?? ""), {
+      message: "Branch name must be alphanumeric",
+    }),
+  model: z.enum(zodEnum<AIModel>(AIModels)),
+  template: z.string().min(1).max(9999),
+  instruction: z.string().optional().default(""),
+  modelSettings: z.string().optional().nullable(),
+});
+
+export const WorkflowTestSchema = z.object({
+  id: z.number(),
+  input: z.string(),
+  condition: z.enum(zodEnum<string>(Object.keys(WorkflowTestCondition))),
+  output: z.string(),
 });
 
 export const translateInputs = async ({

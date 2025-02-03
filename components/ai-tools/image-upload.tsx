@@ -1,6 +1,6 @@
 "use client";
 
-import { PhotoIcon } from "@heroicons/react/20/solid";
+import { Aperture } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
@@ -79,7 +79,7 @@ export function FileUploader({
           />
         ) : (
           <div className="text-center">
-            <PhotoIcon
+            <Aperture
               className="mx-auto h-12 w-12 text-primary"
               aria-hidden="true"
             />

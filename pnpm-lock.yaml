@@ -29,9 +29,6 @@ importers:
       '@headlessui/tailwindcss':
         specifier: ^0.2.0
         version: 0.2.1(tailwindcss@3.4.17)
-      '@heroicons/react':
-        specifier: ^2.0.17
-        version: 2.2.0(react@19.0.0)
       '@mozilla/readability':
         specifier: ^0.5.0
         version: 0.5.0
@@ -42,7 +39,7 @@ importers:
         specifier: ^5.17.0
         version: 5.22.0(pg@8.13.1)
       '@prisma/client':
-        specifier: ^5.18.0
+        specifier: ^5
         version: 5.22.0(prisma@5.22.0)
       '@prisma/extension-accelerate':
         specifier: ^1.1.0
@@ -250,7 +247,7 @@ importers:
         specifier: 19.0.3
         version: 19.0.3(@types/react@19.0.8)
       prisma:
-        specifier: ^5.18.0
+        specifier: ^5
         version: 5.22.0
       typescript:
         specifier: 5.0.4
@@ -778,11 +775,6 @@ packages:
     engines: {node: '>=10'}
     peerDependencies:
       tailwindcss: ^3.0
-
-  '@heroicons/react@2.2.0':
-    resolution: {integrity: sha512-LMcepvRaS9LYHJGsF0zzmgKCUim/X3N/DQKc4jepAXJ7l8QxJ1PmxJzqplF2Z3FE4PqBAIGyJAQ/w4B5dsqbtQ==}
-    peerDependencies:
-      react: '>= 16 || ^19.0.0-rc'
 
   '@huggingface/inference@2.8.1':
     resolution: {integrity: sha512-EfsNtY9OR6JCNaUa5bZu2mrs48iqeTz0Gutwf+fU0Kypx33xFQB4DKMhp8u4Ee6qVbLbNWvTHuWwlppLQl4p4Q==}
@@ -8482,10 +8474,6 @@ snapshots:
     dependencies:
       tailwindcss: 3.4.17
 
-  '@heroicons/react@2.2.0(react@19.0.0)':
-    dependencies:
-      react: 19.0.0
-
   '@huggingface/inference@2.8.1':
     dependencies:
       '@huggingface/tasks': 0.12.30
@@ -13012,7 +13000,7 @@ snapshots:
       isstream: 0.1.2
       jsonwebtoken: 9.0.2
       mime-types: 2.1.35
-      retry-axios: 2.6.0(axios@1.7.9(debug@4.4.0))
+      retry-axios: 2.6.0(axios@1.7.9)
       tough-cookie: 4.1.4
     transitivePeerDependencies:
       - supports-color
@@ -15438,7 +15426,7 @@ snapshots:
       path-parse: 1.0.7
       supports-preserve-symlinks-flag: 1.0.0
 
-  retry-axios@2.6.0(axios@1.7.9(debug@4.4.0)):
+  retry-axios@2.6.0(axios@1.7.9):
     dependencies:
       axios: 1.7.9(debug@4.4.0)
 

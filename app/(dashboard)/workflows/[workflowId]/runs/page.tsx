@@ -23,8 +23,6 @@ interface Props {
   }>;
 }
 
-export const maxDuration = 120;
-
 export default async function WorkflowRunDetails(props: Props) {
   const searchParams = await props.searchParams;
   const params = await props.params;
