@@ -69,8 +69,8 @@ export function WorkflowTestForm({ workflow, action }: Props) {
         ) : null}
 
         <div className="w-full">
-          {inputs?.length ? (
-            <div className="flex flex-col sm:flex-row sm:space-x-2 w-full space-between">
+          <div className="flex flex-col sm:flex-row sm:space-x-2 w-full space-between">
+            {inputs?.length ? (
               <div className="flex-1 flex-col space-y-2">
                 <h3 className="font-semibold">For Inputs</h3>
                 {(inputs as WorkflowInput[]).map(
@@ -104,31 +104,31 @@ export function WorkflowTestForm({ workflow, action }: Props) {
                         />
                       ) : null}
                     </div>
-                  )
+                  ),
                 )}
               </div>
+            ) : null}
 
-              <div className="flex-1 flex-inline space-y-1 sm:pl-4">
-                <h3 className="font-semibold">Test</h3>
-                <Label className="uppercase">Result</Label>
-                <Select name="condition">
-                  <SelectTrigger className="w-[240px]">
-                    <SelectValue placeholder="Condition" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {Object.keys(WorkflowTestCondition).map((condition) => (
-                      <SelectItem key={condition} value={condition}>
-                        {WorkflowTestCondition[condition]}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+            <div className="flex-1 flex-inline space-y-1 sm:pl-4">
+              <h3 className="font-semibold">Test</h3>
+              <Label className="uppercase">Result</Label>
+              <Select name="condition">
+                <SelectTrigger className="w-[240px]">
+                  <SelectValue placeholder="Condition" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.keys(WorkflowTestCondition).map((condition) => (
+                    <SelectItem key={condition} value={condition}>
+                      {WorkflowTestCondition[condition]}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-                <Label className="uppercase mt-2">Value</Label>
-                <Input name="output" />
-              </div>
+              <Label className="uppercase mt-2">Value</Label>
+              <Input name="output" />
             </div>
-          ) : null}
+          </div>
         </div>
 
         <div className="flex items-center justify-end gap-x-6 mt-6">
