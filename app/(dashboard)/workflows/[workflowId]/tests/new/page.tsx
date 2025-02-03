@@ -28,10 +28,11 @@ export default async function CreateWorkflowTest(props: {
       <CardHeader>
         <Alert>
           <Terminal className="h-4 w-4" />
-          <AlertTitle>Heads up!</AlertTitle>
+          <AlertTitle>Test?!</AlertTitle>
           <AlertDescription>
-            A workflow is an AI prompt with a pre-defined set of inputs &
-            configuration. It can be run using our API or the console.
+            A test is a way to verify that your workflow is working as expected.
+            You can create a test by providing the input and the expected
+            output.
           </AlertDescription>
         </Alert>
       </CardHeader>
