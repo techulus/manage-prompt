@@ -91,7 +91,7 @@ importers:
         version: 2.4.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@upstash/rag-chat':
         specifier: ^2.0.3
-        version: 2.0.3(2fr5rarhyonymdkjizfjetq23i)
+        version: 2.0.3(ekx5zrigzwpg7k7pddhzgb77si)
       '@upstash/ratelimit':
         specifier: ^1.0.1
         version: 1.2.1
@@ -101,15 +101,9 @@ importers:
       '@upstash/vector':
         specifier: ^1.1.5
         version: 1.2.0
-      '@vercel/analytics':
-        specifier: ^1.0.1
-        version: 1.4.1(next@15.1.6(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)(svelte@4.2.19)(vue@3.5.13(typescript@5.0.4))
-      '@vercel/blob':
-        specifier: ^0.27.1
-        version: 0.27.1
       '@vercel/functions':
-        specifier: ^1.4.0
-        version: 1.6.0(@aws-sdk/credential-provider-web-identity@3.734.0)
+        specifier: ^2.0.0
+        version: 2.0.0(@aws-sdk/credential-provider-web-identity@3.734.0)
       ai:
         specifier: ^4.1.16
         version: 4.1.16(react@19.0.0)(zod@3.24.1)
@@ -191,9 +185,6 @@ importers:
       remark-gfm:
         specifier: ^4.0.0
         version: 4.0.0
-      replicate:
-        specifier: ^0.22.0
-        version: 0.22.0
       sharp:
         specifier: ^0.32.0
         version: 0.32.6
@@ -3075,17 +3066,13 @@ packages:
       vue-router:
         optional: true
 
-  '@vercel/blob@0.27.1':
-    resolution: {integrity: sha512-X5EG9W1cZW+Nbt/XdrJJSl5DzCXXn1JRP5nfFwkpFD03nB6uh6BldwX4syElHcciM4Pih8CS7Ri1mtLCJvxSHA==}
-    engines: {node: '>=16.14'}
-
   '@vercel/blob@0.9.3':
     resolution: {integrity: sha512-/joEYvzqiItiUdN/WgrA/ICpOfBe1b/5eTJhMd92PHiXw0AEsi41FgGyoKhtFISkkkjOY6c7VO0MHAg/TaWooQ==}
     engines: {node: '>=16.14'}
 
-  '@vercel/functions@1.6.0':
-    resolution: {integrity: sha512-R6FKQrYT5MZs5IE1SqeCJWxMuBdHawFcCZboKKw8p7s+6/mcd55Gx6tWmyKnQTyrSEA04NH73Tc9CbqpEle8RA==}
-    engines: {node: '>= 16'}
+  '@vercel/functions@2.0.0':
+    resolution: {integrity: sha512-BSwIihLHoV18gerKZJyGuqd3rtaYM6rJvET1kOwKktshucyaHXTJel7Cxegs+sdX0NZqsX4LO2MFnMU2jG01Cw==}
+    engines: {node: '>= 18'}
     peerDependencies:
       '@aws-sdk/credential-provider-web-identity': '*'
     peerDependenciesMeta:
@@ -3335,9 +3322,6 @@ packages:
   async-function@1.0.0:
     resolution: {integrity: sha512-hsU18Ae8CDTR6Kgu9DYf0EbCr/a5iGL0rytQDobUcdpYOKokk8LEjVphnXkDkgpi0wYVsqrXuP0bZxJaTqdgoA==}
     engines: {node: '>= 0.4'}
-
-  async-retry@1.3.3:
-    resolution: {integrity: sha512-wfr/jstw9xNi/0teMHrRW7dsz3Lt5ARhYNZ2ewpadnhaIp5mbALhOAP+EAdsC7t4Z6wqsDVv9+W6gm1Dk9mEyw==}
 
   async@3.2.6:
     resolution: {integrity: sha512-htCUDlxyyCLMgaM3xXg0C0LW2xqfuQ6p05pCEIsXuyQ+a1koYKTuBMzRNwmybfLgvJDMd0r1LTn4+E0Ti6C2AA==}
@@ -4823,9 +4807,6 @@ packages:
   is-map@2.0.3:
     resolution: {integrity: sha512-1Qed0/Hr2m+YqxnM09CjA2d/i6YZNfF6R2oRAOj36eUdS6qIV/huPJNSEpKbupewFs+ZsJlxsjjPbc0/afW6Lw==}
     engines: {node: '>= 0.4'}
-
-  is-node-process@1.2.0:
-    resolution: {integrity: sha512-Vg4o6/fqPxIjtxgUH5QLJhwZ7gW5diGCVlXpuUfELC62CuxM1iHcRe51f2W1FDy04Ai4KJkagKjx3XaqyfRKXw==}
 
   is-number-object@1.1.1:
     resolution: {integrity: sha512-lZhclumE1G6VYD8VHe35wFaIif+CTy5SJIi5+3y4psDgWu4wPDoBhF8NxUOinEc7pHgiTsT6MaBb92rKhhD+Xw==}
@@ -6565,10 +6546,6 @@ packages:
 
   remark-stringify@11.0.0:
     resolution: {integrity: sha512-1OSmLd3awB/t8qdoEOMazZkNsfVTeY4fTsgzcQFdXNq8ToTN4ZGwrMnlda4K6smTFKD+GRV6O48i6Z4iKgPPpw==}
-
-  replicate@0.22.0:
-    resolution: {integrity: sha512-jUfvYCcnnzG0l3NzgNLUBRfv7e5ZcZpBWzxGqx3v8bkvJmY0jK19JRtFtBgJFRBye61ggH1zC9cubGkburF82g==}
-    engines: {git: '>=2.11.0', node: '>=18.0.0', npm: '>=7.19.0', yarn: '>=1.7.0'}
 
   require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
@@ -8424,7 +8401,8 @@ snapshots:
 
   '@eslint/js@8.36.0': {}
 
-  '@fastify/busboy@2.1.1': {}
+  '@fastify/busboy@2.1.1':
+    optional: true
 
   '@floating-ui/core@1.6.9':
     dependencies:
@@ -8648,7 +8626,7 @@ snapshots:
       - encoding
       - openai
 
-  '@langchain/community@0.3.28(yhubog4c4bvjqhsqyheumo3oxi)':
+  '@langchain/community@0.3.28(savqsk44u64bhdis5wmwdtqhpm)':
     dependencies:
       '@browserbasehq/stagehand': 1.11.0(@playwright/test@1.50.1)(bufferutil@4.0.9)(deepmerge@4.3.1)(dotenv@16.4.7)(encoding@0.1.13)(openai@4.82.0(encoding@0.1.13)(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.1))(zod@3.24.1)
       '@ibm-cloud/watsonx-ai': 1.4.0(@langchain/core@0.2.36(openai@4.82.0(encoding@0.1.13)(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.1)))
@@ -8700,7 +8678,6 @@ snapshots:
       pg: 8.13.1
       playwright: 1.50.1
       portkey-ai: 0.1.16
-      replicate: 0.22.0
       ws: 8.18.0(bufferutil@4.0.9)
     transitivePeerDependencies:
       - '@gomomento/sdk-web'
@@ -10796,11 +10773,11 @@ snapshots:
     dependencies:
       '@upstash/redis': 1.34.3
 
-  '@upstash/rag-chat@2.0.3(2fr5rarhyonymdkjizfjetq23i)':
+  '@upstash/rag-chat@2.0.3(ekx5zrigzwpg7k7pddhzgb77si)':
     dependencies:
       '@ai-sdk/openai': 0.0.44(zod@3.24.1)
       '@langchain/anthropic': 0.2.18(encoding@0.1.13)(openai@4.82.0(encoding@0.1.13)(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.1))
-      '@langchain/community': 0.3.28(yhubog4c4bvjqhsqyheumo3oxi)
+      '@langchain/community': 0.3.28(savqsk44u64bhdis5wmwdtqhpm)
       '@langchain/core': 0.2.36(openai@4.82.0(encoding@0.1.13)(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.1))
       '@langchain/mistralai': 0.0.28(encoding@0.1.13)(openai@4.82.0(encoding@0.1.13)(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.1))
       '@langchain/openai': 0.2.11(encoding@0.1.13)(ws@8.18.0(bufferutil@4.0.9))
@@ -10983,21 +10960,6 @@ snapshots:
       svelte: 4.2.19
       vue: 3.5.13(typescript@5.0.4)
 
-  '@vercel/analytics@1.4.1(next@15.1.6(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)(svelte@4.2.19)(vue@3.5.13(typescript@5.0.4))':
-    optionalDependencies:
-      next: 15.1.6(@opentelemetry/api@1.9.0)(@playwright/test@1.50.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
-      react: 19.0.0
-      svelte: 4.2.19
-      vue: 3.5.13(typescript@5.0.4)
-
-  '@vercel/blob@0.27.1':
-    dependencies:
-      async-retry: 1.3.3
-      is-buffer: 2.0.5
-      is-node-process: 1.2.0
-      throttleit: 2.1.0
-      undici: 5.28.5
-
   '@vercel/blob@0.9.3(bufferutil@4.0.9)(canvas@2.11.2(encoding@0.1.13))':
     dependencies:
       jest-environment-jsdom: 29.6.1(bufferutil@4.0.9)(canvas@2.11.2(encoding@0.1.13))
@@ -11008,7 +10970,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@vercel/functions@1.6.0(@aws-sdk/credential-provider-web-identity@3.734.0)':
+  '@vercel/functions@2.0.0(@aws-sdk/credential-provider-web-identity@3.734.0)':
     optionalDependencies:
       '@aws-sdk/credential-provider-web-identity': 3.734.0
 
@@ -11308,10 +11270,6 @@ snapshots:
   ast-types-flow@0.0.8: {}
 
   async-function@1.0.0: {}
-
-  async-retry@1.3.3:
-    dependencies:
-      retry: 0.13.1
 
   async@3.2.6: {}
 
@@ -13000,7 +12958,7 @@ snapshots:
       isstream: 0.1.2
       jsonwebtoken: 9.0.2
       mime-types: 2.1.35
-      retry-axios: 2.6.0(axios@1.7.9)
+      retry-axios: 2.6.0(axios@1.7.9(debug@4.4.0))
       tough-cookie: 4.1.4
     transitivePeerDependencies:
       - supports-color
@@ -13143,8 +13101,6 @@ snapshots:
   is-hexadecimal@2.0.1: {}
 
   is-map@2.0.3: {}
-
-  is-node-process@1.2.0: {}
 
   is-number-object@1.1.1:
     dependencies:
@@ -15397,8 +15353,6 @@ snapshots:
       mdast-util-to-markdown: 2.1.2
       unified: 11.0.5
 
-  replicate@0.22.0: {}
-
   require-directory@2.1.1:
     optional: true
 
@@ -15426,7 +15380,7 @@ snapshots:
       path-parse: 1.0.7
       supports-preserve-symlinks-flag: 1.0.0
 
-  retry-axios@2.6.0(axios@1.7.9):
+  retry-axios@2.6.0(axios@1.7.9(debug@4.4.0)):
     dependencies:
       axios: 1.7.9(debug@4.4.0)
 
@@ -16201,6 +16155,7 @@ snapshots:
   undici@5.28.5:
     dependencies:
       '@fastify/busboy': 2.1.1
+    optional: true
 
   undici@6.21.1: {}
 
