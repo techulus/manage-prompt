@@ -22,22 +22,6 @@ const navigation = {
       name: "Summarise Text",
       href: "/ai-tools/summarise-text",
     },
-    {
-      name: "Photo Colorizer",
-      href: "/ai-tools/black-and-white-to-color",
-    },
-    {
-      name: "Realistic Image Creator",
-      href: "/ai-tools/photo-realistic-image-creator",
-    },
-    {
-      name: "Image Upscale",
-      href: "/ai-tools/image-upscale",
-    },
-    {
-      name: "Remove Background",
-      href: "/ai-tools/remove-background",
-    },
   ],
   project: [
     { name: "Source code", href: "https://github.com/techulus/manage-prompt" },
