@@ -242,16 +242,3 @@ model ChatBotUserSession {
   @@unique([chatbotId, sessionId])
   @@index([chatbotId, sessionId])
 }
-
-// Free tools
-model ImageOrder {
-  id           Int      @id @default(autoincrement())
-  predictionId String?  @unique
-  type         String
-  inputUrl     String
-  inputPrompt  String?
-  inputData    Json?
-  outputUrl    String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-}

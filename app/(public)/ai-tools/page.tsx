@@ -27,29 +27,6 @@ export default async function FreeAiTools() {
         "Use AI to summarise your text and generate a short summary.",
       href: "/ai-tools/summarise-text",
     },
-    {
-      title: "Photo Colorizer",
-      description:
-        "Colorize your black and white photos using AI to bring them to life.",
-      href: "/ai-tools/black-and-white-to-color",
-    },
-    {
-      title: "Photo Realistic Image Creator",
-      description:
-        "Create photo realistic images using AI to generate images from text.",
-      href: "/ai-tools/photo-realistic-image-creator",
-    },
-    {
-      title: "Image Upscaling",
-      description:
-        "Upscale your images using AI to enhance the details and sharpness.",
-      href: "/ai-tools/image-upscale",
-    },
-    {
-      title: "Remove Background",
-      description: "Use AI to remove the background from your images.",
-      href: "/ai-tools/remove-background",
-    },
   ];
 
   return (

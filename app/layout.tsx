@@ -1,6 +1,5 @@
 import { ThemeProvider } from "@/components/core/theme-provider";
 import { SITE_METADATA } from "@/data/marketing";
-import { Analytics } from "@vercel/analytics/react";
 import classNames from "classnames";
 import { Archivo } from "next/font/google";
 import Script from "next/script";
@@ -105,7 +104,6 @@ export default async function RootLayout({
           data-key="ENZwU7AFoU9yXXczsA6Avw"
         />
       </body>
-      <Analytics />
     </html>
   );
 }
