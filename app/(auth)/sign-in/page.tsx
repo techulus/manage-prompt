@@ -45,8 +45,6 @@ export default function SignInForm() {
       );
     } catch (error) {
       console.error(error);
-    } finally {
-      setProcessing(false);
     }
   }, [email]);
 
@@ -103,7 +101,7 @@ export default function SignInForm() {
             </p>
           ) : (
             <Button
-              className="gap-2"
+              className="gap-2 disabled:opacity-50"
               disabled={processing}
               onClick={signInWithMagicLink}
             >
