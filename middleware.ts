@@ -25,11 +25,13 @@ export async function middleware(request: NextRequest) {
   }
 
   const session = getSessionCookie(request);
+  console.log("middleware", session);
   if (session && pathname === "/sign-in") {
     return NextResponse.redirect(new URL("/start", request.nextUrl.href));
   }
 
   if (!session) {
+    console.log("redirecting to sign-in");
     return NextResponse.redirect(
       new URL(
         `/sign-in?redirectTo=${encodeURIComponent(request.nextUrl.href)}`,
