@@ -11,7 +11,6 @@ import { useParams, usePathname } from "next/navigation";
 import { useMemo } from "react";
 import logo from "../../public/images/logo.png";
 import { UserButton } from "../core/auth";
-import { createToastWrapper } from "../core/toast";
 
 type Props = {
   isPublicPage?: boolean;
@@ -80,7 +79,6 @@ export default function NavBar({ isPublicPage = false }: Props) {
 
   return (
     <>
-      {createToastWrapper(theme)}
       <nav
         className={cn(
           "flex-shrink-0 text-black dark:text-white",

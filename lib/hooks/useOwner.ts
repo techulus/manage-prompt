@@ -1,5 +1,6 @@
-import { auth } from "@/auth";
 import type { User } from "@prisma/client";
+import { headers } from "next/headers";
+import { auth } from "../auth";
 import { prisma } from "../utils/db";
 
 type Result = {
@@ -9,7 +10,9 @@ type Result = {
 };
 
 export async function owner(): Promise<Result> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
   if (!session?.user?.id) {
     throw new Error("User not found");
@@ -23,7 +26,9 @@ export async function owner(): Promise<Result> {
 }
 
 export async function getUser(): Promise<User | null> {
-  const session = await auth();
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
   if (!session?.user?.id) {
     throw new Error("User not found");
   }

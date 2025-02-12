@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { notifyError, notifySuccess } from "../core/toast";
+import { toast } from "sonner";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { ActionButton } from "./button";
@@ -28,9 +28,9 @@ export function EditableValue({
         try {
           const result = await action(formData);
           if (result?.error) {
-            notifyError(result.error);
+            toast.error(result.error);
           } else {
-            notifySuccess("Updated successfully");
+            toast.success("Updated successfully");
           }
         } finally {
           setIsEditing(false);

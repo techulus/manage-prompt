@@ -17,7 +17,7 @@ import {
 import type { Workflow } from "@prisma/client";
 import Link from "next/link";
 import { useReducer } from "react";
-import { notifyError, notifySuccess } from "../../core/toast";
+import { toast } from "sonner";
 import { SaveButton } from "../../form/button";
 import { buttonVariants } from "../../ui/button";
 import { Input } from "../../ui/input";
@@ -43,9 +43,9 @@ export function WorkflowTestForm({ workflow, action }: Props) {
       action={async (data: FormData) => {
         const result = await action(data);
         if (result?.error) {
-          notifyError(result.error);
+          toast.error(result.error);
         } else {
-          notifySuccess("Done");
+          toast.success("Done");
         }
       }}
     >

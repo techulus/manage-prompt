@@ -1,4 +1,5 @@
 import { ThemeProvider } from "@/components/core/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 import { SITE_METADATA } from "@/data/marketing";
 import classNames from "classnames";
 import { Archivo } from "next/font/google";
@@ -103,6 +104,7 @@ export default async function RootLayout({
           src="https://analytics.ahrefs.com/analytics.js"
           data-key="ENZwU7AFoU9yXXczsA6Avw"
         />
+        <Toaster />
       </body>
     </html>
   );

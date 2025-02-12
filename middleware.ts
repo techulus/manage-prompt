@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
-import { auth } from "./auth";
+import { getSessionCookie } from "better-auth";
+import { type NextRequest, NextResponse } from "next/server";
 
 const publicAppPaths = [
   "/sign-in",
@@ -14,12 +14,8 @@ const publicAppPaths = [
   "/embed/chatbot",
 ];
 
-export default auth(async (req) => {
-  const pathname = req.nextUrl.pathname;
-
-  if (req.auth && pathname === "/sign-in") {
-    return NextResponse.redirect(new URL("/start", req.nextUrl.href));
-  }
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
 
   const isPublicAppPath = publicAppPaths.some((path) =>
     pathname.startsWith(path),
@@ -28,17 +24,22 @@ export default auth(async (req) => {
     return NextResponse.next();
   }
 
-  if (!req.auth) {
+  const session = getSessionCookie(request);
+  if (session && pathname === "/sign-in") {
+    return NextResponse.redirect(new URL("/start", request.nextUrl.href));
+  }
+
+  if (!session) {
     return NextResponse.redirect(
       new URL(
-        `/sign-in?redirectTo=${encodeURIComponent(req.nextUrl.href)}`,
-        req.url,
+        `/sign-in?redirectTo=${encodeURIComponent(request.nextUrl.href)}`,
+        request.url,
       ),
     );
   }
 
   return NextResponse.next();
-});
+}
 
 export const config = {
   matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],

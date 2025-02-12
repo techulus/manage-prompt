@@ -16,7 +16,7 @@ import { useDebounce } from "@uidotdev/usehooks";
 import { useChat } from "ai/react";
 import { CornerDownLeft, Trash2Icon, UserIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 function ChatView({ token, isEmbed }: { token: string; isEmbed?: boolean }) {
   const [loading, setLoading] = useState(true);
@@ -48,7 +48,7 @@ function ChatView({ token, isEmbed }: { token: string; isEmbed?: boolean }) {
 
   const clearChatHistory = useCallback(async () => {
     setMessages([]);
-    await toast.promise(
+     toast.promise(
       fetch(`/api/v1/chat/${token}/history`, {
         method: "DELETE",
       }),
