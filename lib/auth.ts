@@ -39,10 +39,4 @@ export const auth = betterAuth({
     nextCookies(),
   ],
   trustedOrigins: [process.env.APP_BASE_URL!],
-  session: {
-    cookieCache: {
-      enabled: true,
-      maxAge: 5 * 60,
-    },
-  },
 });
