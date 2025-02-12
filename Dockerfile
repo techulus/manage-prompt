@@ -13,7 +13,8 @@ RUN apk add --no-cache \
     gcc \
     musl-dev \
     cmake \
-    curl
+    curl \
+    libssl-dev
 
 # Stage 1: Install dependencies
 FROM base AS deps
