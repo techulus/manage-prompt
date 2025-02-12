@@ -3,9 +3,6 @@ const { withSentryConfig } = require("@sentry/nextjs");
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
-  experimental: {
-    turbo: {},
-  },
 };
 
 module.exports = withSentryConfig(
