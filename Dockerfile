@@ -1,6 +1,7 @@
 FROM node:lts-alpine AS base
 
 ARG NEXT_PUBLIC_APP_URL
+ARG DATABASE_URL
 ARG DIRECT_DATABASE_URL
 
 # Install build tools and dependencies
@@ -12,8 +13,7 @@ RUN apk add --no-cache \
     gcc \
     musl-dev \
     cmake \
-    curl \
-    sqlite
+    curl
 
 # Stage 1: Install dependencies
 FROM base AS deps
