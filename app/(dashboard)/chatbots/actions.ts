@@ -6,7 +6,6 @@ import { index, ragChat } from "@/lib/utils/rag-chat";
 import { z } from "@/node_modules/zod";
 import { fromZodError } from "@/node_modules/zod-validation-error";
 import { createId } from "@paralleldrive/cuid2";
-import { waitUntil } from "@vercel/functions";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -76,25 +75,29 @@ export async function createChatBot(payload: FormData) {
     for (const item of validationResult.data.contextItems) {
       if (!item?.source) continue;
       if (item.type === "html") {
-        waitUntil(
-          ragChat.context.add({
+        ragChat.context
+          .add({
             type: item.type as any,
             source: item.source,
             options: {
               namespace,
             },
-          }),
-        );
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       } else {
-        waitUntil(
-          ragChat.context.add({
+        ragChat.context
+          .add({
             type: item.type as any,
             fileSource: item.source as any,
             options: {
               namespace,
             },
-          }),
-        );
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       }
     }
   }
@@ -158,25 +161,29 @@ export async function updateChatBot(payload: FormData) {
     for (const item of validationResult.data.contextItems) {
       if (!item?.source) continue;
       if (item.type === "html") {
-        waitUntil(
-          ragChat.context.add({
+        ragChat.context
+          .add({
             type: item.type as any,
             source: item.source,
             options: {
               namespace,
             },
-          }),
-        );
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       } else {
-        waitUntil(
-          ragChat.context.add({
+        ragChat.context
+          .add({
             type: item.type as any,
             fileSource: item.source as any,
             options: {
               namespace,
             },
-          }),
-        );
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       }
     }
   }

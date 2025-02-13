@@ -18,13 +18,15 @@ import {
   getWorkflowCachedResult,
 } from "@/lib/utils/useWorkflow";
 import { translateInputs } from "@/lib/utils/workflow";
-import { waitUntil } from "@vercel/functions";
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 
 export const maxDuration = 120;
 
-export async function POST(req: Request, props: { params: Promise<{ workflowId: string }> }) {
+export async function POST(
+  req: Request,
+  props: { params: Promise<{ workflowId: string }> },
+) {
   const params = await props.params;
   try {
     const authorization = req.headers.get("authorization");
@@ -150,41 +152,41 @@ export async function POST(req: Request, props: { params: Promise<{ workflowId: 
       totalTokenCount = Math.floor(totalTokenCount * 0.3);
     }
 
-    waitUntil(
-      Promise.all([
-        reportUsage(
-          organization?.id,
-          organization?.stripe?.subscription as unknown as Stripe.Subscription,
+    Promise.all([
+      reportUsage(
+        organization?.id,
+        organization?.stripe?.subscription as unknown as Stripe.Subscription,
+        totalTokenCount,
+      ),
+      prisma.workflowRun.create({
+        data: {
+          result,
+          rawRequest: JSON.parse(JSON.stringify({ model, content })),
+          rawResult: JSON.parse(JSON.stringify(rawResult)),
           totalTokenCount,
-        ),
-        prisma.workflowRun.create({
-          data: {
-            result,
-            rawRequest: JSON.parse(JSON.stringify({ model, content })),
-            rawResult: JSON.parse(JSON.stringify(rawResult)),
-            totalTokenCount,
-            user: {
-              connect: {
-                id: key.ownerId,
-              },
-            },
-            workflow: {
-              connect: {
-                id: workflow.id,
-              },
+          user: {
+            connect: {
+              id: key.ownerId,
             },
           },
-        }),
-        workflow.cacheControlTtl
-          ? cacheWorkflowResult(
-              params.workflowId,
-              JSON.stringify(body),
-              result,
-              workflow.cacheControlTtl,
-            )
-          : null,
-      ]),
-    );
+          workflow: {
+            connect: {
+              id: workflow.id,
+            },
+          },
+        },
+      }),
+      workflow.cacheControlTtl
+        ? cacheWorkflowResult(
+            params.workflowId,
+            JSON.stringify(body),
+            result,
+            workflow.cacheControlTtl,
+          )
+        : null,
+    ]).catch((error) => {
+      console.error(error);
+    });
 
     return NextResponse.json(
       { success: true, result },
