@@ -19,14 +19,6 @@
 
 If you want to learn more about this project or have any questions, send us an email at [hello+manageprompt@techulus.com](mailto:hello+manageprompt@techulus.com)
 
-## Built with 🛠️
-
-- [Next.js](https://nextjs.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Auth.js](https://authjs.dev)
-- [Upstash](https://upstash.com)
-- Several AI models and AI services
-
 ## Getting Started 🚀
 
 ### Requirements

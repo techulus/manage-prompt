@@ -3,9 +3,8 @@
 import { FileIcon } from "@radix-ui/react-icons";
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { Spinner } from "../../core/loaders";
-import { notifyError } from "../../core/toast";
 import { buttonVariants } from "../../ui/button";
 import {
   Dialog,
@@ -33,7 +32,7 @@ export const ImportWorkflowDialog = () => {
             if (res?.success) {
               window.location.reload();
             } else {
-              notifyError(
+              toast.error(
                 res?.message ||
                   "Failed to upload file, please try again or contact support."
               );
@@ -47,12 +46,11 @@ export const ImportWorkflowDialog = () => {
     });
 
     toast
-      .promise(Promise.all(uploaders), {
+      .promise(Promise.all(uploaders).finally(() => setLoading(false)), {
         loading: "Uploading...",
         success: "Upload completed!",
         error: "Failed to upload file(s)",
       })
-      .finally(() => setLoading(false));
   }, []);
 
   const { getRootProps, getInputProps } = useDropzone({

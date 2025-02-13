@@ -12,7 +12,7 @@ import type { Workflow } from "@prisma/client";
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import slugify from "slugify";
-import { notifyError, notifySuccess } from "../../core/toast";
+import { toast } from "sonner";
 import { SaveButton } from "../../form/button";
 import { Button, buttonVariants } from "../../ui/button";
 import { Input } from "../../ui/input";
@@ -101,9 +101,9 @@ export function WorkflowForm({
       action={async (data: FormData) => {
         const result = await action(data);
         if (result?.error) {
-          notifyError(result.error);
+          toast.error(result.error);
         } else {
-          notifySuccess("Workflow saved successfully");
+          toast.success("Workflow saved successfully");
         }
       }}
     >

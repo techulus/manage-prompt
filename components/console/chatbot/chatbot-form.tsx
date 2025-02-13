@@ -4,7 +4,7 @@ import type { ChatBot } from "@prisma/client";
 import { PlusCircleIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { notifyError, notifySuccess } from "../../core/toast";
+import { toast } from "sonner";
 import { SaveButton } from "../../form/button";
 import { Button, buttonVariants } from "../../ui/button";
 import { Input } from "../../ui/input";
@@ -43,9 +43,9 @@ export function ChatbotForm({ chatbot, action }: Props) {
       action={async (data: FormData) => {
         const result = await action(data);
         if (result?.error) {
-          notifyError(result.error);
+          toast.error(result.error);
         } else {
-          notifySuccess("Chatbot created successfully");
+          toast.success("Chatbot created successfully");
         }
       }}
     >

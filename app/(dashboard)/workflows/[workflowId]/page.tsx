@@ -58,16 +58,6 @@ export default async function WorkflowEditor(props: Props) {
 
   return (
     <>
-      {!workflow.published ? (
-        <Alert variant="destructive" className="mx-auto max-w-7xl mt-4">
-          <Terminal className="h-4 w-4" />
-          <AlertTitle>Heads up!</AlertTitle>
-          <AlertDescription>
-            This workflow is not active and hence cannot be run.
-          </AlertDescription>
-        </Alert>
-      ) : null}
-
       {/* Toolbar*/}
       <PageSection bottomMargin className="-mt-4">
         <div className="flex flex-col justify-center">
@@ -143,6 +133,16 @@ export default async function WorkflowEditor(props: Props) {
           </div>
         </div>
       </PageSection>
+
+      {!workflow.published ? (
+        <Alert variant="destructive" className="mx-auto max-w-7xl mt-4">
+          <Terminal className="h-4 w-4" />
+          <AlertTitle>Heads up!</AlertTitle>
+          <AlertDescription>
+            This workflow is not active and hence cannot be run.
+          </AlertDescription>
+        </Alert>
+      ) : null}
 
       <PageSection>
         <WorkflowComposer

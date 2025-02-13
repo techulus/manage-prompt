@@ -1,4 +1,5 @@
 import PageSection from "@/components/core/page-section";
+import { ManagePasskeys } from "@/components/core/passkeys";
 import { ActionButton, DeleteButton } from "@/components/form/button";
 import { EditableValue } from "@/components/form/editable-text";
 import PageTitle from "@/components/layout/page-title";
@@ -140,7 +141,7 @@ export default async function Settings() {
                           <span className="ml-2">
                             USD {(invoice.amount_remaining / 100).toFixed(2)} on{" "}
                             {DateTime.fromSeconds(
-                              invoice.period_end
+                              invoice.period_end,
                             ).toDateString()}
                           </span>
                         </p>
@@ -354,6 +355,8 @@ export default async function Settings() {
           </dl>
         </div>
       </PageSection>
+
+      <ManagePasskeys />
     </>
   );
 }

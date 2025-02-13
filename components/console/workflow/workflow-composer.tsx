@@ -8,8 +8,8 @@ import {
 } from "@/data/workflow";
 import type { Workflow } from "@prisma/client";
 import { useMemo, useReducer } from "react";
+import { toast } from "sonner";
 import { ApiCodeSnippet } from "../../code/snippet";
-import { notifyError } from "../../core/toast";
 import { SaveButton } from "../../form/button";
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
@@ -60,7 +60,7 @@ export function WorkflowComposer({ workflow, apiSecretKey, branch }: Props) {
         action={async (data: FormData) => {
           const result = await runWorkflow(data);
           if (result?.error) {
-            notifyError(result.error as string);
+            toast.error(result.error as string);
           }
         }}
       >

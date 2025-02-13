@@ -1,61 +1,144 @@
 "use client";
 
-import { createToastWrapper } from "@/components/core/toast";
-import { ActionButton } from "@/components/form/button";
-import { Header } from "@/components/layout/header";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import toast from "react-hot-toast";
-import { login } from "../actions";
+import { signIn } from "@/lib/auth-client";
+import { FingerprintIcon } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
+import { toast } from "sonner";
+import logo from "../../../public/images/logo.png";
 
 export default function SignInForm() {
+  const [email, setEmail] = useState("");
+  const [processing, setProcessing] = useState(false);
+  const [hasSendEmail, setHasSendEmail] = useState(false);
+
+  const router = useRouter();
+
+  const signInWithMagicLink = useCallback(async () => {
+    try {
+      if (!email) return;
+      setProcessing(true);
+      toast.promise(
+        signIn
+          .magicLink({ email, callbackURL: "/start" })
+          .then((result) => {
+            if (result?.error) {
+              throw new Error(result.error?.message);
+            }
+
+            setHasSendEmail(true);
+          })
+          .finally(() => {
+            setProcessing(false);
+          }),
+        {
+          loading: "Sending magic link...",
+          success: "Magic link sent!",
+          error: "Failed to send magic link.",
+        },
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  }, [email]);
+
   return (
     <div className="m-6 flex h-full items-center justify-center">
-      <Header />
-      {createToastWrapper("dark")}
-
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle className="text-hero text-4xl">Get Started</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-4">
-          <div className="grid gap-2">
-            <form
-              action={(formData) => {
-                toast.promise(login(formData), {
-                  loading: "Logging in...",
-                  success: "Logged in!",
-                  error: "Failed to log in.",
-                });
-              }}
-            >
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="john.doe@manageprompt.com"
-                name="email"
-                required
-              />
+          <div className="flex lg:flex-1">
+            <Image
+              src={logo}
+              alt="Manage"
+              width={32}
+              height={32}
+              className="-mt-2 mr-2 rounded-md"
+            />
 
-              <ActionButton
-                variant="default"
-                className="mt-2 w-full"
-                label="Sign in"
-                loadingLabel="Logging in..."
-              />
-            </form>
+            <Link href="/" className="-m-1.5 p-1.5" prefetch={false}>
+              <p className="relative tracking-tight">
+                Manage
+                <sup className="absolute left-[calc(100%+.1rem)] top-0 text-xs">
+                  [beta]
+                </sup>
+              </p>
+            </Link>
           </div>
+
+          <CardTitle className="text-hero text-2xl">Get Started</CardTitle>
+        </CardHeader>
+
+        <CardContent className="grid gap-4">
+          <Label htmlFor="email">Email</Label>
+
+          <Input
+            id="email"
+            type="email"
+            placeholder="m@example.com"
+            required
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                signInWithMagicLink();
+              }
+            }}
+            value={email}
+          />
+
+          {hasSendEmail ? (
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              An email has been sent to{" "}
+              <span className="font-semibold">{email}</span> with a magic link
+              to sign in.
+            </p>
+          ) : (
+            <Button
+              className="gap-2 disabled:opacity-50"
+              disabled={processing}
+              onClick={signInWithMagicLink}
+            >
+              {processing ? "Sending magic link..." : "Sign-in with Magic Link"}
+            </Button>
+          )}
+
+          <Button
+            variant="secondary"
+            className="gap-2"
+            disabled={processing}
+            onClick={async () => {
+              setProcessing(true);
+              toast.promise(
+                signIn
+                  .passkey()
+                  .then((result) => {
+                    if (result?.error) {
+                      throw new Error(result.error?.message);
+                    }
+
+                    router.push("/start");
+                  })
+                  .finally(() => {
+                    setProcessing(false);
+                  }),
+                {
+                  loading: "Waiting for passkey...",
+                  success: "Signed in with passkey!",
+                  error: "Failed to receive passkey.",
+                },
+              );
+            }}
+          >
+            <FingerprintIcon size={16} />
+            Sign-in with Passkey
+          </Button>
         </CardContent>
       </Card>
     </div>
