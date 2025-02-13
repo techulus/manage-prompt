@@ -64,9 +64,6 @@ export async function POST(
       where: {
         shortId: params.workflowId,
       },
-      cacheStrategy: {
-        ttl: 60,
-      },
     });
     if (!workflow || !workflow?.published) {
       return ErrorResponse("Workflow not found", 404);

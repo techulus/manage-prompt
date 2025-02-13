@@ -15,9 +15,6 @@ export async function GET(
     where: {
       id: params.token,
     },
-    cacheStrategy: {
-      ttl: 3600,
-    },
   });
   if (!tokenData) {
     return UnauthorizedResponse();
@@ -41,9 +38,6 @@ export async function DELETE(
   const tokenData = await prisma.chatBotUserSession.findUnique({
     where: {
       id: params.token,
-    },
-    cacheStrategy: {
-      ttl: 3600,
     },
   });
   if (!tokenData) {

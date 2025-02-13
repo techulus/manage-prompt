@@ -20,9 +20,6 @@ export async function getWorkflowUsage(id: number | string): Promise<{
         gte: new Date(new Date().setDate(new Date().getDate() - 30)),
       },
     },
-    cacheStrategy: {
-      ttl: 300,
-    },
   });
 
   return {

@@ -33,9 +33,6 @@ export async function POST(
     where: {
       id: params.token,
     },
-    cacheStrategy: {
-      ttl: 3600,
-    },
   });
   if (!tokenData) {
     return UnauthorizedResponse();
@@ -52,9 +49,6 @@ export async function POST(
     },
     include: {
       stripe: true,
-    },
-    cacheStrategy: {
-      ttl: 300,
     },
   });
 
