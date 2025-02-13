@@ -1,4 +1,4 @@
-FROM node:lts-alpine AS base
+FROM node:lts-slim AS base
 
 ARG NEXT_PUBLIC_APP_BASE_URL
 ARG APP_BASE_URL
@@ -14,16 +14,14 @@ ARG UPSTASH_VECTOR_REST_TOKEN
 ARG OPENAI_API_KEY
 
 # Install build tools and dependencies
-RUN apk add --no-cache \
+RUN apt-get update && apt-get install -y \
     python3 \
     make \
     g++ \
-    libstdc++ \
     gcc \
-    musl-dev \
-    cmake \
     curl \
-    openssl
+    openssl \
+    && rm -rf /var/lib/apt/lists/*
 
 # Stage 1: Install dependencies
 FROM base AS deps
@@ -45,8 +43,8 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN groupadd --system --gid 1001 nodejs
+RUN useradd --system --uid 1001 nextjs
 
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
