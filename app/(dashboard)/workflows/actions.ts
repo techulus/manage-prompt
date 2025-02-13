@@ -448,7 +448,7 @@ export async function mergeWorkflowBranch(formData: FormData) {
       template: workflowBranch?.template,
       modelSettings: workflowBranch?.modelSettings as unknown as Record<
         string,
-        unknown
+        string | number | boolean | null
       >,
     },
   });
