@@ -17,7 +17,6 @@ export const auth = betterAuth({
     magicLink({
       sendMagicLink: async ({ email, url }) => {
         const { plainText, html } = magicLinkEmail(url);
-
         const emailClient = new ServerClient(process.env.AUTH_POSTMARK_KEY!);
         await emailClient.sendEmail({
           From: process.env.AUTH_FROM_EMAIL!,
@@ -38,5 +37,6 @@ export const auth = betterAuth({
     ),
     nextCookies(),
   ],
+  baseURL: process.env.APP_BASE_URL,
   trustedOrigins: [process.env.APP_BASE_URL!],
 });
