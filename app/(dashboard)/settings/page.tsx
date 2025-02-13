@@ -38,9 +38,6 @@ import {
 
 export default async function Settings() {
   const { userId, ownerId } = await owner();
-  if (!ownerId || !userId) {
-    throw new Error("User not found");
-  }
 
   const [user, organization, secretKeys, userKeys] = await Promise.all([
     getUser(),

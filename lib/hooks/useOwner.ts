@@ -1,5 +1,6 @@
 import type { User } from "@prisma/client";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { auth } from "../auth";
 import { prisma } from "../utils/db";
 
@@ -15,7 +16,7 @@ export async function owner(): Promise<Result> {
   });
 
   if (!session?.user?.id) {
-    throw new Error("User not found");
+    redirect("/sign-in");
   }
 
   return {
@@ -30,7 +31,7 @@ export async function getUser(): Promise<User | null> {
     headers: await headers(),
   });
   if (!session?.user?.id) {
-    throw new Error("User not found");
+    redirect("/sign-in");
   }
 
   return await prisma.user.findUnique({
