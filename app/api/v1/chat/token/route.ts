@@ -29,9 +29,6 @@ export async function POST(req: NextRequest) {
     where: {
       key: token,
     },
-    cacheStrategy: {
-      ttl: 300,
-    },
   });
   if (!key) {
     return UnauthorizedResponse();

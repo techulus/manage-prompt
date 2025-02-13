@@ -39,9 +39,6 @@ export async function GET(req: NextRequest) {
           },
         },
       },
-      cacheStrategy: {
-        ttl: 300,
-      },
     });
     if (!key) {
       return UnauthorizedResponse();
