@@ -105,7 +105,7 @@ export default function SignInForm() {
               disabled={processing}
               onClick={signInWithMagicLink}
             >
-              {processing ? "Sending magic link..." : "Sign-in with Magic Link"}
+              Sign-in with Magic Link
             </Button>
           )}
 
