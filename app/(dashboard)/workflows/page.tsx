@@ -79,7 +79,7 @@ export default async function Workflows(props: Props) {
         ) : null}
 
         {workflows?.length ? (
-          <div className="px-4 lg:px-0 divide-y border">
+          <div className="divide-y border">
             {workflows.map((workflow) => (
               <WorkflowItem key={workflow.id} workflow={workflow} />
             ))}
