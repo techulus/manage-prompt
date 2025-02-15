@@ -3,12 +3,16 @@ import { Header } from "@/components/layout/header";
 import { buttonVariants } from "@/components/ui/button";
 import { SITE_METADATA } from "@/data/marketing";
 import promoImage from "@/public/images/promo.png";
-import { CheckIcon, CloudCog, LockIcon, ServerCog } from "lucide-react";
-
+import workflowImage from "@/public/images/workflow.png";
+import {
+  CheckIcon,
+  CloudCog,
+  GitBranch,
+  LockIcon,
+  ServerCog,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
-export const revalidate = 86400;
 
 const pricingIncludedFeatures = [
   "Unlimited workflows",
@@ -21,8 +25,14 @@ const features = [
   {
     name: "Deploy instantly.",
     description:
-      "Using our workflows, you can tweak prompts, update models, and deliver changes to your users instanty.",
+      "You can tweak prompts, update models, and deliver changes to your users instanty.",
     icon: CloudCog,
+  },
+  {
+    name: "Iterate quickly.",
+    description:
+      "Branches and tests lets you evaluate several variants of your prompt and models.",
+    icon: GitBranch,
   },
   {
     name: "Security controls.",
@@ -56,25 +66,47 @@ export default async function Home() {
             }}
           />
         </div>
-        <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
-          <div className="text-center">
-            <h1 className="text-4xl text-hero py-4 tracking-tight text-gray-900 sm:text-6xl hero text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-700">
-              {SITE_METADATA.TAGLINE}
-            </h1>
-            <p className="pt-4 text-lg leading-8 text-gray-600 dark:text-gray-300">
-              {SITE_METADATA.DESCRIPTION}
-            </p>
-            <div className="mt-10 flex flex-col space-y-4 md:space-y-0 md:flex-row items-center justify-center gap-x-6">
-              <Link
-                href="/workflows"
-                className={buttonVariants({ variant: "default", size: "lg" })}
-                prefetch={false}
-              >
-                Get started
-              </Link>
+        <div className="py-24 sm:py-32 lg:pb-40">
+          <div className="mx-auto max-w-7xl px-6 lg:px-8">
+            <div className="mx-auto max-w-4xl text-center">
+              <h1 className="text-balance text-5xl font-semibold tracking-tight text-gray-900 dark:text-gray-100 sm:text-7xl">
+                {SITE_METADATA.TAGLINE}
+              </h1>
+              <p className="mt-8 text-pretty text-lg font-medium text-gray-500 dark:text-gray-300 sm:text-xl/8">
+                {SITE_METADATA.DESCRIPTION}
+              </p>
+              <div className="mt-10 flex items-center justify-center gap-x-6">
+                <Link
+                  href="/workflows"
+                  className={buttonVariants({ variant: "default" })}
+                  prefetch={false}
+                >
+                  Get started
+                </Link>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://github.com/techulus/manage-prompt"
+                  className="text-sm/6 font-semibold text-gray-900 dark:text-gray-100"
+                >
+                  View on GitHub <span aria-hidden="true">→</span>
+                </a>
+              </div>
+            </div>
+            <div className="mt-16 flow-root sm:mt-24">
+              <div className="-m-2 rounded-xl bg-gray-900/5 dark:bg-gray-700 p-2 ring-1 ring-inset ring-gray-600 lg:-m-4 lg:rounded-2xl lg:p-4">
+                <Image
+                  alt="App screenshot"
+                  src={workflowImage}
+                  width={2432}
+                  height={1442}
+                  className="rounded-md shadow-2xl ring-1 ring-gray-900/10 dark:ring-gray-600"
+                />
+              </div>
             </div>
           </div>
         </div>
+
         <div
           className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)]"
           aria-hidden="true"
@@ -124,7 +156,7 @@ export default async function Home() {
             <Image
               src={promoImage}
               alt="Product screenshot"
-              className="w-[48rem] max-w-none shadow-xl ring-1 ring-white/10 sm:w-[57rem] md:-ml-4 lg:-ml-0"
+              className="w-[56rem] max-w-none shadow-xl ring-1 ring-white/10 sm:w-[64rem] md:-ml-4 lg:-ml-0"
             />
           </div>
         </div>
@@ -137,10 +169,10 @@ export default async function Home() {
               Pay as you go
             </h2>
             <p className="mt-6 text-lg leading-8 text-foreground-accent">
-              Only pay for what you use. No long-term contracts. No hidden fees.
+              Only pay for what you use.
             </p>
           </div>
-          <div className="mx-auto mt-16 max-w-2xl ring-1 sm:mt-20 lg:mx-0 lg:flex lg:max-w-none">
+          <div className="mx-auto mt-16 max-w-2xl ring-1 sm:mt-20 lg:mx-0 lg:flex lg:max-w-none rounded-lg">
             <div className="p-8 sm:p-10 lg:flex-auto">
               <h3 className="text-lg font-bold tracking-tight text-primary">
                 Prices are per 1,000 tokens. You can think of tokens as pieces
@@ -165,7 +197,7 @@ export default async function Home() {
               </ul>
             </div>
             <div className="-mt-2 p-2 lg:mt-0 lg:w-full lg:max-w-md lg:flex-shrink-0">
-              <div className="bg-secondary py-10 text-center ring-1 ring-inset ring-gray-900/5 lg:flex lg:flex-col lg:justify-center lg:py-16">
+              <div className="bg-secondary py-10 text-center ring-1 ring-inset ring-gray-900/5 lg:flex lg:flex-col lg:justify-center lg:py-12 rounded-lg">
                 <div className="mx-auto max-w-xs px-8">
                   <p className="text-md font-semibold text-primary-muted">
                     Billed Monthly
@@ -179,8 +211,8 @@ export default async function Home() {
                     </span>
                   </p>
                   <p className="mt-2 flex items-baseline justify-center gap-x-2">
-                    <span className="text-md leading-6 tracking-tight text-green-600 dark:text-green-400">
-                      Get 50% off first year
+                    <span className="text-md leading-6 tracking-tight">
+                      ✨ Get 50% off first year ✨
                     </span>
                   </p>
                   <Link
