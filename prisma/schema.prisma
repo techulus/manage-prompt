@@ -1,6 +1,6 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters", "fullTextSearch"]
+  previewFeatures = ["driverAdapters", "fullTextSearchPostgres"]
 }
 
 datasource db {
@@ -9,40 +9,36 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  image         String?
-  rawData       Json?
-  settings      Json?
-
+  id                 String               @id @default(cuid())
+  email              String               @unique
+  rawData            Json?
+  settings           Json?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  emailVerified      DateTime?
+  image              String?
+  name               String?
+  ChatBot            ChatBot[]
   organizations      Organization[]
-  Workflow           Workflow[]
-  WorkflowRun        WorkflowRun[]
   OrganizationToUser OrganizationToUser[]
   SecretKey          SecretKey[]
   sessions           Session[]
-  ChatBot            ChatBot[]
-
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  accounts  Account[]
-  passkeys  Passkey[]
+  Workflow           Workflow[]
+  WorkflowRun        WorkflowRun[]
+  accounts           Account[]
+  passkeys           Passkey[]
 }
 
 model Session {
-  id        String   @id @default(cuid())
-  userId    String
   token     String   @unique @map("sessionToken")
+  userId    String
   expiresAt DateTime @map("expires")
-  ipAddress String?
-  userAgent String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  id        String   @id @default(cuid())
+  ipAddress String?
+  userAgent String?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Account {
@@ -50,7 +46,6 @@ model Account {
   accountId             String
   providerId            String
   userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
   refreshToken          String?
   idToken               String?
@@ -60,6 +55,7 @@ model Account {
   password              String?
   createdAt             DateTime
   updatedAt             DateTime
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("account")
 }
@@ -83,26 +79,26 @@ model Organization {
   rawData            Json?
   credits            Int                  @default(0)
   createdByUser      String
-  createdBy          User                 @relation(fields: [createdByUser], references: [id], onDelete: Cascade)
-  stripe             Stripe?
   spendLimit         Int?
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
-  workflows          Workflow[]
+  ChatBot            ChatBot[]
+  createdBy          User                 @relation(fields: [createdByUser], references: [id], onDelete: Cascade)
   OrganizationToUser OrganizationToUser[]
   SecretKey          SecretKey[]
+  stripe             Stripe?
   UserKeys           UserKey[]
-  ChatBot            ChatBot[]
+  workflows          Workflow[]
 }
 
 model OrganizationToUser {
   id             Int          @id @default(autoincrement())
   organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   userId         String
-  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Stripe {
@@ -111,114 +107,103 @@ model Stripe {
   subscriptionId String?      @unique
   subscription   Json?
   ownerId        String       @unique
-  organization   Organization @relation(fields: [ownerId], references: [id])
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+  organization   Organization @relation(fields: [ownerId], references: [id])
 }
 
 model SecretKey {
-  id                 Int       @id @default(autoincrement())
+  id                 Int          @id @default(autoincrement())
   name               String?
-  key                String    @unique
-  rateLimitPerSecond Int       @default(10)
+  key                String       @unique
+  rateLimitPerSecond Int          @default(10)
   createdBy          String
   ownerId            String
   lastUsed           DateTime?
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-
-  user         User         @relation(fields: [createdBy], references: [id], onDelete: Cascade)
-  organization Organization @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  user               User         @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  organization       Organization @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 }
 
 model UserKey {
-  id        String   @id
-  provider  String
-  data      Json
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  ownerId   String
-
+  id           String       @id
+  provider     String
+  data         Json
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  ownerId      String
   organization Organization @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 }
 
 model Workflow {
-  id              Int     @id @default(autoincrement())
-  shortId         String  @unique
+  id              Int              @id @default(autoincrement())
+  shortId         String           @unique
+  createdBy       String
+  ownerId         String
   name            String
-  published       Boolean @default(false)
-  cacheControlTtl Int?
+  published       Boolean          @default(false)
   model           String
   modelSettings   Json?
   template        String
   instruction     String?
   inputs          Json
-
-  ownerId      String
-  organization Organization @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-
-  createdBy String
-  user      User   @relation(fields: [createdBy], references: [id], onDelete: Cascade)
-
-  runs     WorkflowRun[]
-  branches WorkflowBranch[]
-  tests    WorkflowTest[]
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  cacheControlTtl Int?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  user            User             @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  organization    Organization     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  branches        WorkflowBranch[]
+  runs            WorkflowRun[]
+  tests           WorkflowTest[]
 
   @@index([ownerId])
 }
 
 model WorkflowBranch {
-  id            Int     @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   shortId       String
   model         String
   modelSettings Json?
   template      String
   instruction   String?
-  status        String  @default("open")
-
-  workflowId Int
-  workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  workflowId    Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  status        String   @default("open")
+  workflow      Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
 
   @@unique([shortId, workflowId])
 }
 
 model WorkflowTest {
-  id        Int      @id @default(autoincrement())
-  input     Json
-  output    String
-  condition String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  status    String   @default("pending")
-
-  workflowId Int
-  workflow   Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
-
+  id            Int          @id @default(autoincrement())
+  input         Json
+  output        String
+  condition     String
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  workflowId    Int
+  status        String       @default("pending")
   workflowRunId Int?
-  workflowRun   WorkflowRun? @relation(fields: [workflowRunId], references: [id], onDelete: SetNull)
+  workflow      Workflow     @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  workflowRun   WorkflowRun? @relation(fields: [workflowRunId], references: [id])
 }
 
 model WorkflowRun {
-  id              Int      @id @default(autoincrement())
-  workflow        Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  id              Int            @id @default(autoincrement())
   workflowId      Int
   result          String
   rawRequest      Json?
   rawResult       Json?
-  totalTokenCount Int      @default(0)
-  branchId        String?
+  totalTokenCount Int            @default(0)
   createdBy       String?
-  user            User?    @relation(fields: [createdBy], references: [id], onDelete: Cascade)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  WorkflowTest WorkflowTest[]
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  branchId        String?
+  user            User?          @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  workflow        Workflow       @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  WorkflowTest    WorkflowTest[]
 }
 
 model ChatBot {
@@ -228,22 +213,22 @@ model ChatBot {
   ownerId            String
   model              String
   modelSettings      Json?
-  contextItems       Json
-  organization       Organization         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  user               User                 @relation(fields: [createdBy], references: [id], onDelete: Cascade)
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
+  contextItems       Json
+  user               User                 @relation(fields: [createdBy], references: [id], onDelete: Cascade)
+  organization       Organization         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   ChatBotUserSession ChatBotUserSession[]
 }
 
 model ChatBotUserSession {
   id        String   @id @default(cuid())
-  chatbotId String
-  chatbot   ChatBot  @relation(fields: [chatbotId], references: [id], onDelete: Cascade)
-  sessionId String
-  ownerId   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  sessionId String
+  chatbotId String
+  ownerId   String
+  chatbot   ChatBot  @relation(fields: [chatbotId], references: [id], onDelete: Cascade)
 
   @@unique([chatbotId, sessionId])
   @@index([chatbotId, sessionId])
@@ -254,13 +239,13 @@ model Passkey {
   name         String?
   publicKey    String
   userId       String
-  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   credentialID String
   counter      Int
   deviceType   String
   backedUp     Boolean
   transports   String?
   createdAt    DateTime?
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("passkey")
 }
