@@ -142,17 +142,17 @@ export default async function WorkflowTests(props: Props) {
                 </div>
               </div>
 
-              <div className="mt-2 font-mono text-xs">
+              <div className="mt-2 font-mono text-xs whitespace-pre-wrap break-words">
                 <Badge className="mr-2">Expected</Badge>
                 Result for inputs{" "}
                 <span className="font-mono text-xs">
-                  {String(test.input)}
+                  {String(test.input) === "{}" ? "(empty)" : String(test.input)}
                 </span>{" "}
                 {WorkflowTestCondition[test.condition]} {test.output ?? ""}
               </div>
 
               {test.workflowRun ? (
-                <div className="mt-2 font-mono text-xs">
+                <div className="mt-2 font-mono text-xs whitespace-pre-wrap break-words">
                   <Badge className="mr-2">Actual</Badge>
                   {String(test.workflowRun.result)}
                 </div>
