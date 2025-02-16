@@ -1,7 +1,9 @@
 import { WorkflowForm } from "@/components/console/workflow/workflow-form";
 import PageSection from "@/components/core/page-section";
-import { CardContent } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { CardContent, CardHeader } from "@/components/ui/card";
 import { prisma } from "@/lib/utils/db";
+import { Terminal } from "lucide-react";
 import { updateWorkflow } from "../../actions";
 
 interface Props {
@@ -25,6 +27,16 @@ export default async function EditWorkflow(props: Props) {
 
   return (
     <PageSection topInset>
+      <CardHeader>
+        <Alert>
+          <Terminal className="h-4 w-4" />
+          <AlertTitle>Heads up!</AlertTitle>
+          <AlertDescription>
+            Any changes you make on main branch will be instantly rolled out to
+            all users.
+          </AlertDescription>
+        </Alert>
+      </CardHeader>
       <CardContent>
         <WorkflowForm workflow={workflow} action={updateWorkflow} />
       </CardContent>
