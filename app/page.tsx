@@ -69,7 +69,7 @@ export default async function Home() {
         <div className="py-24 sm:py-32 lg:pb-40">
           <div className="mx-auto max-w-7xl px-6 lg:px-8">
             <div className="mx-auto max-w-4xl text-center">
-              <h1 className="text-balance text-5xl font-semibold tracking-tight text-gray-900 dark:text-gray-100 sm:text-7xl">
+              <h1 className="text-balance text-5xl font-semibold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-red-500 dark:from-blue-400 dark:to-red-400 sm:text-7xl">
                 {SITE_METADATA.TAGLINE}
               </h1>
               <p className="mt-8 text-pretty text-lg font-medium text-gray-500 dark:text-gray-300 sm:text-xl/8">
@@ -101,6 +101,7 @@ export default async function Home() {
                   width={2432}
                   height={1442}
                   className="rounded-md shadow-2xl ring-1 ring-gray-900/10 dark:ring-gray-600"
+                  priority
                 />
               </div>
             </div>

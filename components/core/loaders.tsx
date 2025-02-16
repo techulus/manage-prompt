@@ -48,15 +48,21 @@ export function SpinnerWithSpacing() {
   );
 }
 
-export function PageLoading() {
+export function PageLoading({
+  hideHeader = false,
+}: {
+  hideHeader?: boolean;
+}) {
   return (
     <>
-      <PageTitle title="">
-        <div className="-mt-6 flex w-full max-w-6xl flex-col justify-center space-y-2">
-          <Skeleton className="h-[20px] w-[300px]" />
-          <Skeleton className="h-[20px] w-[300px]" />
-        </div>
-      </PageTitle>
+      {!hideHeader && (
+        <PageTitle title="">
+          <div className="-mt-6 flex w-full max-w-6xl flex-col justify-center space-y-2">
+            <Skeleton className="h-[20px] w-[300px]" />
+            <Skeleton className="h-[20px] w-[300px]" />
+          </div>
+        </PageTitle>
+      )}
 
       <PageSection topInset bottomMargin>
         <div className="flex flex-col space-y-2 p-4">
