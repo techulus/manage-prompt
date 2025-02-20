@@ -3,13 +3,8 @@
 import { owner } from "@/lib/hooks/useOwner";
 import { ByokService } from "@/lib/utils/byok-service";
 import { prisma } from "@/lib/utils/db";
-import {
-  createOrRetrieveCustomer,
-  getCheckoutSession,
-} from "@/lib/utils/stripe";
 import { MAX_RATE_LIMIT_RPS } from "@/lib/utils/workflow";
 import { init } from "@paralleldrive/cuid2";
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { fromZodError } from "zod-validation-error";
@@ -17,18 +12,6 @@ import { fromZodError } from "zod-validation-error";
 const createId = init({
   length: 32,
 });
-
-export async function redirectToBilling() {
-  const { ownerId } = await owner();
-
-  if (!ownerId) {
-    throw new Error("User and org ID not found");
-  }
-
-  const customer = await createOrRetrieveCustomer(ownerId);
-  const url = await getCheckoutSession(customer);
-  redirect(url);
-}
 
 export async function createSecretKey() {
   const { userId, ownerId } = await owner();
@@ -94,50 +77,6 @@ export async function updateRateLimit(data: FormData) {
   });
 
   redirect("/settings");
-}
-
-export async function updateSpendLimit(data: FormData) {
-  const id = data.get("id") as string;
-  const spendLimit = Number(data.get("spendLimit"));
-
-  const result = z
-    .object({
-      spendLimit: z.number().min(10).max(10000),
-    })
-    .safeParse({
-      spendLimit,
-    });
-  if (!result.success) {
-    return {
-      error: fromZodError(result.error).toString(),
-    };
-  }
-
-  await prisma.organization.update({
-    where: {
-      id,
-    },
-    data: {
-      spendLimit,
-    },
-  });
-
-  redirect("/settings");
-}
-
-export async function removeSpendLimit(data: FormData) {
-  const id = data.get("id") as string;
-
-  await prisma.organization.update({
-    where: {
-      id,
-    },
-    data: {
-      spendLimit: null,
-    },
-  });
-
-  revalidatePath("/settings");
 }
 
 export async function updateKeyName(data: FormData) {

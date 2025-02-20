@@ -36,7 +36,6 @@ export async function GET(
       include: {
         organization: {
           include: {
-            stripe: true,
             UserKeys: true,
           },
         },

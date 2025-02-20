@@ -6,11 +6,6 @@ import { getCompletion } from "@/lib/utils/ai";
 import { ByokService } from "@/lib/utils/byok-service";
 import { prisma } from "@/lib/utils/db";
 import {
-  hasExceededSpendLimit,
-  isSubscriptionActive,
-  reportUsage,
-} from "@/lib/utils/stripe";
-import {
   WorkflowBranchSchema,
   WorkflowSchema,
   WorkflowTestSchema,
@@ -19,7 +14,6 @@ import {
 import { createId } from "@paralleldrive/cuid2";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import type Stripe from "stripe";
 import { fromZodError } from "zod-validation-error";
 
 export async function createWorkflow(formData: FormData) {
@@ -190,7 +184,6 @@ export async function runWorkflow(formData: FormData) {
 
     const organization = await prisma.organization.findUnique({
       include: {
-        stripe: true,
         UserKeys: true,
       },
       where: {
@@ -198,21 +191,7 @@ export async function runWorkflow(formData: FormData) {
       },
     });
 
-    if (
-      organization?.credits === 0 &&
-      !isSubscriptionActive(organization?.stripe?.subscription)
-    )
-      throw "No credits remaining";
-
-    if (
-      organization?.credits !== 0 &&
-      (await hasExceededSpendLimit(
-        organization?.spendLimit,
-        organization?.stripe?.customerId,
-      ))
-    ) {
-      throw "Spend limit exceeded";
-    }
+    if (organization?.credits === 0) throw "No credits remaining";
 
     const workflow = await prisma.workflow.findUnique({
       where: {
@@ -291,11 +270,6 @@ export async function runWorkflow(formData: FormData) {
           },
         },
       }),
-      reportUsage(
-        ownerId,
-        organization?.stripe?.subscription as unknown as Stripe.Subscription,
-        totalTokenCount,
-      ),
     ]);
   } catch (error) {
     console.error(error);
@@ -521,7 +495,6 @@ export async function runTests(formData: FormData) {
     include: {
       organization: {
         select: {
-          stripe: true,
           UserKeys: true,
         },
       },
@@ -639,12 +612,6 @@ export async function runTests(formData: FormData) {
           },
         },
       }),
-      reportUsage(
-        ownerId,
-        workflow.organization?.stripe
-          ?.subscription as unknown as Stripe.Subscription,
-        totalTokenCount,
-      ),
     ]);
 
     await prisma.workflowTest.update({

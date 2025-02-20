@@ -8,7 +8,6 @@ import {
 import { ByokService } from "@/lib/utils/byok-service";
 import { prisma } from "@/lib/utils/db";
 import { redis } from "@/lib/utils/redis";
-import { reportUsage } from "@/lib/utils/stripe";
 import {
   cacheWorkflowResult,
   getWorkflowCachedResult,
@@ -16,7 +15,6 @@ import {
 import { translateInputs } from "@/lib/utils/workflow";
 import { createDataStreamResponse } from "ai";
 import { type NextRequest, NextResponse } from "next/server";
-import type Stripe from "stripe";
 
 export const maxDuration = 120;
 
@@ -56,7 +54,6 @@ export async function POST(
       include: {
         organization: {
           include: {
-            stripe: true,
             UserKeys: true,
           },
         },
@@ -122,12 +119,6 @@ export async function POST(
       }
 
       Promise.all([
-        reportUsage(
-          workflow?.organization?.id,
-          workflow?.organization?.stripe
-            ?.subscription as unknown as Stripe.Subscription,
-          totalTokens,
-        ),
         prisma.workflowRun.create({
           data: {
             result: output,
