@@ -79,14 +79,12 @@ model Organization {
   rawData            Json?
   credits            Int                  @default(0)
   createdByUser      String
-  spendLimit         Int?
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
   ChatBot            ChatBot[]
   createdBy          User                 @relation(fields: [createdByUser], references: [id], onDelete: Cascade)
   OrganizationToUser OrganizationToUser[]
   SecretKey          SecretKey[]
-  stripe             Stripe?
   UserKeys           UserKey[]
   workflows          Workflow[]
 }
@@ -99,17 +97,6 @@ model OrganizationToUser {
   updatedAt      DateTime     @updatedAt
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model Stripe {
-  id             Int          @id @default(autoincrement())
-  customerId     String       @unique
-  subscriptionId String?      @unique
-  subscription   Json?
-  ownerId        String       @unique
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  organization   Organization @relation(fields: [ownerId], references: [id])
 }
 
 model SecretKey {

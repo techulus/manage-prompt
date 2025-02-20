@@ -9,17 +9,11 @@ import { ByokService } from "@/lib/utils/byok-service";
 import { prisma } from "@/lib/utils/db";
 import { validateRateLimit } from "@/lib/utils/ratelimit";
 import {
-  hasExceededSpendLimit,
-  isSubscriptionActive,
-  reportUsage,
-} from "@/lib/utils/stripe";
-import {
   cacheWorkflowResult,
   getWorkflowCachedResult,
 } from "@/lib/utils/useWorkflow";
 import { translateInputs } from "@/lib/utils/workflow";
 import { NextResponse } from "next/server";
-import type Stripe from "stripe";
 
 export const maxDuration = 120;
 
@@ -46,7 +40,6 @@ export async function POST(
       include: {
         organization: {
           include: {
-            stripe: true,
             UserKeys: true,
           },
         },
@@ -70,29 +63,11 @@ export async function POST(
 
     // Check if the organization has valid billing
     const organization = key.organization;
-    if (
-      organization?.credits === 0 &&
-      !isSubscriptionActive(organization?.stripe?.subscription)
-    ) {
+    if (organization?.credits === 0) {
       return ErrorResponse(
         "Invalid billing. Please contact support.",
         402,
         ErrorCodes.InvalidBilling,
-      );
-    }
-
-    // Spend limit
-    if (
-      organization?.credits === 0 &&
-      (await hasExceededSpendLimit(
-        organization?.spendLimit,
-        organization?.stripe?.customerId,
-      ))
-    ) {
-      return ErrorResponse(
-        "Spend limit exceeded. Please increase your spend limit to continue using the service.",
-        402,
-        ErrorCodes.SpendLimitReached,
       );
     }
 
@@ -153,11 +128,6 @@ export async function POST(
     }
 
     Promise.all([
-      reportUsage(
-        organization?.id,
-        organization?.stripe?.subscription as unknown as Stripe.Subscription,
-        totalTokenCount,
-      ),
       prisma.workflowRun.create({
         data: {
           result,

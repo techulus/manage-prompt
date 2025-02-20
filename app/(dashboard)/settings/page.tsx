@@ -3,7 +3,7 @@ import { ManagePasskeys } from "@/components/core/passkeys";
 import { ActionButton, DeleteButton } from "@/components/form/button";
 import { EditableValue } from "@/components/form/editable-text";
 import PageTitle from "@/components/layout/page-title";
-import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Table,
   TableBody,
@@ -14,24 +14,15 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { getUser, owner } from "@/lib/hooks/useOwner";
-import { DateTime } from "@/lib/utils/datetime";
 import { prisma } from "@/lib/utils/db";
-import {
-  getUpcomingInvoice,
-  isSubscriptionCancelled,
-} from "@/lib/utils/stripe";
 import { CheckCircle } from "lucide-react";
 import { notFound } from "next/navigation";
-import type Stripe from "stripe";
 import {
   createSecretKey,
-  redirectToBilling,
-  removeSpendLimit,
   revokeSecretKey,
   revokeUserKey,
   updateKeyName,
   updateRateLimit,
-  updateSpendLimit,
   updateUserKey,
   updateUserName,
 } from "./actions";
@@ -42,9 +33,6 @@ export default async function Settings() {
   const [user, organization, secretKeys, userKeys] = await Promise.all([
     getUser(),
     prisma.organization.findUnique({
-      include: {
-        stripe: true,
-      },
       where: {
         id: ownerId,
       },
@@ -76,13 +64,6 @@ export default async function Settings() {
     return notFound();
   }
 
-  const subscription = organization?.stripe
-    ?.subscription as unknown as Stripe.Subscription;
-
-  const invoice: Stripe.Invoice | null = organization?.stripe?.customerId
-    ? await getUpcomingInvoice(organization?.stripe?.customerId)
-    : null;
-
   const userOpenAIKey = userKeys.find((k) => k.provider === "openai");
 
   return (
@@ -105,85 +86,20 @@ export default async function Settings() {
                   Credits
                 </dt>
                 <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                  <div className="text-gray-900 dark:text-gray-200">
+                  <div className="flex items-center gap-2 text-gray-900 dark:text-gray-200">
                     {organization?.credits.toLocaleString() ?? 0} credits left
+                    <a
+                      href="mailto:support@manageprompt.com?subject=Request%20More%20Credits"
+                      className={buttonVariants({
+                        variant: "link",
+                        className: "ml-2",
+                        size: "sm",
+                      })}
+                    >
+                      Request More
+                    </a>
                   </div>
-                  {!subscription ? (
-                    <div className="text-gray-900 dark:text-gray-200">
-                      <form action={redirectToBilling}>
-                        <ActionButton
-                          variant="link"
-                          label="Upgrade"
-                          loadingLabel="Redirecting to checkout..."
-                        />
-                      </form>
-                    </div>
-                  ) : null}
                 </dd>
-              </div>
-
-              <div className="pt-2 sm:flex">
-                <dt className="font-medium text-gray-900 dark:text-gray-200 sm:w-64 sm:flex-none sm:pr-6">
-                  Billing
-                </dt>
-                {subscription ? (
-                  <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                    <div className="text-gray-900 dark:text-gray-200">
-                      <Badge variant="default">
-                        {subscription?.status.toUpperCase()}
-                      </Badge>
-                      {invoice?.amount_remaining && invoice?.period_end ? (
-                        <p className="mt-2">
-                          <span className="font-bold">Next Invoice:</span>
-                          <span className="ml-2">
-                            USD {(invoice.amount_remaining / 100).toFixed(2)} on{" "}
-                            {DateTime.fromSeconds(
-                              invoice.period_end,
-                            ).toDateString()}
-                          </span>
-                        </p>
-                      ) : null}
-                      <div className="mt-2 flex items-center">
-                        <span className="font-semibold">
-                          Monthly Spend Limit (USD):
-                        </span>
-                        <span className="ml-2">
-                          <EditableValue
-                            id={ownerId}
-                            name="spendLimit"
-                            type="number"
-                            value={organization?.spendLimit ?? "-"}
-                            action={updateSpendLimit}
-                          />
-                        </span>
-                        {organization?.spendLimit ? (
-                          <form action={removeSpendLimit}>
-                            <input type="hidden" name="id" value={ownerId} />
-                            <ActionButton
-                              className="p-0 m-0 h-5"
-                              variant="link"
-                              label="Remove"
-                              loadingLabel="Removing..."
-                            />
-                          </form>
-                        ) : null}
-                      </div>
-                    </div>
-                    <div className="text-gray-900 dark:text-gray-200">
-                      <form action={redirectToBilling}>
-                        <ActionButton
-                          variant="link"
-                          label={
-                            isSubscriptionCancelled(subscription)
-                              ? "Upgrade"
-                              : "Manage"
-                          }
-                          loadingLabel="Redirecting..."
-                        />
-                      </form>
-                    </div>
-                  </dd>
-                ) : null}
               </div>
 
               <div className="pt-2 sm:flex">

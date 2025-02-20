@@ -4,22 +4,9 @@ import { buttonVariants } from "@/components/ui/button";
 import { SITE_METADATA } from "@/data/marketing";
 import promoImage from "@/public/images/promo.png";
 import workflowImage from "@/public/images/workflow.png";
-import {
-  CheckIcon,
-  CloudCog,
-  GitBranch,
-  LockIcon,
-  ServerCog,
-} from "lucide-react";
+import { CloudCog, GitBranch, LockIcon, ServerCog } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-
-const pricingIncludedFeatures = [
-  "Unlimited workflows",
-  "Unlimited chatbots",
-  "Models by OpenAI, Meta, Google, Mixtral, Anthropic and xAI",
-  "Email support",
-];
 
 const features = [
   {
@@ -159,76 +146,6 @@ export default async function Home() {
               alt="Product screenshot"
               className="w-[56rem] max-w-none shadow-xl ring-1 ring-white/10 sm:w-[64rem] md:-ml-4 lg:-ml-0"
             />
-          </div>
-        </div>
-      </div>
-
-      <div className="py-24 sm:py-32">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl sm:text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-primary sm:text-4xl text-hero">
-              Pay as you go
-            </h2>
-            <p className="mt-6 text-lg leading-8 text-foreground-accent">
-              Only pay for what you use.
-            </p>
-          </div>
-          <div className="mx-auto mt-16 max-w-2xl ring-1 sm:mt-20 lg:mx-0 lg:flex lg:max-w-none rounded-lg">
-            <div className="p-8 sm:p-10 lg:flex-auto">
-              <h3 className="text-lg font-bold tracking-tight text-primary">
-                Prices are per 1,000 tokens. You can think of tokens as pieces
-                of words, where 1,000 tokens is about 750 words.
-              </h3>
-              <div className="mt-6 flex items-center gap-x-4">
-                <h4 className="flex-none text-sm font-semibold leading-6 text-primary">
-                  What&apos;s included
-                </h4>
-                <div className="h-px flex-auto bg-primary" />
-              </div>
-              <ul className="mt-8 grid grid-cols-1 gap-4 text-sm leading-6 text-foreground sm:grid-cols-2 sm:gap-4">
-                {pricingIncludedFeatures.map((feature) => (
-                  <li key={feature} className="flex gap-x-3">
-                    <CheckIcon
-                      className="h-6 w-5 flex-none text-primary"
-                      aria-hidden="true"
-                    />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="-mt-2 p-2 lg:mt-0 lg:w-full lg:max-w-md lg:flex-shrink-0">
-              <div className="bg-secondary py-10 text-center ring-1 ring-inset ring-gray-900/5 lg:flex lg:flex-col lg:justify-center lg:py-12 rounded-lg">
-                <div className="mx-auto max-w-xs px-8">
-                  <p className="text-md font-semibold text-primary-muted">
-                    Billed Monthly
-                  </p>
-                  <p className="mt-6 flex items-baseline justify-center gap-x-2">
-                    <span className="text-5xl font-bold tracking-tight text-foreground">
-                      $0.01
-                    </span>
-                    <span className="text-md leading-6 tracking-wide text-primary">
-                      /1K tokens
-                    </span>
-                  </p>
-                  <p className="mt-2 flex items-baseline justify-center gap-x-2">
-                    <span className="text-md leading-6 tracking-tight">
-                      ✨ Get 50% off first year ✨
-                    </span>
-                  </p>
-                  <Link
-                    href="/workflows"
-                    className={buttonVariants({
-                      variant: "default",
-                      className: "mt-8",
-                    })}
-                    prefetch={false}
-                  >
-                    Get Started
-                  </Link>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
