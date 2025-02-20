@@ -8,7 +8,6 @@ export enum ErrorCodes {
   InvalidBilling = "invalid_billing",
   InternalServerError = "internal_server_error",
   RequestBlocked = "request_blocked",
-  SpendLimitReached = "spend_limit_reached",
 }
 
 export const UnauthorizedResponse = () =>
