@@ -1,11 +1,10 @@
-import { type WorkflowInput, modelToProvider } from "@/data/workflow";
+import type { WorkflowInput } from "@/data/workflow";
 import { getCompletion } from "@/lib/utils/ai";
 import {
   ErrorCodes,
   ErrorResponse,
   UnauthorizedResponse,
 } from "@/lib/utils/api";
-import { ByokService } from "@/lib/utils/byok-service";
 import { prisma } from "@/lib/utils/db";
 import { validateRateLimit } from "@/lib/utils/ratelimit";
 import {
@@ -109,22 +108,13 @@ export async function POST(
       organization.UserKeys,
     );
 
-    let { result, rawResult, totalTokenCount } = response;
+    const { result, rawResult, totalTokenCount } = response;
     if (!result) {
       return ErrorResponse(
         "Failed to run workflow",
         500,
         ErrorCodes.InternalServerError,
       );
-    }
-
-    const byokService = new ByokService();
-    const isEligibleForByokDiscount = !!byokService.get(
-      modelToProvider[model],
-      organization.UserKeys,
-    );
-    if (isEligibleForByokDiscount) {
-      totalTokenCount = Math.floor(totalTokenCount * 0.3);
     }
 
     Promise.all([
@@ -143,6 +133,16 @@ export async function POST(
             connect: {
               id: workflow.id,
             },
+          },
+        },
+      }),
+      prisma.organization.update({
+        where: {
+          id: organization.id,
+        },
+        data: {
+          credits: {
+            decrement: 1,
           },
         },
       }),

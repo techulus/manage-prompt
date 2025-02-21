@@ -1,11 +1,10 @@
-import { type WorkflowInput, modelToProvider } from "@/data/workflow";
+import { type WorkflowInput } from "@/data/workflow";
 import { getStreamingCompletion } from "@/lib/utils/ai";
 import {
   ErrorCodes,
   ErrorResponse,
   UnauthorizedResponse,
 } from "@/lib/utils/api";
-import { ByokService } from "@/lib/utils/byok-service";
 import { prisma } from "@/lib/utils/db";
 import { redis } from "@/lib/utils/redis";
 import {
@@ -97,26 +96,16 @@ export async function POST(
       template: workflow.template,
     });
 
-    const byokService = new ByokService();
-    const isEligibleForByokDiscount = !!byokService.get(
-      modelToProvider[model],
-      workflow.organization.UserKeys,
-    );
-
     const onFinish = async (evt: any) => {
       const output = evt.text ?? "";
 
       const inputWordCount = content.split(" ").length;
       const outWordCount = output.split(" ").length;
-      let totalTokens = Math.floor(
+      const totalTokens = Math.floor(
         !Number.isNaN(evt?.usage?.totalTokens)
           ? evt?.usage?.totalTokens
           : (inputWordCount + outWordCount) * 0.6,
       );
-
-      if (isEligibleForByokDiscount) {
-        totalTokens = Math.floor(totalTokens * 0.3);
-      }
 
       Promise.all([
         prisma.workflowRun.create({

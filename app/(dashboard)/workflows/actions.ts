@@ -1,9 +1,8 @@
 "use server";
 
-import { type WorkflowInput, modelToProvider } from "@/data/workflow";
+import { type WorkflowInput } from "@/data/workflow";
 import { owner } from "@/lib/hooks/useOwner";
 import { getCompletion } from "@/lib/utils/ai";
-import { ByokService } from "@/lib/utils/byok-service";
 import { prisma } from "@/lib/utils/db";
 import {
   WorkflowBranchSchema,
@@ -191,7 +190,8 @@ export async function runWorkflow(formData: FormData) {
       },
     });
 
-    if (organization?.credits === 0) throw "No credits remaining";
+    if (!organization) throw "Organization not found";
+    if (organization.credits === 0) throw "No credits remaining";
 
     const workflow = await prisma.workflow.findUnique({
       where: {
@@ -238,17 +238,8 @@ export async function runWorkflow(formData: FormData) {
       organization?.UserKeys,
     );
 
-    let { result, rawResult, totalTokenCount } = response;
+    const { result, rawResult, totalTokenCount } = response;
     if (!result) throw "No result returned from OpenAI";
-
-    const byokService = new ByokService();
-    const isEligibleForByokDiscount = !!byokService.get(
-      modelToProvider[model],
-      organization?.UserKeys,
-    );
-    if (isEligibleForByokDiscount) {
-      totalTokenCount = Math.floor(totalTokenCount * 0.3);
-    }
 
     await Promise.all([
       prisma.workflowRun.create({
@@ -267,6 +258,16 @@ export async function runWorkflow(formData: FormData) {
             connect: {
               id,
             },
+          },
+        },
+      }),
+      prisma.organization.update({
+        where: {
+          id: organization.id,
+        },
+        data: {
+          credits: {
+            decrement: 1,
           },
         },
       }),
@@ -551,7 +552,7 @@ export async function runTests(formData: FormData) {
       JSON.parse(JSON.stringify(workflow.modelSettings)),
     );
 
-    let { result, rawResult, totalTokenCount } = response;
+    const { result, rawResult, totalTokenCount } = response;
     if (!result) throw "No result returned from OpenAI";
 
     let testPassed = false;
@@ -582,14 +583,6 @@ export async function runTests(formData: FormData) {
           testPassed = false;
         }
         break;
-    }
-
-    const isEligibleForByokDiscount = !!new ByokService().get(
-      modelToProvider[model],
-      workflow.organization?.UserKeys,
-    );
-    if (isEligibleForByokDiscount) {
-      totalTokenCount = Math.floor(totalTokenCount * 0.3);
     }
 
     const [run] = await Promise.all([

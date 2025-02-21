@@ -55,19 +55,14 @@ export default function SignInForm() {
           <div className="flex lg:flex-1">
             <Image
               src={logo}
-              alt="Manage"
+              alt="ManagePrompt"
               width={32}
               height={32}
               className="-mt-2 mr-2 rounded-md"
             />
 
             <Link href="/" className="-m-1.5 p-1.5" prefetch={false}>
-              <p className="relative tracking-tight">
-                Manage
-                <sup className="absolute left-[calc(100%+.1rem)] top-0 text-xs">
-                  [beta]
-                </sup>
-              </p>
+              <p className="relative tracking-tight">ManagePrompt</p>
             </Link>
           </div>
 

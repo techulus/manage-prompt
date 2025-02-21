@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/table";
 import { getUser, owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
-import { CheckCircle } from "lucide-react";
 import { notFound } from "next/navigation";
 import {
   createSecretKey,
@@ -65,6 +64,9 @@ export default async function Settings() {
   }
 
   const userOpenAIKey = userKeys.find((k) => k.provider === "openai");
+  const userAnthropicKey = userKeys.find((k) => k.provider === "anthropic");
+  const userGroqKey = userKeys.find((k) => k.provider === "groq");
+  const userXaiKey = userKeys.find((k) => k.provider === "xai");
 
   return (
     <>
@@ -133,6 +135,115 @@ export default async function Settings() {
               ) : null}
             </dl>
           </div>
+        </div>
+      </PageSection>
+
+      <PageSection className="overflow-y-scroll">
+        <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none p-6">
+          <h2 className="text-base font-semibold leading-7 text-gray-900 dark:text-gray-200">
+            Setup Model Providers
+          </h2>
+          <p className="mt-1 text-sm leading-6 text-gray-500 dark:text-gray-400">
+            Use your API keys to authenticate with AI providers.
+          </p>
+
+          <dl className="mt-6 space-y-4 divide-y border-t text-sm leading-6">
+            <div className="pt-2 sm:flex">
+              <dt className="font-medium text-gray-900 dark:text-gray-200 sm:w-64 sm:flex-none sm:pr-6">
+                OpenAI
+              </dt>
+              <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                <div className="text-gray-900 dark:text-gray-200">
+                  {userOpenAIKey ? (
+                    <form className="inline-block" action={revokeUserKey}>
+                      <input type="hidden" name="provider" value="openai" />
+                      <DeleteButton label="Remove" size="sm" />
+                    </form>
+                  ) : (
+                    <EditableValue
+                      id="openai"
+                      name="apiKey"
+                      type="text"
+                      value={userOpenAIKey ? "*******" : "-"}
+                      action={updateUserKey}
+                    />
+                  )}
+                </div>
+              </dd>
+            </div>
+
+            <div className="pt-2 sm:flex">
+              <dt className="font-medium text-gray-900 dark:text-gray-200 sm:w-64 sm:flex-none sm:pr-6">
+                Anthropic
+              </dt>
+              <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                <div className="text-gray-900 dark:text-gray-200">
+                  {userAnthropicKey ? (
+                    <form className="inline-block" action={revokeUserKey}>
+                      <input type="hidden" name="provider" value="anthropic" />
+                      <DeleteButton label="Remove" size="sm" />
+                    </form>
+                  ) : (
+                    <EditableValue
+                      id="anthropic"
+                      name="apiKey"
+                      type="text"
+                      value={userAnthropicKey ? "*******" : "-"}
+                      action={updateUserKey}
+                    />
+                  )}
+                </div>
+              </dd>
+            </div>
+
+            <div className="pt-2 sm:flex">
+              <dt className="font-medium text-gray-900 dark:text-gray-200 sm:w-64 sm:flex-none sm:pr-6">
+                Groq
+              </dt>
+              <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                <div className="text-gray-900 dark:text-gray-200">
+                  {userGroqKey ? (
+                    <form className="inline-block" action={revokeUserKey}>
+                      <input type="hidden" name="provider" value="groq" />
+                      <DeleteButton label="Remove" size="sm" />
+                    </form>
+                  ) : (
+                    <EditableValue
+                      id="groq"
+                      name="apiKey"
+                      type="text"
+                      value={userGroqKey ? "*******" : "-"}
+                      action={updateUserKey}
+                    />
+                  )}
+                </div>
+              </dd>
+            </div>
+
+            <div className="pt-2 sm:flex">
+              <dt className="font-medium text-gray-900 dark:text-gray-200 sm:w-64 sm:flex-none sm:pr-6">
+                xAI
+              </dt>
+              <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                <div className="text-gray-900 dark:text-gray-200">
+                  {userXaiKey ? (
+                    <form className="inline-block" action={revokeUserKey}>
+                      <input type="hidden" name="provider" value="xai" />
+                      <DeleteButton label="Remove" size="sm" />
+                    </form>
+                  ) : (
+                    <EditableValue
+                      id="xai"
+                      name="apiKey"
+                      type="text"
+                      value={userXaiKey ? "*******" : "-"}
+                      action={updateUserKey}
+                    />
+                  )}
+                </div>
+              </dd>
+            </div>
+          </dl>
         </div>
       </PageSection>
 
@@ -223,49 +334,6 @@ export default async function Settings() {
               ))}
             </TableBody>
           </Table>
-        </div>
-      </PageSection>
-
-      <PageSection className="overflow-y-scroll">
-        <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none p-6">
-          <h2 className="text-base font-semibold leading-7 text-gray-900 dark:text-gray-200">
-            Bring your own key (beta)
-          </h2>
-          <p className="mt-1 text-sm leading-6 text-gray-500 dark:text-gray-400">
-            If you have your own API key, you can use it to authenticate with AI
-            providers. We currently support OpenAI. (GROQ and Anthropic coming
-            soon)
-          </p>
-
-          <dl className="mt-6 space-y-4 divide-y border-t text-sm leading-6">
-            <div className="pt-2 sm:flex">
-              <dt className="font-medium text-gray-900 dark:text-gray-200 sm:w-64 sm:flex-none sm:pr-6">
-                OpenAI
-              </dt>
-              <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                <div className="text-gray-900 dark:text-gray-200">
-                  {userOpenAIKey ? (
-                    <CheckCircle className="h-6 w-6 text-green-500" />
-                  ) : (
-                    <EditableValue
-                      id="openai"
-                      name="apiKey"
-                      type="text"
-                      value={userOpenAIKey ? "*******" : "-"}
-                      action={updateUserKey}
-                    />
-                  )}
-                </div>
-
-                {userOpenAIKey ? (
-                  <form className="inline-block" action={revokeUserKey}>
-                    <input type="hidden" name="provider" value="openai" />
-                    <DeleteButton label="Remove" size="sm" />
-                  </form>
-                ) : null}
-              </dd>
-            </div>
-          </dl>
         </div>
       </PageSection>
 
