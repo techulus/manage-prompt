@@ -1,6 +1,6 @@
 import type { ModelSettings } from "@/components/console/workflow/workflow-model-settings";
 import { modelToProviderId } from "@/data/workflow";
-import { anthropic } from "@ai-sdk/anthropic";
+import { createAnthropic } from "@ai-sdk/anthropic";
 import { createAzure } from "@ai-sdk/azure";
 import { createOpenAI } from "@ai-sdk/openai";
 import { createXai } from "@ai-sdk/xai";
@@ -32,9 +32,10 @@ export const getCompletion = async (
     case "mistralai/Mixtral-8x7B-Instruct-v0.1":
     case "meta-llama/Llama-2-70b-chat-hf":
     case "google/gemma-7b-it": {
+      const userGroqKey = new ByokService().get("groq", userKeys);
       const groq = createOpenAI({
         baseURL: "https://api.groq.com/openai/v1",
-        apiKey: process.env.GROQ_TOKEN,
+        apiKey: userGroqKey ?? process.env.GROQ_TOKEN,
       });
       completion = await generateText({
         model: groq(modelToProviderId[model] ?? model) as LanguageModel,
@@ -42,16 +43,22 @@ export const getCompletion = async (
       });
       break;
     }
-    case "claude-3-5-sonnet-20240620":
+    case "claude-3-5-sonnet-20240620": {
+      const userAnthropicKey = new ByokService().get("anthropic", userKeys);
+      const anthropic = createAnthropic({
+        apiKey: userAnthropicKey ?? process.env.ANTHROPIC_API_KEY,
+      });
       completion = await generateText({
         model: anthropic(modelToProviderId[model] ?? model) as LanguageModel,
         ...modelParams,
       });
       break;
+    }
     case "grok-beta":
     case "grok-2-latest": {
+      const userXaiKey = new ByokService().get("xai", userKeys);
       const xai = createXai({
-        apiKey: process.env.XAI_API_KEY,
+        apiKey: userXaiKey ?? process.env.XAI_API_KEY,
       });
       completion = await generateText({
         model: xai(model) as LanguageModel,
@@ -113,9 +120,10 @@ export const getStreamingCompletion = async (
     case "mistralai/Mixtral-8x7B-Instruct-v0.1":
     case "meta-llama/Llama-2-70b-chat-hf":
     case "google/gemma-7b-it": {
+      const userGroqKey = new ByokService().get("groq", userKeys);
       const groq = createOpenAI({
         baseURL: "https://api.groq.com/openai/v1",
-        apiKey: process.env.GROQ_TOKEN,
+        apiKey: userGroqKey ?? process.env.GROQ_TOKEN,
       });
       completion = streamText({
         model: groq(modelToProviderId[model] ?? model) as LanguageModel,
@@ -124,17 +132,23 @@ export const getStreamingCompletion = async (
       });
       break;
     }
-    case "claude-3-5-sonnet-20240620":
+    case "claude-3-5-sonnet-20240620": {
+      const userAnthropicKey = new ByokService().get("anthropic", userKeys);
+      const anthropic = createAnthropic({
+        apiKey: userAnthropicKey ?? process.env.ANTHROPIC_API_KEY,
+      });
       completion = streamText({
         model: anthropic(modelToProviderId[model] ?? model) as LanguageModel,
         ...modelParams,
         onFinish,
       });
       break;
+    }
     case "grok-beta":
     case "grok-2-latest": {
+      const userXaiKey = new ByokService().get("xai", userKeys);
       const xai = createXai({
-        apiKey: process.env.XAI_API_KEY,
+        apiKey: userXaiKey ?? process.env.XAI_API_KEY,
       });
       completion = streamText({
         model: xai(model) as LanguageModel,
