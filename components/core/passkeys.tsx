@@ -3,7 +3,6 @@
 import { authClient } from "@/lib/auth-client";
 import { Fingerprint, Loader2, Plus, Trash } from "lucide-react";
 import { useState } from "react";
-import { Label } from "recharts";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 import {
@@ -16,6 +15,7 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 import {
   Table,
   TableBody,
