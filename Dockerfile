@@ -1,4 +1,4 @@
-FROM node:lts AS base
+FROM node:lts-alpine AS base
 
 ARG NEXT_PUBLIC_APP_BASE_URL
 ARG APP_BASE_URL
