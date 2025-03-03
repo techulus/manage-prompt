@@ -33,8 +33,8 @@ importers:
         specifier: ^2.2.2
         version: 2.2.2
       '@prisma/adapter-pg':
-        specifier: ^5.17.0
-        version: 5.22.0(pg@8.13.2)
+        specifier: ^6.4.1
+        version: 6.4.1(pg@8.13.3)
       '@prisma/client':
         specifier: ^6.4.1
         version: 6.4.1(prisma@6.4.1(typescript@5.0.4))(typescript@5.0.4)
@@ -85,7 +85,7 @@ importers:
         version: 2.4.1(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       '@upstash/rag-chat':
         specifier: ^2.0.3
-        version: 2.0.3(@browserbasehq/sdk@2.3.0)(@browserbasehq/stagehand@1.12.0(@playwright/test@1.50.1)(bufferutil@4.0.9)(deepmerge@4.3.1)(dotenv@16.4.7)(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))(zod@3.24.2))(@ibm-cloud/watsonx-ai@1.5.0(@langchain/core@0.2.36(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))))(@langchain/openai@0.4.4(@langchain/core@0.2.36(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)))(ws@8.18.0(bufferutil@4.0.9)))(@mozilla/readability@0.5.0)(@upstash/ratelimit@1.2.1)(@upstash/redis@1.34.4)(@upstash/vector@1.2.0)(@vercel/kv@0.2.4)(axios@1.7.9)(crypto-js@4.2.0)(fast-xml-parser@4.5.1)(ibm-cloud-sdk-core@5.1.2)(ignore@5.3.2)(jsdom@25.0.1(bufferutil@4.0.9))(jsonwebtoken@9.0.2)(lodash@4.17.21)(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))(pg@8.13.2)(playwright@1.50.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(solid-js@1.9.4)(sswr@2.1.0(svelte@4.2.19))(svelte@4.2.19)(vue@3.5.13(typescript@5.0.4))(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)
+        version: 2.0.3(@browserbasehq/sdk@2.3.0)(@browserbasehq/stagehand@1.12.0(@playwright/test@1.50.1)(bufferutil@4.0.9)(deepmerge@4.3.1)(dotenv@16.4.7)(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))(zod@3.24.2))(@ibm-cloud/watsonx-ai@1.5.0(@langchain/core@0.2.36(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))))(@langchain/openai@0.4.4(@langchain/core@0.2.36(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)))(ws@8.18.0(bufferutil@4.0.9)))(@mozilla/readability@0.5.0)(@upstash/ratelimit@1.2.1)(@upstash/redis@1.34.4)(@upstash/vector@1.2.0)(@vercel/kv@0.2.4)(axios@1.7.9)(crypto-js@4.2.0)(fast-xml-parser@4.5.1)(ibm-cloud-sdk-core@5.1.2)(ignore@5.3.2)(jsdom@25.0.1(bufferutil@4.0.9))(jsonwebtoken@9.0.2)(lodash@4.17.21)(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))(pg@8.13.3)(playwright@1.50.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(solid-js@1.9.4)(sswr@2.1.0(svelte@4.2.19))(svelte@4.2.19)(vue@3.5.13(typescript@5.0.4))(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)
       '@upstash/ratelimit':
         specifier: ^1.0.1
         version: 1.2.1
@@ -135,8 +135,8 @@ importers:
         specifier: ^0.4.4
         version: 0.4.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       pg:
-        specifier: ^8.12.0
-        version: 8.13.2
+        specifier: ^8.13.3
+        version: 8.13.3
       postcss:
         specifier: 8.4.23
         version: 8.4.23
@@ -1650,8 +1650,8 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@prisma/adapter-pg@5.22.0':
-    resolution: {integrity: sha512-feLMrZtHD4qSG/Kk+GSQKyLsIpukDhMc4xucNz268NDiYxx0oviI9SA9M8dWX5BSPt2Qhr7Hqt8AVB6V/zvR1g==}
+  '@prisma/adapter-pg@6.4.1':
+    resolution: {integrity: sha512-alwRFNHawfeFfjbErMOUbLRgoxBSTCdcGpxV66oKSwsgNPQHjAqBb+xxD5Xg2Y4oyhP2ul1d5GT5vfWgTBzQPg==}
     peerDependencies:
       pg: ^8.11.3
 
@@ -1667,14 +1667,11 @@ packages:
       typescript:
         optional: true
 
-  '@prisma/debug@5.22.0':
-    resolution: {integrity: sha512-AUt44v3YJeggO2ZU5BkXI7M4hu9BF2zzH2iF2V5pyXT/lRTyWiElZ7It+bRH1EshoMRxHgpYg4VB6rCM+mG5jQ==}
-
   '@prisma/debug@6.4.1':
     resolution: {integrity: sha512-Q9xk6yjEGIThjSD8zZegxd5tBRNHYd13GOIG0nLsanbTXATiPXCLyvlYEfvbR2ft6dlRsziQXfQGxAgv7zcMUA==}
 
-  '@prisma/driver-adapter-utils@5.22.0':
-    resolution: {integrity: sha512-Y8msGZl9unmVflXoqdxTejv99UD02Gp4VoIvkyw+YxNUIj7nRz35O7yf5D87qNmTiPMGCS1WjUucG9ZuNq8+tw==}
+  '@prisma/driver-adapter-utils@6.4.1':
+    resolution: {integrity: sha512-WIVq6QUzz9HJXNa+6LmyLrW/KHOFQwmXYvpaVVECjwAUaAQXFw4g85i68GFPTYrfozwz5CntdHVVzXxInkk0fA==}
 
   '@prisma/engines-version@6.4.0-29.a9055b89e58b4b5bfb59600785423b1db3d0e75d':
     resolution: {integrity: sha512-Xq54qw55vaCGrGgIJqyDwOq0TtjZPJEWsbQAHugk99hpDf2jcEeQhUcF+yzEsSqegBaDNLA4IC8Nn34sXmkiTQ==}
@@ -5307,8 +5304,8 @@ packages:
     resolution: {integrity: sha512-cRL3JpS3lKMGsKaWndugWQoLOCoP+Cic8oseVcbr0qhPzYD5DWXK+RZ9LY9wxRf7RQia4SCwQlXk0q6FCPrVng==}
     engines: {node: '>=10'}
 
-  pg@8.13.2:
-    resolution: {integrity: sha512-L5QkPvTjVWWHbLaFjCkOSplpb2uCiRYbg0IJ2okCy5ClYfWlSgDDnvdR6dyw3EWAH2AfS4j8E61QFI7gLfTtlw==}
+  pg@8.13.3:
+    resolution: {integrity: sha512-P6tPt9jXbL9HVu/SSRERNYaYG++MjnscnegFh9pPHihfoBSujsrka0hyuymMzeJKFWrcG8wvCKy8rCe8e5nDUQ==}
     engines: {node: '>= 8.0.0'}
     peerDependencies:
       pg-native: '>=3.0.1'
@@ -7169,7 +7166,7 @@ snapshots:
       - encoding
       - openai
 
-  '@langchain/community@0.3.30(3c7egifemzizrdjocidzpei6t4)':
+  '@langchain/community@0.3.30(yjzdlyvtokhirepnjaomd666ry)':
     dependencies:
       '@browserbasehq/stagehand': 1.12.0(@playwright/test@1.50.1)(bufferutil@4.0.9)(deepmerge@4.3.1)(dotenv@16.4.7)(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))(zod@3.24.2)
       '@ibm-cloud/watsonx-ai': 1.5.0(@langchain/core@0.2.36(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)))
@@ -7203,7 +7200,7 @@ snapshots:
       jsonwebtoken: 9.0.2
       lodash: 4.17.21
       pdf-parse: 1.1.1
-      pg: 8.13.2
+      pg: 8.13.3
       playwright: 1.50.1
       ws: 8.18.0(bufferutil@4.0.9)
     transitivePeerDependencies:
@@ -7672,10 +7669,10 @@ snapshots:
     dependencies:
       playwright: 1.50.1
 
-  '@prisma/adapter-pg@5.22.0(pg@8.13.2)':
+  '@prisma/adapter-pg@6.4.1(pg@8.13.3)':
     dependencies:
-      '@prisma/driver-adapter-utils': 5.22.0
-      pg: 8.13.2
+      '@prisma/driver-adapter-utils': 6.4.1
+      pg: 8.13.3
       postgres-array: 3.0.2
 
   '@prisma/client@6.4.1(prisma@6.4.1(typescript@5.0.4))(typescript@5.0.4)':
@@ -7683,13 +7680,11 @@ snapshots:
       prisma: 6.4.1(typescript@5.0.4)
       typescript: 5.0.4
 
-  '@prisma/debug@5.22.0': {}
-
   '@prisma/debug@6.4.1': {}
 
-  '@prisma/driver-adapter-utils@5.22.0':
+  '@prisma/driver-adapter-utils@6.4.1':
     dependencies:
-      '@prisma/debug': 5.22.0
+      '@prisma/debug': 6.4.1
 
   '@prisma/engines-version@6.4.0-29.a9055b89e58b4b5bfb59600785423b1db3d0e75d': {}
 
@@ -8835,11 +8830,11 @@ snapshots:
     dependencies:
       '@upstash/redis': 1.34.4
 
-  '@upstash/rag-chat@2.0.3(@browserbasehq/sdk@2.3.0)(@browserbasehq/stagehand@1.12.0(@playwright/test@1.50.1)(bufferutil@4.0.9)(deepmerge@4.3.1)(dotenv@16.4.7)(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))(zod@3.24.2))(@ibm-cloud/watsonx-ai@1.5.0(@langchain/core@0.2.36(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))))(@langchain/openai@0.4.4(@langchain/core@0.2.36(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)))(ws@8.18.0(bufferutil@4.0.9)))(@mozilla/readability@0.5.0)(@upstash/ratelimit@1.2.1)(@upstash/redis@1.34.4)(@upstash/vector@1.2.0)(@vercel/kv@0.2.4)(axios@1.7.9)(crypto-js@4.2.0)(fast-xml-parser@4.5.1)(ibm-cloud-sdk-core@5.1.2)(ignore@5.3.2)(jsdom@25.0.1(bufferutil@4.0.9))(jsonwebtoken@9.0.2)(lodash@4.17.21)(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))(pg@8.13.2)(playwright@1.50.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(solid-js@1.9.4)(sswr@2.1.0(svelte@4.2.19))(svelte@4.2.19)(vue@3.5.13(typescript@5.0.4))(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)':
+  '@upstash/rag-chat@2.0.3(@browserbasehq/sdk@2.3.0)(@browserbasehq/stagehand@1.12.0(@playwright/test@1.50.1)(bufferutil@4.0.9)(deepmerge@4.3.1)(dotenv@16.4.7)(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))(zod@3.24.2))(@ibm-cloud/watsonx-ai@1.5.0(@langchain/core@0.2.36(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))))(@langchain/openai@0.4.4(@langchain/core@0.2.36(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)))(ws@8.18.0(bufferutil@4.0.9)))(@mozilla/readability@0.5.0)(@upstash/ratelimit@1.2.1)(@upstash/redis@1.34.4)(@upstash/vector@1.2.0)(@vercel/kv@0.2.4)(axios@1.7.9)(crypto-js@4.2.0)(fast-xml-parser@4.5.1)(ibm-cloud-sdk-core@5.1.2)(ignore@5.3.2)(jsdom@25.0.1(bufferutil@4.0.9))(jsonwebtoken@9.0.2)(lodash@4.17.21)(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))(pg@8.13.3)(playwright@1.50.1)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(solid-js@1.9.4)(sswr@2.1.0(svelte@4.2.19))(svelte@4.2.19)(vue@3.5.13(typescript@5.0.4))(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)':
     dependencies:
       '@ai-sdk/openai': 0.0.44(zod@3.24.2)
       '@langchain/anthropic': 0.2.18(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))
-      '@langchain/community': 0.3.30(3c7egifemzizrdjocidzpei6t4)
+      '@langchain/community': 0.3.30(yjzdlyvtokhirepnjaomd666ry)
       '@langchain/core': 0.2.36(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))
       '@langchain/mistralai': 0.0.28(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2))
       '@langchain/openai': 0.4.4(@langchain/core@0.2.36(openai@4.83.0(ws@8.18.0(bufferutil@4.0.9))(zod@3.24.2)))(ws@8.18.0(bufferutil@4.0.9))
@@ -10836,7 +10831,7 @@ snapshots:
       isstream: 0.1.2
       jsonwebtoken: 9.0.2
       mime-types: 2.1.35
-      retry-axios: 2.6.0(axios@1.7.9(debug@4.4.0))
+      retry-axios: 2.6.0(axios@1.7.9)
       tough-cookie: 4.1.4
     transitivePeerDependencies:
       - supports-color
@@ -12010,9 +12005,9 @@ snapshots:
 
   pg-numeric@1.0.2: {}
 
-  pg-pool@3.7.1(pg@8.13.2):
+  pg-pool@3.7.1(pg@8.13.3):
     dependencies:
-      pg: 8.13.2
+      pg: 8.13.3
 
   pg-protocol@1.7.1: {}
 
@@ -12034,10 +12029,10 @@ snapshots:
       postgres-interval: 3.0.0
       postgres-range: 1.1.4
 
-  pg@8.13.2:
+  pg@8.13.3:
     dependencies:
       pg-connection-string: 2.7.0
-      pg-pool: 3.7.1(pg@8.13.2)
+      pg-pool: 3.7.1(pg@8.13.3)
       pg-protocol: 1.7.1
       pg-types: 2.2.0
       pgpass: 1.0.5
@@ -12524,7 +12519,7 @@ snapshots:
       path-parse: 1.0.7
       supports-preserve-symlinks-flag: 1.0.0
 
-  retry-axios@2.6.0(axios@1.7.9(debug@4.4.0)):
+  retry-axios@2.6.0(axios@1.7.9):
     dependencies:
       axios: 1.7.9(debug@4.4.0)
 
