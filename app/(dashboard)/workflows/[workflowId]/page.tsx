@@ -72,7 +72,7 @@ export default async function WorkflowEditor(props: Props) {
                   className={buttonVariants({ variant: "ghost", size: "sm" })}
                   prefetch={false}
                 >
-                  <DownloadIcon className="mr-2 h-4 w-4" aria-hidden="true" />
+                  <DownloadIcon className="mr-1 h-4 w-4" aria-hidden="true" />
                   Export
                 </Link>
               </span>
@@ -99,7 +99,7 @@ export default async function WorkflowEditor(props: Props) {
                       size="sm"
                       icon={
                         <PauseCircleIcon
-                          className="mr-2 h-4 w-4"
+                          className="mr-1 h-4 w-4"
                           aria-hidden="true"
                         />
                       }
@@ -110,7 +110,7 @@ export default async function WorkflowEditor(props: Props) {
                       size="sm"
                       icon={
                         <PlayCircleIcon
-                          className="mr-2 h-4 w-4"
+                          className="mr-1 h-4 w-4"
                           aria-hidden="true"
                         />
                       }
@@ -126,7 +126,7 @@ export default async function WorkflowEditor(props: Props) {
                     name="id"
                     defaultValue={workflow.id}
                   />
-                  <DeleteButton size="sm" />
+                  <DeleteButton size="sm" compact />
                 </form>
               </span>
             </nav>

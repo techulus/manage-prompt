@@ -62,7 +62,7 @@ export default function SignInForm() {
             />
 
             <Link href="/" className="-m-1.5 p-1.5" prefetch={false}>
-              <p className="relative tracking-tight">ManagePrompt</p>
+              <p className="relative">ManagePrompt</p>
             </Link>
           </div>
 
