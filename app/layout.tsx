@@ -25,7 +25,10 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={classNames("flex min-w-full min-h-full", spaceGrotesk.className)}
+      className={classNames(
+        "flex min-w-full min-h-full",
+        spaceGrotesk.className,
+      )}
       suppressHydrationWarning
     >
       <head>
@@ -97,7 +100,7 @@ export default async function RootLayout({
         />
       </head>
 
-      <body className="flex-1 min-h-full min-w-full">
+      <body className="flex-1 min-h-full min-w-full tracking-tight">
         <ThemeProvider>{children}</ThemeProvider>
         <Script
           strategy="afterInteractive"

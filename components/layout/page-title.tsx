@@ -39,7 +39,7 @@ export default function PageTitle({
             </Link>
           ) : null}
 
-          <h1 className="flex-1 text-3xl tracking-tight lg:text-4xl font-bold">
+          <h1 className="flex-1 text-3xl tracking-tighter lg:text-4xl font-bold">
             {title}
           </h1>
           {subTitle ? (
