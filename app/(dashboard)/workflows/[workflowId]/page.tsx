@@ -126,7 +126,7 @@ export default async function WorkflowEditor(props: Props) {
                     name="id"
                     defaultValue={workflow.id}
                   />
-                  <DeleteButton size="sm" />
+                  <DeleteButton size="sm" compact />
                 </form>
               </span>
             </nav>
