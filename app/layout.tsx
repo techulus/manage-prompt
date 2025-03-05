@@ -2,7 +2,7 @@ import { ThemeProvider } from "@/components/core/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { SITE_METADATA } from "@/data/marketing";
 import classNames from "classnames";
-import { Archivo } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 
@@ -11,7 +11,7 @@ export const metadata = {
   description: SITE_METADATA.DESCRIPTION,
 };
 
-const archivo = Archivo({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
 });
 
@@ -25,7 +25,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={classNames("flex min-w-full min-h-full", archivo.className)}
+      className={classNames("flex min-w-full min-h-full", spaceGrotesk.className)}
       suppressHydrationWarning
     >
       <head>
