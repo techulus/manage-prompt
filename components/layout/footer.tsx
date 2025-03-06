@@ -9,7 +9,7 @@ const navigation = {
     { name: "Chatbots", href: "/chatbots" },
     {
       name: "Zapier Integration",
-      href: "https://zapier.com/developer/public-invite/217847/c90f089190b5e742f49cbef29910800f/",
+      href: "https://zapier.com/developer/public-invite/217847/04ed2c8a7d2b104e1eb7a68a89fd6b36/",
     },
     { name: "Free AI Tools", href: "/ai-tools" },
   ],
