@@ -1,7 +1,6 @@
 import PageSection from "@/components/core/page-section";
 import PageTitle from "@/components/layout/page-title";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { buildMetadata } from "@/lib/utils/metadata";
 import { MagicWandIcon } from "@radix-ui/react-icons";
 import type { Metadata } from "next";
@@ -46,14 +45,9 @@ export default async function FreeAiTools() {
       </PageTitle>
 
       <PageSection topInset>
-        <div className="divide-y overflow-hidden bg-slate-200 dark:bg-slate-900 shadow sm:grid sm:grid-cols-2 sm:gap-px sm:divide-y-0">
+        <div className="divide-y overflow-hidden shadow sm:grid sm:grid-cols-2 sm:gap-px sm:divide-y-0 rounded-md">
           {actions.map((action) => (
-            <div
-              key={action.title}
-              className={cn(
-                "group relative bg-white dark:bg-slate-950 p-6 focus-within:ring-2 focus-within:ring-inset  focus-within:ring-primary"
-              )}
-            >
+            <div key={action.title} className="group relative p-6">
               <h3 className="text-xl font-semibold leading-6">
                 <Link
                   prefetch={false}

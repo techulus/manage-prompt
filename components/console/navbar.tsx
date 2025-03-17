@@ -116,7 +116,7 @@ export default function NavBar({ isPublicPage = false }: Props) {
 
       <div
         className={cn(
-          "sticky -top-[1px] z-10 -mb-px flex w-screen self-start border-b border-gray-200 bg-background px-4 dark:border-gray-800 dark:bg-gray-950 lg:px-8",
+          "sticky -top-[1px] z-10 -mb-px flex w-screen self-start border-b bg-background px-4 lg:px-8",
           isSticky ? "pt-[1px] shadow-md" : "",
           isPublicPage ? "hidden" : "",
         )}
