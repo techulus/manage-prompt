@@ -1,4 +1,4 @@
-FROM node:lts-alpine AS base
+FROM oven/bun:1 AS base
 
 ARG NEXT_PUBLIC_APP_BASE_URL
 ARG APP_BASE_URL
@@ -28,15 +28,15 @@ RUN apk add --no-cache \
 # Stage 1: Install dependencies
 FROM base AS deps
 WORKDIR /app
-COPY package.json pnpm-lock.yaml ./
-RUN corepack enable && corepack prepare pnpm@9.15.4 --activate && pnpm install --frozen-lockfile
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile
 
 # Stage 2: Build the application
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN corepack enable && corepack prepare pnpm@9.15.4 --activate && pnpm run build
+RUN bun run build
 
 # Stage 3: Production server
 FROM base AS runner
@@ -60,4 +60,4 @@ ENV PORT=3000
 # https://nextjs.org/docs/pages/api-reference/config/next-config-js/output
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["node", "server.js"]
+CMD ["bun", "server.js"]
