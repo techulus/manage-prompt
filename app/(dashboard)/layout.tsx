@@ -15,7 +15,7 @@ export default function ConsoleLayout({
 
       <div className="mx-auto w-full flex-grow lg:flex">
         <div className="min-w-0 flex-1 xl:flex">
-          <div className="min-h-screen bg-gray-50 dark:bg-gray-900 lg:min-w-0 lg:flex-1 pb-12">
+          <div className="min-h-screen lg:min-w-0 lg:flex-1 pb-12">
             {children}
           </div>
         </div>
