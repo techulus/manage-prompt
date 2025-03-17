@@ -1,4 +1,4 @@
-FROM oven/bun:1 AS base
+FROM oven/bun:alpine AS base
 
 ARG NEXT_PUBLIC_APP_BASE_URL
 ARG APP_BASE_URL
