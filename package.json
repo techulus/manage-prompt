@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "generate": "DATABASE_URL=$PUBLIC_DATABASE_URL prisma generate",
-    "prebuild": "DATABASE_URL=$PUBLIC_DATABASE_URL prisma migrate deploy && prisma generate",
+    "generate": "prisma generate",
+    "prebuild": "prisma migrate deploy && prisma generate",
     "build": "next build",
     "start": "next start",
     "lint": "biome check ."
