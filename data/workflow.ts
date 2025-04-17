@@ -1,10 +1,14 @@
 export type AIProvider = "openai" | "groq" | "anthropic" | "xai";
 
 export const AIModelToLabel = {
-  "gpt-4": "GPT-4",
-  "gpt-4o": "GPT-4o",
-  "gpt-4o-mini": "GPT-4o mini",
+  "gpt-4o": "GPT 4o",
+  "gpt-4o-mini": "GPT 4o mini",
+  "gpt-4.1": "GPT 4.1",
+  "gpt-4.1-mini": "GPT 4.1 mini",
+  "gpt-4.1-nano": "GPT 4.1 nano",
   "o1-mini": "o1 Mini",
+  "o3-mini": "o3 Mini",
+  "o4-mini": "o4 Mini",
   "meta-llama/Llama-2-70b-chat-hf": "Meta Llama 2 70b",
   "mistralai/Mixtral-8x7B-Instruct-v0.1": "Mixtral 8x7B",
   "google/gemma-7b-it": "Google Gemma 7B",
@@ -17,19 +21,6 @@ export const modelToProviderId: Record<string | AIModel, string> = {
   "google/gemma-7b-it": "gemma-7b-it",
   "meta-llama/Llama-2-70b-chat-hf": "llama3-8b-8192",
   "mistralai/Mixtral-8x7B-Instruct-v0.1": "mixtral-8x7b-32768",
-};
-
-export const modelToProvider: Record<string | AIModel, AIProvider> = {
-  "gpt-4": "openai",
-  "gpt-4o": "openai",
-  "gpt-4o-mini": "openai",
-  "o1-mini": "openai",
-  "meta-llama/Llama-2-70b-chat-hf": "groq",
-  "mistralai/Mixtral-8x7B-Instruct-v0.1": "groq",
-  "google/gemma-7b-it": "groq",
-  "claude-3-5-sonnet-20240620": "anthropic",
-  "grok-2-latest": "xai",
-  "grok-beta": "xai",
 };
 
 export type AIModel = keyof typeof AIModelToLabel;
