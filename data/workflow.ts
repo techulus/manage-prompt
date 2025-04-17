@@ -1,6 +1,7 @@
 export type AIProvider = "openai" | "groq" | "anthropic" | "xai";
 
 export const AIModelToLabel = {
+  "gpt-4": "GPT-4 (Deprecated)",
   "gpt-4o": "GPT 4o",
   "gpt-4o-mini": "GPT 4o mini",
   "gpt-4.1": "GPT 4.1",
