@@ -9,7 +9,7 @@ const navigation = [
   },
   {
     name: "Support",
-    href: "https://techulus.atlassian.net/servicedesk/customer/portal/5",
+    href: "https://github.com/techulus/manage-prompt/issues/new",
   },
 ];
 
