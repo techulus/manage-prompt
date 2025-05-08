@@ -9,9 +9,7 @@
     <br />
     <a href="https://manageprompt.com">Website</a>
     ·
-    <a href="https://github.com/techulus/manage-prompt/issues">Issues</a>
-    ·
-    <a href="https://techulus.atlassian.net/servicedesk/customer/portal/5">Support</a>
+    <a href="https://github.com/techulus/manage-prompt/issues/new">Support</a>
   </p>
 </p>
 

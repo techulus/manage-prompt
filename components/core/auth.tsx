@@ -34,7 +34,7 @@ export const UserButton = () => {
         </DropdownMenuItem>
         <DropdownMenuItem>
           <Link
-            href="https://techulus.atlassian.net/servicedesk/customer/portal/5"
+            href="https://github.com/techulus/manage-prompt/issues/new"
             target="_blank"
             rel="noopener noreferrer"
             className="w-full"
