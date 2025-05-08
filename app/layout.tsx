@@ -4,7 +4,6 @@ import { SITE_METADATA } from "@/data/marketing";
 import { OpenPanelComponent } from "@openpanel/nextjs";
 import classNames from "classnames";
 import { IBM_Plex_Sans } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 
 export const metadata = {
@@ -109,11 +108,6 @@ export default async function RootLayout({
           />
         ) : null}
         <ThemeProvider>{children}</ThemeProvider>
-        <Script
-          strategy="afterInteractive"
-          src="https://analytics.ahrefs.com/analytics.js"
-          data-key="ENZwU7AFoU9yXXczsA6Avw"
-        />
         <Toaster />
       </body>
     </html>
