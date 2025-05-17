@@ -1,7 +1,7 @@
 import { ThemeProvider } from "@/components/core/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { SITE_METADATA } from "@/data/marketing";
-import { OpenPanelComponent } from "@openpanel/nextjs";
+import { Analytics } from "@vercel/analytics/next";
 import classNames from "classnames";
 import { IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
@@ -99,15 +99,8 @@ export default async function RootLayout({
       </head>
 
       <body className="flex-1 min-h-full min-w-full tracking-tight">
-        {process.env.NEXT_PUBLIC_OPEN_PANEL_CLIENT_ID ? (
-          <OpenPanelComponent
-            clientId={process.env.NEXT_PUBLIC_OPEN_PANEL_CLIENT_ID}
-            trackScreenViews
-            trackAttributes
-            trackOutgoingLinks
-          />
-        ) : null}
         <ThemeProvider>{children}</ThemeProvider>
+        <Analytics />
         <Toaster />
       </body>
     </html>
