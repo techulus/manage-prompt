@@ -1,8 +1,7 @@
 import type { ModelSettings } from "@/components/console/workflow/workflow-model-settings";
 import { modelToProviderId } from "@/data/workflow";
 import { createAnthropic } from "@ai-sdk/anthropic";
-import { createAzure } from "@ai-sdk/azure";
-import { createOpenAI } from "@ai-sdk/openai";
+import { createOpenAI, openai } from "@ai-sdk/openai";
 import { createXai } from "@ai-sdk/xai";
 import type { UserKey } from "@prisma/client";
 import { type LanguageModel, generateText, streamText } from "ai";
@@ -69,20 +68,16 @@ export const getCompletion = async (
     default: {
       const userOpenApiKey = new ByokService().get("openai", userKeys);
       if (userOpenApiKey) {
-        const openai = createOpenAI({
+        const userOpenai = createOpenAI({
           apiKey: userOpenApiKey,
         });
         completion = await generateText({
-          model: openai(modelToProviderId[model] ?? model) as LanguageModel,
+          model: userOpenai(modelToProviderId[model] ?? model) as LanguageModel,
           ...modelParams,
         });
       } else {
-        const azure = createAzure({
-          resourceName: process.env.AZURE_RESOURCE_NAME,
-          apiKey: process.env.AZURE_API_KEY,
-        });
         completion = await generateText({
-          model: azure(modelToProviderId[model] ?? model) as LanguageModel,
+          model: openai(modelToProviderId[model] ?? model) as LanguageModel,
           ...modelParams,
         });
       }
@@ -160,21 +155,17 @@ export const getStreamingCompletion = async (
     default: {
       const userOpenApiKey = new ByokService().get("openai", userKeys);
       if (userOpenApiKey) {
-        const openai = createOpenAI({
+        const userOpenai = createOpenAI({
           apiKey: userOpenApiKey,
         });
         completion = streamText({
-          model: openai(modelToProviderId[model] ?? model) as LanguageModel,
+          model: userOpenai(modelToProviderId[model] ?? model) as LanguageModel,
           ...modelParams,
           onFinish,
         });
       } else {
-        const azure = createAzure({
-          resourceName: process.env.AZURE_RESOURCE_NAME,
-          apiKey: process.env.AZURE_API_KEY,
-        });
         completion = streamText({
-          model: azure(modelToProviderId[model] ?? model) as LanguageModel,
+          model: openai(modelToProviderId[model] ?? model) as LanguageModel,
           ...modelParams,
           onFinish,
         });
