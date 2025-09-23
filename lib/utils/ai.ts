@@ -1,7 +1,6 @@
 import type { ModelSettings } from "@/components/console/workflow/workflow-model-settings";
 import { modelToProviderId } from "@/data/workflow";
 import { createAnthropic } from "@ai-sdk/anthropic";
-import { createAzure } from "@ai-sdk/azure";
 import { createOpenAI } from "@ai-sdk/openai";
 import { createXai } from "@ai-sdk/xai";
 import type { UserKey } from "@prisma/client";
@@ -77,12 +76,9 @@ export const getCompletion = async (
           ...modelParams,
         });
       } else {
-        const azure = createAzure({
-          resourceName: process.env.AZURE_RESOURCE_NAME,
-          apiKey: process.env.AZURE_API_KEY,
-        });
+        const provider = createOpenAI();
         completion = await generateText({
-          model: azure(modelToProviderId[model] ?? model) as LanguageModel,
+          model: provider(modelToProviderId[model] ?? model) as LanguageModel,
           ...modelParams,
         });
       }
@@ -169,12 +165,9 @@ export const getStreamingCompletion = async (
           onFinish,
         });
       } else {
-        const azure = createAzure({
-          resourceName: process.env.AZURE_RESOURCE_NAME,
-          apiKey: process.env.AZURE_API_KEY,
-        });
+        const provider = createOpenAI();
         completion = streamText({
-          model: azure(modelToProviderId[model] ?? model) as LanguageModel,
+          model: provider(modelToProviderId[model] ?? model) as LanguageModel,
           ...modelParams,
           onFinish,
         });

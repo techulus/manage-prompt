@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^1.1.6",
-    "@ai-sdk/azure": "^1.1.9",
     "@ai-sdk/openai": "^1.1.9",
     "@ai-sdk/xai": "^1.1.8",
     "@headlessui/react": "^1.7.18",
