@@ -2,19 +2,12 @@ import { ThemeProvider } from "@/components/core/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { SITE_METADATA } from "@/data/marketing";
 import { Analytics } from "@vercel/analytics/next";
-import classNames from "classnames";
-import { IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
 
 export const metadata = {
   title: SITE_METADATA.TITLE,
   description: SITE_METADATA.DESCRIPTION,
 };
-
-const mainFont = IBM_Plex_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
 
 export const fetchCache = "force-no-store";
 
@@ -26,7 +19,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
-      className={classNames("flex min-w-full min-h-full", mainFont.className)}
+      className="flex min-w-full min-h-full"
       suppressHydrationWarning
     >
       <head>
