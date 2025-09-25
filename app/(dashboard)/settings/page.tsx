@@ -63,10 +63,7 @@ export default async function Settings() {
     return notFound();
   }
 
-  const userOpenAIKey = userKeys.find((k) => k.provider === "openai");
-  const userAnthropicKey = userKeys.find((k) => k.provider === "anthropic");
-  const userGroqKey = userKeys.find((k) => k.provider === "groq");
-  const userXaiKey = userKeys.find((k) => k.provider === "xai");
+  const userOpenRouterKey = userKeys.find((k) => k.provider === "openrouter");
 
   return (
     <>
@@ -150,93 +147,21 @@ export default async function Settings() {
           <dl className="mt-6 space-y-4 divide-y border-t text-sm leading-6">
             <div className="pt-2 sm:flex">
               <dt className="font-medium text-gray-900 dark:text-gray-200 sm:w-64 sm:flex-none sm:pr-6">
-                OpenAI
+                OpenRouter
               </dt>
               <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
                 <div className="text-gray-900 dark:text-gray-200">
-                  {userOpenAIKey ? (
+                  {userOpenRouterKey ? (
                     <form className="inline-block" action={revokeUserKey}>
-                      <input type="hidden" name="provider" value="openai" />
+                      <input type="hidden" name="provider" value="openrouter" />
                       <DeleteButton label="Remove" size="sm" />
                     </form>
                   ) : (
                     <EditableValue
-                      id="openai"
+                      id="openrouter"
                       name="apiKey"
                       type="text"
-                      value={userOpenAIKey ? "*******" : "-"}
-                      action={updateUserKey}
-                    />
-                  )}
-                </div>
-              </dd>
-            </div>
-
-            <div className="pt-2 sm:flex">
-              <dt className="font-medium text-gray-900 dark:text-gray-200 sm:w-64 sm:flex-none sm:pr-6">
-                Anthropic
-              </dt>
-              <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                <div className="text-gray-900 dark:text-gray-200">
-                  {userAnthropicKey ? (
-                    <form className="inline-block" action={revokeUserKey}>
-                      <input type="hidden" name="provider" value="anthropic" />
-                      <DeleteButton label="Remove" size="sm" />
-                    </form>
-                  ) : (
-                    <EditableValue
-                      id="anthropic"
-                      name="apiKey"
-                      type="text"
-                      value={userAnthropicKey ? "*******" : "-"}
-                      action={updateUserKey}
-                    />
-                  )}
-                </div>
-              </dd>
-            </div>
-
-            <div className="pt-2 sm:flex">
-              <dt className="font-medium text-gray-900 dark:text-gray-200 sm:w-64 sm:flex-none sm:pr-6">
-                Groq
-              </dt>
-              <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                <div className="text-gray-900 dark:text-gray-200">
-                  {userGroqKey ? (
-                    <form className="inline-block" action={revokeUserKey}>
-                      <input type="hidden" name="provider" value="groq" />
-                      <DeleteButton label="Remove" size="sm" />
-                    </form>
-                  ) : (
-                    <EditableValue
-                      id="groq"
-                      name="apiKey"
-                      type="text"
-                      value={userGroqKey ? "*******" : "-"}
-                      action={updateUserKey}
-                    />
-                  )}
-                </div>
-              </dd>
-            </div>
-
-            <div className="pt-2 sm:flex">
-              <dt className="font-medium text-gray-900 dark:text-gray-200 sm:w-64 sm:flex-none sm:pr-6">
-                xAI
-              </dt>
-              <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                <div className="text-gray-900 dark:text-gray-200">
-                  {userXaiKey ? (
-                    <form className="inline-block" action={revokeUserKey}>
-                      <input type="hidden" name="provider" value="xai" />
-                      <DeleteButton label="Remove" size="sm" />
-                    </form>
-                  ) : (
-                    <EditableValue
-                      id="xai"
-                      name="apiKey"
-                      type="text"
-                      value={userXaiKey ? "*******" : "-"}
+                      value={userOpenRouterKey ? "*******" : "-"}
                       action={updateUserKey}
                     />
                   )}

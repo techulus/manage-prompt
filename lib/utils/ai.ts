@@ -1,10 +1,8 @@
 import type { ModelSettings } from "@/components/console/workflow/workflow-model-settings";
 import { modelToProviderId } from "@/data/workflow";
-import { createAnthropic } from "@ai-sdk/anthropic";
-import { createOpenAI, openai } from "@ai-sdk/openai";
-import { createXai } from "@ai-sdk/xai";
+import { createOpenAI } from "@ai-sdk/openai";
 import type { UserKey } from "@prisma/client";
-import { type LanguageModel, generateText, streamText } from "ai";
+import { generateText, streamText } from "ai";
 import { ByokService } from "./byok-service";
 
 export const getCompletion = async (
@@ -26,63 +24,20 @@ export const getCompletion = async (
     presencePenalty: settings?.presencePenalty ?? 0,
   };
 
-  let completion = null;
-  switch (model) {
-    case "mistralai/Mixtral-8x7B-Instruct-v0.1":
-    case "meta-llama/Llama-2-70b-chat-hf":
-    case "google/gemma-7b-it": {
-      const userGroqKey = new ByokService().get("groq", userKeys);
-      const groq = createOpenAI({
-        baseURL: "https://api.groq.com/openai/v1",
-        apiKey: userGroqKey ?? process.env.GROQ_TOKEN,
-      });
-      completion = await generateText({
-        model: groq(modelToProviderId[model] ?? model) as LanguageModel,
-        ...modelParams,
-      });
-      break;
-    }
-    case "claude-3-5-sonnet-20240620": {
-      const userAnthropicKey = new ByokService().get("anthropic", userKeys);
-      const anthropic = createAnthropic({
-        apiKey: userAnthropicKey ?? process.env.ANTHROPIC_API_KEY,
-      });
-      completion = await generateText({
-        model: anthropic(modelToProviderId[model] ?? model) as LanguageModel,
-        ...modelParams,
-      });
-      break;
-    }
-    case "grok-beta":
-    case "grok-2-latest": {
-      const userXaiKey = new ByokService().get("xai", userKeys);
-      const xai = createXai({
-        apiKey: userXaiKey ?? process.env.XAI_API_KEY,
-      });
-      completion = await generateText({
-        model: xai(model) as LanguageModel,
-        ...modelParams,
-      });
-      break;
-    }
-    default: {
-      const userOpenApiKey = new ByokService().get("openai", userKeys);
-      if (userOpenApiKey) {
-        const userOpenai = createOpenAI({
-          apiKey: userOpenApiKey,
-        });
-        completion = await generateText({
-          model: userOpenai(modelToProviderId[model] ?? model) as LanguageModel,
-          ...modelParams,
-        });
-      } else {
-        completion = await generateText({
-          model: openai(modelToProviderId[model] ?? model) as LanguageModel,
-          ...modelParams,
-        });
-      }
-    }
-  }
+  const userOpenRouterKey = new ByokService().get("openrouter", userKeys);
+  const openrouter = createOpenAI({
+    baseURL: "https://openrouter.ai/api/v1",
+    apiKey: userOpenRouterKey ?? process.env.OPENROUTER_API_KEY,
+  });
+
+  const completion = await generateText({
+    model: openrouter(modelToProviderId[model]),
+    headers: {
+      "HTTP-Referer": "manageprompt.com",
+      "X-Title": "ManagePrompt",
+    },
+    ...modelParams,
+  });
 
   if (!completion.text) throw new Error("No result returned from Provider");
 
@@ -109,69 +64,21 @@ export const getStreamingCompletion = async (
     presencePenalty: settings?.presencePenalty ?? 0,
   };
 
-  let completion = null;
+  const userOpenRouterKey = new ByokService().get("openrouter", userKeys);
+  const openrouter = createOpenAI({
+    baseURL: "https://openrouter.ai/api/v1",
+    apiKey: userOpenRouterKey ?? process.env.OPENROUTER_API_KEY,
+  });
 
-  switch (model) {
-    case "mistralai/Mixtral-8x7B-Instruct-v0.1":
-    case "meta-llama/Llama-2-70b-chat-hf":
-    case "google/gemma-7b-it": {
-      const userGroqKey = new ByokService().get("groq", userKeys);
-      const groq = createOpenAI({
-        baseURL: "https://api.groq.com/openai/v1",
-        apiKey: userGroqKey ?? process.env.GROQ_TOKEN,
-      });
-      completion = streamText({
-        model: groq(modelToProviderId[model] ?? model) as LanguageModel,
-        ...modelParams,
-        onFinish,
-      });
-      break;
-    }
-    case "claude-3-5-sonnet-20240620": {
-      const userAnthropicKey = new ByokService().get("anthropic", userKeys);
-      const anthropic = createAnthropic({
-        apiKey: userAnthropicKey ?? process.env.ANTHROPIC_API_KEY,
-      });
-      completion = streamText({
-        model: anthropic(modelToProviderId[model] ?? model) as LanguageModel,
-        ...modelParams,
-        onFinish,
-      });
-      break;
-    }
-    case "grok-beta":
-    case "grok-2-latest": {
-      const userXaiKey = new ByokService().get("xai", userKeys);
-      const xai = createXai({
-        apiKey: userXaiKey ?? process.env.XAI_API_KEY,
-      });
-      completion = streamText({
-        model: xai(model) as LanguageModel,
-        ...modelParams,
-        onFinish,
-      });
-      break;
-    }
-    default: {
-      const userOpenApiKey = new ByokService().get("openai", userKeys);
-      if (userOpenApiKey) {
-        const userOpenai = createOpenAI({
-          apiKey: userOpenApiKey,
-        });
-        completion = streamText({
-          model: userOpenai(modelToProviderId[model] ?? model) as LanguageModel,
-          ...modelParams,
-          onFinish,
-        });
-      } else {
-        completion = streamText({
-          model: openai(modelToProviderId[model] ?? model) as LanguageModel,
-          ...modelParams,
-          onFinish,
-        });
-      }
-    }
-  }
+  const completion = streamText({
+    model: openrouter(modelToProviderId[model]),
+    headers: {
+      "HTTP-Referer": "manageprompt.com",
+      "X-Title": "ManagePrompt",
+    },
+    ...modelParams,
+    onFinish,
+  });
 
   return completion.toTextStreamResponse({
     headers: {

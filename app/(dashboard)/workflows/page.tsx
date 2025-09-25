@@ -79,7 +79,7 @@ export default async function Workflows(props: Props) {
         ) : null}
 
         {workflows?.length ? (
-          <div className="divide-y border">
+          <div className="divide-y border rounded-md overflow-hidden">
             {workflows.map((workflow) => (
               // @ts-ignore
               <WorkflowItem key={workflow.id} workflow={workflow} />
