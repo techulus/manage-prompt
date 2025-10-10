@@ -9,12 +9,13 @@ import type { Workflow } from "@prisma/client";
 import { useMemo, useReducer, useState } from "react";
 import { toast } from "sonner";
 import { ApiCodeSnippet } from "../../code/snippet";
+import { Spinner } from "../../core/loaders";
+import StreamingText from "../../core/streaming-text";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
 import { Textarea } from "../../ui/textarea";
-import { Spinner } from "../../core/loaders";
 
 interface Props {
   workflow: Workflow;
@@ -22,8 +23,8 @@ interface Props {
   branch?: string;
 }
 
-export function WorkflowComposer({ workflow, apiSecretKey, branch }: Props) {
-  const { id, template, instruction, model } = workflow;
+export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
+  const { template, instruction, model } = workflow;
   const inputs = (workflow.inputs ?? []) as WorkflowInput[];
 
   const [inputValues, updateInput] = useReducer((state: any, action: any) => {
@@ -33,8 +34,8 @@ export function WorkflowComposer({ workflow, apiSecretKey, branch }: Props) {
     };
   }, {});
 
-  const [isStreaming, setIsStreaming] = useState(false);
-  const [streamedResult, setStreamedResult] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [streamUrl, setStreamUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const generatedTemplate = useMemo(() => {
@@ -63,8 +64,8 @@ export function WorkflowComposer({ workflow, apiSecretKey, branch }: Props) {
       return;
     }
 
-    setIsStreaming(true);
-    setStreamedResult("");
+    setIsLoading(true);
+    setStreamUrl(null);
     setError(null);
 
     try {
@@ -79,47 +80,20 @@ export function WorkflowComposer({ workflow, apiSecretKey, branch }: Props) {
       }
 
       const { token } = await tokenResponse.json();
-
-      const streamResponse = await fetch(
-        `/api/v1/run/${workflow.shortId}/stream?token=${token}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(inputValues),
-        }
-      );
-
-      if (!streamResponse.ok) {
-        throw new Error("Failed to start streaming");
-      }
-
-      const reader = streamResponse.body?.getReader();
-      const decoder = new TextDecoder();
-
-      if (!reader) {
-        throw new Error("No response body");
-      }
-
-      let result = "";
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const chunk = decoder.decode(value, { stream: true });
-        result += chunk;
-        setStreamedResult(result);
-      }
-
-      toast.success("Workflow completed");
+      setStreamUrl(`/api/v1/run/${workflow.shortId}/stream?token=${token}`);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Failed to run workflow";
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to run workflow";
       setError(errorMessage);
       toast.error(errorMessage);
     } finally {
-      setIsStreaming(false);
+      setIsLoading(false);
     }
+  };
+
+  const handleReset = () => {
+    setStreamUrl(null);
+    setError(null);
   };
 
   return (
@@ -175,7 +149,7 @@ export function WorkflowComposer({ workflow, apiSecretKey, branch }: Props) {
                         />
                       ) : null}
                     </div>
-                  )
+                  ),
                 )}
               </div>
 
@@ -185,12 +159,13 @@ export function WorkflowComposer({ workflow, apiSecretKey, branch }: Props) {
                   disabled={
                     !workflow.published ||
                     !apiSecretKey ||
-                    isStreaming ||
+                    isLoading ||
+                    !!streamUrl ||
                     Object.keys(inputValues).length !==
                       (inputs as WorkflowInput[])?.length
                   }
                 >
-                  {isStreaming ? <Spinner message="Streaming..." /> : "Run"}
+                  {isLoading ? <Spinner message="Loading..." /> : "Run"}
                 </Button>
               </div>
             </TabsContent>
@@ -215,12 +190,13 @@ export function WorkflowComposer({ workflow, apiSecretKey, branch }: Props) {
                 disabled={
                   !workflow.published ||
                   !apiSecretKey ||
-                  isStreaming ||
+                  isLoading ||
+                  !!streamUrl ||
                   Object.keys(inputValues).length !==
                     (inputs as WorkflowInput[])?.length
                 }
               >
-                {isStreaming ? <Spinner message="Streaming..." /> : "Run"}
+                {isLoading ? <Spinner message="Loading..." /> : "Run"}
               </Button>
             </div>
           </TabsContent>
@@ -249,8 +225,8 @@ export function WorkflowComposer({ workflow, apiSecretKey, branch }: Props) {
                         Object.assign(acc, {
                           [input.name]: "value",
                         }),
-                      {}
-                    )
+                      {},
+                    ),
                   ),
                 },
               }}
@@ -264,16 +240,22 @@ export function WorkflowComposer({ workflow, apiSecretKey, branch }: Props) {
           </TabsContent>
         </Tabs>
 
-        {streamedResult && (
+        {streamUrl && (
           <div className="mt-6 border-t pt-6">
             <h3 className="text-lg font-semibold mb-3">Result</h3>
             <div className="border rounded-lg p-4 bg-slate-50 dark:bg-slate-900">
-              <div className="text-sm leading-5 text-slate-800 dark:text-slate-100 whitespace-pre-wrap">
-                {streamedResult}
-              </div>
-              {isStreaming && (
-                <div className="mt-2 text-xs text-slate-500">Streaming...</div>
-              )}
+              <StreamingText
+                url={streamUrl}
+                body={inputValues}
+                fallbackText="Failed to process workflow"
+                className="text-sm leading-5 text-slate-800 dark:text-slate-100 whitespace-pre-wrap"
+                onCompleted={() => toast.success("Workflow completed")}
+              />
+            </div>
+            <div className="mt-4 flex justify-end">
+              <Button onClick={handleReset} variant="outline">
+                Run Again
+              </Button>
             </div>
           </div>
         )}
