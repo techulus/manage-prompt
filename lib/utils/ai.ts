@@ -71,7 +71,7 @@ export const getStreamingCompletion = async (
   const completion = streamText({
     model: openrouter(modelToProviderId[model]),
     headers: {
-      "HTTP-Referer": "manageprompt.com",
+      "HTTP-Referer": "https://manageprompt.com",
       "X-Title": "ManagePrompt",
     },
     ...modelParams,
