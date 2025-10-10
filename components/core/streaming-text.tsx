@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Markdown from "react-markdown";
 import { Spinner } from "./loaders";
 
@@ -21,6 +21,7 @@ export default function StreamingText({
 }) {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState("");
+  const hasStarted = useRef(false);
 
   const getData = useCallback(async () => {
     setLoading(true);
@@ -58,12 +59,12 @@ export default function StreamingText({
     onCompleted?.();
   }, [url, fallbackText, body, onCompleted]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (url) {
+    if (url && !hasStarted.current) {
+      hasStarted.current = true;
       getData();
     }
-  }, [url]);
+  }, [url, getData]);
 
   return loading ? (
     <Spinner className={className} />

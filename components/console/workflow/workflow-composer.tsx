@@ -1,16 +1,17 @@
 "use client";
 
-import { runWorkflow } from "@/app/(dashboard)/workflows/actions";
 import {
   type WorkflowInput,
   WorkflowInputType,
   modelHasInstruction,
 } from "@/data/workflow";
 import type { Workflow } from "@prisma/client";
-import { useMemo, useReducer } from "react";
+import { useMemo, useReducer, useState } from "react";
 import { toast } from "sonner";
 import { ApiCodeSnippet } from "../../code/snippet";
-import { SaveButton } from "../../form/button";
+import { Spinner } from "../../core/loaders";
+import StreamingText from "../../core/streaming-text";
+import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
@@ -22,8 +23,8 @@ interface Props {
   branch?: string;
 }
 
-export function WorkflowComposer({ workflow, apiSecretKey, branch }: Props) {
-  const { id, template, instruction, model } = workflow;
+export function WorkflowComposer({ workflow, apiSecretKey }: Props) {
+  const { template, instruction, model } = workflow;
   const inputs = (workflow.inputs ?? []) as WorkflowInput[];
 
   const [inputValues, updateInput] = useReducer((state: any, action: any) => {
@@ -32,6 +33,10 @@ export function WorkflowComposer({ workflow, apiSecretKey, branch }: Props) {
       ...action,
     };
   }, {});
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [streamUrl, setStreamUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const generatedTemplate = useMemo(() => {
     let result = template;
@@ -53,52 +58,47 @@ export function WorkflowComposer({ workflow, apiSecretKey, branch }: Props) {
     return result;
   }, [inputValues, instruction]);
 
+  const handleRunWorkflow = async () => {
+    if (!apiSecretKey) {
+      toast.error("API key not available");
+      return;
+    }
+
+    setIsLoading(true);
+    setStreamUrl(null);
+    setError(null);
+
+    try {
+      const tokenResponse = await fetch("/api/v1/token", {
+        headers: {
+          Authorization: `Bearer ${apiSecretKey}`,
+        },
+      });
+
+      if (!tokenResponse.ok) {
+        throw new Error("Failed to get streaming token");
+      }
+
+      const { token } = await tokenResponse.json();
+      setStreamUrl(`/api/v1/run/${workflow.shortId}/stream?token=${token}`);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to run workflow";
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleReset = () => {
+    setStreamUrl(null);
+    setError(null);
+  };
+
   return (
     <>
-      <form
-        className="p-6"
-        action={async (data: FormData) => {
-          const result = await runWorkflow(data);
-          if (result?.error) {
-            toast.error(result.error as string);
-          }
-        }}
-      >
-        <input
-          type="number"
-          name="id"
-          className="hidden"
-          defaultValue={Number(id)}
-        />
-        {branch ? (
-          <input
-            type="text"
-            name="branch"
-            className="hidden"
-            defaultValue={branch}
-          />
-        ) : null}
-        <input
-          type="text"
-          name="model"
-          className="hidden"
-          defaultValue={model!}
-        />
-        <input
-          type="text"
-          name="inputs"
-          className="hidden"
-          value={JSON.stringify(inputValues)}
-          onChange={() => null}
-        />
-        <input
-          type="text"
-          name="instruction"
-          className="hidden"
-          value={geneatedInstruction}
-          onChange={() => null}
-        />
-
+      <div className="p-6">
         <Tabs defaultValue={inputs?.length ? "compose" : "review"}>
           <TabsList>
             {inputs?.length ? (
@@ -149,20 +149,24 @@ export function WorkflowComposer({ workflow, apiSecretKey, branch }: Props) {
                         />
                       ) : null}
                     </div>
-                  )
+                  ),
                 )}
               </div>
 
               <div className="mt-2 flex justify-end">
-                <SaveButton
-                  label="Run"
-                  loadingLabel="Running"
+                <Button
+                  onClick={handleRunWorkflow}
                   disabled={
                     !workflow.published ||
+                    !apiSecretKey ||
+                    isLoading ||
+                    !!streamUrl ||
                     Object.keys(inputValues).length !==
                       (inputs as WorkflowInput[])?.length
                   }
-                />
+                >
+                  {isLoading ? <Spinner message="Loading..." /> : "Run"}
+                </Button>
               </div>
             </TabsContent>
           ) : null}
@@ -181,15 +185,19 @@ export function WorkflowComposer({ workflow, apiSecretKey, branch }: Props) {
             </div>
 
             <div className="mt-2 flex justify-end">
-              <SaveButton
-                label="Run"
-                loadingLabel="Running"
+              <Button
+                onClick={handleRunWorkflow}
                 disabled={
                   !workflow.published ||
+                  !apiSecretKey ||
+                  isLoading ||
+                  !!streamUrl ||
                   Object.keys(inputValues).length !==
                     (inputs as WorkflowInput[])?.length
                 }
-              />
+              >
+                {isLoading ? <Spinner message="Loading..." /> : "Run"}
+              </Button>
             </div>
           </TabsContent>
 
@@ -217,8 +225,8 @@ export function WorkflowComposer({ workflow, apiSecretKey, branch }: Props) {
                         Object.assign(acc, {
                           [input.name]: "value",
                         }),
-                      {}
-                    )
+                      {},
+                    ),
                   ),
                 },
               }}
@@ -231,7 +239,33 @@ export function WorkflowComposer({ workflow, apiSecretKey, branch }: Props) {
             </div>
           </TabsContent>
         </Tabs>
-      </form>
+
+        {streamUrl && (
+          <div className="mt-6 border-t pt-6">
+            <h3 className="text-lg font-semibold mb-3">Result</h3>
+            <div className="border rounded-lg p-4 bg-slate-50 dark:bg-slate-900">
+              <StreamingText
+                url={streamUrl}
+                body={inputValues}
+                fallbackText="Failed to process workflow"
+                className="text-sm leading-5 text-slate-800 dark:text-slate-100 whitespace-pre-wrap"
+                onCompleted={() => toast.success("Workflow completed")}
+              />
+            </div>
+            <div className="mt-4 flex justify-end">
+              <Button onClick={handleReset} variant="outline">
+                Run Again
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {error && (
+          <div className="mt-4 p-4 border border-red-300 rounded-lg bg-red-50 dark:bg-red-900/20">
+            <p className="text-sm text-red-800 dark:text-red-200">{error}</p>
+          </div>
+        )}
+      </div>
     </>
   );
 }

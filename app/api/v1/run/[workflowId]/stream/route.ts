@@ -1,4 +1,4 @@
-import { type WorkflowInput } from "@/data/workflow";
+import type { WorkflowInput } from "@/data/workflow";
 import { getStreamingCompletion } from "@/lib/utils/ai";
 import {
   ErrorCodes,
@@ -12,7 +12,6 @@ import {
   getWorkflowCachedResult,
 } from "@/lib/utils/useWorkflow";
 import { translateInputs } from "@/lib/utils/workflow";
-import { createDataStreamResponse } from "ai";
 import { type NextRequest, NextResponse } from "next/server";
 
 export const maxDuration = 120;
@@ -75,15 +74,25 @@ export async function POST(
     );
 
     if (cachedResult) {
-      const chunks = cachedResult.split(" ");
+      const chunks = cachedResult.match(/.{1,1024}/gs) ?? [cachedResult];
+      const encoder = new TextEncoder();
 
-      return createDataStreamResponse({
-        status: 200,
-        statusText: "OK",
-        async execute(dataStream) {
+      const stream = new ReadableStream({
+        async start(controller) {
           for (const chunk of chunks) {
-            dataStream.writeData(chunk);
+            controller.enqueue(encoder.encode(chunk));
           }
+          controller.close();
+        },
+      });
+
+      return new Response(stream, {
+        status: 200,
+        headers: {
+          "Content-Type": "text/plain; charset=utf-8",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "POST, OPTIONS",
+          "Access-Control-Allow-Headers": "*",
         },
       });
     }

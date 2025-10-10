@@ -1,6 +1,6 @@
 import type { ModelSettings } from "@/components/console/workflow/workflow-model-settings";
 import { modelToProviderId } from "@/data/workflow";
-import { createOpenAI } from "@ai-sdk/openai";
+import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import type { UserKey } from "@prisma/client";
 import { generateText, streamText } from "ai";
 import { ByokService } from "./byok-service";
@@ -25,15 +25,14 @@ export const getCompletion = async (
   };
 
   const userOpenRouterKey = new ByokService().get("openrouter", userKeys);
-  const openrouter = createOpenAI({
-    baseURL: "https://openrouter.ai/api/v1",
+  const openrouter = createOpenRouter({
     apiKey: userOpenRouterKey ?? process.env.OPENROUTER_API_KEY,
   });
 
   const completion = await generateText({
     model: openrouter(modelToProviderId[model]),
     headers: {
-      "HTTP-Referer": "manageprompt.com",
+      "HTTP-Referer": "https://manageprompt.com",
       "X-Title": "ManagePrompt",
     },
     ...modelParams,
@@ -65,15 +64,14 @@ export const getStreamingCompletion = async (
   };
 
   const userOpenRouterKey = new ByokService().get("openrouter", userKeys);
-  const openrouter = createOpenAI({
-    baseURL: "https://openrouter.ai/api/v1",
+  const openrouter = createOpenRouter({
     apiKey: userOpenRouterKey ?? process.env.OPENROUTER_API_KEY,
   });
 
   const completion = streamText({
     model: openrouter(modelToProviderId[model]),
     headers: {
-      "HTTP-Referer": "manageprompt.com",
+      "HTTP-Referer": "https://manageprompt.com",
       "X-Title": "ManagePrompt",
     },
     ...modelParams,
