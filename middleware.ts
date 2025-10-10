@@ -11,7 +11,6 @@ const publicAppPaths = [
   "/api/ai-tools",
   "/api/v1",
   "/api/auth",
-  "/embed/chatbot",
 ];
 
 export async function middleware(request: NextRequest) {

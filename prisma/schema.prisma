@@ -18,7 +18,6 @@ model User {
   emailVerified      DateTime?
   image              String?
   name               String?
-  ChatBot            ChatBot[]
   organizations      Organization[]
   OrganizationToUser OrganizationToUser[]
   SecretKey          SecretKey[]
@@ -81,7 +80,6 @@ model Organization {
   createdByUser      String
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
-  ChatBot            ChatBot[]
   createdBy          User                 @relation(fields: [createdByUser], references: [id], onDelete: Cascade)
   OrganizationToUser OrganizationToUser[]
   SecretKey          SecretKey[]
@@ -191,34 +189,6 @@ model WorkflowRun {
   user            User?          @relation(fields: [createdBy], references: [id], onDelete: Cascade)
   workflow        Workflow       @relation(fields: [workflowId], references: [id], onDelete: Cascade)
   WorkflowTest    WorkflowTest[]
-}
-
-model ChatBot {
-  id                 String               @id @default(cuid())
-  name               String
-  createdBy          String
-  ownerId            String
-  model              String
-  modelSettings      Json?
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
-  contextItems       Json
-  user               User                 @relation(fields: [createdBy], references: [id], onDelete: Cascade)
-  organization       Organization         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  ChatBotUserSession ChatBotUserSession[]
-}
-
-model ChatBotUserSession {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  sessionId String
-  chatbotId String
-  ownerId   String
-  chatbot   ChatBot  @relation(fields: [chatbotId], references: [id], onDelete: Cascade)
-
-  @@unique([chatbotId, sessionId])
-  @@index([chatbotId, sessionId])
 }
 
 model Passkey {

@@ -6,7 +6,6 @@ import logo from "../../public/images/logo.png";
 const navigation = {
   solutions: [
     { name: "Workflows", href: "/workflows" },
-    { name: "Chatbots", href: "/chatbots" },
     {
       name: "Zapier Integration",
       href: "https://zapier.com/developer/public-invite/217847/04ed2c8a7d2b104e1eb7a68a89fd6b36/",
