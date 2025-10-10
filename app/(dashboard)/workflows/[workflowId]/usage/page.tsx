@@ -15,7 +15,7 @@ export default async function WorkflowUsage(props: Props) {
   const usageData = await getWorkflowRunStats(+params.workflowId);
   const totalTokensConsumed = usageData.reduce(
     (acc, run) => acc + run.tokens,
-    0
+    0,
   );
 
   return (
@@ -32,16 +32,6 @@ export default async function WorkflowUsage(props: Props) {
               <span className="text-sm text-gray-500">Total Tokens</span>
               <span className="text-2xl font-semibold">
                 {totalTokensConsumed.toLocaleString()}
-              </span>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <span className="text-sm text-gray-500">Estimated Cost</span>
-              <span className="text-2xl font-semibold">
-                $
-                {(totalTokensConsumed * 0.00001)
-                  .toPrecision(2)
-                  .toLocaleString()}
               </span>
             </div>
           </div>
