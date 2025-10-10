@@ -1,6 +1,6 @@
 "use server";
 
-import { type WorkflowInput } from "@/data/workflow";
+import type { WorkflowInput } from "@/data/workflow";
 import { owner } from "@/lib/hooks/useOwner";
 import { getCompletion } from "@/lib/utils/ai";
 import { prisma } from "@/lib/utils/db";
@@ -160,127 +160,6 @@ export async function toggleWorkflowState(formData: FormData) {
   });
 
   redirect(`/workflows/${id}`);
-}
-
-export async function runWorkflow(formData: FormData) {
-  const { userId, ownerId } = await owner();
-
-  const id = Number(formData.get("id"));
-  const branch = formData.get("branch") as string;
-  let inputValues: Record<string, string> = {};
-
-  let redirectUrl = `/workflows/${id}`;
-
-  try {
-    inputValues = JSON.parse(formData.get("inputs") as string);
-  } catch (e) {
-    throw "Invalid input values";
-  }
-
-  try {
-    if (!id) throw "ID is missing";
-    if (!userId || !ownerId) throw "User/Owner ID is missing";
-
-    const organization = await prisma.organization.findUnique({
-      include: {
-        UserKeys: true,
-      },
-      where: {
-        id: ownerId,
-      },
-    });
-
-    if (!organization) throw "Organization not found";
-    if (organization.credits === 0) throw "No credits remaining";
-
-    const workflow = await prisma.workflow.findUnique({
-      where: {
-        id,
-      },
-      select: {
-        modelSettings: true,
-        template: true,
-        model: true,
-        inputs: true,
-      },
-    });
-
-    if (!workflow) throw "Workflow not found";
-
-    const workflowBranch = branch
-      ? await prisma.workflowBranch.findFirst({
-          where: {
-            shortId: branch,
-            workflowId: id,
-          },
-        })
-      : null;
-
-    if (workflowBranch) {
-      workflow.model = workflowBranch.model;
-      workflow.template = workflowBranch.template;
-
-      redirectUrl = `/workflows/${id}?branch=${workflowBranch.shortId}`;
-    }
-
-    const inputs = workflow.inputs as unknown as WorkflowInput[];
-    const model = workflow.model;
-    const content = await translateInputs({
-      inputs,
-      inputValues,
-      template: workflow.template,
-    });
-
-    const response = await getCompletion(
-      model,
-      content,
-      JSON.parse(JSON.stringify(workflow.modelSettings)),
-      organization?.UserKeys,
-    );
-
-    const { result, rawResult, totalTokenCount } = response;
-    if (!result) throw "No result returned from OpenAI";
-
-    await Promise.all([
-      prisma.workflowRun.create({
-        data: {
-          result,
-          rawRequest: JSON.parse(JSON.stringify({ model, content })),
-          rawResult: JSON.parse(JSON.stringify(rawResult)),
-          branchId: workflowBranch?.shortId,
-          totalTokenCount,
-          user: {
-            connect: {
-              id: userId,
-            },
-          },
-          workflow: {
-            connect: {
-              id,
-            },
-          },
-        },
-      }),
-      prisma.organization.update({
-        where: {
-          id: organization.id,
-        },
-        data: {
-          credits: {
-            decrement: 1,
-          },
-        },
-      }),
-    ]);
-  } catch (error) {
-    console.error(error);
-    return {
-      error:
-        error instanceof Error ? error?.message : "Oops! Something went wrong.",
-    };
-  }
-
-  redirect(redirectUrl);
 }
 
 export async function createWorkflowBranch(formData: FormData) {
@@ -482,7 +361,7 @@ export async function deleteTest(formData: FormData) {
 }
 
 export async function runTests(formData: FormData) {
-  const { userId, ownerId } = await owner();
+  const { userId } = await owner();
   const id = Number(formData.get("id"));
   const branch = formData.get("branch") as string;
 

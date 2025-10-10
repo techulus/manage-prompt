@@ -1,20 +1,20 @@
 "use client";
 
-import { runWorkflow } from "@/app/(dashboard)/workflows/actions";
 import {
   type WorkflowInput,
   WorkflowInputType,
   modelHasInstruction,
 } from "@/data/workflow";
 import type { Workflow } from "@prisma/client";
-import { useMemo, useReducer } from "react";
+import { useMemo, useReducer, useState } from "react";
 import { toast } from "sonner";
 import { ApiCodeSnippet } from "../../code/snippet";
-import { SaveButton } from "../../form/button";
+import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../../ui/tabs";
 import { Textarea } from "../../ui/textarea";
+import { Spinner } from "../../core/loaders";
 
 interface Props {
   workflow: Workflow;
@@ -32,6 +32,10 @@ export function WorkflowComposer({ workflow, apiSecretKey, branch }: Props) {
       ...action,
     };
   }, {});
+
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [streamedResult, setStreamedResult] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   const generatedTemplate = useMemo(() => {
     let result = template;
@@ -53,52 +57,74 @@ export function WorkflowComposer({ workflow, apiSecretKey, branch }: Props) {
     return result;
   }, [inputValues, instruction]);
 
+  const handleRunWorkflow = async () => {
+    if (!apiSecretKey) {
+      toast.error("API key not available");
+      return;
+    }
+
+    setIsStreaming(true);
+    setStreamedResult("");
+    setError(null);
+
+    try {
+      const tokenResponse = await fetch("/api/v1/token", {
+        headers: {
+          Authorization: `Bearer ${apiSecretKey}`,
+        },
+      });
+
+      if (!tokenResponse.ok) {
+        throw new Error("Failed to get streaming token");
+      }
+
+      const { token } = await tokenResponse.json();
+
+      const streamResponse = await fetch(
+        `/api/v1/run/${workflow.shortId}/stream?token=${token}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(inputValues),
+        }
+      );
+
+      if (!streamResponse.ok) {
+        throw new Error("Failed to start streaming");
+      }
+
+      const reader = streamResponse.body?.getReader();
+      const decoder = new TextDecoder();
+
+      if (!reader) {
+        throw new Error("No response body");
+      }
+
+      let result = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        result += chunk;
+        setStreamedResult(result);
+      }
+
+      toast.success("Workflow completed");
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Failed to run workflow";
+      setError(errorMessage);
+      toast.error(errorMessage);
+    } finally {
+      setIsStreaming(false);
+    }
+  };
+
   return (
     <>
-      <form
-        className="p-6"
-        action={async (data: FormData) => {
-          const result = await runWorkflow(data);
-          if (result?.error) {
-            toast.error(result.error as string);
-          }
-        }}
-      >
-        <input
-          type="number"
-          name="id"
-          className="hidden"
-          defaultValue={Number(id)}
-        />
-        {branch ? (
-          <input
-            type="text"
-            name="branch"
-            className="hidden"
-            defaultValue={branch}
-          />
-        ) : null}
-        <input
-          type="text"
-          name="model"
-          className="hidden"
-          defaultValue={model!}
-        />
-        <input
-          type="text"
-          name="inputs"
-          className="hidden"
-          value={JSON.stringify(inputValues)}
-          onChange={() => null}
-        />
-        <input
-          type="text"
-          name="instruction"
-          className="hidden"
-          value={geneatedInstruction}
-          onChange={() => null}
-        />
-
+      <div className="p-6">
         <Tabs defaultValue={inputs?.length ? "compose" : "review"}>
           <TabsList>
             {inputs?.length ? (
@@ -154,15 +180,18 @@ export function WorkflowComposer({ workflow, apiSecretKey, branch }: Props) {
               </div>
 
               <div className="mt-2 flex justify-end">
-                <SaveButton
-                  label="Run"
-                  loadingLabel="Running"
+                <Button
+                  onClick={handleRunWorkflow}
                   disabled={
                     !workflow.published ||
+                    !apiSecretKey ||
+                    isStreaming ||
                     Object.keys(inputValues).length !==
                       (inputs as WorkflowInput[])?.length
                   }
-                />
+                >
+                  {isStreaming ? <Spinner message="Streaming..." /> : "Run"}
+                </Button>
               </div>
             </TabsContent>
           ) : null}
@@ -181,15 +210,18 @@ export function WorkflowComposer({ workflow, apiSecretKey, branch }: Props) {
             </div>
 
             <div className="mt-2 flex justify-end">
-              <SaveButton
-                label="Run"
-                loadingLabel="Running"
+              <Button
+                onClick={handleRunWorkflow}
                 disabled={
                   !workflow.published ||
+                  !apiSecretKey ||
+                  isStreaming ||
                   Object.keys(inputValues).length !==
                     (inputs as WorkflowInput[])?.length
                 }
-              />
+              >
+                {isStreaming ? <Spinner message="Streaming..." /> : "Run"}
+              </Button>
             </div>
           </TabsContent>
 
@@ -231,7 +263,27 @@ export function WorkflowComposer({ workflow, apiSecretKey, branch }: Props) {
             </div>
           </TabsContent>
         </Tabs>
-      </form>
+
+        {streamedResult && (
+          <div className="mt-6 border-t pt-6">
+            <h3 className="text-lg font-semibold mb-3">Result</h3>
+            <div className="border rounded-lg p-4 bg-slate-50 dark:bg-slate-900">
+              <div className="text-sm leading-5 text-slate-800 dark:text-slate-100 whitespace-pre-wrap">
+                {streamedResult}
+              </div>
+              {isStreaming && (
+                <div className="mt-2 text-xs text-slate-500">Streaming...</div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {error && (
+          <div className="mt-4 p-4 border border-red-300 rounded-lg bg-red-50 dark:bg-red-900/20">
+            <p className="text-sm text-red-800 dark:text-red-200">{error}</p>
+          </div>
+        )}
+      </div>
     </>
   );
 }
