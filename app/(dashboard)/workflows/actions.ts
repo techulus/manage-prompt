@@ -28,7 +28,8 @@ export async function createWorkflow(formData: FormData) {
   const template = formData.get("template") as string;
   const instruction = (formData.get("instruction") as string) ?? "";
   const modelSettings = (formData.get("modelSettings") as string) ?? null;
-  const cacheControlTtl = Number(formData.get("cacheControlTtl")) ?? 0;
+  const rawCacheTtl = Number(formData.get("cacheControlTtl")) ?? 0;
+  const cacheControlTtl = Math.min(Math.max(rawCacheTtl, 0), 86400);
 
   let inputs: WorkflowInput[] = [];
   try {
@@ -88,7 +89,8 @@ export async function updateWorkflow(formData: FormData) {
   const template = formData.get("template") as string;
   const instruction = (formData.get("instruction") as string) ?? "";
   const modelSettings = (formData.get("modelSettings") as string) ?? null;
-  const cacheControlTtl = Number(formData.get("cacheControlTtl")) ?? 0;
+  const rawCacheTtl = Number(formData.get("cacheControlTtl")) ?? 0;
+  const cacheControlTtl = Math.min(Math.max(rawCacheTtl, 0), 86400);
 
   let inputs: WorkflowInput[] = [];
   try {
@@ -315,8 +317,6 @@ export async function createTest(formData: FormData) {
   const input = formData.get("input") as string;
   const condition = formData.get("condition") as string;
   const output = (formData.get("output") as string) ?? "";
-
-  console.log({ id, input, output, condition });
 
   const validationResult = WorkflowTestSchema.safeParse({
     id,

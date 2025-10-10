@@ -74,13 +74,13 @@ export async function POST(
     );
 
     if (cachedResult) {
-      const chunks = cachedResult.split(" ");
+      const chunks = cachedResult.match(/.{1,1024}/gs) ?? [cachedResult];
       const encoder = new TextEncoder();
 
       const stream = new ReadableStream({
         async start(controller) {
           for (const chunk of chunks) {
-            controller.enqueue(encoder.encode(`${chunk} `));
+            controller.enqueue(encoder.encode(chunk));
           }
           controller.close();
         },
