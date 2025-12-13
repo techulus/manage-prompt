@@ -1,7 +1,7 @@
 import type { ModelSettings } from "@/components/console/workflow/workflow-model-settings";
 import { modelToProviderId } from "@/data/workflow";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
-import type { UserKey } from "@prisma/client";
+import type { UserKey } from "@/generated/prisma-client/client";
 import { generateText, streamText } from "ai";
 import { ByokService } from "./byok-service";
 

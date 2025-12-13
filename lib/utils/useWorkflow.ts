@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/utils/db";
-import type { Prisma, Workflow } from "@prisma/client";
+import type { Prisma, Workflow } from "@/generated/prisma-client/client";
 import { createHash } from "node:crypto";
 import { owner } from "../hooks/useOwner";
 import { redisStore } from "./redis";
