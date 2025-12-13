@@ -5,7 +5,7 @@ import {
   WorkflowInputType,
   modelHasInstruction,
 } from "@/data/workflow";
-import type { Workflow } from "@prisma/client";
+import type { Workflow } from "@/generated/prisma-client/client";
 import { useMemo, useReducer, useState } from "react";
 import { toast } from "sonner";
 import { ApiCodeSnippet } from "../../code/snippet";

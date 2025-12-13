@@ -14,7 +14,7 @@ import {
   WorkflowInputType,
   WorkflowTestCondition,
 } from "@/data/workflow";
-import type { Workflow } from "@prisma/client";
+import type { Workflow } from "@/generated/prisma-client/client";
 import Link from "next/link";
 import { useReducer } from "react";
 import { toast } from "sonner";
