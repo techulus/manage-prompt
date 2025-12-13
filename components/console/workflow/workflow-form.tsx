@@ -8,7 +8,7 @@ import {
   WorkflowInputTypeToLabel,
   modelHasInstruction,
 } from "@/data/workflow";
-import type { Workflow } from "@prisma/client";
+import type { Workflow } from "@/generated/prisma-client/client";
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import slugify from "slugify";

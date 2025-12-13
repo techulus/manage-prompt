@@ -3,7 +3,7 @@ import { type AIModel, AIModelToLabel } from "@/data/workflow";
 import { cn } from "@/lib/utils";
 import { getWorkflowUsage } from "@/lib/utils/analytics";
 import { prisma } from "@/lib/utils/db";
-import type { Workflow } from "@prisma/client";
+import type { Workflow } from "@/generated/prisma-client/client";
 import classNames from "classnames";
 import { ChevronRightIcon, TestTube } from "lucide-react";
 

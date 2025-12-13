@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import type { SecretKey, UserKey } from "@/generated/prisma-client/client";
 import { getUser, owner } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
 import { notFound } from "next/navigation";
@@ -63,7 +64,7 @@ export default async function Settings() {
     return notFound();
   }
 
-  const userOpenRouterKey = userKeys.find((k) => k.provider === "openrouter");
+  const userOpenRouterKey = userKeys.find((k: UserKey) => k.provider === "openrouter");
 
   return (
     <>
@@ -226,7 +227,7 @@ export default async function Settings() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {secretKeys.map((key) => (
+              {secretKeys.map((key: SecretKey) => (
                 <TableRow key={key.id}>
                   <TableCell>
                     <EditableValue
