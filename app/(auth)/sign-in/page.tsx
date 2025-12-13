@@ -8,7 +8,6 @@ import { signIn } from "@/lib/auth-client";
 import { FingerprintIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import logo from "../../../public/images/logo.png";
@@ -17,8 +16,6 @@ export default function SignInForm() {
   const [email, setEmail] = useState("");
   const [processing, setProcessing] = useState(false);
   const [hasSendEmail, setHasSendEmail] = useState(false);
-
-  const router = useRouter();
 
   const signInWithMagicLink = useCallback(async () => {
     try {
@@ -118,7 +115,7 @@ export default function SignInForm() {
                       throw new Error(result.error?.message);
                     }
 
-                    router.push("/start");
+                    window.location.href = "/start";
                   })
                   .finally(() => {
                     setProcessing(false);
