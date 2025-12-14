@@ -34,7 +34,7 @@ export const ImportWorkflowDialog = () => {
             } else {
               toast.error(
                 res?.message ||
-                  "Failed to upload file, please try again or contact support."
+                  "Failed to upload file, please try again or contact support.",
               );
             }
           });
@@ -45,12 +45,14 @@ export const ImportWorkflowDialog = () => {
       }
     });
 
-    toast
-      .promise(Promise.all(uploaders).finally(() => setLoading(false)), {
+    toast.promise(
+      Promise.all(uploaders).finally(() => setLoading(false)),
+      {
         loading: "Uploading...",
         success: "Upload completed!",
         error: "Failed to upload file(s)",
-      })
+      },
+    );
   }, []);
 
   const { getRootProps, getInputProps } = useDropzone({

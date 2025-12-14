@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/pagination";
 import { owner } from "@/lib/hooks/useOwner";
 import { cn } from "@/lib/utils";
-import { LIMIT, getWorkflowsForOwner } from "@/lib/utils/useWorkflow";
+import { getWorkflowsForOwner, LIMIT } from "@/lib/utils/useWorkflow";
 
 interface Props {
   searchParams: Promise<{

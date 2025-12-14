@@ -12,7 +12,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { cn } from "@/lib/utils";
-import { LIMIT, getWorkflowAndRuns } from "@/lib/utils/useWorkflow";
+import { getWorkflowAndRuns, LIMIT } from "@/lib/utils/useWorkflow";
 
 interface Props {
   params: Promise<{
@@ -68,7 +68,7 @@ export default async function WorkflowRunDetails(props: Props) {
                       href={`/workflows?page=${pageNumber}`}
                       className={cn(
                         pageNumber === currentPage &&
-                          "text-primary font-semibold"
+                          "text-primary font-semibold",
                       )}
                     >
                       {pageNumber}

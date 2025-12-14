@@ -1,9 +1,9 @@
 "use client";
 
-import MarkdownView from "@/components/markdown/markdown-view";
-import { DateTime } from "@/lib/utils/datetime";
-import type { WorkflowRun } from "@/generated/prisma-client/client";
 import { GitBranchIcon } from "lucide-react";
+import MarkdownView from "@/components/markdown/markdown-view";
+import type { WorkflowRun } from "@/generated/prisma-client/client";
+import { DateTime } from "@/lib/utils/datetime";
 import { Button, buttonVariants } from "../../ui/button";
 import {
   Drawer,

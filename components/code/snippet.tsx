@@ -49,7 +49,8 @@ export function ApiCodeSnippet({ har }: { har: unknown }) {
         value={selectedLanguage.language}
         onValueChange={(value) =>
           setSelectedLanguage(
-            languages.find(({ language }) => language === value) ?? languages[0]
+            languages.find(({ language }) => language === value) ??
+              languages[0],
           )
         }
       >

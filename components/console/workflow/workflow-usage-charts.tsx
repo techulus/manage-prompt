@@ -1,7 +1,7 @@
 "use client";
 
-import type { WorkflowRunStat } from "@/lib/utils/analytics";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import type { WorkflowRunStat } from "@/lib/utils/analytics";
 import {
   type ChartConfig,
   ChartContainer,

@@ -1,11 +1,11 @@
-import { magicLinkEmail } from "@/components/emails/magic-link";
-import { prisma } from "@/lib/utils/db";
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from "better-auth/next-js";
 import { magicLink } from "better-auth/plugins";
 import { passkey } from "better-auth/plugins/passkey";
 import { ServerClient } from "postmark";
+import { magicLinkEmail } from "@/components/emails/magic-link";
+import { prisma } from "@/lib/utils/db";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {

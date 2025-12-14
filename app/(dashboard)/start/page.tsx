@@ -1,6 +1,6 @@
+import { notFound, redirect } from "next/navigation";
 import { getUser } from "@/lib/hooks/useOwner";
 import { prisma } from "@/lib/utils/db";
-import { notFound, redirect } from "next/navigation";
 
 export default async function Start() {
   const user = await getUser();

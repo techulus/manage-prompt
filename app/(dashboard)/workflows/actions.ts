@@ -1,19 +1,19 @@
 "use server";
 
+import { createId } from "@paralleldrive/cuid2";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { fromZodError } from "zod-validation-error";
 import type { WorkflowInput } from "@/data/workflow";
 import { owner } from "@/lib/hooks/useOwner";
 import { getCompletion } from "@/lib/utils/ai";
 import { prisma } from "@/lib/utils/db";
 import {
+  translateInputs,
   WorkflowBranchSchema,
   WorkflowSchema,
   WorkflowTestSchema,
-  translateInputs,
 } from "@/lib/utils/workflow";
-import { createId } from "@paralleldrive/cuid2";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-import { fromZodError } from "zod-validation-error";
 
 export async function createWorkflow(formData: FormData) {
   const { userId, ownerId } = await owner();
@@ -34,7 +34,7 @@ export async function createWorkflow(formData: FormData) {
   let inputs: WorkflowInput[] = [];
   try {
     inputs = JSON.parse((formData.get("inputs") as string) ?? "");
-  } catch (e) {
+  } catch {
     inputs = [];
   }
 
@@ -95,7 +95,7 @@ export async function updateWorkflow(formData: FormData) {
   let inputs: WorkflowInput[] = [];
   try {
     inputs = JSON.parse((formData.get("inputs") as string) ?? "");
-  } catch (e) {
+  } catch {
     inputs = [];
   }
 
@@ -458,7 +458,7 @@ export async function runTests(formData: FormData) {
         try {
           JSON.parse(result);
           testPassed = true;
-        } catch (e) {
+        } catch {
           testPassed = false;
         }
         break;

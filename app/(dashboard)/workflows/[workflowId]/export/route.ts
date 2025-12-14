@@ -1,5 +1,5 @@
-import { prisma } from "@/lib/utils/db";
 import { type NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/utils/db";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -10,7 +10,7 @@ export async function GET(
     params: Promise<{
       workflowId: string;
     }>;
-  }
+  },
 ) {
   const params = await props.params;
   const id = params.workflowId;

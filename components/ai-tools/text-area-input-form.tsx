@@ -1,10 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import StreamingText from "@/components/core/streaming-text";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
 
 export default function TextAreaForm({ streamUrl }: { streamUrl: string }) {
   const [content, setContent] = useState("");

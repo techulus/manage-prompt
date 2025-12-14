@@ -1,3 +1,4 @@
+import { z } from "zod";
 import {
   type AIModel,
   AIModels,
@@ -5,7 +6,6 @@ import {
   WorkflowInputType,
   WorkflowTestCondition,
 } from "@/data/workflow";
-import { z } from "zod";
 import { WebpageParser } from "./webpage-parser";
 
 export const MAX_GLOBAL_RATE_LIMIT_RPS = 100;
