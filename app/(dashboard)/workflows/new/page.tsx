@@ -1,9 +1,9 @@
+import { Terminal } from "lucide-react";
 import { WorkflowForm } from "@/components/console/workflow/workflow-form";
 import PageSection from "@/components/core/page-section";
 import PageTitle from "@/components/layout/page-title";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CardContent, CardHeader } from "@/components/ui/card";
-import { Terminal } from "lucide-react";
 import { createWorkflow } from "../actions";
 
 export default function CreateWorkflow() {

@@ -1,18 +1,18 @@
 "use client";
 
-import {
-  AIModelToLabel,
-  AIModels,
-  type WorkflowInput,
-  WorkflowInputType,
-  WorkflowInputTypeToLabel,
-  modelHasInstruction,
-} from "@/data/workflow";
-import type { Workflow } from "@/generated/prisma-client/client";
 import Link from "next/link";
 import { useCallback, useState } from "react";
 import slugify from "slugify";
 import { toast } from "sonner";
+import {
+  AIModels,
+  AIModelToLabel,
+  modelHasInstruction,
+  type WorkflowInput,
+  WorkflowInputType,
+  WorkflowInputTypeToLabel,
+} from "@/data/workflow";
+import type { Workflow } from "@/generated/prisma-client/client";
 import { SaveButton } from "../../form/button";
 import { Button, buttonVariants } from "../../ui/button";
 import { Input } from "../../ui/input";
@@ -39,7 +39,7 @@ interface Props {
 
 const parseInputs = (
   inputs: string,
-  currentInputs: WorkflowInput[] | null
+  currentInputs: WorkflowInput[] | null,
 ): WorkflowInput[] =>
   Array.from(inputs.matchAll(/{{\s*(?<name>\w+)\s*}}/g))
     .reduce((acc: string[], match) => {
@@ -66,7 +66,7 @@ export function WorkflowForm({
   const [template, setTemplate] = useState(workflow?.template ?? "");
   const [instruction, setInstruction] = useState(workflow?.instruction ?? "");
   const [inputs, setInputs] = useState<WorkflowInput[]>(
-    (workflow?.inputs as WorkflowInput[]) ?? []
+    (workflow?.inputs as WorkflowInput[]) ?? [],
   );
 
   const [showAdvancedModelParams, setShowAdvancedModelParams] = useState(false);
@@ -80,19 +80,19 @@ export function WorkflowForm({
         setInputs(
           parseInputs(
             `${updatedValue.template} ${updatedValue.instruction}`,
-            workflow?.inputs as WorkflowInput[] | null
-          )
+            workflow?.inputs as WorkflowInput[] | null,
+          ),
         );
       } else {
         setInputs(
           parseInputs(
             updatedValue.template,
-            workflow?.inputs as WorkflowInput[] | null
-          )
+            workflow?.inputs as WorkflowInput[] | null,
+          ),
         );
       }
     },
-    [template, instruction, model, workflow?.inputs]
+    [template, instruction, model, workflow?.inputs],
   );
 
   return (

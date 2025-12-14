@@ -48,11 +48,7 @@ export function SpinnerWithSpacing() {
   );
 }
 
-export function PageLoading({
-  hideHeader = false,
-}: {
-  hideHeader?: boolean;
-}) {
+export function PageLoading({ hideHeader = false }: { hideHeader?: boolean }) {
   return (
     <>
       {!hideHeader && (

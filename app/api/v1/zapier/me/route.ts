@@ -1,10 +1,10 @@
+import { NextResponse } from "next/server";
 import {
   ErrorCodes,
   ErrorResponse,
   UnauthorizedResponse,
 } from "@/lib/utils/api";
 import { prisma } from "@/lib/utils/db";
-import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;

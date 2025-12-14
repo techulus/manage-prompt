@@ -1,3 +1,4 @@
+import { type NextRequest, NextResponse } from "next/server";
 import type { WorkflowInput } from "@/data/workflow";
 import { getStreamingCompletion } from "@/lib/utils/ai";
 import {
@@ -12,7 +13,6 @@ import {
   getWorkflowCachedResult,
 } from "@/lib/utils/useWorkflow";
 import { translateInputs } from "@/lib/utils/workflow";
-import { type NextRequest, NextResponse } from "next/server";
 
 export const maxDuration = 120;
 

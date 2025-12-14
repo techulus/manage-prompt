@@ -1,9 +1,9 @@
+import { Terminal } from "lucide-react";
 import { WorkflowForm } from "@/components/console/workflow/workflow-form";
 import PageSection from "@/components/core/page-section";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CardContent, CardHeader } from "@/components/ui/card";
 import { prisma } from "@/lib/utils/db";
-import { Terminal } from "lucide-react";
 import { createWorkflowBranch } from "../../../actions";
 
 interface Props {

@@ -1,12 +1,12 @@
 "use client";
 
-import { useDetectSticky } from "@/lib/hooks/useDetectSticky";
-import { cn } from "@/lib/utils";
 import { Transition } from "@headlessui/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { useMemo } from "react";
+import { useDetectSticky } from "@/lib/hooks/useDetectSticky";
+import { cn } from "@/lib/utils";
 import logo from "../../public/images/logo.png";
 import { UserButton } from "../core/auth";
 
@@ -116,7 +116,6 @@ export default function NavBar({ isPublicPage = false }: Props) {
           isPublicPage ? "hidden" : "",
         )}
         ref={ref}
-        aria-label="Tabs"
       >
         <Transition show={isSticky}>
           <Link

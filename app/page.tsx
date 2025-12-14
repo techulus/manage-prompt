@@ -1,12 +1,12 @@
+import { CloudCog, GitBranch, LockIcon, ServerCog } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { buttonVariants } from "@/components/ui/button";
 import { SITE_METADATA } from "@/data/marketing";
 import promoImage from "@/public/images/promo.png";
 import workflowImage from "@/public/images/workflow.png";
-import { CloudCog, GitBranch, LockIcon, ServerCog } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
 
 const features = [
   {

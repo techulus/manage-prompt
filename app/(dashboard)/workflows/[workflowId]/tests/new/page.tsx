@@ -1,9 +1,9 @@
+import { Terminal } from "lucide-react";
 import { WorkflowTestForm } from "@/components/console/workflow/workflow-tests-form";
 import PageSection from "@/components/core/page-section";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CardContent, CardHeader } from "@/components/ui/card";
 import { prisma } from "@/lib/utils/db";
-import { Terminal } from "lucide-react";
 import { createTest } from "../../../actions";
 
 export default async function CreateWorkflowTest(props: {

@@ -1,10 +1,10 @@
+import { MagicWandIcon } from "@radix-ui/react-icons";
+import type { Metadata } from "next";
+import Link from "next/link";
 import PageSection from "@/components/core/page-section";
 import PageTitle from "@/components/layout/page-title";
 import { Button } from "@/components/ui/button";
 import { buildMetadata } from "@/lib/utils/metadata";
-import { MagicWandIcon } from "@radix-ui/react-icons";
-import type { Metadata } from "next";
-import Link from "next/link";
 
 const title = "Free AI Tools";
 const description =

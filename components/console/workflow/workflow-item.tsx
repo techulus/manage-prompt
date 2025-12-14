@@ -1,11 +1,11 @@
+import classNames from "classnames";
+import { ChevronRightIcon, TestTube } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { type AIModel, AIModelToLabel } from "@/data/workflow";
+import type { Workflow } from "@/generated/prisma-client/client";
 import { cn } from "@/lib/utils";
 import { getWorkflowUsage } from "@/lib/utils/analytics";
 import { prisma } from "@/lib/utils/db";
-import type { Workflow } from "@/generated/prisma-client/client";
-import classNames from "classnames";
-import { ChevronRightIcon, TestTube } from "lucide-react";
 
 interface Props {
   workflow: Pick<

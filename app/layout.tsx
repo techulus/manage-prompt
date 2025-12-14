@@ -1,7 +1,7 @@
+import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "@/components/core/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { SITE_METADATA } from "@/data/marketing";
-import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 export const metadata = {

@@ -1,7 +1,7 @@
 import { Capture } from "capture-node";
 import { z } from "zod";
 
-const UrlValidationSchema = z.string().url();
+const UrlValidationSchema = z.url();
 
 export class WebpageParser {
   #captureClient: Capture;
@@ -24,12 +24,13 @@ export class WebpageParser {
     }
 
     try {
-      const { textContent } = await this.#captureClient.fetchContent(url, {
+      const { markdown } = await this.#captureClient.fetchContent(url, {
         delay: 1,
       });
 
-      return textContent;
+      return markdown;
     } catch (e) {
+      console.error("Error fetching content:", e);
       return "Failed to fetch content";
     }
   }

@@ -1,3 +1,5 @@
+import { CheckCircle, CircleOff, CircleSlash, GitBranch } from "lucide-react";
+import Link from "next/link";
 import { WorkflowBranchPicker } from "@/components/console/workflow/workflow-branch-picker";
 import EmptyState from "@/components/core/empty-state";
 import { Spinner } from "@/components/core/loaders";
@@ -7,8 +9,6 @@ import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { WorkflowTestCondition } from "@/data/workflow";
 import { prisma } from "@/lib/utils/db";
-import { CheckCircle, CircleOff, CircleSlash, GitBranch } from "lucide-react";
-import Link from "next/link";
 import { deleteTest, runTests } from "../../actions";
 
 interface Props {

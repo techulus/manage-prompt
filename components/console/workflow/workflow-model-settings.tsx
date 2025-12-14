@@ -139,7 +139,7 @@ export function WorkflowModelSettings({ defaultValue, onChange }: Props) {
               max={2}
               step={0.1}
               onValueChange={(val: number[]) => {
-                setTopP(val[0]);
+                setPresencePenalty(val[0]);
                 triggerChange({ presencePenalty: val[0] });
               }}
             />

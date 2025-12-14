@@ -1,9 +1,9 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
 import { Fingerprint, Loader2, Plus, Trash } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { authClient } from "@/lib/auth-client";
 import { Button } from "../ui/button";
 import {
   Dialog,
