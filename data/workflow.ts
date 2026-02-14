@@ -16,13 +16,19 @@ export const AIModelToLabel = {
   "o4-mini": "o4 Mini",
   "gpt-oss-120b": "GPT OSS 120B",
   "gpt-oss-20b": "GPT OSS 20B",
+  "gpt-5.1": "GPT 5.1",
+  "gpt-5.2": "GPT 5.2",
+  "gpt-5-mini": "GPT 5 Mini",
+  "gpt-5-nano": "GPT 5 Nano",
+  "gpt-5-pro": "GPT 5 Pro",
 
   // Anthropic Models
   "claude-3-5-sonnet-20240620": "Claude 3.5 Sonnet",
   "claude-3-5-haiku": "Claude 3.5 Haiku",
   "claude-3-7-sonnet": "Claude 3.7 Sonnet",
   "claude-4-sonnet": "Claude 4 Sonnet",
-
+  "claude-haiku-4.5": "Claude 4.5 Haiku",
+  "claude-sonnet-4.5": "Claude 4.5 Sonnet",
   // xAI/Grok Models
   "grok-2-latest": "Grok 2",
   "grok-2-1212": "Grok 2 (Dec 2024)",
@@ -31,9 +37,15 @@ export const AIModelToLabel = {
   "grok-4": "Grok 4",
   "grok-4-heavy": "Grok 4 Heavy",
   "grok-beta": "Grok Beta",
+  "grok-4-fast": "Grok 4 Fast",
+  "grok-4.1-fast": "Grok 4.1 Fast",
 
   // Google Models
-  // Gemini 2.5 Series (Latest)
+  // Gemini 3 Series
+  "gemini-3-pro-preview": "Gemini 3 Pro Preview",
+  "gemini-3-flash-preview": "Gemini 3 Flash Preview",
+
+  // Gemini 2.5 Series
   "gemini-2-5-pro": "Gemini 2.5 Pro",
   "gemini-2-5-flash": "Gemini 2.5 Flash",
   "gemini-2-5-flash-lite": "Gemini 2.5 Flash Lite",
@@ -56,9 +68,36 @@ export const AIModelToLabel = {
   "tx-gemma": "TX Gemma",
   "google/gemma-7b-it": "Google Gemma 7B IT",
 
-  // Other Models
+  // DeepSeek Models
+  "deepseek-chat-v3.1": "DeepSeek V3.1",
+  "deepseek-v3.2": "DeepSeek V3.2",
+  "deepseek-r1": "DeepSeek R1",
+  "deepseek-r1-0528": "DeepSeek R1 0528",
+
+  // Meta Llama Models
+  "llama-4-scout": "Llama 4 Scout",
+  "llama-3.3-70b": "Llama 3.3 70B",
   "meta-llama/Llama-2-70b-chat-hf": "Meta Llama 2 70b",
+
+  // Mistral Models
+  "mistral-medium-3": "Mistral Medium 3",
+  "mistral-medium-3.1": "Mistral Medium 3.1",
+  "codestral-2508": "Codestral 2508",
+  "devstral-small": "Devstral Small",
+  "devstral-medium": "Devstral Medium",
   "mistralai/Mixtral-8x7B-Instruct-v0.1": "Mixtral 8x7B",
+
+  // Qwen Models
+  "qwen3-coder": "Qwen3 Coder",
+  "qwen3-max": "Qwen3 Max",
+  "qwq-32b": "QwQ 32B",
+
+  // Kimi Models
+  "kimi-k2": "Kimi K2",
+  "kimi-k2.5": "Kimi K2.5",
+
+  // MiniMax Models
+  "minimax-m1": "MiniMax M1",
 } as const;
 
 export const modelToProviderId: Record<string | AIModel, string> = {
@@ -71,22 +110,25 @@ export const modelToProviderId: Record<string | AIModel, string> = {
   "gpt-4.1-nano": "openai/gpt-4o-mini",
   "gpt-4.5": "openai/gpt-4.5-turbo",
   "gpt-5": "openai/gpt-5",
-  "gpt-5-pro": "openai/gpt-5-pro",
   "o1-mini": "openai/o1-mini",
   "o3-mini": "openai/o3-mini",
   "o3-pro": "openai/o3-pro",
   "o4-mini": "openai/o4-mini",
   "gpt-oss-120b": "openai/gpt-oss-120b",
   "gpt-oss-20b": "openai/gpt-oss-20b",
+  "gpt-5.1": "openai/gpt-5.1",
+  "gpt-5.2": "openai/gpt-5.2",
+  "gpt-5-mini": "openai/gpt-5-mini",
+  "gpt-5-nano": "openai/gpt-5-nano",
+  "gpt-5-pro": "openai/gpt-5-pro",
 
   // Anthropic Models
   "claude-3-5-sonnet-20240620": "anthropic/claude-3.5-sonnet",
   "claude-3-5-haiku": "anthropic/claude-3.5-haiku",
   "claude-3-7-sonnet": "anthropic/claude-3.7-sonnet",
-  "claude-4-sonnet": "anthropic/claude-4-sonnet",
-  "claude-4-opus": "anthropic/claude-4-opus",
-  "claude-4-1-opus": "anthropic/claude-4.1-opus",
-
+  "claude-4-sonnet": "anthropic/claude-sonnet-4",
+  "claude-haiku-4.5": "anthropic/claude-haiku-4.5",
+  "claude-sonnet-4.5": "anthropic/claude-sonnet-4.5",
   // xAI/Grok Models
   "grok-2-latest": "x-ai/grok-2",
   "grok-2-1212": "x-ai/grok-2-1212",
@@ -95,15 +137,46 @@ export const modelToProviderId: Record<string | AIModel, string> = {
   "grok-4": "x-ai/grok-4",
   "grok-4-heavy": "x-ai/grok-4-heavy",
   "grok-beta": "x-ai/grok-beta",
+  "grok-4-fast": "x-ai/grok-4-fast",
+  "grok-4.1-fast": "x-ai/grok-4.1-fast",
 
-  // Meta Models
+  // DeepSeek Models
+  "deepseek-chat-v3.1": "deepseek/deepseek-chat-v3.1",
+  "deepseek-v3.2": "deepseek/deepseek-v3.2",
+  "deepseek-r1": "deepseek/deepseek-r1:free",
+  "deepseek-r1-0528": "deepseek/deepseek-r1-0528:free",
+
+  // Meta Llama Models
+  "llama-4-scout": "meta-llama/llama-4-scout:free",
+  "llama-3.3-70b": "meta-llama/llama-3.3-70b-instruct:free",
   "meta-llama/Llama-2-70b-chat-hf": "meta-llama/llama-2-70b-chat",
 
   // Mistral Models
+  "mistral-medium-3": "mistralai/mistral-medium-3",
+  "mistral-medium-3.1": "mistralai/mistral-medium-3.1",
+  "codestral-2508": "mistralai/codestral-2508",
+  "devstral-small": "mistralai/devstral-small-2505",
+  "devstral-medium": "mistralai/devstral-medium-2507",
   "mistralai/Mixtral-8x7B-Instruct-v0.1": "mistralai/mixtral-8x7b-instruct",
 
+  // Qwen Models
+  "qwen3-coder": "qwen/qwen3-coder",
+  "qwen3-max": "qwen/qwen3-max",
+  "qwq-32b": "qwen/qwq-32b:free",
+
+  // Kimi Models
+  "kimi-k2": "moonshotai/kimi-k2",
+  "kimi-k2.5": "moonshotai/kimi-k2.5",
+
+  // MiniMax Models
+  "minimax-m1": "minimax/minimax-m1",
+
   // Google Models
-  // Gemini 2.5 Series (Latest)
+  // Gemini 3 Series
+  "gemini-3-pro-preview": "google/gemini-3-pro-preview",
+  "gemini-3-flash-preview": "google/gemini-3-flash-preview",
+
+  // Gemini 2.5 Series
   "gemini-2-5-pro": "google/gemini-2.5-pro",
   "gemini-2-5-flash": "google/gemini-2.5-flash",
   "gemini-2-5-flash-lite": "google/gemini-2.5-flash-lite",
