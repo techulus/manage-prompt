@@ -19,6 +19,7 @@ type Request struct {
 	CacheReadTokens  *int     `json:"cache_read_tokens,omitempty"`
 	CacheWriteTokens *int     `json:"cache_write_tokens,omitempty"`
 	CostUSD          *float64 `json:"cost_usd,omitempty"`
+	RawResponse      string   `json:"raw_response,omitempty"`
 }
 
 type RequestSummary struct {

@@ -54,9 +54,28 @@
                     <h3>Body</h3>
                     <pre class="json-view" id="response-body">{{.ResponseBody}}</pre>
                 </div>
+                {{if .RawResponse}}<div class="panel-section">
+                    <div class="raw-toggle">
+                        <button class="btn btn-sm" id="raw-toggle-btn" onclick="toggleRaw()">Show Raw Response</button>
+                    </div>
+                    <pre class="json-view" id="raw-response" style="display:none;margin-top:8px">{{.RawResponse}}</pre>
+                </div>{{end}}
             </div>
         </div>
     </main>
     <script src="/static/js/json-viewer.js"></script>
+    <script>
+        function toggleRaw() {
+            var el = document.getElementById("raw-response");
+            var btn = document.getElementById("raw-toggle-btn");
+            if (el.style.display === "none") {
+                el.style.display = "block";
+                btn.textContent = "Hide Raw Response";
+            } else {
+                el.style.display = "none";
+                btn.textContent = "Show Raw Response";
+            }
+        }
+    </script>
 </body>
 </html>

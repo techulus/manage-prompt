@@ -112,14 +112,14 @@ func (h *Handlers) Ingest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	promptJSON, _ := json.Marshal(payload.Prompt)
-	rawResponseJSON, _ := json.Marshal(payload.RawResponse)
 
 	provider := normalizeProvider(payload.Provider)
 	model := payload.Model
 
-	responseBody := payload.ResponseText
+	var rawResponse string
 	if payload.RawResponse != nil {
-		responseBody = string(rawResponseJSON)
+		rawJSON, _ := json.Marshal(payload.RawResponse)
+		rawResponse = string(rawJSON)
 	}
 
 	rec := &storage.Request{
@@ -127,7 +127,8 @@ func (h *Handlers) Ingest(w http.ResponseWriter, r *http.Request) {
 		Timestamp:    time.Now().UnixMilli(),
 		TargetURL:    provider + "/" + model,
 		RequestBody:  string(promptJSON),
-		ResponseBody: responseBody,
+		ResponseBody: payload.ResponseText,
+		RawResponse:  rawResponse,
 		StatusCode:   200,
 		LatencyMs:    payload.LatencyMs,
 		IsStreaming:   payload.IsStreaming,

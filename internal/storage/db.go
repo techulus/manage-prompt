@@ -60,7 +60,8 @@ func (db *DB) migrate() error {
 			tokens_output INT,
 			cache_read_tokens INT,
 			cache_write_tokens INT,
-			cost_usd REAL
+			cost_usd REAL,
+			raw_response TEXT
 		);
 		CREATE INDEX IF NOT EXISTS idx_timestamp ON requests(timestamp DESC);
 		CREATE INDEX IF NOT EXISTS idx_provider ON requests(provider);
@@ -77,14 +78,14 @@ func (db *DB) Insert(r *Request) error {
 			response_headers, response_body,
 			status_code, latency_ms, is_streaming, error,
 			provider, model, tokens_input, tokens_output,
-			cache_read_tokens, cache_write_tokens, cost_usd
-		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			cache_read_tokens, cache_write_tokens, cost_usd, raw_response
+		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 		r.ID, r.Timestamp, r.TargetURL,
 		r.RequestHeaders, r.RequestBody,
 		r.ResponseHeaders, r.ResponseBody,
 		r.StatusCode, r.LatencyMs, r.IsStreaming, r.Error,
 		r.Provider, r.Model, r.TokensInput, r.TokensOutput,
-		r.CacheReadTokens, r.CacheWriteTokens, r.CostUSD,
+		r.CacheReadTokens, r.CacheWriteTokens, r.CostUSD, r.RawResponse,
 	)
 	return err
 }
@@ -142,14 +143,14 @@ func (db *DB) Get(id string) (*Request, error) {
 			   response_headers, response_body,
 			   status_code, latency_ms, is_streaming, error,
 			   provider, model, tokens_input, tokens_output,
-			   cache_read_tokens, cache_write_tokens, cost_usd
+			   cache_read_tokens, cache_write_tokens, cost_usd, raw_response
 		FROM requests WHERE id = ?`, id).Scan(
 		&r.ID, &r.Timestamp, &r.TargetURL,
 		&r.RequestHeaders, &r.RequestBody,
 		&r.ResponseHeaders, &r.ResponseBody,
 		&r.StatusCode, &r.LatencyMs, &r.IsStreaming, &r.Error,
 		&r.Provider, &r.Model, &r.TokensInput, &r.TokensOutput,
-		&r.CacheReadTokens, &r.CacheWriteTokens, &r.CostUSD,
+		&r.CacheReadTokens, &r.CacheWriteTokens, &r.CostUSD, &r.RawResponse,
 	)
 	if err != nil {
 		return nil, err
