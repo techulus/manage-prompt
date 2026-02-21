@@ -1,10 +1,10 @@
 import { generateText, wrapLanguageModel } from "ai";
 import { openai } from "@ai-sdk/openai";
-import { manageprompt } from "../src/index.js";
+import { devToolsMiddleware } from "../src/index.js";
 
 const model = wrapLanguageModel({
   model: openai("gpt-4o-mini"),
-  middleware: manageprompt(),
+  middleware: devToolsMiddleware(),
 });
 
 const { text, usage } = await generateText({

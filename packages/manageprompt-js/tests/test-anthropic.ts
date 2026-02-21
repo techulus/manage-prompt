@@ -1,10 +1,10 @@
 import { generateText, wrapLanguageModel } from "ai";
 import { anthropic } from "@ai-sdk/anthropic";
-import { manageprompt } from "../src/index.js";
+import { devToolsMiddleware } from "../src/index.js";
 
 const model = wrapLanguageModel({
   model: anthropic("claude-sonnet-4-20250514"),
-  middleware: manageprompt(),
+  middleware: devToolsMiddleware(),
 });
 
 const { text, usage } = await generateText({

@@ -412,11 +412,11 @@
                         <div class="code-block"><span class="fn">pnpm</span> add manageprompt</div>
                         <div class="code-block"><span class="kw">import</span> { generateText, wrapLanguageModel } <span class="kw">from</span> <span class="str">"ai"</span>;
 <span class="kw">import</span> { openai } <span class="kw">from</span> <span class="str">"@ai-sdk/openai"</span>;
-<span class="kw">import</span> { manageprompt } <span class="kw">from</span> <span class="str">"manageprompt"</span>;
+<span class="kw">import</span> { devToolsMiddleware } <span class="kw">from</span> <span class="str">"manageprompt"</span>;
 
 <span class="kw">const</span> model = <span class="fn">wrapLanguageModel</span>({
   model: <span class="fn">openai</span>(<span class="str">"gpt-4o"</span>),
-  middleware: <span class="fn">manageprompt</span>(),
+  middleware: <span class="fn">devToolsMiddleware</span>(),
 });</div>
                     </div>
                 </div>

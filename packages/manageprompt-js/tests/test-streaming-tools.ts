@@ -1,13 +1,13 @@
 import { streamText, wrapLanguageModel, tool } from "ai";
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { z } from "zod";
-import { manageprompt } from "../src/index.js";
+import { devToolsMiddleware } from "../src/index.js";
 
 const openrouter = createOpenRouter();
 
 const model = wrapLanguageModel({
   model: openrouter("anthropic/claude-sonnet-4"),
-  middleware: manageprompt(),
+  middleware: devToolsMiddleware(),
 });
 
 const result = streamText({

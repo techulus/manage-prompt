@@ -43,7 +43,7 @@ function extractUsage(usage: LanguageModelV3Usage) {
   };
 }
 
-export function manageprompt(
+export function devToolsMiddleware(
   options?: ManagePromptOptions
 ): LanguageModelV3Middleware {
   const baseURL = (options?.url ?? "http://localhost:54321").replace(/\/$/, "");
@@ -146,10 +146,10 @@ function send(baseURL: string, data: Record<string, unknown>) {
   })
     .then((res) => {
       if (!res.ok) {
-        console.error(`[manageprompt] Failed to send data: ${res.status} ${res.statusText}`);
+        console.error(`[manageprompt:devtools] Failed to send data: ${res.status} ${res.statusText}`);
       }
     })
     .catch((err) => {
-      console.error(`[manageprompt] Failed to connect to ${baseURL}:`, err.message);
+      console.error(`[manageprompt:devtools] Failed to connect to ${baseURL}:`, err.message);
     });
 }

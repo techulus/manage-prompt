@@ -15,11 +15,11 @@ pnpm add manageprompt
 ```ts
 import { generateText, wrapLanguageModel } from "ai";
 import { openai } from "@ai-sdk/openai";
-import { manageprompt } from "manageprompt";
+import { devToolsMiddleware } from "manageprompt";
 
 const model = wrapLanguageModel({
   model: openai("gpt-4o"),
-  middleware: manageprompt(),
+  middleware: devToolsMiddleware(),
 });
 
 const { text } = await generateText({ model, prompt: "Hello" });
@@ -30,8 +30,8 @@ Works with any AI SDK provider — OpenAI, Anthropic, Google, Mistral, etc.
 ## Options
 
 ```ts
-manageprompt({
-  url: "http://localhost:54321", // default: http://localhost:54321
+devToolsMiddleware({
+  url: "http://localhost:54321",
 });
 ```
 
