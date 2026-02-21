@@ -1,0 +1,48 @@
+{
+  "name": "manageprompt",
+  "version": "0.1.0",
+  "description": "AI SDK middleware for ManagePrompt — local LLM call debugger",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "peerDependencies": {
+    "@ai-sdk/provider": ">=3.0.0"
+  },
+  "devDependencies": {
+    "@ai-sdk/provider": "^3.0.8",
+    "@rollup/plugin-typescript": "^12.1.0",
+    "rollup": "^4.30.0",
+    "rollup-plugin-dts": "^6.2.0",
+    "tslib": "^2.8.0",
+    "typescript": "^5.7.0"
+  },
+  "keywords": [
+    "ai",
+    "llm",
+    "debugging",
+    "openai",
+    "anthropic",
+    "vercel-ai-sdk",
+    "middleware"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/techulus/manage-prompt"
+  }
+}

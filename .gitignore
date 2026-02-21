@@ -1,5 +1,4 @@
 bin/
-manageprompt
 *.exe
 dist/
 .DS_Store
