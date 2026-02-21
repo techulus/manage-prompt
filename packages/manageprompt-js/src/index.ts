@@ -20,10 +20,24 @@ function extractText(content: LanguageModelV3GenerateResult["content"]): string 
     .join("");
 }
 
+function sum(...values: (number | undefined)[]): number {
+  let s = 0;
+  for (const v of values) if (v != null) s += v;
+  return s;
+}
+
 function extractUsage(usage: LanguageModelV3Usage) {
+  const tokensInput =
+    usage.inputTokens.total ??
+    (sum(usage.inputTokens.noCache, usage.inputTokens.cacheRead, usage.inputTokens.cacheWrite) || undefined);
+
+  const tokensOutput =
+    usage.outputTokens.total ??
+    (sum(usage.outputTokens.text, usage.outputTokens.reasoning) || undefined);
+
   return {
-    tokens_input: usage.inputTokens.total,
-    tokens_output: usage.outputTokens.total,
+    tokens_input: tokensInput,
+    tokens_output: tokensOutput,
     cache_read_tokens: usage.inputTokens.cacheRead,
     cache_write_tokens: usage.inputTokens.cacheWrite,
   };
@@ -97,6 +111,14 @@ export function manageprompt(
           controller.enqueue(chunk);
         },
         flush() {
+          if (!usage) {
+            const finish = chunks.find((c) => c.type === "finish");
+            if (finish && finish.type === "finish") {
+              usage = finish.usage;
+              finishReason = finish.finishReason;
+            }
+          }
+
           send(baseURL, {
             model: model.modelId,
             provider: model.provider,
