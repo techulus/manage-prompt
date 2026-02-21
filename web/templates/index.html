@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ManagePrompt</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <h1>ManagePrompt</h1>
+            <span class="badge" id="connection-status">connecting...</span>
+        </div>
+        <div class="header-right">
+            <div class="stats" id="stats"></div>
+            <button class="btn btn-danger" id="clear-btn">Clear All</button>
+        </div>
+    </header>
+    <main>
+        <table id="request-table">
+            <thead>
+                <tr>
+                    <th>Time</th>
+                    <th>URL</th>
+                    <th>Status</th>
+                    <th>Latency</th>
+                    <th>Model</th>
+                    <th>Tokens</th>
+                    <th>Cost</th>
+                </tr>
+            </thead>
+            <tbody id="request-list"></tbody>
+        </table>
+        <div id="empty-state" class="empty-state">
+            <p>No requests captured yet.</p>
+            <p class="muted">See the <a href="https://github.com/techulus/manage-prompt#integration" target="_blank">README</a> for integration instructions.</p>
+        </div>
+        <div class="pagination" id="pagination"></div>
+    </main>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

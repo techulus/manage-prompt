@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Detail — ManagePrompt</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <a href="/ui" class="back-link">&larr; Back</a>
+            <h1>Request Detail</h1>
+        </div>
+    </header>
+    <main class="detail-view">
+        <div class="meta-bar">
+            <span class="badge status-{{.StatusCode}}">{{.StatusCode}}</span>
+            <span class="meta-item"><strong>URL:</strong> {{.TargetURL}}</span>
+            <span class="meta-item"><strong>Latency:</strong> {{.LatencyMs}}ms</span>
+            {{if .IsStreaming}}<span class="badge badge-info">streaming</span>{{end}}
+        </div>
+
+        <div class="panels">
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Request</h2>
+                    <button class="btn btn-sm copy-btn" data-target="request-body">Copy</button>
+                </div>
+                <div class="panel-section">
+                    <h3>Headers</h3>
+                    <pre class="json-view" id="request-headers">{{.RequestHeaders}}</pre>
+                </div>
+                <div class="panel-section">
+                    <h3>Body</h3>
+                    <pre class="json-view" id="request-body">{{.RequestBody}}</pre>
+                </div>
+            </div>
+            <div class="panel">
+                <div class="panel-header">
+                    <h2>Response</h2>
+                    <button class="btn btn-sm copy-btn" data-target="response-body">Copy</button>
+                </div>
+                <div class="panel-section">
+                    <h3>Headers</h3>
+                    <pre class="json-view" id="response-headers">{{.ResponseHeaders}}</pre>
+                </div>
+                <div class="panel-section">
+                    <h3>Body</h3>
+                    <pre class="json-view" id="response-body">{{.ResponseBody}}</pre>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="/static/js/json-viewer.js"></script>
+</body>
+</html>

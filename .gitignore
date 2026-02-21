@@ -1,0 +1,9 @@
+bin/
+manageprompt
+*.exe
+dist/
+.DS_Store
+.manageprompt/
+node_modules/
+*.tgz
+*.log
