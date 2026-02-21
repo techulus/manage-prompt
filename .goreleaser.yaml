@@ -37,7 +37,7 @@ changelog:
       - "^test:"
       - "^chore:"
 
-homebrews:
+brews:
   - repository:
       owner: techulus
       name: homebrew-tap
