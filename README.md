@@ -118,7 +118,21 @@ manageprompt clear            # Clear all stored requests
 manageprompt version          # Print version
 ```
 
-## Build from Source
+## Install
+
+### Homebrew
+
+```bash
+brew install techulus/tap/manageprompt
+```
+
+### Go
+
+```bash
+go install github.com/techulus/manage-prompt/cmd/manageprompt@latest
+```
+
+### Build from Source
 
 ```bash
 go build -o bin/manageprompt ./cmd/manageprompt
