@@ -14,23 +14,27 @@ type Request struct {
 	Error           *string  `json:"error,omitempty"`
 	Provider        *string  `json:"provider,omitempty"`
 	Model           *string  `json:"model,omitempty"`
-	TokensInput     *int     `json:"tokens_input,omitempty"`
-	TokensOutput    *int     `json:"tokens_output,omitempty"`
-	CostUSD         *float64 `json:"cost_usd,omitempty"`
+	TokensInput      *int     `json:"tokens_input,omitempty"`
+	TokensOutput     *int     `json:"tokens_output,omitempty"`
+	CacheReadTokens  *int     `json:"cache_read_tokens,omitempty"`
+	CacheWriteTokens *int     `json:"cache_write_tokens,omitempty"`
+	CostUSD          *float64 `json:"cost_usd,omitempty"`
 }
 
 type RequestSummary struct {
-	ID           string   `json:"id"`
-	Timestamp    int64    `json:"timestamp"`
-	TargetURL    string   `json:"target_url"`
-	StatusCode   int      `json:"status_code"`
-	LatencyMs    int64    `json:"latency_ms"`
-	IsStreaming  bool     `json:"is_streaming"`
-	Provider     *string  `json:"provider,omitempty"`
-	Model        *string  `json:"model,omitempty"`
-	TokensInput  *int     `json:"tokens_input,omitempty"`
-	TokensOutput *int     `json:"tokens_output,omitempty"`
-	CostUSD      *float64 `json:"cost_usd,omitempty"`
+	ID               string   `json:"id"`
+	Timestamp        int64    `json:"timestamp"`
+	TargetURL        string   `json:"target_url"`
+	StatusCode       int      `json:"status_code"`
+	LatencyMs        int64    `json:"latency_ms"`
+	IsStreaming       bool     `json:"is_streaming"`
+	Provider         *string  `json:"provider,omitempty"`
+	Model            *string  `json:"model,omitempty"`
+	TokensInput      *int     `json:"tokens_input,omitempty"`
+	TokensOutput     *int     `json:"tokens_output,omitempty"`
+	CacheReadTokens  *int     `json:"cache_read_tokens,omitempty"`
+	CacheWriteTokens *int     `json:"cache_write_tokens,omitempty"`
+	CostUSD          *float64 `json:"cost_usd,omitempty"`
 }
 
 type Stats struct {

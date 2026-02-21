@@ -14,7 +14,26 @@ type Handler struct {
 }
 
 func NewHandler(db *storage.DB) *Handler {
-	tmpl := template.Must(template.ParseFS(TemplateFS(), "*.html"))
+	funcs := template.FuncMap{
+		"deref": func(v any) any {
+			switch p := v.(type) {
+			case *int:
+				if p != nil {
+					return *p
+				}
+			case *float64:
+				if p != nil {
+					return *p
+				}
+			case *string:
+				if p != nil {
+					return *p
+				}
+			}
+			return nil
+		},
+	}
+	tmpl := template.Must(template.New("").Funcs(funcs).ParseFS(TemplateFS(), "*.html"))
 	return &Handler{db: db, templates: tmpl}
 }
 

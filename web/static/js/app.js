@@ -18,9 +18,12 @@
     return "$" + cost.toFixed(6);
   }
 
-  function formatTokens(input, output) {
-    if (!input && !output) return "\u2014";
-    return (input || 0) + " \u2192 " + (output || 0);
+  function formatTokens(req) {
+    if (!req.tokens_input && !req.tokens_output) return "\u2014";
+    var s = (req.tokens_input || 0) + " \u2192 " + (req.tokens_output || 0);
+    if (req.cache_read_tokens) s += " (\u21B5" + req.cache_read_tokens + ")";
+    if (req.cache_write_tokens) s += " (\u2191" + req.cache_write_tokens + ")";
+    return s;
   }
 
   function statusClass(code) {
@@ -43,7 +46,7 @@
       '<td class="' + statusClass(req.status_code) + '">' + esc(String(req.status_code)) + "</td>" +
       "<td>" + esc(req.latency_ms + "ms") + "</td>" +
       "<td>" + esc(req.model || "\u2014") + "</td>" +
-      "<td>" + esc(formatTokens(req.tokens_input, req.tokens_output)) + "</td>" +
+      "<td>" + esc(formatTokens(req)) + "</td>" +
       "<td>" + esc(formatCost(req.cost_usd)) + "</td>";
 
     if (prepend) {

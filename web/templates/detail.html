@@ -19,6 +19,11 @@
             <span class="meta-item"><strong>URL:</strong> {{.TargetURL}}</span>
             <span class="meta-item"><strong>Latency:</strong> {{.LatencyMs}}ms</span>
             {{if .IsStreaming}}<span class="badge badge-info">streaming</span>{{end}}
+            {{if .TokensInput}}<span class="meta-item"><strong>In:</strong> {{deref .TokensInput}}</span>{{end}}
+            {{if .TokensOutput}}<span class="meta-item"><strong>Out:</strong> {{deref .TokensOutput}}</span>{{end}}
+            {{if .CacheReadTokens}}<span class="meta-item"><strong>Cache Read:</strong> {{deref .CacheReadTokens}}</span>{{end}}
+            {{if .CacheWriteTokens}}<span class="meta-item"><strong>Cache Write:</strong> {{deref .CacheWriteTokens}}</span>{{end}}
+            {{if .CostUSD}}<span class="meta-item"><strong>Cost:</strong> ${{printf "%.6f" (deref .CostUSD)}}</span>{{end}}
         </div>
 
         <div class="panels">
@@ -27,10 +32,10 @@
                     <h2>Request</h2>
                     <button class="btn btn-sm copy-btn" data-target="request-body">Copy</button>
                 </div>
-                <div class="panel-section">
+                {{if .RequestHeaders}}<div class="panel-section">
                     <h3>Headers</h3>
                     <pre class="json-view" id="request-headers">{{.RequestHeaders}}</pre>
-                </div>
+                </div>{{end}}
                 <div class="panel-section">
                     <h3>Body</h3>
                     <pre class="json-view" id="request-body">{{.RequestBody}}</pre>
@@ -41,10 +46,10 @@
                     <h2>Response</h2>
                     <button class="btn btn-sm copy-btn" data-target="response-body">Copy</button>
                 </div>
-                <div class="panel-section">
+                {{if .ResponseHeaders}}<div class="panel-section">
                     <h3>Headers</h3>
                     <pre class="json-view" id="response-headers">{{.ResponseHeaders}}</pre>
-                </div>
+                </div>{{end}}
                 <div class="panel-section">
                     <h3>Body</h3>
                     <pre class="json-view" id="response-body">{{.ResponseBody}}</pre>

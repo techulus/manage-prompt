@@ -85,15 +85,18 @@ func (h *Handlers) GetStats(w http.ResponseWriter, r *http.Request) {
 }
 
 type ingestPayload struct {
-	Model        string `json:"model"`
-	Provider     string `json:"provider"`
-	Prompt       any    `json:"prompt"`
-	ResponseText string `json:"response_text"`
-	TokensInput  *int   `json:"tokens_input"`
-	TokensOutput *int   `json:"tokens_output"`
-	LatencyMs    int64  `json:"latency_ms"`
-	IsStreaming  bool   `json:"is_streaming"`
-	FinishReason string `json:"finish_reason"`
+	Model            string `json:"model"`
+	Provider         string `json:"provider"`
+	Prompt           any    `json:"prompt"`
+	ResponseText     string `json:"response_text"`
+	RawResponse      any    `json:"raw_response"`
+	TokensInput      *int   `json:"tokens_input"`
+	TokensOutput     *int   `json:"tokens_output"`
+	CacheReadTokens  *int   `json:"cache_read_tokens"`
+	CacheWriteTokens *int   `json:"cache_write_tokens"`
+	LatencyMs        int64  `json:"latency_ms"`
+	IsStreaming       bool   `json:"is_streaming"`
+	FinishReason     string `json:"finish_reason"`
 }
 
 func (h *Handlers) Ingest(w http.ResponseWriter, r *http.Request) {
@@ -109,23 +112,31 @@ func (h *Handlers) Ingest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	promptJSON, _ := json.Marshal(payload.Prompt)
+	rawResponseJSON, _ := json.Marshal(payload.RawResponse)
 
-	provider := payload.Provider
+	provider := normalizeProvider(payload.Provider)
 	model := payload.Model
+
+	responseBody := payload.ResponseText
+	if payload.RawResponse != nil {
+		responseBody = string(rawResponseJSON)
+	}
 
 	rec := &storage.Request{
 		ID:           uuid.New().String(),
 		Timestamp:    time.Now().UnixMilli(),
 		TargetURL:    provider + "/" + model,
 		RequestBody:  string(promptJSON),
-		ResponseBody: payload.ResponseText,
+		ResponseBody: responseBody,
 		StatusCode:   200,
 		LatencyMs:    payload.LatencyMs,
 		IsStreaming:   payload.IsStreaming,
 		Provider:     &provider,
 		Model:        &model,
-		TokensInput:  payload.TokensInput,
-		TokensOutput: payload.TokensOutput,
+		TokensInput:      payload.TokensInput,
+		TokensOutput:     payload.TokensOutput,
+		CacheReadTokens:  payload.CacheReadTokens,
+		CacheWriteTokens: payload.CacheWriteTokens,
 	}
 
 	if payload.TokensInput != nil && payload.TokensOutput != nil {
@@ -142,6 +153,11 @@ func (h *Handlers) Ingest(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(map[string]string{"id": rec.ID})
+}
+
+func normalizeProvider(raw string) string {
+	parts := strings.SplitN(raw, ".", 2)
+	return parts[0]
 }
 
 func writeJSON(w http.ResponseWriter, v any) {

@@ -58,6 +58,8 @@ func (db *DB) migrate() error {
 			model TEXT,
 			tokens_input INT,
 			tokens_output INT,
+			cache_read_tokens INT,
+			cache_write_tokens INT,
 			cost_usd REAL
 		);
 		CREATE INDEX IF NOT EXISTS idx_timestamp ON requests(timestamp DESC);
@@ -74,13 +76,15 @@ func (db *DB) Insert(r *Request) error {
 			request_headers, request_body,
 			response_headers, response_body,
 			status_code, latency_ms, is_streaming, error,
-			provider, model, tokens_input, tokens_output, cost_usd
-		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+			provider, model, tokens_input, tokens_output,
+			cache_read_tokens, cache_write_tokens, cost_usd
+		) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 		r.ID, r.Timestamp, r.TargetURL,
 		r.RequestHeaders, r.RequestBody,
 		r.ResponseHeaders, r.ResponseBody,
 		r.StatusCode, r.LatencyMs, r.IsStreaming, r.Error,
-		r.Provider, r.Model, r.TokensInput, r.TokensOutput, r.CostUSD,
+		r.Provider, r.Model, r.TokensInput, r.TokensOutput,
+		r.CacheReadTokens, r.CacheWriteTokens, r.CostUSD,
 	)
 	return err
 }
@@ -102,7 +106,8 @@ func (db *DB) List(page, limit int) ([]RequestSummary, int, error) {
 
 	rows, err := db.conn.Query(`
 		SELECT id, timestamp, target_url, status_code, latency_ms, is_streaming,
-			   provider, model, tokens_input, tokens_output, cost_usd
+			   provider, model, tokens_input, tokens_output,
+			   cache_read_tokens, cache_write_tokens, cost_usd
 		FROM requests
 		ORDER BY timestamp DESC
 		LIMIT ? OFFSET ?`, limit, offset)
@@ -117,7 +122,8 @@ func (db *DB) List(page, limit int) ([]RequestSummary, int, error) {
 		err := rows.Scan(
 			&r.ID, &r.Timestamp, &r.TargetURL,
 			&r.StatusCode, &r.LatencyMs, &r.IsStreaming,
-			&r.Provider, &r.Model, &r.TokensInput, &r.TokensOutput, &r.CostUSD,
+			&r.Provider, &r.Model, &r.TokensInput, &r.TokensOutput,
+			&r.CacheReadTokens, &r.CacheWriteTokens, &r.CostUSD,
 		)
 		if err != nil {
 			return nil, 0, err
@@ -135,13 +141,15 @@ func (db *DB) Get(id string) (*Request, error) {
 			   request_headers, request_body,
 			   response_headers, response_body,
 			   status_code, latency_ms, is_streaming, error,
-			   provider, model, tokens_input, tokens_output, cost_usd
+			   provider, model, tokens_input, tokens_output,
+			   cache_read_tokens, cache_write_tokens, cost_usd
 		FROM requests WHERE id = ?`, id).Scan(
 		&r.ID, &r.Timestamp, &r.TargetURL,
 		&r.RequestHeaders, &r.RequestBody,
 		&r.ResponseHeaders, &r.ResponseBody,
 		&r.StatusCode, &r.LatencyMs, &r.IsStreaming, &r.Error,
-		&r.Provider, &r.Model, &r.TokensInput, &r.TokensOutput, &r.CostUSD,
+		&r.Provider, &r.Model, &r.TokensInput, &r.TokensOutput,
+		&r.CacheReadTokens, &r.CacheWriteTokens, &r.CostUSD,
 	)
 	if err != nil {
 		return nil, err
