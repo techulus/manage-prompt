@@ -2,7 +2,7 @@
 
 Local LLM call debugger. Captures every LLM API call during development with full request/response details, token usage, cost, and latency.
 
-<img width="3902" height="2576" alt="CleanShot 2026-02-22 at 18 09 03@2x" src="https://github.com/user-attachments/assets/8f24dbb4-1846-4c61-997d-83e23d9355c2" />
+<img width="3392" height="2644" alt="CleanShot 2026-02-22 at 18 11 31@2x" src="https://github.com/user-attachments/assets/637c4719-2549-4403-9275-3b2685fe2e40" />
 
 ## Quick Start
 
