@@ -370,7 +370,7 @@
                 <div class="feature">
                     <div class="feature-icon">&harr;</div>
                     <h3>Full capture</h3>
-                    <p>Request &amp; response bodies, headers with API keys automatically masked.</p>
+                    <p>Request &amp; response bodies with visual flow visualization.</p>
                 </div>
                 <div class="feature">
                     <div class="feature-icon">#</div>
@@ -385,7 +385,7 @@
                 <div class="feature">
                     <div class="feature-icon">&raquo;</div>
                     <h3>Streaming</h3>
-                    <p>SSE streaming forwarded in real-time with zero buffering delay.</p>
+                    <p>Captures both streaming and non-streaming calls automatically.</p>
                 </div>
                 <div class="feature">
                     <div class="feature-icon">&bull;</div>
@@ -423,17 +423,18 @@ const model = wrapLanguageModel({
                 </div>
                 <div class="int-card">
                     <div class="int-card-header">
-                        <h3>Proxy Mode</h3>
+                        <h3>capture()</h3>
                     </div>
                     <div class="int-card-body">
                         <div class="code-block"><code class="language-typescript">import OpenAI from "openai";
+import { capture } from "manageprompt";
 
-const client = new OpenAI({
-  baseURL: "http://localhost:54321/v1",
-  defaultHeaders: {
-    "X-ManagePrompt-Target": "https://api.openai.com/v1"
-  }
-});</code></div>
+const openai = new OpenAI();
+
+const response = await capture(
+  { model: "gpt-4o-mini", messages },
+  (input) => openai.chat.completions.create(input),
+);</code></div>
                     </div>
                 </div>
             </div>
