@@ -5,55 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ManagePrompt — Local LLM Call Debugger</title>
     <meta name="description" content="Capture every LLM API call during development. Full request/response details, token usage, cost estimation, and latency — all in a local web UI.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --bg: #ffffff;
-            --bg-surface: #f9fafb;
-            --bg-hover: #f3f4f6;
-            --border: #e5e7eb;
-            --text: #111827;
-            --text-muted: #6b7280;
-            --accent: #3b82f6;
-            --code-bg: #f3f4f6;
-            --font-mono: "SF Mono", "Cascadia Code", "Fira Code", monospace;
-            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-            --tag-bg: #dbeafe;
-            --tag-text: #1d4ed8;
+            --bg: #fafafa;
+            --bg-surface: #ffffff;
+            --bg-hover: #f4f4f5;
+            --border: #e4e4e7;
+            --text: #18181b;
+            --text-secondary: #52525c;
+            --text-tertiary: #71717b;
+            --accent: #18181b;
+            --success: #059669;
+            --error: #dc2626;
+            --highlight: #2563eb;
+            --code-bg: #f4f4f5;
+            --font-mono: "Geist Mono", "JetBrains Mono", "SF Mono", ui-monospace, monospace;
         }
 
         @media (prefers-color-scheme: dark) {
             :root {
-                --bg: #0a0a0a;
-                --bg-surface: #141414;
-                --bg-hover: #1a1a1a;
-                --border: #262626;
-                --text: #e5e5e5;
-                --text-muted: #737373;
-                --code-bg: #1a1a1a;
-                --tag-bg: #1e3a5f;
-                --tag-text: #93c5fd;
+                --bg: #09090b;
+                --bg-surface: #18181b;
+                --bg-hover: #27272a;
+                --border: #27272a;
+                --text: #f4f4f5;
+                --text-secondary: #9f9fa9;
+                --text-tertiary: #52525c;
+                --success: #5ee9b5;
+                --error: #ff6467;
+                --highlight: #8ec5ff;
+                --code-bg: #27272a;
             }
         }
 
         body {
             background: var(--bg);
             color: var(--text);
-            font-family: var(--font-sans);
-            font-size: 15px;
+            font-family: var(--font-mono);
+            font-size: 14px;
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
+        a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+
+        a:hover { color: var(--text); }
+
         .container {
-            max-width: 960px;
+            max-width: 880px;
             margin: 0 auto;
             padding: 0 24px;
         }
 
         nav {
-            padding: 16px 24px;
+            padding: 0 24px;
+            height: 48px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -61,53 +77,53 @@
         }
 
         nav .logo {
-            font-family: var(--font-mono);
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: -0.02em;
-        }
-
-        nav a {
-            color: var(--text-muted);
-            text-decoration: none;
             font-size: 13px;
-            font-family: var(--font-mono);
-            transition: color 0.15s;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            color: var(--text);
         }
 
-        nav a:hover { color: var(--text); }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
 
         .hero {
-            padding: 100px 0 80px;
+            padding: 120px 0 100px;
             text-align: center;
         }
 
         .hero-tag {
             display: inline-block;
-            font-family: var(--font-mono);
-            font-size: 12px;
-            padding: 4px 12px;
+            font-size: 11px;
+            padding: 2px 10px;
             border-radius: 100px;
-            background: var(--tag-bg);
-            color: var(--tag-text);
-            margin-bottom: 24px;
-            letter-spacing: 0.02em;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            margin-bottom: 28px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
         }
 
         .hero h1 {
-            font-size: clamp(36px, 6vw, 56px);
-            font-weight: 700;
-            letter-spacing: -0.035em;
-            line-height: 1.1;
+            font-size: clamp(32px, 5vw, 48px);
+            font-weight: 600;
+            letter-spacing: -0.04em;
+            line-height: 1.15;
             margin-bottom: 20px;
         }
 
         .hero p {
-            color: var(--text-muted);
-            font-size: 17px;
-            max-width: 540px;
-            margin: 0 auto 40px;
-            line-height: 1.7;
+            color: var(--text-secondary);
+            font-size: 14px;
+            max-width: 480px;
+            margin: 0 auto 48px;
+            line-height: 1.8;
         }
 
         .cmd-block {
@@ -116,26 +132,25 @@
             gap: 12px;
             background: var(--bg-surface);
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 12px 16px;
-            font-family: var(--font-mono);
-            font-size: 14px;
+            border-radius: 6px;
+            padding: 10px 16px;
+            font-size: 13px;
             cursor: pointer;
             transition: border-color 0.15s;
             position: relative;
         }
 
-        .cmd-block:hover { border-color: var(--accent); }
+        .cmd-block:hover { border-color: var(--text-tertiary); }
 
-        .cmd-block .prompt { color: var(--text-muted); user-select: none; }
+        .cmd-block .prompt { color: var(--text-tertiary); user-select: none; }
 
         .cmd-block .copy-icon {
-            color: var(--text-muted);
+            color: var(--text-tertiary);
             transition: color 0.15s;
             flex-shrink: 0;
         }
 
-        .cmd-block:hover .copy-icon { color: var(--text); }
+        .cmd-block:hover .copy-icon { color: var(--text-secondary); }
 
         .cmd-block .tooltip {
             position: absolute;
@@ -145,7 +160,7 @@
             background: var(--text);
             color: var(--bg);
             font-size: 11px;
-            padding: 4px 8px;
+            padding: 3px 8px;
             border-radius: 4px;
             opacity: 0;
             pointer-events: none;
@@ -161,17 +176,16 @@
         }
 
         .section-label {
-            font-family: var(--font-mono);
             font-size: 11px;
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-muted);
-            margin-bottom: 12px;
+            letter-spacing: 0.08em;
+            color: var(--text-tertiary);
+            margin-bottom: 8px;
         }
 
         .section-title {
-            font-size: 28px;
-            font-weight: 700;
+            font-size: 24px;
+            font-weight: 600;
             letter-spacing: -0.03em;
             margin-bottom: 48px;
         }
@@ -188,39 +202,31 @@
 
         .feature {
             background: var(--bg);
-            padding: 28px 24px;
+            padding: 24px;
         }
 
         .feature-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
-            background: var(--bg-surface);
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 16px;
-            font-size: 15px;
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin-bottom: 12px;
         }
 
         .feature h3 {
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 13px;
+            font-weight: 500;
             margin-bottom: 6px;
-            letter-spacing: -0.01em;
         }
 
         .feature p {
-            font-size: 13px;
-            color: var(--text-muted);
-            line-height: 1.5;
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.6;
         }
 
         .integration-cards {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 16px;
         }
 
         .int-card {
@@ -230,7 +236,7 @@
         }
 
         .int-card-header {
-            padding: 16px 20px;
+            padding: 12px 16px;
             background: var(--bg-surface);
             border-bottom: 1px solid var(--border);
             display: flex;
@@ -239,78 +245,77 @@
         }
 
         .int-card-header h3 {
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 13px;
+            font-weight: 500;
         }
 
         .int-card-header .rec {
-            font-family: var(--font-mono);
             font-size: 10px;
-            padding: 2px 7px;
-            border-radius: 100px;
-            background: var(--tag-bg);
-            color: var(--tag-text);
+            padding: 1px 6px;
+            border-radius: 3px;
+            border: 1px solid var(--success);
+            color: var(--success);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.04em;
         }
 
-        .int-card-body { padding: 20px; }
+        .int-card-body { padding: 16px; }
 
         .code-block {
             background: var(--code-bg);
-            border-radius: 6px;
-            padding: 16px;
-            font-family: var(--font-mono);
-            font-size: 12.5px;
-            line-height: 1.7;
+            border-radius: 4px;
+            padding: 14px 16px;
+            font-size: 12px;
+            line-height: 1.8;
             overflow-x: auto;
             white-space: pre;
         }
 
-        .code-block + .code-block { margin-top: 12px; }
+        .code-block + .code-block { margin-top: 8px; }
 
-        .code-block .kw { color: var(--accent); }
-        .code-block .str { color: #16a34a; }
-        .code-block .fn { color: #9333ea; }
-        .code-block .cm { color: var(--text-muted); }
+        .code-block pre {
+            margin: 0;
+            padding: 0;
+            background: transparent !important;
+            font-size: inherit;
+            line-height: inherit;
+        }
 
-        @media (prefers-color-scheme: dark) {
-            .code-block .str { color: #86efac; }
-            .code-block .fn { color: #c084fc; }
+        .code-block .shiki {
+            background: transparent !important;
         }
 
         .integration-note {
             text-align: center;
             margin-top: 20px;
-            color: var(--text-muted);
-            font-size: 14px;
+            color: var(--text-tertiary);
+            font-size: 12px;
         }
 
         .install-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
+            grid-template-columns: 1fr;
+            gap: 12px;
         }
 
         .install-item {
             border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 20px;
+            padding: 16px;
         }
 
         .install-item h3 {
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 11px;
+            font-weight: 400;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
+            letter-spacing: 0.06em;
+            color: var(--text-tertiary);
             margin-bottom: 12px;
-            font-family: var(--font-mono);
         }
 
         .install-item .code-block {
-            font-size: 12px;
-            padding: 12px;
+            font-size: 11px;
+            padding: 10px 12px;
             white-space: pre-wrap;
             word-break: break-all;
         }
@@ -319,24 +324,17 @@
             padding: 32px 24px;
             border-top: 1px solid var(--border);
             text-align: center;
-            font-size: 13px;
-            color: var(--text-muted);
-            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--text-tertiary);
         }
 
-        footer a {
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: color 0.15s;
-        }
-
-        footer a:hover { color: var(--text); }
+        footer a { color: var(--text-tertiary); }
+        footer a:hover { color: var(--text-secondary); }
 
         @media (max-width: 768px) {
-            .hero { padding: 64px 0 56px; }
-            .hero p { font-size: 15px; }
+            .hero { padding: 80px 0 64px; }
             section { padding: 56px 0; }
-            .section-title { font-size: 22px; margin-bottom: 32px; }
+            .section-title { font-size: 20px; margin-bottom: 32px; }
             .features-grid { grid-template-columns: 1fr; }
             .integration-cards { grid-template-columns: 1fr; }
             .install-grid { grid-template-columns: 1fr; }
@@ -346,19 +344,22 @@
 <body>
     <nav>
         <span class="logo">ManagePrompt</span>
-        <a href="https://github.com/techulus/manage-prompt" target="_blank">GitHub</a>
+        <div class="nav-links">
+            <a href="https://github.com/techulus/manage-prompt#readme" target="_blank">docs</a>
+            <a href="https://github.com/techulus/manage-prompt" target="_blank">github</a>
+        </div>
     </nav>
 
     <div class="container">
         <div class="hero">
-            <span class="hero-tag">Open Source</span>
-            <h1>Local LLM call debugger</h1>
-            <p>Capture every LLM API call during development. Full request/response details, token usage, cost estimation, and latency — all in a local web UI.</p>
+            <span class="hero-tag">open source</span>
+            <h1>Local LLM call<br>debugger</h1>
+            <p>Capture every LLM API call during development. Request/response bodies, token usage, cost estimation, and latency in a local web UI.</p>
             <div class="cmd-block" onclick="copyCmd(this)">
                 <span class="prompt">$</span>
                 <span>manageprompt start</span>
-                <span class="tooltip">Copied!</span>
-                <svg class="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                <span class="tooltip">copied</span>
+                <svg class="copy-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
             </div>
         </div>
 
@@ -368,17 +369,17 @@
             <div class="features-grid">
                 <div class="feature">
                     <div class="feature-icon">&harr;</div>
-                    <h3>Full Capture</h3>
+                    <h3>Full capture</h3>
                     <p>Request &amp; response bodies, headers with API keys automatically masked.</p>
                 </div>
                 <div class="feature">
                     <div class="feature-icon">#</div>
-                    <h3>Token Tracking</h3>
+                    <h3>Token tracking</h3>
                     <p>Input, output, cache read &amp; write tokens for every call.</p>
                 </div>
                 <div class="feature">
                     <div class="feature-icon">$</div>
-                    <h3>Cost Estimation</h3>
+                    <h3>Cost estimation</h3>
                     <p>Real-time cost calculated via models.dev pricing data.</p>
                 </div>
                 <div class="feature">
@@ -393,7 +394,7 @@
                 </div>
                 <div class="feature">
                     <div class="feature-icon">&gt;_</div>
-                    <h3>Project Scoped</h3>
+                    <h3>Project scoped</h3>
                     <p>SQLite DB per project directory. Zero config needed.</p>
                 </div>
             </div>
@@ -406,18 +407,18 @@
                 <div class="int-card">
                     <div class="int-card-header">
                         <h3>AI SDK Middleware</h3>
-                        <span class="rec">Recommended</span>
+                        <span class="rec">recommended</span>
                     </div>
                     <div class="int-card-body">
-                        <div class="code-block"><span class="fn">pnpm</span> add manageprompt</div>
-                        <div class="code-block"><span class="kw">import</span> { generateText, wrapLanguageModel } <span class="kw">from</span> <span class="str">"ai"</span>;
-<span class="kw">import</span> { openai } <span class="kw">from</span> <span class="str">"@ai-sdk/openai"</span>;
-<span class="kw">import</span> { devToolsMiddleware } <span class="kw">from</span> <span class="str">"manageprompt"</span>;
+                        <div class="code-block"><code class="language-bash">pnpm add manageprompt</code></div>
+                        <div class="code-block"><code class="language-typescript">import { generateText, wrapLanguageModel } from "ai";
+import { openai } from "@ai-sdk/openai";
+import { devToolsMiddleware } from "manageprompt";
 
-<span class="kw">const</span> model = <span class="fn">wrapLanguageModel</span>({
-  model: <span class="fn">openai</span>(<span class="str">"gpt-4o"</span>),
-  middleware: <span class="fn">devToolsMiddleware</span>(),
-});</div>
+const model = wrapLanguageModel({
+  model: openai("gpt-4o"),
+  middleware: devToolsMiddleware(),
+});</code></div>
                     </div>
                 </div>
                 <div class="int-card">
@@ -425,14 +426,14 @@
                         <h3>Proxy Mode</h3>
                     </div>
                     <div class="int-card-body">
-                        <div class="code-block"><span class="kw">import</span> OpenAI <span class="kw">from</span> <span class="str">"openai"</span>;
+                        <div class="code-block"><code class="language-typescript">import OpenAI from "openai";
 
-<span class="kw">const</span> client = <span class="kw">new</span> <span class="fn">OpenAI</span>({
-  baseURL: <span class="str">"http://localhost:54321/v1"</span>,
+const client = new OpenAI({
+  baseURL: "http://localhost:54321/v1",
   defaultHeaders: {
-    <span class="str">"X-ManagePrompt-Target"</span>: <span class="str">"https://api.openai.com/v1"</span>
+    "X-ManagePrompt-Target": "https://api.openai.com/v1"
   }
-});</div>
+});</code></div>
                     </div>
                 </div>
             </div>
@@ -445,22 +446,22 @@
             <div class="install-grid">
                 <div class="install-item">
                     <h3>Homebrew</h3>
-                    <div class="code-block">brew install techulus/tap/manageprompt</div>
+                    <div class="code-block"><code class="language-bash">brew install techulus/tap/manageprompt</code></div>
                 </div>
                 <div class="install-item">
                     <h3>Go</h3>
-                    <div class="code-block">go install github.com/techulus/manage-prompt/cmd/manageprompt@latest</div>
+                    <div class="code-block"><code class="language-bash">go install github.com/techulus/manage-prompt/cmd/manageprompt@latest</code></div>
                 </div>
                 <div class="install-item">
                     <h3>npm</h3>
-                    <div class="code-block">pnpm add manageprompt</div>
+                    <div class="code-block"><code class="language-bash">pnpm add manageprompt</code></div>
                 </div>
             </div>
         </section>
     </div>
 
     <footer>
-        MIT License &middot; <a href="https://github.com/techulus/manage-prompt" target="_blank">github.com/techulus/manage-prompt</a>
+        MIT &middot; <a href="https://github.com/techulus/manage-prompt" target="_blank">github.com/techulus/manage-prompt</a>
     </footer>
 
     <script>
@@ -470,6 +471,28 @@
             tip.classList.add("show");
             setTimeout(function() { tip.classList.remove("show"); }, 1200);
         }
+    </script>
+    <script type="module">
+        import { codeToHtml } from 'https://esm.sh/shiki@3.0.0'
+
+        const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+
+        document.querySelectorAll('.code-block code').forEach(async function(block) {
+            const lang = block.className.replace('language-', '') || 'text'
+            const code = block.textContent.trim()
+            const parent = block.parentElement
+
+            const html = await codeToHtml(code, {
+                lang: lang,
+                themes: {
+                    light: 'github-light-default',
+                    dark: 'github-dark-default',
+                },
+                defaultColor: isDark ? 'dark' : 'light',
+            })
+
+            parent.innerHTML = html
+        })
     </script>
 </body>
 </html>

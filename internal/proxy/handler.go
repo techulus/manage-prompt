@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"strings"
 	"time"
@@ -16,6 +17,8 @@ import (
 	"github.com/techulus/manage-prompt/internal/storage"
 	"github.com/techulus/manage-prompt/internal/ws"
 )
+
+const maxBodySize = 10 << 20
 
 const TargetHeader = "X-Manageprompt-Target"
 
@@ -51,7 +54,7 @@ func (h *ProxyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		targetURL += "?" + r.URL.RawQuery
 	}
 
-	reqBody, err := io.ReadAll(r.Body)
+	reqBody, err := io.ReadAll(io.LimitReader(r.Body, maxBodySize))
 	if err != nil {
 		http.Error(w, "Failed to read request body", http.StatusInternalServerError)
 		return
@@ -90,7 +93,9 @@ func (h *ProxyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			LatencyMs:      time.Since(start).Milliseconds(),
 			Error:          &errMsg,
 		}
-		h.db.Insert(rec)
+		if err := h.db.Insert(rec); err != nil {
+			log.Printf("db insert error: %v", err)
+		}
 		h.hub.Broadcast(rec.ID)
 		http.Error(w, "Failed to reach target: "+errMsg, http.StatusBadGateway)
 		return
@@ -111,7 +116,7 @@ func (h *ProxyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if isStreaming {
 		respBody, err = h.handleStreaming(w, resp.Body)
 	} else {
-		respBody, err = io.ReadAll(resp.Body)
+		respBody, err = io.ReadAll(io.LimitReader(resp.Body, maxBodySize))
 		if err == nil {
 			w.Write(respBody)
 		}
@@ -148,8 +153,20 @@ func (h *ProxyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	h.db.Insert(rec)
+	if err := h.db.Insert(rec); err != nil {
+		log.Printf("db insert error: %v", err)
+	}
 	h.hub.Broadcast(rec.ID)
+}
+
+func isSensitiveHeader(name string) bool {
+	lower := strings.ToLower(name)
+	for _, s := range []string{"auth", "key", "secret", "token", "cookie", "credential"} {
+		if strings.Contains(lower, s) {
+			return true
+		}
+	}
+	return false
 }
 
 func filterHeaders(h http.Header) map[string]string {
@@ -159,7 +176,7 @@ func filterHeaders(h http.Header) map[string]string {
 		if lower == strings.ToLower(TargetHeader) {
 			continue
 		}
-		if lower == "authorization" || lower == "x-api-key" {
+		if isSensitiveHeader(key) {
 			result[key] = "***"
 			continue
 		}

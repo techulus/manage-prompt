@@ -18,23 +18,25 @@ import (
 )
 
 type Server struct {
-	db   *storage.DB
-	port int
+	db      *storage.DB
+	port    int
+	version string
 }
 
-func NewServer(db *storage.DB, port int) *Server {
-	return &Server{db: db, port: port}
+func NewServer(db *storage.DB, port int, version string) *Server {
+	return &Server{db: db, port: port, version: version}
 }
 
 func (s *Server) Start() error {
 	hub := ws.NewHub()
 	apiHandlers := api.NewHandlers(s.db, hub)
 	proxyHandler := NewProxyHandler(s.db, hub)
-	webHandler := web.NewHandler(s.db)
+	webHandler := web.NewHandler(s.db, s.version)
 
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/ui", webHandler.Index)
+	mux.HandleFunc("/ui/settings", webHandler.Settings)
 	mux.HandleFunc("/ui/", webHandler.ServeUI)
 	mux.Handle("/static/", http.FileServer(http.FS(web.StaticFS())))
 
@@ -63,10 +65,12 @@ func (s *Server) Start() error {
 		proxyHandler.ServeHTTP(w, r)
 	})
 
-	addr := fmt.Sprintf(":%d", s.port)
+	addr := fmt.Sprintf("127.0.0.1:%d", s.port)
 	srv := &http.Server{
-		Addr:    addr,
-		Handler: mux,
+		Addr:              addr,
+		Handler:           mux,
+		ReadHeaderTimeout: 10 * time.Second,
+		IdleTimeout:       120 * time.Second,
 	}
 
 	fmt.Printf("\n  ManagePrompt is running!\n\n")

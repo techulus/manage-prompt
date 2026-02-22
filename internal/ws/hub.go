@@ -1,6 +1,8 @@
 package ws
 
 import (
+	"encoding/json"
+	"log"
 	"net/http"
 	"sync"
 
@@ -53,12 +55,19 @@ func (h *Hub) HandleWS(w http.ResponseWriter, r *http.Request) {
 	}()
 }
 
+type broadcastMsg struct {
+	Type string `json:"type"`
+	ID   string `json:"id"`
+}
+
 func (h *Hub) Broadcast(requestID string) {
 	h.mu.RLock()
 	defer h.mu.RUnlock()
 
-	msg := []byte(`{"type":"new_request","id":"` + requestID + `"}`)
+	msg, _ := json.Marshal(broadcastMsg{Type: "new_request", ID: requestID})
 	for conn := range h.clients {
-		conn.WriteMessage(websocket.TextMessage, msg)
+		if err := conn.WriteMessage(websocket.TextMessage, msg); err != nil {
+			log.Printf("ws write error: %v", err)
+		}
 	}
 }

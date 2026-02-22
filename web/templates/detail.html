@@ -4,33 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Request Detail — ManagePrompt</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/apply-settings.js"></script>
 </head>
 <body>
-    <header>
-        <div class="header-left">
-            <a href="/ui" class="back-link">&larr; Back</a>
-            <h1>Request Detail</h1>
+    {{template "header" .}}
+    <div class="sub-header">
+        <div class="sub-header-left">
+            <a href="/ui" class="back-link">&larr; back</a>
         </div>
-    </header>
+    </div>
     <main class="detail-view">
         <div class="meta-bar">
             <span class="badge status-{{.StatusCode}}">{{.StatusCode}}</span>
-            <span class="meta-item"><strong>URL:</strong> {{.TargetURL}}</span>
-            <span class="meta-item"><strong>Latency:</strong> {{.LatencyMs}}ms</span>
+            <span class="meta-item"><strong>url</strong> {{.TargetURL}}</span>
+            <span class="meta-item"><strong>latency</strong> {{.LatencyMs}}ms</span>
             {{if .IsStreaming}}<span class="badge badge-info">streaming</span>{{end}}
-            {{if .TokensInput}}<span class="meta-item"><strong>In:</strong> {{deref .TokensInput}}</span>{{end}}
-            {{if .TokensOutput}}<span class="meta-item"><strong>Out:</strong> {{deref .TokensOutput}}</span>{{end}}
-            {{if .CacheReadTokens}}<span class="meta-item"><strong>Cache Read:</strong> {{deref .CacheReadTokens}}</span>{{end}}
-            {{if .CacheWriteTokens}}<span class="meta-item"><strong>Cache Write:</strong> {{deref .CacheWriteTokens}}</span>{{end}}
-            {{if .CostUSD}}<span class="meta-item"><strong>Cost:</strong> ${{printf "%.6f" (deref .CostUSD)}}</span>{{end}}
+            {{if .TokensInput}}<span class="meta-item"><strong>in</strong> {{deref .TokensInput}}</span>{{end}}
+            {{if .TokensOutput}}<span class="meta-item"><strong>out</strong> {{deref .TokensOutput}}</span>{{end}}
+            {{if .CacheReadTokens}}<span class="meta-item"><strong>cache read</strong> {{deref .CacheReadTokens}}</span>{{end}}
+            {{if .CacheWriteTokens}}<span class="meta-item"><strong>cache write</strong> {{deref .CacheWriteTokens}}</span>{{end}}
+            {{if .CostUSD}}<span class="meta-item"><strong>cost</strong> ${{printf "%.6f" (deref .CostUSD)}}</span>{{end}}
         </div>
 
         <div class="panels">
             <div class="panel">
                 <div class="panel-header">
                     <h2>Request</h2>
-                    <button class="btn btn-sm copy-btn" data-target="request-body">Copy</button>
+                    <button class="btn btn-sm copy-btn" data-target="request-body">copy</button>
                 </div>
                 {{if .RequestHeaders}}<div class="panel-section">
                     <h3>Headers</h3>
@@ -44,7 +48,7 @@
             <div class="panel">
                 <div class="panel-header">
                     <h2>Response</h2>
-                    <button class="btn btn-sm copy-btn" data-target="response-body">Copy</button>
+                    <button class="btn btn-sm copy-btn" data-target="response-body">copy</button>
                 </div>
                 {{if .ResponseHeaders}}<div class="panel-section">
                     <h3>Headers</h3>
@@ -56,7 +60,7 @@
                 </div>
                 {{if .RawResponse}}<div class="panel-section">
                     <div class="raw-toggle">
-                        <button class="btn btn-sm" id="raw-toggle-btn" onclick="toggleRaw()">Show Raw Response</button>
+                        <button class="btn btn-sm" id="raw-toggle-btn" onclick="toggleRaw()">show raw</button>
                     </div>
                     <pre class="json-view" id="raw-response" style="display:none;margin-top:8px">{{.RawResponse}}</pre>
                 </div>{{end}}
@@ -70,10 +74,10 @@
             var btn = document.getElementById("raw-toggle-btn");
             if (el.style.display === "none") {
                 el.style.display = "block";
-                btn.textContent = "Hide Raw Response";
+                btn.textContent = "hide raw";
             } else {
                 el.style.display = "none";
-                btn.textContent = "Show Raw Response";
+                btn.textContent = "show raw";
             }
         }
     </script>

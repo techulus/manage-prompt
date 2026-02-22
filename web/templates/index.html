@@ -4,28 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ManagePrompt</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/apply-settings.js"></script>
 </head>
 <body>
-    <header>
-        <div class="header-left">
-            <h1>ManagePrompt</h1>
-            <span class="badge" id="connection-status">connecting...</span>
-        </div>
-        <div class="header-right">
+    {{template "header" .}}
+    <div class="sub-header">
+        <div class="sub-header-left">
+            <span class="badge" id="connection-status">connecting</span>
             <div class="stats" id="stats"></div>
-            <button class="btn btn-danger" id="clear-btn">Clear All</button>
         </div>
-    </header>
+        <div class="sub-header-right">
+            <button class="btn btn-danger" id="clear-btn">clear</button>
+        </div>
+    </div>
     <main>
         <table id="request-table">
             <thead>
                 <tr>
                     <th>Time</th>
-                    <th>URL</th>
+                    <th>Provider / Model</th>
                     <th>Status</th>
                     <th>Latency</th>
-                    <th>Model</th>
                     <th>Tokens</th>
                     <th>Cost</th>
                 </tr>
@@ -33,8 +36,8 @@
             <tbody id="request-list"></tbody>
         </table>
         <div id="empty-state" class="empty-state">
-            <p>No requests captured yet.</p>
-            <p class="muted">See the <a href="https://github.com/techulus/manage-prompt#integration" target="_blank">README</a> for integration instructions.</p>
+            <p>No requests captured yet</p>
+            <p class="muted">See the <a href="https://github.com/techulus/manage-prompt#integration" target="_blank">docs</a> for integration instructions</p>
         </div>
         <div class="pagination" id="pagination"></div>
     </main>

@@ -105,6 +105,7 @@ func (h *Handlers) Ingest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	r.Body = http.MaxBytesReader(w, r.Body, 10<<20)
 	var payload ingestPayload
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
 		http.Error(w, "invalid JSON", http.StatusBadRequest)

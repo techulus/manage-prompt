@@ -30,7 +30,7 @@ func main() {
 			}
 			defer db.Close()
 
-			srv := proxy.NewServer(db, port)
+			srv := proxy.NewServer(db, port, version)
 			return srv.Start()
 		},
 	}

@@ -16,7 +16,7 @@ type DB struct {
 func Open(dbPath string) (*DB, error) {
 	if dbPath == "" {
 		dir := ".manageprompt"
-		if err := os.MkdirAll(dir, 0755); err != nil {
+		if err := os.MkdirAll(dir, 0700); err != nil {
 			return nil, fmt.Errorf("create data dir: %w", err)
 		}
 		dbPath = filepath.Join(dir, "requests.db")

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings — ManagePrompt</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="/static/js/apply-settings.js"></script>
+</head>
+<body>
+    {{template "header" .}}
+    <main class="settings-view">
+        <div class="settings-container">
+            <h2 class="settings-page-title">Settings</h2>
+
+            <div class="settings-section">
+                <h3 class="settings-section-title">Appearance</h3>
+                <div class="settings-field">
+                    <label for="font-family">Font family</label>
+                    <input type="text" id="font-family" placeholder="Geist Mono" spellcheck="false" autocomplete="off">
+                </div>
+                <div class="settings-field">
+                    <label for="font-size">Font size</label>
+                    <input type="text" id="font-size" placeholder="13px" spellcheck="false" autocomplete="off" inputmode="decimal">
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h3 class="settings-section-title">About</h3>
+                <div class="settings-row">
+                    <span class="settings-label">Version</span>
+                    <span class="settings-value">{{.Version}}</span>
+                </div>
+                <div class="settings-row">
+                    <span class="settings-label">Source</span>
+                    <a href="https://github.com/techulus/manage-prompt" target="_blank" class="settings-link">github.com/techulus/manage-prompt</a>
+                </div>
+                <div class="settings-row">
+                    <span class="settings-label">Issues</span>
+                    <a href="https://github.com/techulus/manage-prompt/issues" target="_blank" class="settings-link">Report a bug</a>
+                </div>
+                <div class="settings-row">
+                    <span class="settings-label">Docs</span>
+                    <a href="https://github.com/techulus/manage-prompt#readme" target="_blank" class="settings-link">README</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="/static/js/settings.js"></script>
+</body>
+</html>

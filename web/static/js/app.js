@@ -40,12 +40,20 @@
     tr.onclick = function () {
       window.location.href = "/ui/requests/" + encodeURIComponent(req.id);
     };
+    var providerModel = "";
+    if (req.provider && req.model) {
+      providerModel = req.provider + " / " + req.model;
+    } else if (req.model) {
+      providerModel = req.model;
+    } else {
+      providerModel = req.target_url || "";
+    }
+
     tr.innerHTML =
       "<td>" + esc(formatTime(req.timestamp)) + "</td>" +
-      "<td>" + esc(req.target_url || "") + "</td>" +
+      "<td>" + esc(providerModel || "\u2014") + "</td>" +
       '<td class="' + statusClass(req.status_code) + '">' + esc(String(req.status_code)) + "</td>" +
       "<td>" + esc(req.latency_ms + "ms") + "</td>" +
-      "<td>" + esc(req.model || "\u2014") + "</td>" +
       "<td>" + esc(formatTokens(req)) + "</td>" +
       "<td>" + esc(formatCost(req.cost_usd)) + "</td>";
 

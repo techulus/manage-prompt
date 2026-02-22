@@ -2,6 +2,7 @@ package web
 
 import (
 	"html/template"
+	"log"
 	"net/http"
 	"strings"
 
@@ -10,10 +11,11 @@ import (
 
 type Handler struct {
 	db        *storage.DB
+	version   string
 	templates *template.Template
 }
 
-func NewHandler(db *storage.DB) *Handler {
+func NewHandler(db *storage.DB, version string) *Handler {
 	funcs := template.FuncMap{
 		"deref": func(v any) any {
 			switch p := v.(type) {
@@ -34,11 +36,21 @@ func NewHandler(db *storage.DB) *Handler {
 		},
 	}
 	tmpl := template.Must(template.New("").Funcs(funcs).ParseFS(TemplateFS(), "*.html"))
-	return &Handler{db: db, templates: tmpl}
+	return &Handler{db: db, version: version, templates: tmpl}
 }
 
 func (h *Handler) Index(w http.ResponseWriter, r *http.Request) {
-	h.templates.ExecuteTemplate(w, "index.html", nil)
+	if err := h.templates.ExecuteTemplate(w, "index.html", nil); err != nil {
+		log.Printf("template error: %v", err)
+	}
+}
+
+func (h *Handler) Settings(w http.ResponseWriter, r *http.Request) {
+	if err := h.templates.ExecuteTemplate(w, "settings.html", map[string]string{
+		"Version": h.version,
+	}); err != nil {
+		log.Printf("template error: %v", err)
+	}
 }
 
 func (h *Handler) ServeUI(w http.ResponseWriter, r *http.Request) {
@@ -51,7 +63,9 @@ func (h *Handler) ServeUI(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "Request not found", http.StatusNotFound)
 			return
 		}
-		h.templates.ExecuteTemplate(w, "detail.html", req)
+		if err := h.templates.ExecuteTemplate(w, "detail.html", req); err != nil {
+			log.Printf("template error: %v", err)
+		}
 		return
 	}
 
