@@ -30,34 +30,36 @@
             {{if .CostUSD}}<span class="meta-item"><strong>cost</strong> ${{printf "%.6f" (deref .CostUSD)}}</span>{{end}}
         </div>
 
+        <div id="flow-view" class="flow-view"></div>
+
         <div class="panels">
             <div class="panel">
                 <div class="panel-header">
                     <h2>Request</h2>
                     <button class="btn btn-sm copy-btn" data-target="request-body">copy</button>
                 </div>
-                {{if .RequestHeaders}}<div class="panel-section">
-                    <h3>Headers</h3>
-                    <pre class="json-view" id="request-headers">{{.RequestHeaders}}</pre>
-                </div>{{end}}
                 <div class="panel-section">
                     <h3>Body</h3>
                     <pre class="json-view" id="request-body">{{.RequestBody}}</pre>
                 </div>
+                {{if .RequestHeaders}}<div class="panel-section">
+                    <h3>Headers</h3>
+                    <pre class="json-view" id="request-headers">{{.RequestHeaders}}</pre>
+                </div>{{end}}
             </div>
             <div class="panel">
                 <div class="panel-header">
                     <h2>Response</h2>
                     <button class="btn btn-sm copy-btn" data-target="response-body">copy</button>
                 </div>
-                {{if .ResponseHeaders}}<div class="panel-section">
-                    <h3>Headers</h3>
-                    <pre class="json-view" id="response-headers">{{.ResponseHeaders}}</pre>
-                </div>{{end}}
                 <div class="panel-section">
                     <h3>Body</h3>
                     <pre class="json-view" id="response-body">{{.ResponseBody}}</pre>
                 </div>
+                {{if .ResponseHeaders}}<div class="panel-section">
+                    <h3>Headers</h3>
+                    <pre class="json-view" id="response-headers">{{.ResponseHeaders}}</pre>
+                </div>{{end}}
                 {{if .RawResponse}}<div class="panel-section">
                     <div class="raw-toggle">
                         <button class="btn btn-sm" id="raw-toggle-btn" onclick="toggleRaw()">show raw</button>
@@ -67,6 +69,7 @@
             </div>
         </div>
     </main>
+    <script src="/static/js/flow-viewer.js"></script>
     <script src="/static/js/json-viewer.js"></script>
     <script>
         function toggleRaw() {

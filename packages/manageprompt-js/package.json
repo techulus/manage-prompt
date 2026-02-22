@@ -1,7 +1,7 @@
 {
   "name": "manageprompt",
   "version": "0.4.0",
-  "description": "AI SDK middleware for ManagePrompt — local LLM call debugger",
+  "description": "Local LLM call debugger — capture, log, and inspect any AI API call",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
@@ -22,17 +22,26 @@
     "test:openai": "tsx tests/test-openai.ts",
     "test:anthropic": "tsx tests/test-anthropic.ts",
     "test:openrouter": "tsx tests/test-openrouter.ts",
-    "test:streaming-tools": "tsx tests/test-streaming-tools.ts"
+    "test:streaming-tools": "tsx tests/test-streaming-tools.ts",
+    "test:capture-openai": "tsx tests/test-capture-openai.ts",
+    "test:capture-anthropic": "tsx tests/test-capture-anthropic.ts"
   },
   "peerDependencies": {
     "@ai-sdk/provider": ">=3.0.0"
   },
+  "peerDependenciesMeta": {
+    "@ai-sdk/provider": {
+      "optional": true
+    }
+  },
   "devDependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
     "@ai-sdk/anthropic": "^3.0.46",
     "@ai-sdk/openai": "^3.0.30",
     "@ai-sdk/provider": "^3.0.8",
     "@openrouter/ai-sdk-provider": "^2.2.3",
     "@rollup/plugin-typescript": "^12.1.0",
+    "openai": "^4.80.0",
     "ai": "^6.0.97",
     "rollup": "^4.30.0",
     "rollup-plugin-dts": "^6.2.0",
@@ -48,7 +57,9 @@
     "openai",
     "anthropic",
     "vercel-ai-sdk",
-    "middleware"
+    "middleware",
+    "capture",
+    "logging"
   ],
   "license": "MIT",
   "repository": {

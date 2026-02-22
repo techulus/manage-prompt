@@ -94,9 +94,10 @@ type ingestPayload struct {
 	TokensOutput     *int   `json:"tokens_output"`
 	CacheReadTokens  *int   `json:"cache_read_tokens"`
 	CacheWriteTokens *int   `json:"cache_write_tokens"`
-	LatencyMs        int64  `json:"latency_ms"`
-	IsStreaming       bool   `json:"is_streaming"`
-	FinishReason     string `json:"finish_reason"`
+	CostUSD          *float64 `json:"cost_usd"`
+	LatencyMs        int64    `json:"latency_ms"`
+	IsStreaming       bool     `json:"is_streaming"`
+	FinishReason     string   `json:"finish_reason"`
 }
 
 func (h *Handlers) Ingest(w http.ResponseWriter, r *http.Request) {
@@ -141,7 +142,9 @@ func (h *Handlers) Ingest(w http.ResponseWriter, r *http.Request) {
 		CacheWriteTokens: payload.CacheWriteTokens,
 	}
 
-	if payload.TokensInput != nil && payload.TokensOutput != nil {
+	if payload.CostUSD != nil {
+		rec.CostUSD = payload.CostUSD
+	} else if payload.TokensInput != nil && payload.TokensOutput != nil {
 		rec.CostUSD = cost.Calculate(provider, model, *payload.TokensInput, *payload.TokensOutput)
 	}
 

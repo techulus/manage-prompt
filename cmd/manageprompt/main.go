@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/techulus/manage-prompt/internal/proxy"
+	"github.com/techulus/manage-prompt/internal/server"
 	"github.com/techulus/manage-prompt/internal/storage"
 )
 
@@ -22,7 +22,7 @@ func main() {
 
 	startCmd := &cobra.Command{
 		Use:   "start",
-		Short: "Start the proxy server and web UI",
+		Short: "Start the server",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			db, err := storage.Open("")
 			if err != nil {
@@ -30,7 +30,7 @@ func main() {
 			}
 			defer db.Close()
 
-			srv := proxy.NewServer(db, port, version)
+			srv := server.NewServer(db, port, version)
 			return srv.Start()
 		},
 	}

@@ -1,4 +1,4 @@
-package proxy
+package server
 
 import (
 	"context"
@@ -30,7 +30,6 @@ func NewServer(db *storage.DB, port int, version string) *Server {
 func (s *Server) Start() error {
 	hub := ws.NewHub()
 	apiHandlers := api.NewHandlers(s.db, hub)
-	proxyHandler := NewProxyHandler(s.db, hub)
 	webHandler := web.NewHandler(s.db, s.version)
 
 	mux := http.NewServeMux()
@@ -58,11 +57,7 @@ func (s *Server) Start() error {
 	mux.HandleFunc("/api/ingest", apiHandlers.Ingest)
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path == "/" && r.Header.Get(TargetHeader) == "" {
-			http.Redirect(w, r, "/ui", http.StatusTemporaryRedirect)
-			return
-		}
-		proxyHandler.ServeHTTP(w, r)
+		http.Redirect(w, r, "/ui", http.StatusTemporaryRedirect)
 	})
 
 	addr := fmt.Sprintf("127.0.0.1:%d", s.port)
@@ -74,8 +69,7 @@ func (s *Server) Start() error {
 	}
 
 	fmt.Printf("\n  ManagePrompt is running!\n\n")
-	fmt.Printf("  Proxy:  http://localhost:%d\n", s.port)
-	fmt.Printf("  UI:     http://localhost:%d/ui\n\n", s.port)
+	fmt.Printf("  URL: http://localhost:%d\n\n", s.port)
 
 	go openBrowser(fmt.Sprintf("http://localhost:%d/ui", s.port))
 
@@ -117,4 +111,3 @@ func openBrowser(url string) {
 	args = append(args, url)
 	_ = exec.Command(cmd, args...).Start()
 }
-
