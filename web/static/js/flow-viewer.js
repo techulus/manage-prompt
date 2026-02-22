@@ -155,20 +155,22 @@
       var chunk = chunks[i];
 
       if (chunk.type === "tool-call") {
+        var args = chunk.args || chunk.input || "";
         nodes.push({
           role: "tool-call",
           toolName: chunk.toolName || "unknown",
           toolCallId: chunk.toolCallId,
-          content: typeof chunk.args === "string" ? chunk.args : JSON.stringify(chunk.args, null, 2)
+          content: typeof args === "string" ? args : JSON.stringify(args, null, 2)
         });
       }
 
       if (chunk.type === "tool-result") {
+        var result = chunk.result || chunk.output || "";
         nodes.push({
           role: "tool-result",
           toolName: chunk.toolName || "tool",
           toolCallId: chunk.toolCallId,
-          content: typeof chunk.result === "string" ? chunk.result : JSON.stringify(chunk.result, null, 2)
+          content: typeof result === "string" ? result : JSON.stringify(result, null, 2)
         });
       }
 
@@ -210,18 +212,20 @@
     for (var i = 0; i < content.length; i++) {
       var part = content[i];
       if (part.type === "tool-call") {
+        var tcArgs = part.args || part.input || "";
         nodes.push({
           role: "tool-call",
           toolName: part.toolName || "unknown",
           toolCallId: part.toolCallId,
-          content: typeof part.args === "string" ? part.args : JSON.stringify(part.args, null, 2)
+          content: typeof tcArgs === "string" ? tcArgs : JSON.stringify(tcArgs, null, 2)
         });
       } else if (part.type === "tool-result") {
+        var tcResult = part.result || part.output || "";
         nodes.push({
           role: "tool-result",
           toolName: part.toolName || "tool",
           toolCallId: part.toolCallId,
-          content: typeof part.result === "string" ? part.result : JSON.stringify(part.result, null, 2)
+          content: typeof tcResult === "string" ? tcResult : JSON.stringify(tcResult, null, 2)
         });
       } else if (part.type === "text" && part.text) {
         nodes.push({ role: "assistant", content: part.text });

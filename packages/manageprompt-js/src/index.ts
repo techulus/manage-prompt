@@ -9,9 +9,9 @@ import type {
   LanguageModelV3FinishReason,
 } from "@ai-sdk/provider";
 
-interface ManagePromptOptions {
+type ManagePromptOptions = {
   url?: string;
-}
+};
 
 function extractText(content: LanguageModelV3GenerateResult["content"]): string {
   return content
@@ -21,14 +21,16 @@ function extractText(content: LanguageModelV3GenerateResult["content"]): string 
 }
 
 function sum(...values: (number | undefined)[]): number {
-  let s = 0;
-  for (const v of values) if (v != null) s += v;
-  return s;
+  return values.reduce<number>((s, v) => s + (v ?? 0), 0);
 }
+
+type OpenRouterMetadata = {
+  openrouter?: { usage?: { costDetails?: { upstreamInferenceCost?: number } } };
+};
 
 function extractCost(providerMetadata: unknown): number | undefined {
   if (!providerMetadata || typeof providerMetadata !== "object") return undefined;
-  const meta = providerMetadata as any;
+  const meta = providerMetadata as OpenRouterMetadata;
   return meta?.openrouter?.usage?.costDetails?.upstreamInferenceCost ?? undefined;
 }
 
@@ -53,6 +55,39 @@ export function devToolsMiddleware(
   options?: ManagePromptOptions
 ): LanguageModelV3Middleware {
   const baseURL = (options?.url ?? "http://localhost:54321").replace(/\/$/, "");
+
+  let pendingTimer: ReturnType<typeof setTimeout> | null = null;
+  let allChunks: LanguageModelV3StreamPart[] = [];
+  let allText = "";
+  let lastUsage: LanguageModelV3Usage | null = null;
+  let lastFinishReason: LanguageModelV3FinishReason | null = null;
+  let lastCostUSD: number | undefined;
+  let streamStart = 0;
+  let lastModel = "";
+  let lastProvider = "";
+  let lastPrompt: unknown = null;
+
+  function flushStream() {
+    pendingTimer = null;
+    send(baseURL, {
+      model: lastModel,
+      provider: lastProvider,
+      prompt: lastPrompt,
+      response_text: allText,
+      ...(lastUsage ? extractUsage(lastUsage) : {}),
+      ...(lastCostUSD != null ? { cost_usd: lastCostUSD } : {}),
+      raw_response: allChunks,
+      latency_ms: Date.now() - streamStart,
+      is_streaming: true,
+      finish_reason: lastFinishReason?.unified,
+    });
+    allChunks = [];
+    allText = "";
+    lastUsage = null;
+    lastFinishReason = null;
+    lastCostUSD = undefined;
+    streamStart = 0;
+  }
 
   return {
     specificationVersion: "v3",
@@ -95,54 +130,44 @@ export function devToolsMiddleware(
       params: LanguageModelV3CallOptions;
       model: LanguageModelV3;
     }) => {
-      const start = Date.now();
-      const { stream, ...rest } = await doStream();
+      if (streamStart === 0) streamStart = Date.now();
+      lastModel = model.modelId;
+      lastProvider = model.provider;
+      lastPrompt = params.prompt;
 
-      let text = "";
-      let usage: LanguageModelV3Usage | null = null;
-      let finishReason: LanguageModelV3FinishReason | null = null;
-      const chunks: LanguageModelV3StreamPart[] = [];
+      if (pendingTimer) {
+        clearTimeout(pendingTimer);
+        pendingTimer = null;
+      }
+
+      const { stream, ...rest } = await doStream();
 
       const transform = new TransformStream<
         LanguageModelV3StreamPart,
         LanguageModelV3StreamPart
       >({
         transform(chunk, controller) {
-          chunks.push(chunk);
+          allChunks.push(chunk);
           if (chunk.type === "text-delta") {
-            text += chunk.delta;
+            allText += chunk.delta;
           }
           if (chunk.type === "finish") {
-            usage = chunk.usage;
-            finishReason = chunk.finishReason;
+            lastUsage = chunk.usage;
+            lastFinishReason = chunk.finishReason;
+            const cost = "providerMetadata" in chunk
+              ? extractCost(chunk.providerMetadata)
+              : undefined;
+            if (cost != null) lastCostUSD = (lastCostUSD ?? 0) + cost;
           }
           controller.enqueue(chunk);
         },
         flush() {
-          if (!usage) {
-            const finish = chunks.find((c) => c.type === "finish");
-            if (finish && finish.type === "finish") {
-              usage = finish.usage;
-              finishReason = finish.finishReason;
-            }
+          if (lastFinishReason?.unified === "tool-calls") {
+            pendingTimer = setTimeout(flushStream, 30_000);
+            if (typeof pendingTimer === "object" && "unref" in pendingTimer) pendingTimer.unref();
+          } else {
+            flushStream();
           }
-
-          const finishChunk = chunks.find((c) => c.type === "finish");
-          const costUSD = finishChunk && "providerMetadata" in finishChunk
-            ? extractCost(finishChunk.providerMetadata)
-            : undefined;
-          send(baseURL, {
-            model: model.modelId,
-            provider: model.provider,
-            prompt: params.prompt,
-            response_text: text,
-            ...(usage ? extractUsage(usage) : {}),
-            ...(costUSD != null ? { cost_usd: costUSD } : {}),
-            raw_response: chunks,
-            latency_ms: Date.now() - start,
-            is_streaming: true,
-            finish_reason: finishReason?.unified,
-          });
         },
       });
 
@@ -169,7 +194,7 @@ function send(baseURL: string, data: Record<string, unknown>) {
 
 const DEFAULT_URL = "http://localhost:54321";
 
-interface DetectedFields {
+type DetectedFields = {
   provider: string;
   model: string;
   response_text: string;
@@ -178,58 +203,77 @@ interface DetectedFields {
   cache_read_tokens?: number;
   cache_write_tokens?: number;
   finish_reason?: string;
-}
+};
+
+type OpenAIResponse = {
+  object: string;
+  model?: string;
+  choices?: { message?: { content?: string }; finish_reason?: string }[];
+  usage?: { prompt_tokens?: number; completion_tokens?: number; prompt_tokens_details?: { cached_tokens?: number } };
+};
+
+type AnthropicContentBlock = { type: string; text?: string };
+
+type AnthropicResponse = {
+  type: string;
+  model?: string;
+  content?: AnthropicContentBlock[];
+  usage?: { input_tokens?: number; output_tokens?: number; cache_read_input_tokens?: number; cache_creation_input_tokens?: number };
+  stop_reason?: string;
+};
 
 function detectProvider(response: unknown): DetectedFields | null {
   if (!response || typeof response !== "object") return null;
 
-  const r = response as any;
+  const r = response as Record<string, unknown>;
 
   if (r.object === "chat.completion") {
+    const oai = response as OpenAIResponse;
     return {
       provider: "openai",
-      model: r.model ?? "",
-      response_text: r.choices?.[0]?.message?.content ?? "",
-      tokens_input: r.usage?.prompt_tokens,
-      tokens_output: r.usage?.completion_tokens,
-      cache_read_tokens: r.usage?.prompt_tokens_details?.cached_tokens,
-      finish_reason: r.choices?.[0]?.finish_reason,
+      model: oai.model ?? "",
+      response_text: oai.choices?.[0]?.message?.content ?? "",
+      tokens_input: oai.usage?.prompt_tokens,
+      tokens_output: oai.usage?.completion_tokens,
+      cache_read_tokens: oai.usage?.prompt_tokens_details?.cached_tokens,
+      finish_reason: oai.choices?.[0]?.finish_reason,
     };
   }
 
   if (r.type === "message") {
-    const text = Array.isArray(r.content)
-      ? r.content
-          .filter((b: any) => b.type === "text")
-          .map((b: any) => b.text)
+    const ant = response as AnthropicResponse;
+    const text = Array.isArray(ant.content)
+      ? ant.content
+          .filter((b) => b.type === "text")
+          .map((b) => b.text ?? "")
           .join("")
       : "";
 
     return {
       provider: "anthropic",
-      model: r.model ?? "",
+      model: ant.model ?? "",
       response_text: text,
-      tokens_input: r.usage?.input_tokens,
-      tokens_output: r.usage?.output_tokens,
-      cache_read_tokens: r.usage?.cache_read_input_tokens,
-      cache_write_tokens: r.usage?.cache_creation_input_tokens,
-      finish_reason: r.stop_reason,
+      tokens_input: ant.usage?.input_tokens,
+      tokens_output: ant.usage?.output_tokens,
+      cache_read_tokens: ant.usage?.cache_read_input_tokens,
+      cache_write_tokens: ant.usage?.cache_creation_input_tokens,
+      finish_reason: ant.stop_reason,
     };
   }
 
   return null;
 }
 
-export interface CaptureInput {
+export type CaptureInput<M = unknown> = {
   model: string;
-  messages: any[];
+  messages: M[];
   url?: string;
   provider?: string;
-}
+};
 
-export async function capture<T>(
-  input: CaptureInput,
-  fn: (params: { model: string; messages: any[] }) => Promise<T>,
+export async function capture<T, M = unknown>(
+  input: CaptureInput<M>,
+  fn: (params: { model: string; messages: M[] }) => Promise<T>,
 ): Promise<T> {
   const baseURL = (input.url ?? DEFAULT_URL).replace(/\/$/, "");
   const start = Date.now();
@@ -256,7 +300,7 @@ export async function capture<T>(
   return result;
 }
 
-export interface LogData {
+export type LogData = {
   url?: string;
   model: string;
   provider: string;
@@ -270,7 +314,7 @@ export interface LogData {
   latency_ms?: number;
   is_streaming?: boolean;
   finish_reason?: string;
-}
+};
 
 export function log(data: LogData): void {
   const { url, ...fields } = data;
