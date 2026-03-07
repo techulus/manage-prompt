@@ -4,6 +4,17 @@ JavaScript SDK for [ManagePrompt](https://github.com/techulus/manage-prompt) —
 
 Captures every LLM call with full prompt, response, token usage, cost, and latency.
 
+## Prerequisites
+
+This package sends captured data to the ManagePrompt server. Install and start the server first:
+
+```bash
+brew install techulus/tap/manageprompt
+manageprompt start
+```
+
+See the [ManagePrompt README](https://github.com/techulus/manage-prompt) for other installation methods.
+
 ## Install
 
 ```bash
@@ -76,16 +87,6 @@ log({ model: "gpt-4o", provider: "openai", url: "http://localhost:54321" });
 ```
 
 All functions default to `http://localhost:54321`.
-
-## Prerequisites
-
-Start the ManagePrompt server before running your app:
-
-```bash
-manageprompt start
-```
-
-See the [ManagePrompt README](https://github.com/techulus/manage-prompt) for installation and full documentation.
 
 ## License
 

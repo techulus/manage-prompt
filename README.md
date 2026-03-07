@@ -4,7 +4,32 @@ Local LLM call debugger. Captures every LLM API call during development with ful
 
 <img width="3392" height="2644" alt="CleanShot 2026-02-22 at 18 11 31@2x" src="https://github.com/user-attachments/assets/637c4719-2549-4403-9275-3b2685fe2e40" />
 
-## Quick Start
+ManagePrompt has two parts:
+
+- **CLI (Go binary)** — runs the local server and web UI for viewing captured requests
+- **npm package** — instruments your app to capture and send LLM call data to the server
+
+## Step 1: Install the CLI
+
+### Homebrew
+
+```bash
+brew install techulus/tap/manageprompt
+```
+
+### Go
+
+```bash
+go install github.com/techulus/manage-prompt/cmd/manageprompt@latest
+```
+
+### Build from Source
+
+```bash
+go build -o bin/manageprompt ./cmd/manageprompt
+```
+
+## Step 2: Start the Server
 
 ```bash
 manageprompt start
@@ -14,13 +39,22 @@ manageprompt start
 URL: http://localhost:54321
 ```
 
-## Integration
+### CLI Commands
 
-### Vercel AI SDK (Recommended)
+```
+manageprompt start            # Start the server (default port 54321)
+manageprompt start -p 8080    # Custom port
+manageprompt clear            # Clear all stored requests
+manageprompt version          # Print version
+```
+
+## Step 3: Add the npm Package to Your App
 
 ```bash
 pnpm add manageprompt
 ```
+
+### Vercel AI SDK (Recommended)
 
 ```ts
 import { generateText, wrapLanguageModel } from "ai";
@@ -81,40 +115,9 @@ log({
 - Token usage (input, output, cache read, cache write)
 - Cost estimation (via [models.dev](https://models.dev) pricing)
 
-## CLI
-
-```
-manageprompt start            # Start the server (default port 54321)
-manageprompt start -p 8080    # Custom port
-manageprompt clear            # Clear all stored requests
-manageprompt version          # Print version
-```
-
-## Install
-
-### Homebrew
-
-```bash
-brew install techulus/tap/manageprompt
-```
-
-### Go
-
-```bash
-go install github.com/techulus/manage-prompt/cmd/manageprompt@latest
-```
-
-### Build from Source
-
-```bash
-go build -o bin/manageprompt ./cmd/manageprompt
-```
-
 ## How It Works
 
-ManagePrompt runs a local server with a web UI. Your app sends call data via the `manageprompt` npm package — either automatically through the AI SDK middleware or explicitly via `capture()` / `log()`.
-
-1. Your app makes an LLM call wrapped with ManagePrompt
+1. Your app makes an LLM call wrapped with the `manageprompt` npm package
 2. The wrapper captures the full request, response, tokens, cost, and latency
 3. Data is sent to the local ManagePrompt server (`POST /api/ingest`)
 4. Everything is stored in SQLite (`.manageprompt/requests.db` in the current directory)

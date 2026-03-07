@@ -51,6 +51,7 @@
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
         }
 
         a {
@@ -203,6 +204,7 @@
         .feature {
             background: var(--bg);
             padding: 24px;
+            min-width: 0;
         }
 
         .feature-icon {
@@ -233,6 +235,7 @@
             border: 1px solid var(--border);
             border-radius: 8px;
             overflow: hidden;
+            min-width: 0;
         }
 
         .int-card-header {
@@ -302,6 +305,7 @@
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 16px;
+            min-width: 0;
         }
 
         .install-item h3 {
@@ -338,6 +342,15 @@
             .features-grid { grid-template-columns: 1fr; }
             .integration-cards { grid-template-columns: 1fr; }
             .install-grid { grid-template-columns: 1fr; }
+            .code-block {
+                white-space: pre-wrap;
+                word-break: break-word;
+            }
+            .cmd-block {
+                font-size: 12px;
+                padding: 8px 12px;
+                gap: 8px;
+            }
         }
     </style>
 </head>
@@ -444,6 +457,7 @@ const response = await capture(
         <section>
             <p class="section-label">Install</p>
             <h2 class="section-title">Get started in seconds</h2>
+            <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 12px;">Server (runs the local web UI)</p>
             <div class="install-grid">
                 <div class="install-item">
                     <h3>Homebrew</h3>
@@ -453,6 +467,9 @@ const response = await capture(
                     <h3>Go</h3>
                     <div class="code-block"><code class="language-bash">go install github.com/techulus/manage-prompt/cmd/manageprompt@latest</code></div>
                 </div>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 13px; margin-top: 32px; margin-bottom: 12px;">npm package (captures LLM calls from your app)</p>
+            <div class="install-grid">
                 <div class="install-item">
                     <h3>npm</h3>
                     <div class="code-block"><code class="language-bash">pnpm add manageprompt</code></div>
