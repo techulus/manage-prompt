@@ -25,6 +25,8 @@ pnpm add manageprompt
 
 ### Vercel AI SDK Middleware (Recommended)
 
+This integration supports Vercel AI SDK 7 and requires Node.js 22 or later.
+
 ```ts
 import { generateText, wrapLanguageModel } from "ai";
 import { openai } from "@ai-sdk/openai";
@@ -39,6 +41,26 @@ const { text } = await generateText({ model, prompt: "Hello" });
 ```
 
 Works with any AI SDK provider — OpenAI, Anthropic, Google, Mistral, etc.
+
+#### Test the integration locally
+
+Start ManagePrompt from the repository root:
+
+```bash
+go run ./cmd/manageprompt start
+```
+
+In another terminal, build the package and run the example with an OpenAI API key:
+
+```bash
+cd packages/manageprompt-js
+pnpm build
+OPENAI_API_KEY=your-key pnpm example:vercel-ai
+```
+
+The example makes one generated and one streamed request. Open
+`http://localhost:54321` and verify both calls show the prompt, response, token
+usage, latency, finish reason, and correct streaming status.
 
 ### capture()
 
