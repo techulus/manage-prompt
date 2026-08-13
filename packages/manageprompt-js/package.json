@@ -27,7 +27,7 @@
     "test:capture-anthropic": "tsx tests/test-capture-anthropic.ts"
   },
   "peerDependencies": {
-    "@ai-sdk/provider": ">=3.0.0"
+    "@ai-sdk/provider": ">=4.0.0"
   },
   "peerDependenciesMeta": {
     "@ai-sdk/provider": {
@@ -35,14 +35,14 @@
     }
   },
   "devDependencies": {
-    "@ai-sdk/anthropic": "^3.0.46",
-    "@ai-sdk/openai": "^3.0.30",
-    "@ai-sdk/provider": "^3.0.8",
+    "@ai-sdk/anthropic": "^4.0.38",
+    "@ai-sdk/openai": "^4.0.40",
+    "@ai-sdk/provider": "^4.0.7",
     "@anthropic-ai/sdk": "^0.39.0",
-    "@openrouter/ai-sdk-provider": "^2.2.3",
+    "@openrouter/ai-sdk-provider": "^3.0.0",
     "@rollup/plugin-typescript": "^12.1.0",
     "@types/node": "^25.3.0",
-    "ai": "^6.0.97",
+    "ai": "^7.0.62",
     "openai": "^4.80.0",
     "rollup": "^4.30.0",
     "rollup-plugin-dts": "^6.2.0",

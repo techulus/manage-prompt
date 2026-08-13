@@ -1,19 +1,19 @@
 import type {
-  LanguageModelV3Middleware,
-  LanguageModelV3StreamPart,
-  LanguageModelV3CallOptions,
-  LanguageModelV3,
-  LanguageModelV3GenerateResult,
-  LanguageModelV3StreamResult,
-  LanguageModelV3Usage,
-  LanguageModelV3FinishReason,
+  LanguageModelV4Middleware,
+  LanguageModelV4StreamPart,
+  LanguageModelV4CallOptions,
+  LanguageModelV4,
+  LanguageModelV4GenerateResult,
+  LanguageModelV4StreamResult,
+  LanguageModelV4Usage,
+  LanguageModelV4FinishReason,
 } from "@ai-sdk/provider";
 
 type ManagePromptOptions = {
   url?: string;
 };
 
-function extractText(content: LanguageModelV3GenerateResult["content"]): string {
+function extractText(content: LanguageModelV4GenerateResult["content"]): string {
   return content
     .filter((part): part is Extract<typeof part, { type: "text" }> => part.type === "text")
     .map((part) => part.text)
@@ -34,7 +34,7 @@ function extractCost(providerMetadata: unknown): number | undefined {
   return meta?.openrouter?.usage?.costDetails?.upstreamInferenceCost ?? undefined;
 }
 
-function extractUsage(usage: LanguageModelV3Usage) {
+function extractUsage(usage: LanguageModelV4Usage) {
   const tokensInput =
     usage.inputTokens.total ??
     (sum(usage.inputTokens.noCache, usage.inputTokens.cacheRead, usage.inputTokens.cacheWrite) || undefined);
@@ -53,14 +53,14 @@ function extractUsage(usage: LanguageModelV3Usage) {
 
 export function devToolsMiddleware(
   options?: ManagePromptOptions
-): LanguageModelV3Middleware {
+): LanguageModelV4Middleware {
   const baseURL = (options?.url ?? "http://localhost:54321").replace(/\/$/, "");
 
   let pendingTimer: ReturnType<typeof setTimeout> | null = null;
-  let allChunks: LanguageModelV3StreamPart[] = [];
+  let allChunks: LanguageModelV4StreamPart[] = [];
   let allText = "";
-  let lastUsage: LanguageModelV3Usage | null = null;
-  let lastFinishReason: LanguageModelV3FinishReason | null = null;
+  let lastUsage: LanguageModelV4Usage | null = null;
+  let lastFinishReason: LanguageModelV4FinishReason | null = null;
   let lastCostUSD: number | undefined;
   let streamStart = 0;
   let lastModel = "";
@@ -90,16 +90,16 @@ export function devToolsMiddleware(
   }
 
   return {
-    specificationVersion: "v3",
+    specificationVersion: "v4",
 
     wrapGenerate: async ({
       doGenerate,
       params,
       model,
     }: {
-      doGenerate: () => PromiseLike<LanguageModelV3GenerateResult>;
-      params: LanguageModelV3CallOptions;
-      model: LanguageModelV3;
+      doGenerate: () => PromiseLike<LanguageModelV4GenerateResult>;
+      params: LanguageModelV4CallOptions;
+      model: LanguageModelV4;
     }) => {
       const start = Date.now();
       const result = await doGenerate();
@@ -126,9 +126,9 @@ export function devToolsMiddleware(
       params,
       model,
     }: {
-      doStream: () => PromiseLike<LanguageModelV3StreamResult>;
-      params: LanguageModelV3CallOptions;
-      model: LanguageModelV3;
+      doStream: () => PromiseLike<LanguageModelV4StreamResult>;
+      params: LanguageModelV4CallOptions;
+      model: LanguageModelV4;
     }) => {
       if (streamStart === 0) streamStart = Date.now();
       lastModel = model.modelId;
@@ -143,8 +143,8 @@ export function devToolsMiddleware(
       const { stream, ...rest } = await doStream();
 
       const transform = new TransformStream<
-        LanguageModelV3StreamPart,
-        LanguageModelV3StreamPart
+        LanguageModelV4StreamPart,
+        LanguageModelV4StreamPart
       >({
         transform(chunk, controller) {
           allChunks.push(chunk);
