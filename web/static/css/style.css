@@ -18,7 +18,7 @@
     --error: #dc2626;
     --warning: #d97706;
     --highlight: #7c3aed;
-    --font-mono: "Geist Mono", "JetBrains Mono", "SF Mono", "Fira Code", ui-monospace, monospace;
+    --font-mono: monospace;
 }
 
 html {
